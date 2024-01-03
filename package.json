@@ -1,0 +1,23 @@
+{
+	"description": "",
+	"scripts": {
+		"build": "rbxtsc build && rojo build --plugin CrescentVFX.rbxmx"
+	},
+	"devDependencies": {
+		"@rbxts/compiler-types": "^2.2.0-types.0",
+		"@rbxts/types": "^1.0.738",
+		"@typescript-eslint/eslint-plugin": "^6.17.0",
+		"@typescript-eslint/parser": "^6.17.0",
+		"eslint": "^8.56.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.1.2",
+		"eslint-plugin-roblox-ts": "^0.0.36",
+		"prettier": "^3.1.1",
+		"roblox-ts": "^2.2.0",
+		"typescript": "^5.3.3"
+	},
+	"dependencies": {
+		"@rbxts/roact": "npm:@rbxts/react-ts@^1.0.1",
+		"@rbxts/services": "^1.5.1"
+	}
+}
