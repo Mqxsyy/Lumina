@@ -1,6 +1,8 @@
-import Roact from "@rbxts/roact";
+import Roact, { useEffect, useRef } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
+import { ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition } from "WidgetHandler";
+import { GetZoomScale } from "ZoomScale";
 
 interface NodeProps {
 	Position: Vector2;
@@ -22,37 +24,51 @@ function SelectNodeTitleBar(element: Frame, inputObject: InputObject) {
 	element.Parent = undefined;
 	element.Parent = elementParent;
 
-	RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => MoveNode(element, inputObject));
+	RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => MoveNode(element));
 }
 
-function DeselectNodeTitleBar(element: Frame, inputObject: InputObject) {
+function DeselectNodeTitleBar(inputObject: InputObject) {
 	if (inputObject.UserInputType !== Enum.UserInputType.MouseButton1) return;
 	RunService.UnbindFromRenderStep("MoveNode");
 }
 
-function MoveNode(element: Frame, inputObject: InputObject) {
+function MoveNode(element: Frame) {
 	const mousePositionVec2 = GetMousePosition();
 	const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
 
-	element.Position = mousePosition.sub(mouseOffset);
+	let newPosition = mousePosition.sub(mouseOffset);
+
+	if (newPosition.Width.Offset < 0) newPosition = new UDim2(0, 0, 0, newPosition.Y.Offset);
+	if (newPosition.Height.Offset < 0) newPosition = new UDim2(0, newPosition.X.Offset, 0, 0);
+
+	element.Position = newPosition;
 }
 
 export function Node({ Position: Position }: NodeProps) {
+	const frameRef = useRef(undefined as TextButton | undefined);
+
+	useEffect(() => {
+		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
+			frameRef.current!.Size = UDim2.fromOffset(200 * zoomScale, 150 * zoomScale);
+			frameRef.current!.Position = UDim2.fromOffset(Position.X * zoomScale, Position.Y * zoomScale);
+		});
+	}, []);
+
 	return (
 		<textbutton
-			AnchorPoint={new Vector2(0.5, 0.5)}
-			Position={UDim2.fromOffset(Position.X, Position.Y)}
-			Size={UDim2.fromOffset(200, 150)}
+			Position={UDim2.fromOffset(Position.X * GetZoomScale(), Position.Y * GetZoomScale())}
+			Size={UDim2.fromOffset(200 * GetZoomScale(), 150 * GetZoomScale())}
 			BackgroundColor3={Color3.fromHex("#FFFFFF")}
 			Active={true}
 			Text={""}
 			AutoButtonColor={false}
+			ref={frameRef}
 		>
 			<frame
-				Size={new UDim2(1, 0, 0, 20)}
+				Size={new UDim2(1, 0, 0.1, 0)}
 				Event={{
 					InputBegan: (element, inputObject) => SelectNodeTitleBar(element.Parent as Frame, inputObject),
-					InputEnded: (element, inputObject) => DeselectNodeTitleBar(element.Parent as Frame, inputObject),
+					InputEnded: (_, inputObject) => DeselectNodeTitleBar(inputObject),
 				}}
 			/>
 		</textbutton>
