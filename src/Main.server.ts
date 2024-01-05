@@ -6,6 +6,7 @@ const button = toolbar.CreateButton("Open Graph", "Opens Graph", "rbxassetid://7
 
 const widgetInfo = new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 200, 300, 150, 200);
 const widget = plugin.CreateDockWidgetPluginGui("Graph", widgetInfo);
+widget.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
 widget.Title = "CrescentVFX Graph";
 
 SetWidget(widget);
