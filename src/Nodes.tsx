@@ -4,8 +4,8 @@ import { UIUpdateEvent } from "Events";
 
 export const PlacedNodes = [] as Roact.Element[];
 
-export function CreateNode(position: Vector2) {
-	PlacedNodes.push(<Node Position={position} />);
+export function CreateNode() {
+	PlacedNodes.push(<Node />);
 	UIUpdateEvent.Fire();
 }
 

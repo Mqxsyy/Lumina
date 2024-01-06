@@ -2,12 +2,12 @@ import Roact, { useEffect, useRef } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
 import { CreateNode, PlacedNodes } from "Nodes";
-import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePosition } from "WidgetHandler";
 import { GetLastZoomScale, GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 
 function MakeNode(inputObject: InputObject) {
 	if (inputObject.KeyCode === Enum.KeyCode.Space) {
-		CreateNode(GetMousePositionOnCanvas().div(GetZoomScale()));
+		CreateNode();
 	}
 }
 
