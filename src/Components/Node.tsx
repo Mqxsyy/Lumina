@@ -2,7 +2,7 @@ import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
-import { GetZoomScale } from "ZoomScale";
+import { GetLastZoomScale, GetZoomScale } from "ZoomScale";
 
 let mouseOffset = Vector2.zero;
 
@@ -51,8 +51,14 @@ export function Node() {
 
 	useEffect(() => {
 		const connection = ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
+			// const pos1 = anchorPosition.mul(GetLastZoomScale());
+			// print(pos1);
+
 			const position = new Vector2(anchorPosition.X * zoomScale, anchorPosition.Y * zoomScale);
 			setDisplayPosition(position);
+
+			// print(position);
+			// print(pos1.X / position.X, pos1.Y / position.Y);
 		});
 
 		return () => {

@@ -2,7 +2,7 @@ import Roact, { useEffect, useRef } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
 import { CreateNode, PlacedNodes } from "Nodes";
-import { GetMousePosition } from "WidgetHandler";
+import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetLastZoomScale, GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 
 function MakeNode(inputObject: InputObject) {
@@ -71,10 +71,11 @@ export function App({ fn }: AppProps) {
 		fn(canvasRef.current as Frame);
 
 		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
-			const mousePosition = GetMousePosition();
-			const delta = zoomScale - GetLastZoomScale();
+			const mousePosition = GetMousePositionOnCanvas();
+			const delta = -(1 - zoomScale / GetLastZoomScale());
+			print(delta);
 
-			const canvasOffset = mousePosition.mul(delta).mul(3);
+			const canvasOffset = mousePosition.mul(delta);
 
 			const currentPos = canvasRef.current!.Position;
 			let newPosition = UDim2.fromOffset(
