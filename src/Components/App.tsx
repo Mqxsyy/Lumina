@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
 import { CreateNode, PlacedNodes } from "Nodes";
@@ -67,13 +67,14 @@ interface AppProps {
 export function App({ fn }: AppProps) {
 	const canvasRef = useRef(undefined as Frame | undefined);
 
+	const [canvasPosition, setCanvasPosition] = useState(UDim2.fromOffset(0, 0));
+
 	useEffect(() => {
 		fn(canvasRef.current as Frame);
 
 		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
 			const mousePosition = GetMousePositionOnCanvas();
 			const delta = -(1 - zoomScale / GetLastZoomScale());
-			print(delta);
 
 			const canvasOffset = mousePosition.mul(delta);
 
@@ -86,14 +87,15 @@ export function App({ fn }: AppProps) {
 			if (newPosition.Width.Offset >= 0) newPosition = new UDim2(0, 0, 0, newPosition.Y.Offset);
 			if (newPosition.Height.Offset >= 0) newPosition = new UDim2(0, newPosition.X.Offset, 0, 0);
 
-			canvasRef.current!.Position = newPosition;
+			setCanvasPosition(newPosition);
 		});
 	}, []);
 
 	return (
 		<frame
+			Position={canvasPosition}
 			Size={UDim2.fromScale(1, 1)}
-			BackgroundColor3={Color3.fromHex("#1B1B1B")}
+			BackgroundTransparency={1}
 			AutomaticSize={Enum.AutomaticSize.XY}
 			Event={{
 				InputBegan: (_, inputObject: InputObject) => {
@@ -102,6 +104,15 @@ export function App({ fn }: AppProps) {
 			}}
 			ref={canvasRef}
 		>
+			{/* // NOTE: attempted to make image scale with zoom but due to minor alignment inconsistencies with nodes decided not to */}
+			<imagelabel
+				Size={UDim2.fromScale(1, 1)}
+				BackgroundColor3={Color3.fromHex("#1B1B1B")}
+				Image={"rbxassetid://13729909389"}
+				ImageTransparency={0.975}
+				ScaleType={"Tile"}
+				TileSize={UDim2.fromOffset(100, 100)}
+			/>
 			{...PlacedNodes}
 			<frame
 				Size={UDim2.fromScale(1, 1)}

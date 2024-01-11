@@ -1,14 +1,16 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
-import { GetLastZoomScale, GetZoomScale } from "ZoomScale";
+import { GetZoomScale } from "ZoomScale";
 
 let mouseOffset = Vector2.zero;
 
-function SelectNodeTitleBar(element: Frame, inputObject: InputObject, setAnchorPosition: (position: Vector2) => void) {
+function SelectNodeTitleBar(element: Frame, inputObject: InputObject, setPosition: (position: Vector2) => void) {
 	if (inputObject.UserInputType !== Enum.UserInputType.MouseButton1) return;
-	mouseOffset = GetMousePositionOnCanvas().sub(element.AbsolutePosition);
+
+	const elementPosition = new Vector2(element.Position.X.Offset, element.Position.Y.Offset);
+	mouseOffset = GetMousePositionOnCanvas().sub(elementPosition);
 
 	// dumb? fix for element display order
 	// yes zindex exists but it won't leave it above other elements
@@ -16,7 +18,7 @@ function SelectNodeTitleBar(element: Frame, inputObject: InputObject, setAnchorP
 	element.Parent = undefined;
 	element.Parent = elementParent;
 
-	RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => MoveNode(setAnchorPosition));
+	RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => MoveNode(setPosition));
 }
 
 function DeselectNodeTitleBar(inputObject: InputObject) {
@@ -24,7 +26,7 @@ function DeselectNodeTitleBar(inputObject: InputObject) {
 	RunService.UnbindFromRenderStep("MoveNode");
 }
 
-function MoveNode(setAnchorPosition: (position: Vector2) => void) {
+function MoveNode(setPosition: (position: Vector2) => void) {
 	const mousePosition = GetMousePositionOnCanvas();
 
 	const newPosition = mousePosition.sub(mouseOffset);
@@ -34,12 +36,13 @@ function MoveNode(setAnchorPosition: (position: Vector2) => void) {
 	if (newX < 0) newX = 0;
 	if (newY < 0) newY = 0;
 
-	setAnchorPosition(new Vector2(newX, newY));
+	setPosition(new Vector2(newX, newY));
 }
 
 export function Node() {
 	const [anchorPosition, setAnchorPosition] = useState(Vector2.zero);
 	const [displayPosition, setDisplayPosition] = useState(Vector2.zero);
+	const [zoomScale, setZoomScale] = useState(GetZoomScale()); // need this, can't count on render update cuz node at (0; 0) acts weird idk
 
 	useEffect(() => {
 		const mousePosition = GetMousePositionOnCanvas();
@@ -51,14 +54,9 @@ export function Node() {
 
 	useEffect(() => {
 		const connection = ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
-			// const pos1 = anchorPosition.mul(GetLastZoomScale());
-			// print(pos1);
-
 			const position = new Vector2(anchorPosition.X * zoomScale, anchorPosition.Y * zoomScale);
 			setDisplayPosition(position);
-
-			// print(position);
-			// print(pos1.X / position.X, pos1.Y / position.Y);
+			setZoomScale(GetZoomScale());
 		});
 
 		return () => {
@@ -76,7 +74,7 @@ export function Node() {
 	return (
 		<textbutton
 			Position={UDim2.fromOffset(displayPosition.X, displayPosition.Y)}
-			Size={UDim2.fromOffset(200 * GetZoomScale(), 150 * GetZoomScale())}
+			Size={UDim2.fromOffset(200 * zoomScale, 150 * zoomScale)}
 			BackgroundColor3={Color3.fromHex("#FFFFFF")}
 			Active={true}
 			Text={""}
