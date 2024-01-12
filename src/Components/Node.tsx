@@ -4,6 +4,8 @@ import { ZoomScaleUpdateEvent } from "Events";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetZoomScale } from "ZoomScale";
 
+// TODO: Fix positioning / moving (again)
+
 let mouseOffset = Vector2.zero;
 
 function SelectNodeTitleBar(element: Frame, inputObject: InputObject, setPosition: (position: Vector2) => void) {
