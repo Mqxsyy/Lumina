@@ -6,6 +6,7 @@ import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHan
 import { GetLastZoomScale, GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 
 // TODO: add widget size tracking
+// TODO: fix zooming
 
 function MakeNode(inputObject: InputObject) {
 	if (inputObject.KeyCode === Enum.KeyCode.Space) {
