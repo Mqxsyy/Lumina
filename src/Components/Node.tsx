@@ -5,6 +5,7 @@ import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHan
 import { GetZoomScale } from "ZoomScale";
 
 // TODO: fix moving and zooming
+// TODO: fix jitteriness, probs due to delayed update frame
 
 // let mouseOffset = Vector2.zero;
 

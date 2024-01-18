@@ -6,7 +6,7 @@ import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHan
 import { GetLastZoomScale, GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 
 // TODO: add widget size tracking
-// TODO: fix zooming
+// TODO: make zoom go to mouse
 
 function MakeNode(inputObject: InputObject) {
 	if (inputObject.KeyCode === Enum.KeyCode.Space) {
@@ -80,25 +80,25 @@ export function App({ fn }: AppProps) {
 		fn(canvasRef.current as Frame);
 
 		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
-			const mousePosition = GetMousePositionOnCanvas();
-			const delta = -(1 - zoomScale / GetLastZoomScale());
+			// const mousePosition = GetMousePositionOnCanvas();
+			// const delta = -(1 - zoomScale / GetLastZoomScale());
 
-			const canvasOffset = mousePosition.mul(delta);
+			// const canvasOffset = mousePosition.mul(delta);
 
-			const currentPos = canvasRef.current!.Position;
-			const newPosition = UDim2.fromOffset(
-				currentPos.X.Offset - canvasOffset.X,
-				currentPos.Y.Offset - canvasOffset.Y,
-			);
+			// const currentPos = canvasRef.current!.Position;
+			// const newPosition = UDim2.fromOffset(
+			// 	currentPos.X.Offset - canvasOffset.X,
+			// 	currentPos.Y.Offset - canvasOffset.Y,
+			// );
 
-			setCanvasPosition(newPosition);
+			// setCanvasPosition(newPosition);
 			setZoomScale(zoomScale);
 		});
 	}, []);
 
 	useEffect(() => {
 		setCanvasSize(
-			UDim2.fromOffset(widgetSize.X * zoomScale, widgetSize.Y * zoomScale).add(
+			UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
 				UDim2.fromOffset(math.abs(canvasPosition.X.Offset * 2), math.abs(canvasPosition.Y.Offset * 2)),
 			),
 		);
