@@ -1,18 +1,13 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { Element, useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
-import { CreateNode, PlacedNodes } from "Nodes";
 import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHandler";
 import { GetLastZoomScale, GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
+import { Node } from "./Node";
+import { TestComp } from "testcomp";
 
 // TODO: add widget size tracking
 // TODO: make zoom go to mouse
-
-function MakeNode(inputObject: InputObject) {
-	if (inputObject.KeyCode === Enum.KeyCode.Space) {
-		CreateNode();
-	}
-}
 
 let mouseOffset = UDim2.fromOffset(0, 0);
 function StartMoveCanvas(frame: Frame, inputObject: InputObject, setCanvasPosition: (position: UDim2) => void) {
@@ -92,6 +87,25 @@ export function App({ fn }: AppProps) {
 			// );
 
 			// setCanvasPosition(newPosition);
+
+			// const mousePositionVec2 = GetMousePosition().mul(delta);
+			// const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
+
+			// const widgetSize = GetWidget().AbsoluteSize.mul(0.5);
+
+			// mouseOffset = canvasRef
+			// 	.current!.Position.sub(mousePosition)
+			// 	.add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
+
+			// const currentPos = canvasRef.current!.Position;
+			// const newPosition = UDim2.fromOffset(
+			// 	currentPos.X.Offset - mouseOffset.X.Offset,
+			// 	currentPos.Y.Offset - mouseOffset.Y.Offset,
+			// );
+
+			// print(mousePosition);
+
+			// setCanvasPosition(mousePosition);
 			setZoomScale(zoomScale);
 		});
 	}, []);
@@ -104,6 +118,12 @@ export function App({ fn }: AppProps) {
 		);
 	}, [canvasPosition]);
 
+	const [nodeCollection, setNodeCollection] = useState([] as Element[]);
+
+	const CreateNode = () => {
+		setNodeCollection((prevCollection) => [...prevCollection, <Node canvasSize={canvasSize} />]);
+	};
+
 	return (
 		<frame
 			AnchorPoint={new Vector2(0.5, 0.5)}
@@ -112,7 +132,9 @@ export function App({ fn }: AppProps) {
 			BackgroundColor3={Color3.fromHex("#1B1B1B")}
 			Event={{
 				InputBegan: (_, inputObject: InputObject) => {
-					MakeNode(inputObject);
+					if (inputObject.KeyCode === Enum.KeyCode.Space) {
+						CreateNode();
+					}
 				},
 			}}
 			ref={canvasRef}
@@ -121,7 +143,8 @@ export function App({ fn }: AppProps) {
 				Position={UDim2.fromOffset(0, 0)}
 				Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
 				Rotation={180}
-				BackgroundTransparency={1}
+				BackgroundTransparency={0}
+				BackgroundColor3={Color3.fromRGB(0, 0, 255)}
 				Image={"rbxassetid://15952812715"} // alt: 15952811095
 				ImageTransparency={0.5}
 				ScaleType={"Tile"}
@@ -130,7 +153,8 @@ export function App({ fn }: AppProps) {
 			<imagelabel
 				Position={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
 				Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
-				BackgroundTransparency={1}
+				BackgroundTransparency={0}
+				BackgroundColor3={Color3.fromRGB(255, 0, 0)}
 				Image={"rbxassetid://15952812715"} // alt: 15952811095
 				ImageTransparency={0.5}
 				ScaleType={"Tile"}
@@ -147,7 +171,8 @@ export function App({ fn }: AppProps) {
 				}
 				Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
 				Rotation={270}
-				BackgroundTransparency={1}
+				BackgroundTransparency={0}
+				BackgroundColor3={Color3.fromRGB(0, 255, 0)}
 				Image={"rbxassetid://15952812715"} // alt: 15952811095
 				ImageTransparency={0.5}
 				ScaleType={"Tile"}
@@ -164,13 +189,15 @@ export function App({ fn }: AppProps) {
 				}
 				Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
 				Rotation={90}
-				BackgroundTransparency={1}
+				BackgroundTransparency={0}
+				BackgroundColor3={Color3.fromRGB(255, 255, 0)}
 				Image={"rbxassetid://15952812715"} // alt: 15952811095
 				ImageTransparency={0.5}
 				ScaleType={"Tile"}
 				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 			/>
-			{...PlacedNodes}
+			{...nodeCollection}
+			<TestComp abc={canvasSize} />
 			<frame
 				Size={UDim2.fromScale(1, 1)}
 				BackgroundTransparency={1}
