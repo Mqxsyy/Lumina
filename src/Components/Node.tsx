@@ -1,6 +1,6 @@
 import Roact, { useEffect, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
-import { GetCanvasFrame, ZoomScaleUpdateEvent } from "Events";
+import { CanvasSizeChanged, GetCanvasFrame, ZoomScaleUpdateEvent } from "Events";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetZoomScale } from "ZoomScale";
 
@@ -39,30 +39,37 @@ function MoveNode(setCenterOffset: (position: Vector2) => void) {
 	setCenterOffset(mousePosition.sub(center).add(mouseOffset).div(zoomScale));
 }
 
-interface NodeProps {
-	canvasSize: UDim2;
-}
-
-export function Node({ canvasSize }: NodeProps) {
+export function Node() {
 	const [position, setPosition] = useState(Vector2.zero);
 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale()); // need this, can't count on render update cuz node at (0; 0) acts weird idk
 
 	const [centerOffset, setCenterOffset] = useState(Vector2.zero);
 
+	const canvas = GetCanvasFrame.Invoke() as Frame;
+	const [canvasSize, setCanvasSize] = useState(canvas.AbsoluteSize);
+
 	useEffect(() => {
 		const mousePosition = GetMousePositionOnCanvas().add(new Vector2(100 * zoomScale, 75 * zoomScale));
 
-		const center = new Vector2(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5);
+		const center = new Vector2(canvasSize.X * 0.5, canvasSize.Y * 0.5);
 		setCenterOffset(mousePosition.sub(center).div(zoomScale));
 
 		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
 			setZoomScale(zoomScale);
 		});
+
+		CanvasSizeChanged.Event.Connect((size: Vector2) => {
+			setCanvasSize(size);
+		});
+
+		// canvas.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+		// 	setCanvasSize(canvas.AbsoluteSize);
+		// });
 	}, []);
 
 	useEffect(() => {
-		const center = new Vector2(canvasSize.X.Offset / 2, canvasSize.Y.Offset / 2);
+		const center = new Vector2(canvasSize.X / 2, canvasSize.Y / 2);
 		const position = center.add(centerOffset.mul(zoomScale));
 		setPosition(position);
 	}, [canvasSize, centerOffset, zoomScale]);
@@ -74,7 +81,6 @@ export function Node({ canvasSize }: NodeProps) {
 			Size={UDim2.fromOffset(200 * zoomScale, 150 * zoomScale)}
 			BackgroundColor3={Color3.fromHex("#FFFFFF")}
 			Active={true}
-			Text={tostring(canvasSize.X.Offset)}
 			AutoButtonColor={false}
 		>
 			<frame

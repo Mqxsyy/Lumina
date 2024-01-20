@@ -1,10 +1,9 @@
 import Roact, { Element, useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
-import { ZoomScaleUpdateEvent } from "Events";
+import { CanvasSizeChanged, ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHandler";
 import { GetLastZoomScale, GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 import { Node } from "./Node";
-import { TestComp } from "testcomp";
 
 // TODO: add widget size tracking
 // TODO: make zoom go to mouse
@@ -111,17 +110,18 @@ export function App({ fn }: AppProps) {
 	}, []);
 
 	useEffect(() => {
-		setCanvasSize(
-			UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
-				UDim2.fromOffset(math.abs(canvasPosition.X.Offset * 2), math.abs(canvasPosition.Y.Offset * 2)),
-			),
+		const size = UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
+			UDim2.fromOffset(math.abs(canvasPosition.X.Offset * 2), math.abs(canvasPosition.Y.Offset * 2)),
 		);
+
+		CanvasSizeChanged.Fire(new Vector2(size.X.Offset, size.Y.Offset));
+		setCanvasSize(size);
 	}, [canvasPosition]);
 
 	const [nodeCollection, setNodeCollection] = useState([] as Element[]);
 
 	const CreateNode = () => {
-		setNodeCollection((prevCollection) => [...prevCollection, <Node canvasSize={canvasSize} />]);
+		setNodeCollection((prevCollection) => [...prevCollection, <Node />]);
 	};
 
 	return (
@@ -197,7 +197,6 @@ export function App({ fn }: AppProps) {
 				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 			/>
 			{...nodeCollection}
-			<TestComp abc={canvasSize} />
 			<frame
 				Size={UDim2.fromScale(1, 1)}
 				BackgroundTransparency={1}
