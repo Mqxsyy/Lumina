@@ -1,9 +1,9 @@
-import Roact, { Element, useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
-import { CanvasSizeChanged, ZoomScaleUpdateEvent } from "Events";
+import { ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHandler";
-import { GetLastZoomScale, GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
-import { Node } from "./Node";
+import { GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
+import { BlankNode } from "Nodes/BlankNode";
 
 // TODO: add widget size tracking
 // TODO: make zoom go to mouse
@@ -114,14 +114,31 @@ export function App({ fn }: AppProps) {
 			UDim2.fromOffset(math.abs(canvasPosition.X.Offset * 2), math.abs(canvasPosition.Y.Offset * 2)),
 		);
 
-		CanvasSizeChanged.Fire(new Vector2(size.X.Offset, size.Y.Offset));
 		setCanvasSize(size);
 	}, [canvasPosition]);
 
-	const [nodeCollection, setNodeCollection] = useState([] as Element[]);
+	const [nodeCollection, setNodeCollection] = useState([] as NodeData[]);
 
-	const CreateNode = () => {
-		setNodeCollection((prevCollection) => [...prevCollection, <Node />]);
+	const CreateNode = (node: NodeElement) => {
+		setNodeCollection((prevCollection) => [
+			...prevCollection,
+			{
+				Node: node,
+				Params: {
+					Index: prevCollection.size() + 1,
+					AnchorPosition: GetMousePositionOnCanvas(),
+				},
+				Data: {},
+			},
+		]);
+	};
+
+	const UpdateNodeAnchorPosition = (index: number, mouseOffset: Vector2) => {
+		setNodeCollection((prevCollection) => {
+			const updatedCollcection = [...prevCollection];
+			updatedCollcection[index - 1].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
+			return updatedCollcection;
+		});
 	};
 
 	return (
@@ -133,7 +150,7 @@ export function App({ fn }: AppProps) {
 			Event={{
 				InputBegan: (_, inputObject: InputObject) => {
 					if (inputObject.KeyCode === Enum.KeyCode.Space) {
-						CreateNode();
+						CreateNode(BlankNode);
 					}
 				},
 			}}
@@ -196,7 +213,9 @@ export function App({ fn }: AppProps) {
 				ScaleType={"Tile"}
 				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 			/>
-			{...nodeCollection}
+			{nodeCollection.map((nodeData, _) => {
+				return nodeData.Node(canvasSize, UpdateNodeAnchorPosition, nodeData.Params, nodeData.Data);
+			})}
 			<frame
 				Size={UDim2.fromScale(1, 1)}
 				BackgroundTransparency={1}
