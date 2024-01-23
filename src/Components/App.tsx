@@ -135,9 +135,25 @@ export function App({ fn }: AppProps) {
 
 	const UpdateNodeAnchorPosition = (index: number, mouseOffset: Vector2) => {
 		setNodeCollection((prevCollection) => {
-			const updatedCollcection = [...prevCollection];
-			updatedCollcection[index - 1].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
-			return updatedCollcection;
+			const updatedCollection = [...prevCollection];
+
+			const node = updatedCollection.remove(index);
+
+			if (node !== undefined) {
+				node.Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
+				updatedCollection.push(node);
+			}
+
+			return updatedCollection;
+		});
+	};
+
+	const RemoveNode = (index: number) => {
+		setNodeCollection((prevCollection) => {
+			const updatedCollection = [...prevCollection];
+			updatedCollection.remove(index);
+
+			return updatedCollection;
 		});
 	};
 
@@ -214,7 +230,7 @@ export function App({ fn }: AppProps) {
 				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 			/>
 			{nodeCollection.map((nodeData, _) => {
-				return nodeData.Node(canvasSize, UpdateNodeAnchorPosition, nodeData.Params, nodeData.Data);
+				return nodeData.Node(canvasSize, UpdateNodeAnchorPosition, RemoveNode, nodeData.Params, nodeData.Data);
 			})}
 			<frame
 				Size={UDim2.fromScale(1, 1)}

@@ -8,24 +8,15 @@ let mouseOffset = Vector2.zero;
 
 function SelectNodeTitleBar(
 	element: Frame,
-	inputObject: InputObject,
-	updateAnchorPosition: (index: number, offset: Vector2) => void,
 	index: number,
+	updateAnchorPosition: (index: number, offset: Vector2) => void,
 ) {
-	if (inputObject.UserInputType !== Enum.UserInputType.MouseButton1) return;
-
 	const mousePosition = GetMousePosition();
 	mouseOffset = element.AbsolutePosition.sub(mousePosition);
 
-	// dumb? fix for element display order
-	// yes zindex exists but it won't leave it above other elements
-	const elementParent = element.Parent;
-	element.Parent = undefined;
-	element.Parent = elementParent;
-
-	RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () =>
-		MoveNode(updateAnchorPosition, index),
-	);
+	RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => {
+		updateAnchorPosition(index, mouseOffset);
+	});
 }
 
 function DeselectNodeTitleBar(inputObject: InputObject) {
@@ -33,23 +24,15 @@ function DeselectNodeTitleBar(inputObject: InputObject) {
 	RunService.UnbindFromRenderStep("MoveNode");
 }
 
-function MoveNode(updateAnchorPosition: (index: number, offset: Vector2) => void, index: number) {
-	updateAnchorPosition(index, mouseOffset);
-	// const zoomScale = GetZoomScale();
-	// const canvas = GetCanvasFrame.Invoke() as Frame;
-	// const mousePosition = GetMousePositionOnCanvas().add(new Vector2(100 * zoomScale, 75 * zoomScale));
-	// const center = new Vector2(canvas.AbsoluteSize.X * 0.5, canvas.AbsoluteSize.Y * 0.5);
-	// setCenterOffset(mousePosition.sub(center).add(mouseOffset).div(zoomScale));
-}
-
 interface NodeProps {
 	index: number;
 	canvasSize: UDim2;
 	anchorPosition: Vector2;
 	updateAnchorPosition: (index: number, offset: Vector2) => void;
+	removeNode: (index: number) => void;
 }
 
-export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition }: NodeProps) {
+export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition, removeNode }: NodeProps) {
 	const [position, setPosition] = useState(anchorPosition);
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 
@@ -87,12 +70,18 @@ export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition }
 			BackgroundColor3={Color3.fromHex("#FFFFFF")}
 			Active={true}
 			AutoButtonColor={false}
+			ZIndex={index}
 		>
 			<frame
 				Size={new UDim2(1, 0, 0.1, 0)}
 				Event={{
-					InputBegan: (element, inputObject) =>
-						SelectNodeTitleBar(element.Parent as Frame, inputObject, updateAnchorPosition, index),
+					InputBegan: (element, inputObject) => {
+						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
+							SelectNodeTitleBar(element.Parent as Frame, index, updateAnchorPosition);
+						} else if (inputObject.UserInputType === Enum.UserInputType.MouseButton2) {
+							removeNode(index);
+						}
+					},
 					InputEnded: (_, inputObject) => DeselectNodeTitleBar(inputObject),
 				}}
 			/>

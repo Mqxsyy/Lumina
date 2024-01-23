@@ -1,6 +1,7 @@
 type NodeElement = (
 	canvasSize: UDim2,
-	UpdateAnchorPosition: (index: number, offset: Vector2) => void,
+	updateAnchorPosition: (index: number, offset: Vector2) => void,
+	removeNode: (index: number) => void,
 	params: NodeParams,
 	data: {},
 ) => import("@rbxts/roact").Element;
