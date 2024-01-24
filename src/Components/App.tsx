@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { update, useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHandler";
@@ -124,8 +124,8 @@ export function App({ fn }: AppProps) {
 			...prevCollection,
 			{
 				Node: node,
+				Index: prevCollection.size(),
 				Params: {
-					Index: prevCollection.size() + 1,
 					AnchorPosition: GetMousePositionOnCanvas(),
 				},
 				Data: {},
@@ -137,9 +137,11 @@ export function App({ fn }: AppProps) {
 		setNodeCollection((prevCollection) => {
 			const updatedCollection = [...prevCollection];
 
-			const node = updatedCollection.remove(index);
+			if (index + 1 === updatedCollection.size()) {
+				updatedCollection[index].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
+			} else {
+				const node = updatedCollection.remove(index)!;
 
-			if (node !== undefined) {
 				node.Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
 				updatedCollection.push(node);
 			}
@@ -149,12 +151,11 @@ export function App({ fn }: AppProps) {
 	};
 
 	const RemoveNode = (index: number) => {
-		setNodeCollection((prevCollection) => {
-			const updatedCollection = [...prevCollection];
-			updatedCollection.remove(index);
-
-			return updatedCollection;
-		});
+		// setNodeCollection((prevCollection) => {
+		// 	const updatedCollection = [...prevCollection];
+		// 	updatedCollection.remove(index);
+		// 	return updatedCollection;
+		// });
 	};
 
 	return (
@@ -176,8 +177,7 @@ export function App({ fn }: AppProps) {
 				Position={UDim2.fromOffset(0, 0)}
 				Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
 				Rotation={180}
-				BackgroundTransparency={0}
-				BackgroundColor3={Color3.fromRGB(0, 0, 255)}
+				BackgroundTransparency={1}
 				Image={"rbxassetid://15952812715"} // alt: 15952811095
 				ImageTransparency={0.5}
 				ScaleType={"Tile"}
@@ -186,8 +186,7 @@ export function App({ fn }: AppProps) {
 			<imagelabel
 				Position={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
 				Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
-				BackgroundTransparency={0}
-				BackgroundColor3={Color3.fromRGB(255, 0, 0)}
+				BackgroundTransparency={1}
 				Image={"rbxassetid://15952812715"} // alt: 15952811095
 				ImageTransparency={0.5}
 				ScaleType={"Tile"}
@@ -204,8 +203,7 @@ export function App({ fn }: AppProps) {
 				}
 				Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
 				Rotation={270}
-				BackgroundTransparency={0}
-				BackgroundColor3={Color3.fromRGB(0, 255, 0)}
+				BackgroundTransparency={1}
 				Image={"rbxassetid://15952812715"} // alt: 15952811095
 				ImageTransparency={0.5}
 				ScaleType={"Tile"}
@@ -222,15 +220,21 @@ export function App({ fn }: AppProps) {
 				}
 				Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
 				Rotation={90}
-				BackgroundTransparency={0}
-				BackgroundColor3={Color3.fromRGB(255, 255, 0)}
+				BackgroundTransparency={1}
 				Image={"rbxassetid://15952812715"} // alt: 15952811095
 				ImageTransparency={0.5}
 				ScaleType={"Tile"}
 				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 			/>
-			{nodeCollection.map((nodeData, _) => {
-				return nodeData.Node(canvasSize, UpdateNodeAnchorPosition, RemoveNode, nodeData.Params, nodeData.Data);
+			{nodeCollection.map((nodeData, index) => {
+				return nodeData.Node(
+					index,
+					canvasSize,
+					UpdateNodeAnchorPosition,
+					RemoveNode,
+					nodeData.Params,
+					nodeData.Data,
+				);
 			})}
 			<frame
 				Size={UDim2.fromScale(1, 1)}

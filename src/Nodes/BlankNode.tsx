@@ -2,6 +2,7 @@ import Roact from "@rbxts/roact";
 import { Node } from "Components/Node";
 
 export const BlankNode: NodeElement = (
+	index: number,
 	canvasSize: UDim2,
 	updateAnchorPosition: (index: number, offset: Vector2) => void,
 	removeNode: (index: number) => void,
@@ -10,7 +11,7 @@ export const BlankNode: NodeElement = (
 ) => {
 	return (
 		<Node
-			index={params.Index}
+			index={index}
 			canvasSize={canvasSize}
 			anchorPosition={params.AnchorPosition}
 			updateAnchorPosition={updateAnchorPosition}

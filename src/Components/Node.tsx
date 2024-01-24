@@ -4,6 +4,10 @@ import { ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale } from "ZoomScale";
 
+// rewrite movement a bit
+// cause fuckin render order is being a pain
+// or rather react not wanting to update objects cause it thinks they no change
+
 let mouseOffset = Vector2.zero;
 
 function SelectNodeTitleBar(
@@ -39,6 +43,16 @@ export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition, 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale()); // need this, can't count on render update cuz node at (0; 0) acts weird idk
 
 	useEffect(() => {
+		const connection = RunService.RenderStepped.Connect(() => {
+			print(index);
+		});
+
+		return () => {
+			connection.Disconnect();
+		};
+	});
+
+	useEffect(() => {
 		const anchorPositionOffset = anchorPosition.add(new Vector2(100 * zoomScale, 75 * zoomScale));
 
 		const center = new Vector2(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5);
@@ -47,7 +61,7 @@ export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition, 
 		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
 			setZoomScale(zoomScale);
 		});
-	}, []);
+	});
 
 	useEffect(() => {
 		const anchorPositionOffset = anchorPosition.add(new Vector2(100 * zoomScale, 75 * zoomScale));
@@ -70,10 +84,11 @@ export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition, 
 			BackgroundColor3={Color3.fromHex("#FFFFFF")}
 			Active={true}
 			AutoButtonColor={false}
-			ZIndex={index}
+			ZIndex={index + 1}
 		>
 			<frame
 				Size={new UDim2(1, 0, 0.1, 0)}
+				ZIndex={index + 2}
 				Event={{
 					InputBegan: (element, inputObject) => {
 						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
