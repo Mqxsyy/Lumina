@@ -1,54 +1,54 @@
-import Roact, { useEffect, useState } from "@rbxts/roact";
+import Roact, { PureComponent, useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale } from "ZoomScale";
 
-// rewrite movement a bit
-// cause fuckin render order is being a pain
-// or rather react not wanting to update objects cause it thinks they no change
-
-let mouseOffset = Vector2.zero;
-
-function SelectNodeTitleBar(
-	element: Frame,
-	index: number,
-	updateAnchorPosition: (index: number, offset: Vector2) => void,
-) {
-	const mousePosition = GetMousePosition();
-	mouseOffset = element.AbsolutePosition.sub(mousePosition);
-
-	RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => {
-		updateAnchorPosition(index, mouseOffset);
-	});
-}
-
-function DeselectNodeTitleBar(inputObject: InputObject) {
-	if (inputObject.UserInputType !== Enum.UserInputType.MouseButton1) return;
-	RunService.UnbindFromRenderStep("MoveNode");
-}
-
 interface NodeProps {
 	index: number;
 	canvasSize: UDim2;
 	anchorPosition: Vector2;
+	updateNodeOrder: (index: number) => void;
 	updateAnchorPosition: (index: number, offset: Vector2) => void;
 	removeNode: (index: number) => void;
 }
 
-export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition, removeNode }: NodeProps) {
+export function Node({
+	index,
+	canvasSize,
+	anchorPosition,
+	updateNodeOrder,
+	updateAnchorPosition,
+	removeNode,
+}: NodeProps) {
 	const [position, setPosition] = useState(anchorPosition);
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale()); // need this, can't count on render update cuz node at (0; 0) acts weird idk
 
-	useEffect(() => {
-		const connection = RunService.RenderStepped.Connect(() => {
-			print(index);
+	const isDraggingRef = useRef(false);
+	const mouseOffsetRef = useRef(new Vector2(0, 0));
+
+	const getMouseOffset = (element: Frame) => {
+		const mousePosition = GetMousePosition();
+		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
+	};
+
+	const bindDrag = (i: number) => {
+		RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => {
+			updateAnchorPosition(i, mouseOffsetRef.current);
 		});
+	};
+
+	useEffect(() => {
+		print(isDraggingRef.current);
+
+		if (isDraggingRef.current) {
+			bindDrag(index);
+		}
 
 		return () => {
-			connection.Disconnect();
+			RunService.UnbindFromRenderStep("MoveNode");
 		};
 	});
 
@@ -61,7 +61,7 @@ export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition, 
 		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
 			setZoomScale(zoomScale);
 		});
-	});
+	}, []);
 
 	useEffect(() => {
 		const anchorPositionOffset = anchorPosition.add(new Vector2(100 * zoomScale, 75 * zoomScale));
@@ -92,12 +92,19 @@ export function Node({ index, canvasSize, anchorPosition, updateAnchorPosition, 
 				Event={{
 					InputBegan: (element, inputObject) => {
 						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
-							SelectNodeTitleBar(element.Parent as Frame, index, updateAnchorPosition);
+							getMouseOffset(element.Parent as Frame);
+							isDraggingRef.current = true;
+							updateNodeOrder(index);
 						} else if (inputObject.UserInputType === Enum.UserInputType.MouseButton2) {
 							removeNode(index);
 						}
 					},
-					InputEnded: (_, inputObject) => DeselectNodeTitleBar(inputObject),
+					InputEnded: (_, inputObject) => {
+						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
+							isDraggingRef.current = false;
+							RunService.UnbindFromRenderStep("MoveNode");
+						}
+					},
 				}}
 			/>
 		</textbutton>

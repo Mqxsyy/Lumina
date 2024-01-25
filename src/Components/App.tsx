@@ -123,8 +123,8 @@ export function App({ fn }: AppProps) {
 		setNodeCollection((prevCollection) => [
 			...prevCollection,
 			{
-				Node: node,
 				Index: prevCollection.size(),
+				Node: node,
 				Params: {
 					AnchorPosition: GetMousePositionOnCanvas(),
 				},
@@ -133,18 +133,28 @@ export function App({ fn }: AppProps) {
 		]);
 	};
 
+	const UpdateNodeOrder = (index: number) => {
+		setNodeCollection((prevCollection) => {
+			if (index === prevCollection.size() - 1) return prevCollection;
+
+			const updatedCollection = [...prevCollection];
+
+			const node = updatedCollection.remove(index)!;
+			updatedCollection.push(node);
+
+			updatedCollection.forEach((node, i) => {
+				node.Index = i;
+			});
+
+			return updatedCollection;
+		});
+	};
+
 	const UpdateNodeAnchorPosition = (index: number, mouseOffset: Vector2) => {
 		setNodeCollection((prevCollection) => {
 			const updatedCollection = [...prevCollection];
 
-			if (index + 1 === updatedCollection.size()) {
-				updatedCollection[index].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
-			} else {
-				const node = updatedCollection.remove(index)!;
-
-				node.Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
-				updatedCollection.push(node);
-			}
+			updatedCollection[index].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
 
 			return updatedCollection;
 		});
@@ -226,10 +236,11 @@ export function App({ fn }: AppProps) {
 				ScaleType={"Tile"}
 				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 			/>
-			{nodeCollection.map((nodeData, index) => {
+			{nodeCollection.map((nodeData) => {
 				return nodeData.Node(
-					index,
+					nodeData.Index,
 					canvasSize,
+					UpdateNodeOrder,
 					UpdateNodeAnchorPosition,
 					RemoveNode,
 					nodeData.Params,

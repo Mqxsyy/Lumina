@@ -1,6 +1,7 @@
 type NodeElement = (
 	index: number,
 	canvasSize: UDim2,
+	updateNodeOrder: (index: number) => void,
 	updateAnchorPosition: (index: number, offset: Vector2) => void,
 	removeNode: (index: number) => void,
 	params: NodeParams,
@@ -12,8 +13,8 @@ interface NodeParams {
 }
 
 interface NodeData {
-	Node: NodeElement;
 	Index: number;
+	Node: NodeElement;
 	Params: NodeParams;
 	Data: {};
 }
