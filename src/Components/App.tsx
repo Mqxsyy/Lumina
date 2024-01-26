@@ -1,9 +1,10 @@
-import Roact, { update, useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
-import { ZoomScaleUpdateEvent } from "Events";
+import { NodesChanged, ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHandler";
 import { GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 import { BlankNode } from "Nodes/BlankNode";
+import { CreateNode, GetNodeCollection } from "Nodes/NodesHandler";
 
 // TODO: add widget size tracking
 // TODO: make zoom go to mouse
@@ -70,8 +71,15 @@ export function App({ fn }: AppProps) {
 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
+	const [nodesChanged, setNodesChanged] = useState(false);
+
 	useEffect(() => {
 		fn(canvasRef.current as Frame);
+
+		print("BIND CHANGED");
+		NodesChanged.Event.Connect(() => {
+			setNodesChanged((prevValue) => !prevValue);
+		});
 
 		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
 			// const mousePosition = GetMousePositionOnCanvas();
@@ -117,56 +125,46 @@ export function App({ fn }: AppProps) {
 		setCanvasSize(size);
 	}, [canvasPosition]);
 
-	const [nodeCollection, setNodeCollection] = useState([] as NodeData[]);
+	// const CreateNode = (node: NodeElement) => {
+	// 	setNodeCollection((prevCollection) => [
+	// 		...prevCollection,
+	// 		{
+	// 			Id: idCounterRef.current++,
+	// 			Text: tostring(prevCollection.size()),
+	// 			Node: node,
+	// 			Params: {
+	// 				ZIndex: prevCollection.size(),
+	// 				AnchorPosition: GetMousePositionOnCanvas(),
+	// 			},
+	// 			Data: {},
+	// 		},
+	// 	]);
+	// };
 
-	const CreateNode = (node: NodeElement) => {
-		setNodeCollection((prevCollection) => [
-			...prevCollection,
-			{
-				Index: prevCollection.size(),
-				Node: node,
-				Params: {
-					AnchorPosition: GetMousePositionOnCanvas(),
-				},
-				Data: {},
-			},
-		]);
-	};
+	// const UpdateNodeOrder = (index: number) => {
+	// 	setNodeCollection((prevCollection) => {
+	// 		const updatedCollection = [...prevCollection];
+	// 		if (index === updatedCollection.size() - 1) return updatedCollection;
+	// 		const node = updatedCollection.remove(index)!;
+	// 		updatedCollection.push(node);
 
-	const UpdateNodeOrder = (index: number) => {
-		setNodeCollection((prevCollection) => {
-			if (index === prevCollection.size() - 1) return prevCollection;
+	// 		updatedCollection.forEach((node, i) => {
+	// 			node.Params.ZIndex = i;
+	// 		});
 
-			const updatedCollection = [...prevCollection];
+	// 		return updatedCollection;
+	// 	});
+	// };
 
-			const node = updatedCollection.remove(index)!;
-			updatedCollection.push(node);
+	// const UpdateNodeAnchorPosition = (index: number, mouseOffset: Vector2) => {
+	// 	setNodeCollection((prevCollection) => {
+	// 		const updatedCollection = [...prevCollection];
 
-			updatedCollection.forEach((node, i) => {
-				node.Index = i;
-			});
+	// 		updatedCollection[index].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
 
-			return updatedCollection;
-		});
-	};
-
-	const UpdateNodeAnchorPosition = (index: number, mouseOffset: Vector2) => {
-		setNodeCollection((prevCollection) => {
-			const updatedCollection = [...prevCollection];
-
-			updatedCollection[index].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
-
-			return updatedCollection;
-		});
-	};
-
-	const RemoveNode = (index: number) => {
-		// setNodeCollection((prevCollection) => {
-		// 	const updatedCollection = [...prevCollection];
-		// 	updatedCollection.remove(index);
-		// 	return updatedCollection;
-		// });
-	};
+	// 		return updatedCollection;
+	// 	});
+	// };
 
 	return (
 		<frame
@@ -177,7 +175,7 @@ export function App({ fn }: AppProps) {
 			Event={{
 				InputBegan: (_, inputObject: InputObject) => {
 					if (inputObject.KeyCode === Enum.KeyCode.Space) {
-						CreateNode(BlankNode);
+						CreateNode(BlankNode, GetMousePositionOnCanvas());
 					}
 				},
 			}}
@@ -236,16 +234,9 @@ export function App({ fn }: AppProps) {
 				ScaleType={"Tile"}
 				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 			/>
-			{nodeCollection.map((nodeData) => {
-				return nodeData.Node(
-					nodeData.Index,
-					canvasSize,
-					UpdateNodeOrder,
-					UpdateNodeAnchorPosition,
-					RemoveNode,
-					nodeData.Params,
-					nodeData.Data,
-				);
+			{GetNodeCollection().map((node) => {
+				print(node.Id);
+				return node.Node(node.Id, canvasSize);
 			})}
 			<frame
 				Size={UDim2.fromScale(1, 1)}

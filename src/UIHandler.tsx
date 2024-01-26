@@ -1,6 +1,7 @@
 import Roact from "@rbxts/roact";
 import { App } from "Components/App";
 import { GetCanvasFrame } from "Events";
+import { GetWidget } from "WidgetHandler";
 
 let canvas = undefined as Roact.Tree | undefined;
 let canvasFrame = undefined as Frame | undefined;
@@ -13,6 +14,7 @@ GetCanvasFrame.OnInvoke = () => {
 	return canvasFrame;
 };
 
-export function InitUI(widget: DockWidgetPluginGui) {
+export function InitUI() {
+	const widget = GetWidget();
 	canvas = Roact.mount(<App fn={SetCanvasFrame} />, widget, "Graph");
 }

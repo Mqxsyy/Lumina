@@ -15,4 +15,4 @@ button.Click.Connect(() => {
 	widget.Enabled = !widget.Enabled;
 });
 
-InitUI(widget);
+InitUI();
