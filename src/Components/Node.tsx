@@ -53,10 +53,6 @@ export function Node({ id, canvasSize }: NodeProps) {
 	// });
 
 	useEffect(() => {
-		print("ID CHANGED");
-	}, [id]);
-
-	useEffect(() => {
 		const anchorPositionOffset = nodeParams.AnchorPosition.add(new Vector2(100 * zoomScale, 75 * zoomScale));
 
 		const center = new Vector2(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5);

@@ -76,7 +76,7 @@ export function App({ fn }: AppProps) {
 	useEffect(() => {
 		fn(canvasRef.current as Frame);
 
-		print("BIND CHANGED");
+		// force re-render
 		NodesChanged.Event.Connect(() => {
 			setNodesChanged((prevValue) => !prevValue);
 		});
