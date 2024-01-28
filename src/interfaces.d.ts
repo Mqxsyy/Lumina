@@ -1,8 +1,8 @@
-type NodeElement = (id: number, canvasSize: UDim2) => import("@rbxts/roact").Element;
+type NodeElement = (id: number, canvasSize: UDim2, params: NodeParams) => import("@rbxts/roact").Element;
 
 interface NodeParams {
-	ZIndex: number;
 	AnchorPosition: Vector2;
+	ZIndex: number;
 }
 
 interface NodeData {

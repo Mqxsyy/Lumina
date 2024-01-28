@@ -1,67 +1,59 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
-import { DeleteNode, GetNode } from "Nodes/NodesHandler";
+import { DeleteNode, UpdateNodePosition } from "Nodes/NodesHandler";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale } from "ZoomScale";
-
-// idk i can't get the index to be actually dynamic with elements reordering properly
-// it won't update because object at index 0 goes back to index 0 so it doesn't updates the index of it
-
-// add an ID to the node and use that to reference nodes but keep index for rendering order purposes
-// ref gpt
-// hook everything inside data object and keep track of ids idk
-
-// store data outside of app and use forced updates to render
 
 interface NodeProps {
 	id: number;
 	canvasSize: UDim2;
+	nodeParams: NodeParams;
+	data?: {};
 }
 
-export function Node({ id, canvasSize }: NodeProps) {
-	const node = GetNode(id);
-	const nodeParams = node.Params;
-
+export function Node({ id, canvasSize, nodeParams }: NodeProps) {
 	const [position, setPosition] = useState(nodeParams.AnchorPosition);
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale()); // need this, can't count on render update cuz node at (0; 0) acts weird idk
 
-	// const [isDragging, setIsDragging] = useState(false);
-	// const mouseOffsetRef = useRef(new Vector2(0, 0));
+	const [isDragging, setIsDragging] = useState(false);
+	const mouseOffsetRef = useRef(new Vector2(0, 0));
 
-	// const getMouseOffset = (element: Frame) => {
-	// 	const mousePosition = GetMousePosition();
-	// 	mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
-	// };
+	const getMouseOffset = (element: Frame) => {
+		const mousePosition = GetMousePosition();
+		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
+	};
 
-	// const bindDrag = (i: number) => {
-	// 	RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => {
-	// 		updateAnchorPosition(i, mouseOffsetRef.current);
-	// 	});
-	// };
+	const bindDrag = () => {
+		RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => {
+			UpdateNodePosition(id, mouseOffsetRef.current);
+		});
+	};
 
-	// useEffect(() => {
-	// 	if (isDragging) {
-	// 		bindDrag(index);
-	// 	}
+	useEffect(() => {
+		if (isDragging) {
+			bindDrag();
+		}
 
-	// 	return () => {
-	// 		RunService.UnbindFromRenderStep("MoveNode");
-	// 	};
-	// });
+		return () => {
+			RunService.UnbindFromRenderStep("MoveNode");
+		};
+	});
+
+	useEffect(() => {
+		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
+			setZoomScale(zoomScale);
+		});
+	}, []);
 
 	useEffect(() => {
 		const anchorPositionOffset = nodeParams.AnchorPosition.add(new Vector2(100 * zoomScale, 75 * zoomScale));
 
 		const center = new Vector2(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5);
 		setOffsetFromCenter(anchorPositionOffset.sub(center).div(zoomScale));
-
-		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
-			setZoomScale(zoomScale);
-		});
-	}, []);
+	}, [nodeParams.AnchorPosition]);
 
 	useEffect(() => {
 		const center = new Vector2(canvasSize.X.Offset / 2, canvasSize.Y.Offset / 2);
@@ -77,26 +69,25 @@ export function Node({ id, canvasSize }: NodeProps) {
 			BackgroundColor3={Color3.fromHex("#FFFFFF")}
 			Active={true}
 			AutoButtonColor={false}
-			ZIndex={nodeParams.ZIndex + 1}
-			Text={`${id} (${nodeParams.ZIndex})`}
+			Text={`${id}`}
+			ZIndex={nodeParams.ZIndex}
 		>
 			<frame
 				Size={new UDim2(1, 0, 0.1, 0)}
-				ZIndex={nodeParams.ZIndex + 2}
+				ZIndex={nodeParams.ZIndex + 1}
 				Event={{
 					InputBegan: (element, inputObject) => {
 						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
-							// getMouseOffset(element.Parent as Frame);
-							// updateNodeOrder(index);
-							// setIsDragging(true);
+							getMouseOffset(element.Parent as Frame);
+							setIsDragging(true);
 						} else if (inputObject.UserInputType === Enum.UserInputType.MouseButton2) {
 							DeleteNode(id);
 						}
 					},
 					InputEnded: (_, inputObject) => {
 						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
-							// setIsDragging(false);
-							// RunService.UnbindFromRenderStep("MoveNode");
+							setIsDragging(false);
+							RunService.UnbindFromRenderStep("MoveNode");
 						}
 					},
 				}}

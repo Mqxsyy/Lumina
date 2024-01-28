@@ -1,10 +1,15 @@
 import { NodesChanged } from "Events";
+import { GetMousePositionOnCanvas } from "WidgetHandler";
+
+const NODE_Z_OFFSET = 5;
+const NODE_Z_INCREMENTS = 2;
 
 const Nodes: NodeData[] = [];
 
 let currentId = 1;
 
 export function GetNodeCollection() {
+	print(Nodes);
 	return Nodes;
 }
 
@@ -17,8 +22,8 @@ export function CreateNode(node: NodeElement, pos: Vector2) {
 		Id: currentId++,
 		Node: node,
 		Params: {
-			ZIndex: Nodes.size(),
 			AnchorPosition: pos,
+			ZIndex: Nodes.size() * NODE_Z_INCREMENTS + NODE_Z_OFFSET - 1,
 		},
 		Data: {},
 	});
@@ -26,15 +31,33 @@ export function CreateNode(node: NodeElement, pos: Vector2) {
 	NodesChanged.Fire();
 }
 
+// sometimes node doesn't fully deleted but dupes and creates a permaa ghost node or smthin
+// not sure of the cause
 export function DeleteNode(id: number) {
-	// NOTE: React is goofy af with arrays
-	// therefore after multiple days of trying i just can not be bothered to find a dynamic soluiton anymore
-	// especially since this is first and foremost a proof of concept and does not need to be perfect
-
 	const nodeIndex = Nodes.findIndex((node) => node.Id === id);
-	delete Nodes[nodeIndex];
+	Nodes.remove(nodeIndex);
 
 	NodesChanged.Fire();
 }
 
-export function UpdateNode(id: number, updateFunction: (node: NodeElement) => NodeElement) {}
+// f this, wasted literal DAYS just to realize you need to use KEY attribute for arrays to work properly
+export function UpdateNodePosition(id: number, mouseOffset: Vector2) {
+	const nodeIndex = Nodes.findIndex((node) => node.Id === id);
+
+	Nodes[nodeIndex].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
+
+	if (nodeIndex !== Nodes.size() - 1) {
+		UpdateNodeRenderOrder(nodeIndex);
+	}
+
+	NodesChanged.Fire();
+}
+
+export function UpdateNodeRenderOrder(nodeIndex: number) {
+	const node = Nodes.remove(nodeIndex) as NodeData;
+	Nodes.push(node);
+
+	Nodes.forEach((node, index) => {
+		node.Params.ZIndex = index * NODE_Z_INCREMENTS + NODE_Z_OFFSET - 1;
+	});
+}
