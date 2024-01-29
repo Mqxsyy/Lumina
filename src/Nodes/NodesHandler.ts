@@ -9,7 +9,6 @@ const Nodes: NodeData[] = [];
 let currentId = 1;
 
 export function GetNodeCollection() {
-	print(Nodes);
 	return Nodes;
 }
 

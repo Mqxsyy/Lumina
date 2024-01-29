@@ -3,8 +3,7 @@ import { RunService } from "@rbxts/services";
 import { NodesChanged, ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHandler";
 import { GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
-import { BlankNode } from "Nodes/BlankNode";
-import { CreateNode, GetNodeCollection } from "Nodes/NodesHandler";
+import { GetNodeCollection } from "Nodes/NodesHandler";
 import { NodeSelection } from "./NodeSelection";
 
 // TODO: add widget size tracking
@@ -27,6 +26,7 @@ export function App({ fn }: AppProps) {
 	const isDraggingRef = useRef(false);
 	const [_, setNodesChanged] = useState(false);
 
+	const [nodeSelectionPosition, setNodeSelectionPosition] = useState(new Vector2(0, 0));
 	const [displayNodeSelection, setDisplayNodeSelection] = useState(false);
 
 	const StartMoveCanvas = (frame: Frame) => {
@@ -130,8 +130,12 @@ export function App({ fn }: AppProps) {
 			Event={{
 				InputBegan: (_, inputObject: InputObject) => {
 					if (inputObject.KeyCode === Enum.KeyCode.Space) {
+						setNodeSelectionPosition(GetMousePositionOnCanvas());
 						setDisplayNodeSelection(true);
-					} else if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
+					} else if (
+						inputObject.UserInputType === Enum.UserInputType.MouseButton1 ||
+						inputObject.UserInputType === Enum.UserInputType.MouseButton3
+					) {
 						setDisplayNodeSelection(false);
 					}
 				},
@@ -216,7 +220,9 @@ export function App({ fn }: AppProps) {
 					},
 				}}
 			/>
-			{displayNodeSelection && <NodeSelection />}
+			{displayNodeSelection && (
+				<NodeSelection position={nodeSelectionPosition} closeSelection={() => setDisplayNodeSelection(false)} />
+			)}
 		</frame>
 	);
 }
