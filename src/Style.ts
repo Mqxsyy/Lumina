@@ -1,9 +1,9 @@
 export const StyleColorHexes = {
-	Text: "#000000",
-	Background: "#FFFFFF",
-	Primary: "#1E90FF",
-	Secondary: "#FFD700",
-	Accent: "#FF0000",
+	// Text: "#F3F4F8",
+	// Background: "#101223",
+	// Primary: "#1E90FF",
+	// Secondary: "#FFD700",
+	// Accent: "#FF0000",
 
 	hex100: "#F3F4F8",
 	hex200: "#D2D4DA",
@@ -17,11 +17,11 @@ export const StyleColorHexes = {
 };
 
 export const StyleColors = {
-	Text: Color3.fromHex(StyleColorHexes.Text),
-	Background: Color3.fromHex(StyleColorHexes.Background),
-	Primary: Color3.fromHex(StyleColorHexes.Primary),
-	Secondary: Color3.fromHex(StyleColorHexes.Secondary),
-	Accent: Color3.fromHex(StyleColorHexes.Accent),
+	// Text: Color3.fromHex(StyleColorHexes.Text),
+	// Background: Color3.fromHex(StyleColorHexes.Background),
+	// Primary: Color3.fromHex(StyleColorHexes.Primary),
+	// Secondary: Color3.fromHex(StyleColorHexes.Secondary),
+	// Accent: Color3.fromHex(StyleColorHexes.Accent),
 
 	hex100: Color3.fromHex(StyleColorHexes.hex100),
 	hex200: Color3.fromHex(StyleColorHexes.hex200),
@@ -35,5 +35,7 @@ export const StyleColors = {
 };
 
 export const StyleProperties = {
+	FontId: "rbxasset://fonts/families/Nunito.json",
+	FontSize: 16,
 	CornerRadius: new UDim(0, 5),
 };

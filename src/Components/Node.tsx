@@ -2,6 +2,7 @@ import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { ZoomScaleUpdateEvent } from "Events";
 import { DeleteNode, UpdateNodePosition } from "Nodes/NodesHandler";
+import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale } from "ZoomScale";
 
@@ -66,15 +67,30 @@ export function Node({ id, canvasData, nodeParams }: NodeProps) {
 			AnchorPoint={new Vector2(0.5, 0.5)}
 			Position={UDim2.fromOffset(position.X, position.Y)}
 			Size={UDim2.fromOffset(200 * zoomScale, 150 * zoomScale)}
-			BackgroundColor3={Color3.fromHex("#FFFFFF")}
+			BackgroundColor3={StyleColors.hex800}
 			Active={true}
 			AutoButtonColor={false}
 			Text={`${id}`}
 			ZIndex={nodeParams.ZIndex}
 		>
-			<frame
-				Size={new UDim2(1, 0, 0.1, 0)}
+			<uilistlayout Padding={new UDim(0, 5)} HorizontalAlignment={"Center"} />
+			<uicorner CornerRadius={StyleProperties.CornerRadius} />
+			<uipadding
+				PaddingTop={new UDim(0.01, 2)}
+				PaddingRight={new UDim(0.01, 2)}
+				PaddingBottom={new UDim(0.01, 2)}
+				PaddingLeft={new UDim(0.01, 2)}
+			/>
+
+			<textlabel
+				Size={new UDim2(1, 0, 0.15, 0)}
+				BackgroundTransparency={0}
+				BackgroundColor3={StyleColors.hex700}
 				ZIndex={nodeParams.ZIndex + 1}
+				FontFace={new Font(StyleProperties.FontId, Enum.FontWeight.Bold)}
+				TextColor3={StyleColors.hex100}
+				Text={"Blank node"}
+				TextScaled={true}
 				Event={{
 					InputBegan: (element, inputObject) => {
 						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
@@ -92,7 +108,10 @@ export function Node({ id, canvasData, nodeParams }: NodeProps) {
 						}
 					},
 				}}
-			/>
+			>
+				<uicorner CornerRadius={StyleProperties.CornerRadius} />
+			</textlabel>
+			<frame Size={new UDim2(1, 0, 0, 2)} BackgroundTransparency={0} BackgroundColor3={StyleColors.hex600} />
 		</textbutton>
 	);
 }

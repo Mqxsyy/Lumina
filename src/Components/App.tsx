@@ -5,6 +5,7 @@ import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHan
 import { GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 import { GetNodeCollection } from "Nodes/NodesHandler";
 import { NodeSelection } from "./NodeSelection";
+import { StyleColorHexes, StyleColors } from "Style";
 
 // TODO: add widget size tracking
 // TODO: make zoom go to mouse
@@ -126,7 +127,7 @@ export function App({ fn }: AppProps) {
 			AnchorPoint={new Vector2(0.5, 0.5)}
 			Position={UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5).add(canvasPosition)}
 			Size={canvasSize}
-			BackgroundColor3={Color3.fromHex("#1B1B1B")}
+			BackgroundColor3={StyleColors.hex900}
 			Event={{
 				InputBegan: (_, inputObject: InputObject) => {
 					if (inputObject.KeyCode === Enum.KeyCode.Space) {
