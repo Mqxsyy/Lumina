@@ -32,7 +32,7 @@ export function CreateNode(node: NodeElement, pos: Vector2) {
 }
 
 // sometimes node doesn't fully deleted but dupes and creates a permaa ghost node or smthin
-// not sure of the cause
+// genuinely not sure of the cause
 export function DeleteNode(id: number) {
 	const nodeIndex = Nodes.findIndex((node) => node.Id === id);
 	Nodes.remove(nodeIndex);

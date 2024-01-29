@@ -5,57 +5,10 @@ import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHan
 import { GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 import { BlankNode } from "Nodes/BlankNode";
 import { CreateNode, GetNodeCollection } from "Nodes/NodesHandler";
+import { NodeSelection } from "./NodeSelection";
 
 // TODO: add widget size tracking
 // TODO: make zoom go to mouse
-
-let mouseOffset = UDim2.fromOffset(0, 0);
-function StartMoveCanvas(frame: Frame, inputObject: InputObject, setCanvasPosition: (position: UDim2) => void) {
-	if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
-
-	const mousePositionVec2 = GetMousePosition();
-	const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
-
-	const widgetSize = GetWidget().AbsoluteSize.mul(0.5);
-
-	mouseOffset = mousePosition.sub(frame.Position).add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
-
-	RunService.BindToRenderStep("MoveCanvas", Enum.RenderPriority.Input.Value, () => MoveCanvas(setCanvasPosition));
-}
-
-function EndMoveCanvas(inputObject: InputObject) {
-	if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
-	RunService.UnbindFromRenderStep("MoveCanvas");
-}
-
-function MoveCanvas(setCanvasPosition: (position: UDim2) => void) {
-	const mousePositionVec2 = GetMousePosition();
-	const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
-
-	const newPosition = mousePosition.sub(mouseOffset);
-
-	setCanvasPosition(newPosition);
-}
-
-function UpdateZoom(inputObject: InputObject) {
-	if (inputObject.UserInputType === Enum.UserInputType.MouseWheel) {
-		if (inputObject.Position.Z > 0) {
-			const newZoomScale = GetZoomScale() + 0.1;
-			if (newZoomScale > ZoomScaleConstraint.max) {
-				SetZoomScale(ZoomScaleConstraint.max);
-			} else {
-				SetZoomScale(newZoomScale);
-			}
-		} else if (inputObject.Position.Z < 0) {
-			const newZoomScale = GetZoomScale() - 0.1;
-			if (newZoomScale < ZoomScaleConstraint.min) {
-				SetZoomScale(ZoomScaleConstraint.min);
-			} else {
-				SetZoomScale(newZoomScale);
-			}
-		}
-	}
-}
 
 interface AppProps {
 	fn: (frame: Frame) => void;
@@ -71,20 +24,64 @@ export function App({ fn }: AppProps) {
 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
-	const [nodesChanged, setNodesChanged] = useState(false);
+	const isDraggingRef = useRef(false);
+	const [_, setNodesChanged] = useState(false);
+
+	const [displayNodeSelection, setDisplayNodeSelection] = useState(false);
+
+	const StartMoveCanvas = (frame: Frame) => {
+		const mousePositionVec2 = GetMousePosition();
+		const widgetSize = GetWidget().AbsoluteSize.mul(0.5);
+
+		const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
+		const mouseOffset = mousePosition.sub(frame.Position).add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
+
+		RunService.BindToRenderStep("MoveCanvas", Enum.RenderPriority.Input.Value, () => MoveCanvas(mouseOffset));
+	};
+
+	const EndMoveCanvas = () => {
+		RunService.UnbindFromRenderStep("MoveCanvas");
+	};
+
+	const MoveCanvas = (mouseOffset: UDim2) => {
+		const mousePositionVec2 = GetMousePosition();
+		const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
+
+		const newPosition = mousePosition.sub(mouseOffset);
+		setCanvasPosition(newPosition);
+	};
+
+	const UpdateZoom = (inputObject: InputObject) => {
+		if (inputObject.Position.Z > 0) {
+			const newZoomScale = GetZoomScale() + 0.1;
+			if (newZoomScale > ZoomScaleConstraint.max) {
+				SetZoomScale(ZoomScaleConstraint.max);
+			} else {
+				SetZoomScale(newZoomScale);
+			}
+		} else if (inputObject.Position.Z < 0) {
+			const newZoomScale = GetZoomScale() - 0.1;
+			if (newZoomScale < ZoomScaleConstraint.min) {
+				SetZoomScale(ZoomScaleConstraint.min);
+			} else {
+				SetZoomScale(newZoomScale);
+			}
+		}
+	};
 
 	useEffect(() => {
 		fn(canvasRef.current as Frame);
 
-		// force re-render
+		// force re-render when nodes change
 		NodesChanged.Event.Connect(() => {
 			setNodesChanged((prevValue) => !prevValue);
 		});
 
 		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
-			// const mousePosition = GetMousePositionOnCanvas();
 			// const delta = -(1 - zoomScale / GetLastZoomScale());
 
+			/*
+			// const mousePosition = GetMousePositionOnCanvas();
 			// const canvasOffset = mousePosition.mul(delta);
 
 			// const currentPos = canvasRef.current!.Position;
@@ -92,8 +89,9 @@ export function App({ fn }: AppProps) {
 			// 	currentPos.X.Offset - canvasOffset.X,
 			// 	currentPos.Y.Offset - canvasOffset.Y,
 			// );
-
-			// setCanvasPosition(newPosition);
+            
+            // setCanvasPosition(newPosition);
+            */
 
 			// const mousePositionVec2 = GetMousePosition().mul(delta);
 			// const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
@@ -109,8 +107,6 @@ export function App({ fn }: AppProps) {
 			// 	currentPos.X.Offset - mouseOffset.X.Offset,
 			// 	currentPos.Y.Offset - mouseOffset.Y.Offset,
 			// );
-
-			// print(mousePosition);
 
 			// setCanvasPosition(mousePosition);
 			setZoomScale(zoomScale);
@@ -134,7 +130,9 @@ export function App({ fn }: AppProps) {
 			Event={{
 				InputBegan: (_, inputObject: InputObject) => {
 					if (inputObject.KeyCode === Enum.KeyCode.Space) {
-						CreateNode(BlankNode, GetMousePositionOnCanvas());
+						setDisplayNodeSelection(true);
+					} else if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
+						setDisplayNodeSelection(false);
 					}
 				},
 			}}
@@ -194,18 +192,31 @@ export function App({ fn }: AppProps) {
 				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 			/>
 			{GetNodeCollection().map((node) => {
-				return node.Node(node.Id, canvasSize, node.Params);
+				const canvasData: CanvasData = {
+					size: canvasSize,
+					isMoving: isDraggingRef.current,
+				};
+				return node.Node(node.Id, canvasData, node.Params);
 			})}
 			<frame
 				Size={UDim2.fromScale(1, 1)}
 				BackgroundTransparency={1}
 				Event={{
-					InputBegan: (element, inputObject: InputObject) =>
-						StartMoveCanvas(element.Parent as Frame, inputObject, setCanvasPosition),
-					InputEnded: (_, inputObject: InputObject) => EndMoveCanvas(inputObject),
-					InputChanged: (_, inputObject: InputObject) => UpdateZoom(inputObject),
+					InputBegan: (element, inputObject: InputObject) => {
+						if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
+						StartMoveCanvas(element.Parent as Frame);
+					},
+					InputEnded: (_, inputObject: InputObject) => {
+						if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
+						EndMoveCanvas();
+					},
+					InputChanged: (_, inputObject: InputObject) => {
+						if (inputObject.UserInputType !== Enum.UserInputType.MouseWheel) return;
+						UpdateZoom(inputObject);
+					},
 				}}
 			/>
+			{displayNodeSelection && <NodeSelection />}
 		</frame>
 	);
 }

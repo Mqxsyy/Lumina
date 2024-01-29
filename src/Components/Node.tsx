@@ -7,12 +7,12 @@ import { GetZoomScale } from "ZoomScale";
 
 interface NodeProps {
 	id: number;
-	canvasSize: UDim2;
+	canvasData: CanvasData;
 	nodeParams: NodeParams;
 	data?: {};
 }
 
-export function Node({ id, canvasSize, nodeParams }: NodeProps) {
+export function Node({ id, canvasData, nodeParams }: NodeProps) {
 	const [position, setPosition] = useState(nodeParams.AnchorPosition);
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 
@@ -51,15 +51,15 @@ export function Node({ id, canvasSize, nodeParams }: NodeProps) {
 	useEffect(() => {
 		const anchorPositionOffset = nodeParams.AnchorPosition.add(new Vector2(100 * zoomScale, 75 * zoomScale));
 
-		const center = new Vector2(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5);
+		const center = new Vector2(canvasData.size.X.Offset * 0.5, canvasData.size.Y.Offset * 0.5);
 		setOffsetFromCenter(anchorPositionOffset.sub(center).div(zoomScale));
 	}, [nodeParams.AnchorPosition]);
 
 	useEffect(() => {
-		const center = new Vector2(canvasSize.X.Offset / 2, canvasSize.Y.Offset / 2);
+		const center = new Vector2(canvasData.size.X.Offset / 2, canvasData.size.Y.Offset / 2);
 		const position = center.add(offsetFromCenter.mul(zoomScale));
 		setPosition(position);
-	}, [canvasSize, offsetFromCenter, zoomScale]);
+	}, [canvasData.size, offsetFromCenter, zoomScale]);
 
 	return (
 		<textbutton
@@ -81,6 +81,7 @@ export function Node({ id, canvasSize, nodeParams }: NodeProps) {
 							getMouseOffset(element.Parent as Frame);
 							setIsDragging(true);
 						} else if (inputObject.UserInputType === Enum.UserInputType.MouseButton2) {
+							if (canvasData.isMoving) return;
 							DeleteNode(id);
 						}
 					},
