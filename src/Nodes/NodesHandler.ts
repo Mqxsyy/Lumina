@@ -1,8 +1,8 @@
 import { NodesChanged } from "Events";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 
-const NODE_Z_OFFSET = 5;
-const NODE_Z_INCREMENTS = 2;
+export const NODE_Z_OFFSET = 5;
+export const NODE_Z_INCREMENTS = 2;
 
 const Nodes: NodeData[] = [];
 

@@ -1,33 +1,35 @@
 import Roact from "@rbxts/roact";
-import { BlankNode } from "Nodes/BlankNode";
-import { CreateNode } from "Nodes/NodesHandler";
 import { StyleColors, StyleProperties } from "Style";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { NodeSelectionCategoryButton } from "./NodeSelectionCategoryButton";
+import { NodeCategories } from "Nodes/NodeList";
 
-// TODO: add categories
-// TODO: add search
+// IMPROVE: add search
+// IMPROVE: instead of having a static 1 000 000 for zindex make it dynamic
+// IMPROVE: make cateogories not open off widget
 
 interface Props {
+	canvasPosition: UDim2;
 	position: Vector2;
+	zIndex: number;
 	closeSelection: () => void;
 }
 
-export function NodeSelection({ position, closeSelection }: Props) {
+export function NodeSelection({ zIndex, position, closeSelection }: Props) {
 	return (
 		<frame
-			Size={UDim2.fromOffset(150, 0)}
-			AutomaticSize={Enum.AutomaticSize.Y}
+			Size={UDim2.fromOffset(150, 35 + 1 * (5 + 20))}
 			Position={UDim2.fromOffset(position.X, position.Y)}
 			BackgroundTransparency={0}
 			BackgroundColor3={StyleColors.hex800}
+			ZIndex={zIndex}
 		>
 			<uipadding
-				PaddingTop={new UDim(0, 3)}
-				PaddingRight={new UDim(0, 2)}
+				PaddingTop={new UDim(0, 4)}
+				PaddingRight={new UDim(0, 4)}
 				PaddingBottom={new UDim(0, 4)}
-				PaddingLeft={new UDim(0, 3)}
+				PaddingLeft={new UDim(0, 4)}
 			/>
-			<uicorner CornerRadius={new UDim(0, 5)} />
+			<uicorner CornerRadius={StyleProperties.CornerRadius} />
 			<uilistlayout Padding={new UDim(0, 5)} HorizontalAlignment={"Center"} />
 
 			<textlabel
@@ -38,30 +40,31 @@ export function NodeSelection({ position, closeSelection }: Props) {
 				FontFace={new Font(StyleProperties.FontId, Enum.FontWeight.Bold)}
 				TextSize={StyleProperties.FontSize}
 				Text={"Node Selection"}
+				ZIndex={zIndex + 1}
 			>
 				<uicorner CornerRadius={StyleProperties.CornerRadius} />
 			</textlabel>
 
-			<frame Size={new UDim2(1, 0, 0, 2)} BackgroundTransparency={0} BackgroundColor3={StyleColors.hex600} />
-
-			<textbutton
-				Size={new UDim2(1, 0, 0, 20)}
+			<frame
+				Size={new UDim2(1, 0, 0, 2)}
 				BackgroundTransparency={0}
+				BackgroundColor3={StyleColors.hex600}
+				ZIndex={zIndex + 1}
+			/>
+
+			<frame
+				Size={new UDim2(1, 0, 0, 20)}
 				BackgroundColor3={StyleColors.hex700}
-				TextColor3={StyleColors.hex100}
-				FontFace={new Font(StyleProperties.FontId, Enum.FontWeight.Bold)}
-				TextSize={StyleProperties.FontSize}
-				Text={"Blank Node"}
-				Event={{
-					InputBegan: (_, inputObject) => {
-						if (inputObject.UserInputType !== Enum.UserInputType.MouseButton1) return;
-						CreateNode(BlankNode, GetMousePositionOnCanvas());
-						closeSelection();
-					},
-				}}
+				BackgroundTransparency={0}
+				ZIndex={zIndex + 1}
 			>
 				<uicorner CornerRadius={StyleProperties.CornerRadius} />
-			</textbutton>
+				<NodeSelectionCategoryButton
+					category={NodeCategories.Basic}
+					zIndex={zIndex + 2}
+					closeSelection={closeSelection}
+				/>
+			</frame>
 		</frame>
 	);
 }

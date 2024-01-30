@@ -3,9 +3,9 @@ import { RunService } from "@rbxts/services";
 import { NodesChanged, ZoomScaleUpdateEvent } from "Events";
 import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHandler";
 import { GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
-import { GetNodeCollection } from "Nodes/NodesHandler";
+import { GetNodeCollection, NODE_Z_INCREMENTS, NODE_Z_OFFSET } from "Nodes/NodesHandler";
 import { NodeSelection } from "./NodeSelection";
-import { StyleColorHexes, StyleColors } from "Style";
+import { StyleColors } from "Style";
 
 // TODO: add widget size tracking
 // TODO: make zoom go to mouse
@@ -222,7 +222,12 @@ export function App({ fn }: AppProps) {
 				}}
 			/>
 			{displayNodeSelection && (
-				<NodeSelection position={nodeSelectionPosition} closeSelection={() => setDisplayNodeSelection(false)} />
+				<NodeSelection
+					canvasPosition={canvasRef.current!.Position}
+					position={nodeSelectionPosition}
+					zIndex={(GetNodeCollection().size() + 1) * NODE_Z_INCREMENTS + NODE_Z_OFFSET - 1}
+					closeSelection={() => setDisplayNodeSelection(false)}
+				/>
 			)}
 		</frame>
 	);
