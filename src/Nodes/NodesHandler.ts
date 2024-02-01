@@ -42,7 +42,6 @@ export function DeleteNode(id: number) {
 // f this, wasted literal DAYS just to realize you need to use KEY attribute for arrays to work properly
 export function UpdateNodePosition(id: number, mouseOffset: Vector2) {
 	const nodeIndex = Nodes.findIndex((node) => node.Id === id);
-
 	Nodes[nodeIndex].Params.AnchorPosition = GetMousePositionOnCanvas().add(mouseOffset);
 
 	if (nodeIndex !== Nodes.size() - 1) {

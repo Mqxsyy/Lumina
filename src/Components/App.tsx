@@ -6,6 +6,7 @@ import { GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
 import { GetNodeCollection, NODE_Z_INCREMENTS, NODE_Z_OFFSET } from "Nodes/NodesHandler";
 import { NodeSelection } from "./NodeSelection";
 import { StyleColors } from "Style";
+import { BezierCurve } from "./Lines/BezierCurve";
 
 // TODO: add widget size tracking
 // TODO: make zoom go to mouse

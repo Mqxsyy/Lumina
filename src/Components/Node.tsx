@@ -6,14 +6,16 @@ import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale } from "ZoomScale";
 
+const NODE_WIDTH = 200;
+
 interface NodeProps {
 	id: number;
 	canvasData: CanvasData;
 	nodeParams: NodeParams;
-	data?: {};
+	fields: NodeField[];
 }
 
-export function Node({ id, canvasData, nodeParams }: NodeProps) {
+export function Node({ id, canvasData, nodeParams, fields }: NodeProps) {
 	const [position, setPosition] = useState(nodeParams.AnchorPosition);
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 
@@ -50,7 +52,8 @@ export function Node({ id, canvasData, nodeParams }: NodeProps) {
 	}, []);
 
 	useEffect(() => {
-		const anchorPositionOffset = nodeParams.AnchorPosition.add(new Vector2(100 * zoomScale, 75 * zoomScale));
+		const ySize = (4 + 20 + 7 + fields.size() * (20 + 5)) * 0.5 * zoomScale;
+		const anchorPositionOffset = nodeParams.AnchorPosition.add(new Vector2(NODE_WIDTH * 0.5 * zoomScale, ySize));
 
 		const center = new Vector2(canvasData.size.X.Offset * 0.5, canvasData.size.Y.Offset * 0.5);
 		setOffsetFromCenter(anchorPositionOffset.sub(center).div(zoomScale));
@@ -66,24 +69,25 @@ export function Node({ id, canvasData, nodeParams }: NodeProps) {
 		<textbutton
 			AnchorPoint={new Vector2(0.5, 0.5)}
 			Position={UDim2.fromOffset(position.X, position.Y)}
-			Size={UDim2.fromOffset(200 * zoomScale, 150 * zoomScale)}
+			Size={
+				UDim2.fromOffset(NODE_WIDTH * zoomScale, (4 + 20 + 7 + fields.size() * (20 + 5)) * zoomScale) // padding, header, divider, fields
+			}
 			BackgroundColor3={StyleColors.hex800}
 			Active={true}
 			AutoButtonColor={false}
-			Text={`${id}`}
 			ZIndex={nodeParams.ZIndex}
 		>
 			<uilistlayout Padding={new UDim(0, 5)} HorizontalAlignment={"Center"} />
 			<uicorner CornerRadius={StyleProperties.CornerRadius} />
 			<uipadding
-				PaddingTop={new UDim(0.01, 2)}
-				PaddingRight={new UDim(0.01, 2)}
-				PaddingBottom={new UDim(0.01, 2)}
-				PaddingLeft={new UDim(0.01, 2)}
+				PaddingTop={new UDim(0, 2)}
+				PaddingRight={new UDim(0, 2)}
+				PaddingBottom={new UDim(0, 2)}
+				PaddingLeft={new UDim(0, 2)}
 			/>
 
 			<textlabel
-				Size={new UDim2(1, 0, 0.15, 0)}
+				Size={new UDim2(1, 0, 0, 20)}
 				BackgroundTransparency={0}
 				BackgroundColor3={StyleColors.hex700}
 				ZIndex={nodeParams.ZIndex + 1}
@@ -111,7 +115,15 @@ export function Node({ id, canvasData, nodeParams }: NodeProps) {
 			>
 				<uicorner CornerRadius={StyleProperties.CornerRadius} />
 			</textlabel>
-			<frame Size={new UDim2(1, 0, 0, 2)} BackgroundTransparency={0} BackgroundColor3={StyleColors.hex600} />
+			<frame
+				Size={new UDim2(1, 0, 0, 2)}
+				BackgroundTransparency={0}
+				BackgroundColor3={StyleColors.hex600}
+				ZIndex={nodeParams.ZIndex + 1}
+			/>
+			{fields.map((field) => {
+				return field({ ZIndex: nodeParams.ZIndex + 1 });
+			})}
 		</textbutton>
 	);
 }

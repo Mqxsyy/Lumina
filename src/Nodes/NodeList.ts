@@ -1,4 +1,4 @@
-import { BlankNode } from "./BlankNode";
+import { TestNode } from "./TestNode";
 
 interface NodeListEntry {
 	name: string;
@@ -22,7 +22,7 @@ export const NodeList: NodeList = {
 		nodes: [
 			{
 				name: "Blank Node",
-				node: BlankNode,
+				node: TestNode,
 			},
 		],
 	},
