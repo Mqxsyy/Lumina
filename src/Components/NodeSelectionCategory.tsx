@@ -46,6 +46,8 @@ export function NodeSelectionCategory({ position, category, zIndex, closeSelecti
 				ZIndex={zIndex + 1}
 			>
 				<uicorner CornerRadius={StyleProperties.CornerRadius} />
+				<uilistlayout FillDirection={"Vertical"} Padding={new UDim(0, 5)} />
+
 				{NodeList[category].nodes.map((node) => {
 					return (
 						<textbutton
@@ -59,7 +61,7 @@ export function NodeSelectionCategory({ position, category, zIndex, closeSelecti
 							Event={{
 								InputBegan: (_, inputObject) => {
 									if (inputObject.UserInputType !== Enum.UserInputType.MouseButton1) return;
-									CreateNode(node.node, GetMousePositionOnCanvas());
+									CreateNode(node.node, node.name, GetMousePositionOnCanvas());
 									closeSelection();
 								},
 							}}

@@ -12,14 +12,28 @@ interface ConnectionPointOutProps extends NodeFieldProps {
 
 export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) => {
 	const connectionPointRef = useRef(undefined as Frame | undefined);
+
 	const [connectionEndPoint, setConnectionEndPoint] = useState(Vector2.zero);
 
 	const [displayConnection, setDisplayConnection] = useState(false);
 
+	const [forceRerender, setForceRerender] = useState(false);
+
 	const callback = (targetPoint: Vector2) => {
-		setConnectionEndPoint(targetPoint);
+		const localTargetPoint = targetPoint.sub(field.AbsolutePosition);
+
+		setConnectionEndPoint(localTargetPoint);
 		RunService.UnbindFromRenderStep("MoveConnection");
 	};
+
+	useEffect(() => {
+		const invertedForceRender = !forceRerender;
+		setForceRerender(invertedForceRender);
+	}, [connectionPointRef.current?.AbsolutePosition]);
+
+	useEffect(() => {
+		print("FRC RNDR");
+	}, [forceRerender]);
 
 	useEffect(() => {
 		if (displayConnection) {
@@ -54,9 +68,10 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 	return (
 		<>
 			<frame
-				AnchorPoint={new Vector2(1, 0.5)}
-				Position={new UDim2(1, -5, 0.5, 0)}
-				Size={UDim2.fromOffset(CONNECTION_POINT_SIZE.X, CONNECTION_POINT_SIZE.Y)}
+				AnchorPoint={new Vector2(1, 0)}
+				Position={UDim2.fromScale(1, 0)}
+				Size={UDim2.fromScale(1, 1)}
+				SizeConstraint={"RelativeYY"}
 				BackgroundTransparency={1}
 				ref={connectionPointRef}
 				ZIndex={ZIndex + 1}
@@ -90,12 +105,13 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 						.current!.AbsolutePosition.sub(field.AbsolutePosition)
 						.add(
 							new Vector2(
-								CONNECTION_POINT_SIZE.X + CONNECTION_POINT_BORDER_SIZE,
-								CONNECTION_POINT_SIZE.Y + CONNECTION_POINT_BORDER_SIZE,
+								connectionPointRef.current!.AbsoluteSize.X,
+								connectionPointRef.current!.AbsoluteSize.Y,
 							).mul(0.5),
 						)}
 					endPos={connectionEndPoint}
 					zIndex={ZIndex + 1}
+					rerender={forceRerender}
 				/>
 			)}
 		</>

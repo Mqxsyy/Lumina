@@ -5,6 +5,7 @@ interface Props {
 	startPos: Vector2;
 	endPos: Vector2;
 	zIndex: number;
+	rerender: boolean;
 }
 
 interface LineSegment {
@@ -13,10 +14,12 @@ interface LineSegment {
 	rotation: number;
 }
 
-export function SimpleLine({ startPos, endPos, zIndex }: Props) {
+export function SimpleLine({ startPos, endPos, zIndex, rerender }: Props) {
 	const [startSegment, setStartSegment] = useState({ position: Vector2.zero, length: 0, rotation: 0 });
 	const [middleSegment, setMiddleSegment] = useState({ position: Vector2.zero, length: 0, rotation: 0 });
 	const [endSegment, setEndSegment] = useState({ position: Vector2.zero, length: 0, rotation: 0 });
+
+	const [forceRerender, setForceRerender] = useState(false);
 
 	useEffect(() => {
 		const xDistance = endPos.X - startPos.X;
@@ -47,7 +50,7 @@ export function SimpleLine({ startPos, endPos, zIndex }: Props) {
 			rotation: 0,
 		} as LineSegment;
 		setEndSegment(endSegment);
-	}, [startPos, endPos]);
+	}, [startPos, endPos, rerender]);
 
 	return (
 		<>

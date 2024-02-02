@@ -8,6 +8,8 @@ import { GetZoomScale } from "ZoomScale";
 
 const NODE_WIDTH = 200;
 
+type NodeField = (props: { ZIndex: number }) => Roact.Element;
+
 interface NodeProps {
 	id: number;
 	canvasData: CanvasData;
@@ -93,7 +95,7 @@ export function Node({ id, canvasData, nodeParams, fields }: NodeProps) {
 				ZIndex={nodeParams.ZIndex + 1}
 				FontFace={new Font(StyleProperties.FontId, Enum.FontWeight.Bold)}
 				TextColor3={StyleColors.hex100}
-				Text={"Blank node"}
+				Text={nodeParams.Name}
 				TextScaled={true}
 				Event={{
 					InputBegan: (element, inputObject) => {

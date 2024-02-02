@@ -16,11 +16,12 @@ export function GetNode(id: number) {
 	return Nodes.find((node) => node.Id === id) as NodeData;
 }
 
-export function CreateNode(node: NodeElement, pos: Vector2) {
+export function CreateNode(node: NodeElement, name: string, pos: Vector2) {
 	Nodes.push({
 		Id: currentId++,
 		Node: node,
 		Params: {
+			Name: name,
 			AnchorPosition: pos,
 			ZIndex: Nodes.size() * NODE_Z_INCREMENTS + NODE_Z_OFFSET - 1,
 		},

@@ -22,7 +22,7 @@ export const NodeList: NodeList = {
 		categoryName: "Debug",
 		nodes: [
 			{
-				name: "Blank Node",
+				name: "Text Node",
 				node: TestNode,
 			},
 			{

@@ -10,6 +10,7 @@ interface NodeFieldProps {
 }
 
 interface NodeParams {
+	Name: string;
 	AnchorPosition: Vector2;
 	ZIndex: number;
 }
