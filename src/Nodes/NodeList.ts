@@ -1,3 +1,4 @@
+import { LogNode } from "./LogNode";
 import { TestNode } from "./TestNode";
 
 interface NodeListEntry {
@@ -8,21 +9,25 @@ interface NodeListEntry {
 interface NodeList {
 	[key: number]: {
 		categoryName: string;
-		nodes: [NodeListEntry];
+		nodes: NodeListEntry[];
 	};
 }
 
 export const NodeCategories = {
-	Basic: 0,
+	Debug: 0,
 };
 
 export const NodeList: NodeList = {
-	[NodeCategories.Basic]: {
-		categoryName: "Basic",
+	[NodeCategories.Debug]: {
+		categoryName: "Debug",
 		nodes: [
 			{
 				name: "Blank Node",
 				node: TestNode,
+			},
+			{
+				name: "Logger",
+				node: LogNode,
 			},
 		],
 	},

@@ -60,7 +60,7 @@ export function NodeSelection({ zIndex, position, closeSelection }: Props) {
 			>
 				<uicorner CornerRadius={StyleProperties.CornerRadius} />
 				<NodeSelectionCategoryButton
-					category={NodeCategories.Basic}
+					category={NodeCategories.Debug}
 					zIndex={zIndex + 2}
 					closeSelection={closeSelection}
 				/>

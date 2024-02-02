@@ -1,12 +1,11 @@
 type NodeElement = (id: number, CanvasData: CanvasData, params: NodeParams) => import("@rbxts/roact").Element;
-type NodeField = (params: NodeFieldParams) => import("@rbxts/roact").Element;
 
 interface CanvasData {
 	size: UDim2;
 	isMoving: boolean;
 }
 
-interface NodeFieldParams {
+interface NodeFieldProps {
 	ZIndex: number;
 }
 
