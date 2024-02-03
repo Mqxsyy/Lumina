@@ -1,4 +1,4 @@
-import Roact, { useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { CONNECTION_POINT_BORDER_SIZE, CONNECTION_POINT_SIZE } from "./ConnectionPointConfig";
 import { StyleColors } from "Style";
 import { SetTargetField } from "FieldsHandler";
@@ -7,10 +7,27 @@ interface ConnectionPointInProps extends NodeFieldProps {
 	field: GuiObject;
 }
 
+export interface FieldQueryData {
+	connectionPointPosition: Vector2;
+	connectionPointSize: Vector2;
+}
+
 export function ConnectionPointIn({ ZIndex, field }: ConnectionPointInProps) {
 	const [isConnected, setIsConnected] = useState(false);
-
+	const [updateConnectedField, setUpdateConnectedField] = useState<undefined | (() => void)>(undefined);
 	const connectionPointRef = useRef(undefined as Frame | undefined);
+
+	const GetData = () => {
+		return {
+			connectionPointPosition: connectionPointRef.current!.AbsolutePosition,
+			connectionPointSize: connectionPointRef.current?.AbsoluteSize,
+		} as FieldQueryData;
+	};
+
+	useEffect(() => {
+		if (updateConnectedField === undefined) return;
+		updateConnectedField();
+	}, [connectionPointRef.current?.AbsolutePosition]);
 
 	return (
 		<>
@@ -26,16 +43,10 @@ export function ConnectionPointIn({ ZIndex, field }: ConnectionPointInProps) {
 					InputEnded: (_, inputObject) => {
 						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
 							setIsConnected(true);
-							print("SET CONNECTION");
-
-							const targetPos = connectionPointRef.current!.AbsolutePosition.add(
-								new Vector2(
-									connectionPointRef.current!.AbsoluteSize.X,
-									connectionPointRef.current!.AbsoluteSize.Y,
-								).mul(0.5),
-							);
-
-							SetTargetField(targetPos);
+							const updateField = SetTargetField(GetData);
+							if (updateField) {
+								setUpdateConnectedField(() => updateField);
+							}
 						}
 					},
 				}}

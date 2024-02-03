@@ -5,6 +5,11 @@ import { CONNECTION_POINT_BORDER_SIZE, CONNECTION_POINT_SIZE } from "./Connectio
 import { StyleColors } from "Style";
 import { SimpleLine } from "Components/Lines/SimpleLine";
 import { ResetSourceField, SetSourceField } from "FieldsHandler";
+import { FieldQueryData } from "./ConnectionPointIn";
+
+// TODO: make connection update on same frame as move
+// TODO: fix connection rendering behind nodes sometimes
+// TODO: disconnect connections
 
 interface ConnectionPointOutProps extends NodeFieldProps {
 	field: GuiObject;
@@ -17,33 +22,42 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 
 	const [displayConnection, setDisplayConnection] = useState(false);
 
-	const [forceRerender, setForceRerender] = useState(false);
+	const [getConnectedFieldData, setGetConnectedFieldData] = useState<undefined | (() => FieldQueryData)>(undefined);
+	const [connectedFieldUpdated, setConnectedFieldUpdated] = useState(false);
 
-	const callback = (targetPoint: Vector2) => {
-		const localTargetPoint = targetPoint.sub(field.AbsolutePosition);
+	const SetGetConnectedFieldData = (getData: () => FieldQueryData) => {
+		setGetConnectedFieldData(() => getData); // why when not wrapped does it call the function even though it doesn't have '()' ???
+	};
 
-		setConnectionEndPoint(localTargetPoint);
-		RunService.UnbindFromRenderStep("MoveConnection");
+	const OnConnectedFieldUpdate = () => {
+		setConnectedFieldUpdated((prev) => !prev);
 	};
 
 	useEffect(() => {
-		const invertedForceRender = !forceRerender;
-		setForceRerender(invertedForceRender);
-	}, [connectionPointRef.current?.AbsolutePosition]);
-
-	useEffect(() => {
-		print("FRC RNDR");
-	}, [forceRerender]);
-
-	useEffect(() => {
 		if (displayConnection) {
-			SetSourceField(callback);
+			SetSourceField(SetGetConnectedFieldData, OnConnectedFieldUpdate);
 			bindDrag();
 		} else if (!displayConnection) {
 			ResetSourceField();
 			RunService.UnbindFromRenderStep("MoveConnection");
 		}
 	}, [displayConnection]);
+
+	useEffect(() => {
+		if (getConnectedFieldData === undefined) return;
+		RunService.UnbindFromRenderStep("MoveConnection");
+	}, [getConnectedFieldData]);
+
+	useEffect(() => {
+		if (getConnectedFieldData === undefined) return;
+
+		const data = getConnectedFieldData();
+		const targetPosition = data.connectionPointPosition
+			.sub(field.AbsolutePosition)
+			.add(data.connectionPointSize.mul(0.5));
+
+		setConnectionEndPoint(targetPosition);
+	}, [getConnectedFieldData, field?.AbsolutePosition, connectedFieldUpdated]);
 
 	const bindDrag = () => {
 		RunService.BindToRenderStep("MoveConnection", Enum.RenderPriority.Input.Value, () => {
@@ -111,7 +125,6 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 						)}
 					endPos={connectionEndPoint}
 					zIndex={ZIndex + 1}
-					rerender={forceRerender}
 				/>
 			)}
 		</>

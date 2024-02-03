@@ -1,19 +1,29 @@
-let sourceFieldCallback: undefined | ((targetPoint: Vector2) => void);
+import { FieldQueryData } from "Components/NodeFields/ConnectionPoint/ConnectionPointIn";
 
-export function SetSourceField(callback: (targetPoint: Vector2) => void) {
-	sourceFieldCallback = callback;
+let sourceSetGetData: undefined | ((getData: () => FieldQueryData) => void);
+let sourceOnTargetFieldUpdate: undefined | (() => void);
+
+export function SetSourceField(
+	setGetTargetData: (getData: () => FieldQueryData) => void,
+	onTargetFieldUpdate: () => void,
+) {
+	sourceSetGetData = setGetTargetData;
+	sourceOnTargetFieldUpdate = onTargetFieldUpdate;
 }
 
 export function ResetSourceField() {
-	sourceFieldCallback = undefined;
+	sourceSetGetData = undefined;
+	sourceOnTargetFieldUpdate = undefined;
 }
 
-export function SetTargetField(targetPoint: Vector2) {
-	if (sourceFieldCallback === undefined) return;
+export function SetTargetField(getConnectionPointPosition: () => FieldQueryData): undefined | (() => void) {
+	if (sourceSetGetData !== undefined) {
+		sourceSetGetData(getConnectionPointPosition);
+	}
 
-	sourceFieldCallback(targetPoint);
+	if (sourceOnTargetFieldUpdate !== undefined) {
+		return sourceOnTargetFieldUpdate;
+	}
+
+	return undefined;
 }
-
-// SOURCE <- TARGET = visuals
-// SOURCE <- TARGET = asks data
-// SOURCE -> TARGET = data changed
