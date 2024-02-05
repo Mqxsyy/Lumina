@@ -17,6 +17,11 @@ export function ConnectionPointIn({ ZIndex, field }: ConnectionPointInProps) {
 	const [updateConnectedField, setUpdateConnectedField] = useState<undefined | (() => void)>(undefined);
 	const connectionPointRef = useRef(undefined as Frame | undefined);
 
+	const OnDisconnect = () => {
+		setIsConnected(false);
+		setUpdateConnectedField(undefined);
+	};
+
 	const GetData = () => {
 		return {
 			connectionPointPosition: connectionPointRef.current!.AbsolutePosition,
@@ -43,7 +48,7 @@ export function ConnectionPointIn({ ZIndex, field }: ConnectionPointInProps) {
 					InputEnded: (_, inputObject) => {
 						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
 							setIsConnected(true);
-							const updateField = SetTargetField(GetData);
+							const updateField = SetTargetField(GetData, OnDisconnect);
 							if (updateField) {
 								setUpdateConnectedField(() => updateField);
 							}

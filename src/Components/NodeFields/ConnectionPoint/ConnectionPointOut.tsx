@@ -22,11 +22,26 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 
 	const [displayConnection, setDisplayConnection] = useState(false);
 
+	const [disconnectTarget, setDisconnectTarget] = useState<undefined | (() => void)>(undefined);
 	const [getConnectedFieldData, setGetConnectedFieldData] = useState<undefined | (() => FieldQueryData)>(undefined);
 	const [connectedFieldUpdated, setConnectedFieldUpdated] = useState(false);
 
 	const SetGetConnectedFieldData = (getData: () => FieldQueryData) => {
 		setGetConnectedFieldData(() => getData); // why when not wrapped does it call the function even though it doesn't have '()' ???
+	};
+
+	const SetOnDisconnect = (onDisconnect: () => void) => {
+		setDisconnectTarget(() => onDisconnect);
+	};
+
+	const OnDisconnect = () => {
+		if (disconnectTarget !== undefined) {
+			disconnectTarget();
+			setDisconnectTarget(undefined);
+		}
+
+		setGetConnectedFieldData(undefined);
+		setConnectedFieldUpdated((prev) => !prev);
 	};
 
 	const OnConnectedFieldUpdate = () => {
@@ -35,7 +50,7 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 
 	useEffect(() => {
 		if (displayConnection) {
-			SetSourceField(SetGetConnectedFieldData, OnConnectedFieldUpdate);
+			SetSourceField(SetGetConnectedFieldData, OnConnectedFieldUpdate, SetOnDisconnect);
 			bindDrag();
 		} else if (!displayConnection) {
 			ResetSourceField();
@@ -94,6 +109,10 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 						if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
 							const displayConnectionInverted = !displayConnection;
 							setDisplayConnection(displayConnectionInverted);
+
+							if (displayConnection === false) {
+								OnDisconnect();
+							}
 						}
 					},
 				}}
