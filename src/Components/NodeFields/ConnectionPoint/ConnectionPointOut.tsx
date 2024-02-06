@@ -9,7 +9,7 @@ import { FieldQueryData } from "./ConnectionPointIn";
 
 // TODO: make connection update on same frame as move
 // TODO: fix connection rendering behind nodes sometimes
-// TODO: disconnect connections
+// TODO: fix misalignment when canvas >0,0
 
 interface ConnectionPointOutProps extends NodeFieldProps {
 	field: GuiObject;
@@ -18,9 +18,8 @@ interface ConnectionPointOutProps extends NodeFieldProps {
 export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) => {
 	const connectionPointRef = useRef(undefined as Frame | undefined);
 
-	const [connectionEndPoint, setConnectionEndPoint] = useState(Vector2.zero);
-
 	const [displayConnection, setDisplayConnection] = useState(false);
+	const [connectionEndPoint, setConnectionEndPoint] = useState(Vector2.zero);
 
 	const [disconnectTarget, setDisconnectTarget] = useState<undefined | (() => void)>(undefined);
 	const [getConnectedFieldData, setGetConnectedFieldData] = useState<undefined | (() => FieldQueryData)>(undefined);
@@ -35,6 +34,8 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 	};
 
 	const OnDisconnect = () => {
+		print("DISCONNECT OUT");
+
 		if (disconnectTarget !== undefined) {
 			disconnectTarget();
 			setDisconnectTarget(undefined);
@@ -42,6 +43,7 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 
 		setGetConnectedFieldData(undefined);
 		setConnectedFieldUpdated((prev) => !prev);
+		setConnectionEndPoint(connectionPointRef.current!.AbsolutePosition.sub(field.AbsolutePosition));
 	};
 
 	const OnConnectedFieldUpdate = () => {
@@ -110,7 +112,8 @@ export const ConnectionPointOut = ({ ZIndex, field }: ConnectionPointOutProps) =
 							const displayConnectionInverted = !displayConnection;
 							setDisplayConnection(displayConnectionInverted);
 
-							if (displayConnection === false) {
+							if (displayConnectionInverted === false) {
+								print("TRIGGER DISCONNECT OUT");
 								OnDisconnect();
 							}
 						}

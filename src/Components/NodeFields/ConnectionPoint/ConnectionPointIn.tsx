@@ -18,6 +18,8 @@ export function ConnectionPointIn({ ZIndex, field }: ConnectionPointInProps) {
 	const connectionPointRef = useRef(undefined as Frame | undefined);
 
 	const OnDisconnect = () => {
+		print("DISCONNECT IN");
+
 		setIsConnected(false);
 		setUpdateConnectedField(undefined);
 	};
