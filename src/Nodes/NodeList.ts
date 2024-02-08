@@ -1,4 +1,3 @@
-import { LogNode } from "./LogNode";
 import { TestNode } from "./TestNode";
 
 interface NodeListEntry {
@@ -25,10 +24,10 @@ export const NodeList: NodeList = {
 				name: "Text Node",
 				node: TestNode,
 			},
-			{
-				name: "Logger",
-				node: LogNode,
-			},
+			// {
+			// 	name: "Logger",
+			// 	node: LogNode,
+			// },
 		],
 	},
 };
