@@ -14,7 +14,7 @@ export class Lifetime extends Node {
 		this.nodeFields.push(new NumberField(amount));
 	}
 
-	fn(): number {
+	fn = (): number => {
 		return this.nodeFields[0].GetValue() as number;
-	}
+	};
 }

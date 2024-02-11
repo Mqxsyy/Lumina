@@ -1,7 +1,8 @@
 import { INode } from "./Nodes/Node";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
-import { RunService } from "@rbxts/services";
 import { NodeTypes } from "./Nodes/NodeTypes";
+import { ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./Nodes/Render/ParticlePlane";
+import { Position } from "./Nodes/Initialize/Position";
 
 export class NodeSystem {
 	NodeGroups: { [key in NodeGroups]: NodeGroup };
@@ -15,7 +16,7 @@ export class NodeSystem {
 		};
 	}
 
-	AddNode(node: INode) {
+	AddNode<T extends unknown[]>(node: INode<T>) {
 		this.NodeGroups[node.nodeGroup].AddNode(node);
 	}
 
@@ -31,30 +32,26 @@ export class NodeSystem {
 			for (let i = 0; i < amount; i++) {
 				task.spawn(() => {
 					const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes();
-
 					const lifetimeNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Lifetime);
 					const spawnPositionNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Position);
 
 					const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes();
-
 					const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
 
-					const lifetime = lifetimeNode!.fn() as number;
+					const InitParams: ParticleInitParams = {
+						lifetime: lifetimeNode!.fn() as number,
+						position: spawnPositionNode!.fn() as Vector3,
+					};
 
-					const outputNode = this.NodeGroups[NodeGroups.Spawn].GetNodes()[0];
-					outputNode.fn();
+					const UpdateParams: ParticleUpdateParams = {
+						position: [updatePositionNode!.fn] as PositionUpdateFn[],
+					};
 
-					let aliveTime = 0;
-					let position = spawnPositionNode!.fn() as Vector3;
-					const connection = RunService.RenderStepped.Connect((dt) => {
-						if (aliveTime >= lifetime) {
-							connection.Disconnect();
-						}
+					const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as INode<
+						[ParticleInitParams, ParticleUpdateParams]
+					>;
 
-						position = updatePositionNode!.fn(position) as Vector3;
-						print(position);
-						aliveTime += dt;
-					});
+					outputNode.fn(InitParams, UpdateParams);
 				});
 			}
 		}

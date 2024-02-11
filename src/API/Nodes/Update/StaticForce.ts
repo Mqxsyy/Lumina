@@ -5,7 +5,7 @@ import { Node } from "../Node";
 import { NodeTypes } from "../NodeTypes";
 import { BooleanField } from "API/Fields/BooleanField";
 
-export class StaticForce extends Node {
+export class StaticForce extends Node<[Vector3]> {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeType: NodeTypes = NodeTypes.Position;
 	nodeFields: INodeField[] = [];
@@ -16,8 +16,7 @@ export class StaticForce extends Node {
 		this.nodeFields.push(new BooleanField(isLocal));
 	}
 
-	// unknown to match INode
-	fn(position: Vector3): Vector3 {
+	fn = (position: Vector3): Vector3 => {
 		return position.add(this.nodeFields[0].GetValue() as Vector3);
-	}
+	};
 }
