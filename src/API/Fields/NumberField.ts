@@ -1,14 +1,23 @@
 import { NodeField } from "./NodeField";
 
-export class NumberField extends NodeField {
-	value: number;
+const DEFAULT_VALUE = 1;
 
-	constructor(value: number) {
-		super();
-		this.value = value;
+export class NumberField extends NodeField {
+	private value: number | (() => number) = DEFAULT_VALUE;
+
+	GetValue(): number {
+		if (typeIs(this.value, "number")) {
+			return this.value;
+		}
+
+		return this.value();
 	}
 
-	GetValue(): unknown {
-		return this.value;
+	SetValue(newValue: number): void {
+		this.value = newValue;
+	}
+
+	BindValue(newValue: () => number): void {
+		this.value = newValue;
 	}
 }

@@ -1,14 +1,25 @@
 import { NodeField } from "./NodeField";
 
-export class Vector3Field extends NodeField {
-	value: Vector3;
+// TODO: make expandable / each value be able to be assigned individually
 
-	constructor(value: Vector3) {
-		super();
-		this.value = value;
+const DEFAULT_VALUE = new Vector3(0, 0, 0);
+
+export class Vector3Field extends NodeField {
+	private value: Vector3 | (() => Vector3) = DEFAULT_VALUE;
+
+	GetValue(): Vector3 {
+		if (typeIs(this.value, "Vector3")) {
+			return this.value;
+		}
+
+		return this.value();
 	}
 
-	GetValue(): unknown {
-		return this.value;
+	SetValue(newValue: Vector3): void {
+		this.value = newValue;
+	}
+
+	BindValue(newValue: () => Vector3): void {
+		this.value = newValue;
 	}
 }

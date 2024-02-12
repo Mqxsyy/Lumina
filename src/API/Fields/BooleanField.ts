@@ -1,14 +1,23 @@
 import { NodeField } from "./NodeField";
 
-export class BooleanField extends NodeField {
-	value: boolean;
+const DEFAULT_VALUE = true;
 
-	constructor(value: boolean) {
-		super();
-		this.value = value;
+export class BooleanField extends NodeField {
+	private value: boolean | (() => boolean) = DEFAULT_VALUE;
+
+	GetValue(): boolean {
+		if (typeIs(this.value, "boolean")) {
+			return this.value;
+		}
+
+		return this.value();
 	}
 
-	GetValue(): unknown {
-		return this.value;
+	SetValue(newValue: boolean): void {
+		this.value = newValue;
+	}
+
+	BindValue(newValue: () => boolean): void {
+		this.value = newValue;
 	}
 }

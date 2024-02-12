@@ -1,5 +1,4 @@
 import { Vector3Field } from "API/Fields/Vector3Field";
-import { INodeField } from "../../Fields/NodeField";
 import { NodeGroups } from "../../NodeGroup";
 import { Node } from "../Node";
 import { NodeTypes } from "../NodeTypes";
@@ -8,15 +7,21 @@ import { BooleanField } from "API/Fields/BooleanField";
 export class StaticForce extends Node<[Vector3]> {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeType: NodeTypes = NodeTypes.Position;
-	nodeFields: INodeField[] = [];
+	nodeFields: {
+		direction: Vector3Field;
+		isLocal: BooleanField;
+	};
 
-	constructor(id: number, direction: Vector3, isLocal: boolean) {
+	constructor(id: number) {
 		super(id);
-		this.nodeFields.push(new Vector3Field(direction));
-		this.nodeFields.push(new BooleanField(isLocal));
+
+		this.nodeFields = {
+			direction: new Vector3Field(),
+			isLocal: new BooleanField(),
+		};
 	}
 
 	fn = (position: Vector3): Vector3 => {
-		return position.add(this.nodeFields[0].GetValue() as Vector3);
+		return position.add(this.nodeFields.direction.GetValue() as Vector3);
 	};
 }

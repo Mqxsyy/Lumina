@@ -1,8 +1,8 @@
 import { Node } from "../Node";
-import { INodeField } from "../../Fields/NodeField";
 import { NodeGroups } from "../../NodeGroup";
 import { NodeTypes } from "../NodeTypes";
-import { RunService, Workspace } from "@rbxts/services";
+import { ReplicatedStorage, RunService, Workspace } from "@rbxts/services";
+import { ObjectPool } from "API/ObjectPool";
 
 export interface ParticleInitParams {
 	lifetime: number;
@@ -18,35 +18,79 @@ export interface ParticleUpdateParams {
 export class ParticlePlane extends Node<[ParticleInitParams, ParticleUpdateParams]> {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeType: NodeTypes = NodeTypes.ParticlePlane;
-	nodeFields: INodeField[] = [];
+	nodeFields = {};
+
+	objectPool: ObjectPool;
+	displayFolder: Folder;
+
+	constructor(id: number) {
+		super(id);
+
+		const particlePlane = new Instance("Part");
+
+		particlePlane.Size = new Vector3(1, 1, 0.1);
+		particlePlane.Color = Color3.fromHex("#FFFFFF");
+		particlePlane.Transparency = 0;
+
+		particlePlane.Anchored = true;
+		particlePlane.CanCollide = false;
+		particlePlane.CanQuery = false;
+		particlePlane.CanTouch = false;
+		particlePlane.Massless = true;
+
+		let pooledVfxFolder = ReplicatedStorage.FindFirstChild("CrescentVFX Graph Particles");
+		if (pooledVfxFolder === undefined) {
+			pooledVfxFolder = new Instance("Folder");
+			pooledVfxFolder.Name = "CrescentVFX Graph Particles";
+			pooledVfxFolder.Parent = ReplicatedStorage;
+		}
+
+		let pooledPlaneParticlesFolder = pooledVfxFolder.FindFirstChild("PlaneParticles");
+		if (pooledPlaneParticlesFolder === undefined) {
+			pooledPlaneParticlesFolder = new Instance("Folder");
+			pooledPlaneParticlesFolder.Name = "PlaneParticles";
+			pooledPlaneParticlesFolder.Parent = ReplicatedStorage;
+		}
+
+		this.objectPool = new ObjectPool(particlePlane, pooledPlaneParticlesFolder as Folder);
+
+		let displayVfxFolder = Workspace.FindFirstChild("CrescentVFX Graph Particles");
+		if (displayVfxFolder === undefined) {
+			displayVfxFolder = new Instance("Folder");
+			displayVfxFolder.Name = "CrescentVFX Graph Particles";
+			displayVfxFolder.Parent = Workspace;
+		}
+
+		let displayPlaneParticlesFolder = displayVfxFolder.FindFirstChild("PlaneParticles");
+		if (displayPlaneParticlesFolder === undefined) {
+			displayPlaneParticlesFolder = new Instance("Folder");
+			displayPlaneParticlesFolder.Name = "PlaneParticles";
+			displayPlaneParticlesFolder.Parent = Workspace;
+		}
+
+		this.displayFolder = displayPlaneParticlesFolder as Folder;
+	}
 
 	fn = (init: ParticleInitParams, update: ParticleUpdateParams) => {
-		const part = new Instance("Part");
-
-		part.Anchored = true;
-		part.Size = new Vector3(1, 1, 0.01);
-
-		part.CanCollide = false;
-		part.CanTouch = false;
-		part.CanQuery = false;
-
-		part.Position = init.position;
+		const particle = this.objectPool.GetItem();
+		particle.Position = init.position;
 
 		let aliveTime = 0;
 		const connection = RunService.RenderStepped.Connect((dt) => {
 			if (aliveTime >= init.lifetime) {
 				connection.Disconnect();
+				this.objectPool.RemoveItem(particle);
 				return;
 			}
 
 			update.position.forEach((fn) => {
-				part.Position = fn(part.Position);
+				particle.Position = fn(particle.Position);
 			});
 
 			aliveTime += dt;
 		});
 
-		part.Parent = Workspace;
+		particle.Parent = this.displayFolder;
 
 		return;
 	};

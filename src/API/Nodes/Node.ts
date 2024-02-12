@@ -11,7 +11,7 @@ export interface INode<T extends unknown[] = []> {
 	id: number;
 	nodeType: NodeTypes;
 	nodeGroup: NodeGroups;
-	nodeFields: INodeField[];
+	nodeFields: { [key: string]: INodeField };
 	fn: (...params: T) => unknown;
 }
 
@@ -20,7 +20,7 @@ export abstract class Node<T extends unknown[] = []> implements INode<T> {
 	id: number;
 	abstract nodeGroup: NodeGroups;
 	abstract nodeType: NodeTypes;
-	abstract nodeFields: INodeField[];
+	abstract nodeFields: { [key: string]: INodeField };
 
 	constructor(id: number) {
 		this.id = id;

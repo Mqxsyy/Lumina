@@ -2,7 +2,6 @@ import { INode } from "./Nodes/Node";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
 import { NodeTypes } from "./Nodes/NodeTypes";
 import { ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./Nodes/Render/ParticlePlane";
-import { Position } from "./Nodes/Initialize/Position";
 
 export class NodeSystem {
 	NodeGroups: { [key in NodeGroups]: NodeGroup };
