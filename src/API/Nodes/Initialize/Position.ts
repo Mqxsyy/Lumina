@@ -10,11 +10,11 @@ export class Position extends Node {
 		position: Vector3Field;
 	};
 
-	constructor(id: number) {
-		super(id);
+	constructor() {
+		super();
 
 		this.nodeFields = {
-			position: new Vector3Field(),
+			position: new Vector3Field(new Vector3(0, 0, 0)),
 		};
 	}
 

@@ -1,9 +1,12 @@
 import { NodeField } from "./NodeField";
 
-const DEFAULT_VALUE = 1;
-
 export class NumberField extends NodeField {
-	private value: number | (() => number) = DEFAULT_VALUE;
+	private value: number | (() => number);
+
+	constructor(defaultValue: number) {
+		super();
+		this.value = defaultValue;
+	}
 
 	GetValue(): number {
 		if (typeIs(this.value, "number")) {

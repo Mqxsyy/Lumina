@@ -1,9 +1,12 @@
 import { NodeField } from "./NodeField";
 
-const DEFAULT_VALUE = true;
-
 export class BooleanField extends NodeField {
-	private value: boolean | (() => boolean) = DEFAULT_VALUE;
+	private value: boolean | (() => boolean);
+
+	constructor(defaultValue: boolean) {
+		super();
+		this.value = defaultValue;
+	}
 
 	GetValue(): boolean {
 		if (typeIs(this.value, "boolean")) {

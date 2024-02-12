@@ -23,8 +23,8 @@ export class ParticlePlane extends Node<[ParticleInitParams, ParticleUpdateParam
 	objectPool: ObjectPool;
 	displayFolder: Folder;
 
-	constructor(id: number) {
-		super(id);
+	constructor() {
+		super();
 
 		const particlePlane = new Instance("Part");
 

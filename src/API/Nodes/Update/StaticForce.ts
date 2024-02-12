@@ -12,12 +12,12 @@ export class StaticForce extends Node<[Vector3]> {
 		isLocal: BooleanField;
 	};
 
-	constructor(id: number) {
-		super(id);
+	constructor() {
+		super();
 
 		this.nodeFields = {
-			direction: new Vector3Field(),
-			isLocal: new BooleanField(),
+			direction: new Vector3Field(new Vector3(0, 1, 0)),
+			isLocal: new BooleanField(true),
 		};
 	}
 

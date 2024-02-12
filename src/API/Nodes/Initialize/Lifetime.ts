@@ -10,11 +10,11 @@ export class Lifetime extends Node {
 		time: NumberField;
 	};
 
-	constructor(id: number) {
-		super(id);
+	constructor() {
+		super();
 
 		this.nodeFields = {
-			time: new NumberField(),
+			time: new NumberField(1),
 		};
 	}
 

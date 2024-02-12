@@ -10,11 +10,11 @@ export class BurstSpawn extends Node {
 		amount: NumberField;
 	};
 
-	constructor(id: number) {
-		super(id);
+	constructor() {
+		super();
 
 		this.nodeFields = {
-			amount: new NumberField(),
+			amount: new NumberField(10),
 		};
 	}
 

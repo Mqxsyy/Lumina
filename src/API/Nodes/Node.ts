@@ -1,5 +1,6 @@
 import { INodeField } from "../Fields/NodeField";
 import { NodeGroups } from "../NodeGroup";
+import { GetNodeId } from "./IdTracker";
 import { NodeTypes } from "./NodeTypes";
 
 export interface ParticleInitData {
@@ -22,8 +23,8 @@ export abstract class Node<T extends unknown[] = []> implements INode<T> {
 	abstract nodeType: NodeTypes;
 	abstract nodeFields: { [key: string]: INodeField };
 
-	constructor(id: number) {
-		this.id = id;
+	constructor() {
+		this.id = GetNodeId();
 	}
 
 	abstract fn: (...params: T) => unknown;
