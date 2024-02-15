@@ -12,16 +12,17 @@ export class StaticForce extends UpdateNode<[Vector3]> {
 		isLocal: BooleanField;
 	};
 
+	// add id tracker per node so one random node can be used for multiple fields
 	constructor() {
 		super();
 
 		this.nodeFields = {
-			direction: new Vector3Field(new Vector3(0, 1, 0)),
+			direction: new Vector3Field(new Vector3(0, 0.1, 0)),
 			isLocal: new BooleanField(true),
 		};
 	}
 
-	UpdateValue = (position: Vector3): Vector3 => {
-		return position.add(this.nodeFields.direction.GetValue() as Vector3);
+	UpdateValue = (id: number, position: Vector3): Vector3 => {
+		return position.add(this.nodeFields.direction.GetValue(id));
 	};
 }

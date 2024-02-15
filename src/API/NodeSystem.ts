@@ -7,11 +7,13 @@ import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
 import { UpdateNode } from "./Nodes/Update/UpdateNode";
 import { LogicNode } from "./Nodes/Logic/LogicNode";
+import { IdPool } from "./IdPool";
 
 // OPTIMIZE?: look into an alt version for array.find
-// TODO: add a way to clear 'dead' particles
 
 export class NodeSystem {
+	ParticleIdPool = new IdPool();
+
 	NodeGroups: { [key in NodeGroups]: NodeGroup<INode> };
 	SpawnConnection: RBXScriptConnection | undefined;
 
@@ -54,9 +56,11 @@ export class NodeSystem {
 					const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
 					const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
 
+					const particleId = this.ParticleIdPool.GetNextId();
 					const InitParams: ParticleInitParams = {
-						lifetime: lifetimeNode!.GetValue() as number,
-						position: spawnPositionNode!.GetValue() as Vector3,
+						id: particleId,
+						lifetime: lifetimeNode!.GetValue(particleId) as number,
+						position: spawnPositionNode!.GetValue(particleId) as Vector3,
 					};
 
 					const UpdateParams: ParticleUpdateParams = {
@@ -93,9 +97,11 @@ export class NodeSystem {
 				const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
 				const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
 
+				const particleId = this.ParticleIdPool.GetNextId();
 				const InitParams: ParticleInitParams = {
-					lifetime: lifetimeNode!.GetValue() as number,
-					position: spawnPositionNode!.GetValue() as Vector3,
+					id: particleId,
+					lifetime: lifetimeNode!.GetValue(particleId) as number,
+					position: spawnPositionNode!.GetValue(particleId) as Vector3,
 				};
 
 				const UpdateParams: ParticleUpdateParams = {
@@ -109,12 +115,14 @@ export class NodeSystem {
 		}
 	}
 
-	Stop() {
+	Stop(clearCache: boolean = false) {
 		if (this.SpawnConnection !== undefined) {
 			this.SpawnConnection.Disconnect();
 		}
 
-		const renderNodes = this.NodeGroups[NodeGroups.Render].GetNodes() as RenderNode[];
-		renderNodes[0].Destroy();
+		if (clearCache) {
+			const renderNodes = this.NodeGroups[NodeGroups.Render].GetNodes() as RenderNode[];
+			renderNodes[0].Destroy();
+		}
 	}
 }

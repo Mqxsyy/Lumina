@@ -18,9 +18,11 @@ export class BooleanField extends NodeField {
 
 	SetValue(newValue: boolean): void {
 		this.value = newValue;
+		this.FieldChanged.Fire();
 	}
 
 	BindValue(newValue: () => boolean): void {
 		this.value = newValue;
+		this.FieldChanged.Fire();
 	}
 }

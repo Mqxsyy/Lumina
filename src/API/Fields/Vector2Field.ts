@@ -18,9 +18,11 @@ export class Vector2Field extends NodeField {
 
 	SetValue(newValue: Vector2): void {
 		this.value = newValue;
+		this.FieldChanged.Fire();
 	}
 
 	BindValue(newValue: () => Vector2): void {
 		this.value = newValue;
+		this.FieldChanged.Fire();
 	}
 }
