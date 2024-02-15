@@ -5,9 +5,9 @@ export class ObjectPool {
 	activeItems: BasePart[];
 	standbyItems: BasePart[];
 
-	constructor(item: BasePart, poolFolder: Folder) {
+	constructor(item: BasePart, activeFolder: Folder) {
 		this.item = item;
-		this.folder = poolFolder;
+		this.folder = activeFolder;
 
 		this.activeItems = [];
 		this.standbyItems = [];
@@ -35,5 +35,13 @@ export class ObjectPool {
 		const item = this.activeItems.remove(index);
 		item!.Parent = undefined;
 		this.standbyItems.push(item!);
+	}
+
+	ClearStandby() {
+		for (const item of this.standbyItems) {
+			item.Destroy();
+		}
+
+		this.standbyItems = [];
 	}
 }

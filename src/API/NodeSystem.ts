@@ -1,58 +1,120 @@
 import { INode } from "./Nodes/Node";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
 import { NodeTypes } from "./Nodes/NodeTypes";
-import { ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./Nodes/Render/ParticlePlane";
+import { RunService } from "@rbxts/services";
+import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./Nodes/Render/RenderNode";
+import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
+import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
+import { UpdateNode } from "./Nodes/Update/UpdateNode";
+import { LogicNode } from "./Nodes/Logic/LogicNode";
+
+// OPTIMIZE?: look into an alt version for array.find
+// TODO: add a way to clear 'dead' particles
 
 export class NodeSystem {
-	NodeGroups: { [key in NodeGroups]: NodeGroup };
+	NodeGroups: { [key in NodeGroups]: NodeGroup<INode> };
+	SpawnConnection: RBXScriptConnection | undefined;
 
 	constructor() {
 		this.NodeGroups = {
-			[NodeGroups.Spawn]: new NodeGroup(),
-			[NodeGroups.Initialize]: new NodeGroup(),
-			[NodeGroups.Update]: new NodeGroup(),
-			[NodeGroups.Render]: new NodeGroup(),
+			[NodeGroups.Spawn]: new NodeGroup<SpawnNode>(),
+			[NodeGroups.Initialize]: new NodeGroup<InitializeNode>(),
+			[NodeGroups.Update]: new NodeGroup<UpdateNode>(),
+			[NodeGroups.Render]: new NodeGroup<RenderNode>(),
+			[NodeGroups.Logic]: new NodeGroup<LogicNode>(),
 		};
 	}
 
-	AddNode<T extends unknown[]>(node: INode<T>) {
-		this.NodeGroups[node.nodeGroup].AddNode(node);
+	AddNode(node: INode) {
+		this.NodeGroups[node.nodeGroup as NodeGroups].AddNode(node);
 	}
 
 	Run() {
-		for (const [_, v] of pairs(this.NodeGroups)) {
+		for (const [i, v] of pairs(this.NodeGroups)) {
+			if (i === NodeGroups.Logic) continue;
 			if (v.GetNodes().size() === 0) return;
 		}
 
-		const spawnNode = this.NodeGroups[NodeGroups.Spawn].GetNodes()[0];
+		const spawnNodes = this.NodeGroups[NodeGroups.Spawn].GetNodes();
+		if (spawnNodes.size() > 1) {
+			warn("More than one spawn node used, only the first will be used.");
+		}
+
+		const spawnNode = spawnNodes[0] as SpawnNode;
+
 		if (spawnNode.nodeType === NodeTypes.BurstSpawn) {
-			const amount = spawnNode.fn() as number;
+			const amount = spawnNode.GetValue() as number;
 
 			for (let i = 0; i < amount; i++) {
 				task.spawn(() => {
-					const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes();
+					const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes() as InitializeNode[];
 					const lifetimeNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Lifetime);
 					const spawnPositionNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Position);
 
-					const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes();
+					const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
 					const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
 
 					const InitParams: ParticleInitParams = {
-						lifetime: lifetimeNode!.fn() as number,
-						position: spawnPositionNode!.fn() as Vector3,
+						lifetime: lifetimeNode!.GetValue() as number,
+						position: spawnPositionNode!.GetValue() as Vector3,
 					};
 
 					const UpdateParams: ParticleUpdateParams = {
-						position: [updatePositionNode!.fn] as PositionUpdateFn[],
+						position: [updatePositionNode!.UpdateValue] as PositionUpdateFn[],
 					};
 
-					const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as INode<
-						[ParticleInitParams, ParticleUpdateParams]
-					>;
+					const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as RenderNode;
 
-					outputNode.fn(InitParams, UpdateParams);
+					outputNode.Render(InitParams, UpdateParams);
 				});
 			}
+		} else if (spawnNode.nodeType === NodeTypes.ConstantSpawn) {
+			let amount = spawnNode.GetValue() as number;
+			let cd = math.round(1 / amount);
+			let lastSpawn = os.time();
+
+			this.SpawnConnection = RunService.RenderStepped.Connect(() => {
+				const newAmount = spawnNode.GetValue() as number;
+				if (newAmount !== amount) {
+					amount = newAmount;
+					cd = math.round(1 / amount);
+				}
+
+				if (os.time() - lastSpawn < cd) {
+					return;
+				}
+
+				lastSpawn = os.time();
+
+				const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes() as InitializeNode[];
+				const lifetimeNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Lifetime);
+				const spawnPositionNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Position);
+
+				const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
+				const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
+
+				const InitParams: ParticleInitParams = {
+					lifetime: lifetimeNode!.GetValue() as number,
+					position: spawnPositionNode!.GetValue() as Vector3,
+				};
+
+				const UpdateParams: ParticleUpdateParams = {
+					position: [updatePositionNode!.UpdateValue] as PositionUpdateFn[],
+				};
+
+				const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as RenderNode;
+
+				outputNode.Render(InitParams, UpdateParams);
+			});
 		}
+	}
+
+	Stop() {
+		if (this.SpawnConnection !== undefined) {
+			this.SpawnConnection.Disconnect();
+		}
+
+		const renderNodes = this.NodeGroups[NodeGroups.Render].GetNodes() as RenderNode[];
+		renderNodes[0].Destroy();
 	}
 }

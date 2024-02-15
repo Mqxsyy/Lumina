@@ -1,9 +1,9 @@
 import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
-import { Node } from "../Node";
 import { NodeTypes } from "../NodeTypes";
+import { InitializeNode } from "./InitializeNode";
 
-export class Lifetime extends Node {
+export class Lifetime extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeType: NodeTypes = NodeTypes.Lifetime;
 	nodeFields: {
@@ -18,7 +18,7 @@ export class Lifetime extends Node {
 		};
 	}
 
-	fn = (): number => {
+	GetValue = (): number => {
 		return this.nodeFields.time.GetValue() as number;
 	};
 }

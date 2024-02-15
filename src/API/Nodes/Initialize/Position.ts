@@ -1,9 +1,9 @@
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { NodeGroups } from "../../NodeGroup";
-import { Node } from "../Node";
 import { NodeTypes } from "../NodeTypes";
+import { InitializeNode } from "./InitializeNode";
 
-export class Position extends Node {
+export class Position extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeType: NodeTypes = NodeTypes.Position;
 	nodeFields: {
@@ -18,7 +18,7 @@ export class Position extends Node {
 		};
 	}
 
-	fn = (): Vector3 => {
+	GetValue = (): Vector3 => {
 		return this.nodeFields.position.GetValue() as Vector3;
 	};
 }

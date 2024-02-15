@@ -1,9 +1,9 @@
 import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
-import { Node } from "../Node";
 import { NodeTypes } from "../NodeTypes";
+import { SpawnNode } from "./SpawnNode";
 
-export class BurstSpawn extends Node {
+export class BurstSpawn extends SpawnNode {
 	nodeGroup: NodeGroups = NodeGroups.Spawn;
 	nodeType: NodeTypes = NodeTypes.BurstSpawn;
 	nodeFields: {
@@ -18,7 +18,7 @@ export class BurstSpawn extends Node {
 		};
 	}
 
-	fn = (): number => {
+	GetValue = (): number => {
 		return this.nodeFields.amount.GetValue() as number;
 	};
 }

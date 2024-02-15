@@ -5,20 +5,21 @@ export enum NodeGroups {
 	Initialize,
 	Update,
 	Render,
+	Logic,
 }
 
-export class NodeGroup {
-	private Nodes: INode[];
+export class NodeGroup<T extends INode> {
+	private Nodes: T[];
 
 	constructor() {
 		this.Nodes = [];
 	}
 
-	AddNode(node: INode) {
+	AddNode(node: T) {
 		this.Nodes.push(node);
 	}
 
-	GetNodes(): INode[] {
+	GetNodes(): T[] {
 		return this.Nodes;
 	}
 }

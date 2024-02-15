@@ -1,11 +1,13 @@
 export enum NodeTypes {
-	ContiniousSpawn,
+	ConstantSpawn,
 	BurstSpawn,
-	RepeatingBurstSpawn,
+	PeriodicBurstSpawn,
 
 	Lifetime,
 
 	Position,
 
 	ParticlePlane,
+
+	RandomNumber,
 }

@@ -7,17 +7,17 @@ export interface ParticleInitData {
 	lifetime?: number;
 	spawnPosition?: Vector3;
 }
-
-export interface INode<T extends unknown[] = []> {
+// <T extends unknown[] = []>
+export interface INode {
 	id: number;
 	nodeType: NodeTypes;
 	nodeGroup: NodeGroups;
 	nodeFields: { [key: string]: INodeField };
-	fn: (...params: T) => unknown;
+	// fn: (...params: T) => unknown;
 }
 
 // bro these type definitions feel soo weird and overkill
-export abstract class Node<T extends unknown[] = []> implements INode<T> {
+export abstract class Node implements INode {
 	id: number;
 	abstract nodeGroup: NodeGroups;
 	abstract nodeType: NodeTypes;
@@ -27,5 +27,5 @@ export abstract class Node<T extends unknown[] = []> implements INode<T> {
 		this.id = GetNodeId();
 	}
 
-	abstract fn: (...params: T) => unknown;
+	// abstract fn: (...params: T) => unknown;
 }

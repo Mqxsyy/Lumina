@@ -1,11 +1,11 @@
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { NodeGroups } from "API/NodeGroup";
-import { Node } from "API/Nodes/Node";
 import { NodeTypes } from "API/Nodes/NodeTypes";
+import { LogicNode } from "../LogicNode";
 
-export class RandomNumberNode extends Node {
-	nodeGroup: NodeGroups = NodeGroups.Initialize;
-	nodeType: NodeTypes = NodeTypes.Lifetime;
+export class RandomNumberNode extends LogicNode {
+	nodeGroup: NodeGroups = NodeGroups.Logic;
+	nodeType: NodeTypes = NodeTypes.RandomNumber;
 	nodeFields: {
 		range: Vector2Field;
 	};
@@ -22,7 +22,7 @@ export class RandomNumberNode extends Node {
 		};
 	}
 
-	fn = (): number => {
+	Calculate = (): number => {
 		const range = this.nodeFields.range.GetValue();
 		return this.random.NextInteger(range.X, range.Y);
 	};
