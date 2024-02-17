@@ -18,7 +18,7 @@ export class Position extends InitializeNode {
 		};
 	}
 
-	GetValue = (id: number): Vector3 => {
-		return this.nodeFields.position.GetValue(id) as Vector3;
+	GetValue = (): Vector3 => {
+		return this.nodeFields.position.GetValue() as Vector3;
 	};
 }

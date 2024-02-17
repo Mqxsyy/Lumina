@@ -15,8 +15,6 @@ export class RandomNumberNode extends LogicNode {
 
 	random: Random;
 
-	storedValues: Map<number, number> = new Map<number, number>();
-
 	constructor() {
 		super();
 
@@ -29,7 +27,7 @@ export class RandomNumberNode extends LogicNode {
 		};
 	}
 
-	GetRandom(): number {
+	Calculate = (): number => {
 		const range = this.nodeFields.range.GetValue();
 		let value = range.X + this.random.NextNumber() * (range.Y - range.X);
 
@@ -38,20 +36,5 @@ export class RandomNumberNode extends LogicNode {
 		}
 
 		return range.X + this.random.NextNumber() * (range.Y - range.X);
-	}
-
-	Calculate = (id: number): number => {
-		if (this.nodeFields.randomizeOnce.GetValue()) {
-			let value = this.storedValues.get(id);
-			if (value !== undefined) {
-				return value;
-			}
-
-			value = this.GetRandom();
-			this.storedValues.set(id, value);
-			return value;
-		}
-
-		return this.GetRandom();
 	};
 }

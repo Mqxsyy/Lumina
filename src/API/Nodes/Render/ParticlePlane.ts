@@ -7,7 +7,6 @@ import { RenderNode, ParticleInitParams, ParticleUpdateParams } from "./RenderNo
 import { NumberField } from "API/Fields/NumberField";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
-import { RemapValue } from "API/Lib";
 
 // TODO: make double sided, required reversed image if not symmetrical
 
@@ -18,7 +17,7 @@ const DEFAULT_EMISSION = 1;
 
 interface PlaneParticle extends Part {
 	SurfaceGui: SurfaceGui & {
-		Image: ImageLabel;
+		ImageLabel: ImageLabel;
 	};
 }
 
@@ -56,6 +55,7 @@ export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeType: NodeTypes = NodeTypes.ParticlePlane;
 	nodeFields = {
+		transparency: new NumberField(0),
 		color: new Vector3Field(new Vector3(1, 1, 1)),
 		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),
@@ -83,6 +83,11 @@ export class ParticlePlane extends RenderNode {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
 		particle.Position = init.position;
 
+		const colorVec3 = this.nodeFields.color.GetValue();
+		particle.SurfaceGui.ImageLabel.ImageColor3 = new Color3(colorVec3.X, colorVec3.Y, colorVec3.Z);
+		particle.SurfaceGui.Brightness = this.nodeFields.emission.GetValue();
+		particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
+
 		const orientation = this.nodeFields.orientation.GetValue();
 		if (orientation === Orientation.FacingCamera) {
 			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
@@ -97,6 +102,12 @@ export class ParticlePlane extends RenderNode {
 				return;
 			}
 
+			if (update.aliveNodes !== undefined && update.aliveNodes.size() > 0) {
+				for (const aliveNode of update.aliveNodes) {
+					aliveNode.nodeFields.value.SetValue(aliveTime / init.lifetime);
+				}
+			}
+
 			if (orientation === Orientation.FacingCamera) {
 				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
 			}
@@ -106,6 +117,8 @@ export class ParticlePlane extends RenderNode {
 					particle.Position = fn(init.id, particle.Position);
 				}
 			}
+
+			particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
 
 			aliveTime += dt;
 		});

@@ -106,8 +106,11 @@ export class NodeSystem {
 					position: spawnPositionNode!.GetValue(particleId) as Vector3,
 				};
 
+				const logicNodes = this.NodeGroups[NodeGroups.Logic].GetNodes();
+
 				const UpdateParams: ParticleUpdateParams = {
 					position: [updatePositionNode!.UpdateValue] as PositionUpdateFn[],
+					aliveNodes: logicNodes.filter((node) => node.nodeType === NodeTypes.AliveTime) as LogicNode[],
 				};
 
 				const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as RenderNode;

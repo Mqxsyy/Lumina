@@ -2,9 +2,10 @@ import { ClearParticles } from "./FolderLocations";
 import { NodeSystem } from "./NodeSystem";
 import { Lifetime } from "./Nodes/Initialize/Lifetime";
 import { Position } from "./Nodes/Initialize/Position";
+import { AliveTime } from "./Nodes/Logic/AliveTime";
+import { RampNode } from "./Nodes/Logic/Math/RampNode";
 import { RandomNumberNode } from "./Nodes/Logic/Math/RandomNumberNode";
 import { ParticlePlane } from "./Nodes/Render/ParticlePlane";
-import { BurstSpawn } from "./Nodes/Spawn/BurstSpawn";
 import { ConstantSpawnNode } from "./Nodes/Spawn/ConstantSpawn";
 import { StaticForce } from "./Nodes/Update/StaticForce";
 
@@ -17,8 +18,12 @@ export function CreateBasicNodeSystem() {
 	constantSpawnNode.nodeFields.rate.SetValue(5);
 	nodeSystem.AddNode(constantSpawnNode);
 
+	const randomNumberNode0 = new RandomNumberNode();
+	randomNumberNode0.nodeFields.randomizeOnce.SetValue(true);
+	randomNumberNode0.nodeFields.range.SetValue(new Vector2(1, 3));
+
 	const lifetimeNode = new Lifetime();
-	lifetimeNode.nodeFields.time.SetValue(3);
+	lifetimeNode.nodeFields.time.BindValue(randomNumberNode0.Calculate);
 	nodeSystem.AddNode(lifetimeNode);
 
 	const randomNumberNode1 = new RandomNumberNode();
@@ -40,14 +45,22 @@ export function CreateBasicNodeSystem() {
 	staticForceNode.nodeFields.isLocal.SetValue(true);
 	nodeSystem.AddNode(staticForceNode);
 
+	const aliveTimeNode = new AliveTime();
+	nodeSystem.AddNode(aliveTimeNode);
+
+	const rampNode = new RampNode();
+	rampNode.nodeFields.value.BindValue(aliveTimeNode.Calculate);
+	nodeSystem.AddNode(rampNode);
+
 	const particlePlane = new ParticlePlane();
-	particlePlane.nodeFields.color.SetValue(new Vector3(0, 0, 0));
-	particlePlane.nodeFields.emission.SetValue(0);
+	particlePlane.nodeFields.transparency.BindValue(rampNode.Calculate);
+	particlePlane.nodeFields.color.SetValue(new Vector3(2, 2, 2));
+	particlePlane.nodeFields.emission.SetValue(1);
 	nodeSystem.AddNode(particlePlane);
 
 	nodeSystem.Run();
 
-	task.wait(10);
+	task.wait(5);
 
 	nodeSystem.Stop();
 }

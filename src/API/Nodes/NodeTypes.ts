@@ -10,4 +10,6 @@ export enum NodeTypes {
 	ParticlePlane,
 
 	RandomNumber,
+	Ramp,
+	AliveTime,
 }
