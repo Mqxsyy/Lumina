@@ -5,30 +5,18 @@ import { ObjectPool } from "API/ObjectPool";
 import { GetLiveParticlesFolder } from "API/FolderLocations";
 import { RenderNode, ParticleInitParams, ParticleUpdateParams } from "./RenderNode";
 
-// TODO: make a plane mesh that displays the image; need this for emission and flipping backside image
+// TODO: make double sided version
 
 const DEFAULT_SIZE = new Vector3(1, 1, 0.01);
-const DEFAULT_IMAGE = "rbxassetid://7848741169";
-
-function CreateImage(): SurfaceGui {
-	const surfaceGui = new Instance("SurfaceGui");
-
-	const imageLabel = new Instance("ImageLabel");
-	imageLabel.Size = UDim2.fromScale(1, 1);
-	imageLabel.BorderSizePixel = 0;
-	imageLabel.BackgroundTransparency = 1;
-	imageLabel.ImageColor3 = new Color3(2, 2, 2);
-	imageLabel.Parent = surfaceGui;
-	imageLabel.Image = DEFAULT_IMAGE;
-
-	return surfaceGui;
-}
+const DEFAULT_MESH_ID = "rbxassetid://16402058447";
+const DEFAULT_TEXTURE = "rbxassetid://7848741169";
 
 function CreateParticlePlane(): BasePart {
 	const particlePlane = new Instance("Part");
+	particlePlane.Name = "ParticlePlane";
 
 	particlePlane.Size = DEFAULT_SIZE;
-	particlePlane.Transparency = 1;
+	particlePlane.Transparency = 0.015;
 
 	particlePlane.CastShadow = false;
 
@@ -38,13 +26,13 @@ function CreateParticlePlane(): BasePart {
 	particlePlane.CanTouch = false;
 	particlePlane.Massless = true;
 
-	const frontSurfaceGui = CreateImage();
-	frontSurfaceGui.Face = Enum.NormalId.Front;
-	frontSurfaceGui.Parent = particlePlane;
+	const mesh = new Instance("SpecialMesh");
+	mesh.MeshType = Enum.MeshType.FileMesh;
+	mesh.MeshId = DEFAULT_MESH_ID;
+	mesh.TextureId = DEFAULT_TEXTURE;
+	mesh.Parent = particlePlane;
 
-	const backSurfaceGui = CreateImage();
-	backSurfaceGui.Face = Enum.NormalId.Back;
-	backSurfaceGui.Parent = particlePlane;
+	mesh.VertexColor = new Vector3(2, 2, 2);
 
 	return particlePlane;
 }
