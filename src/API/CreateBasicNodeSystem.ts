@@ -4,6 +4,7 @@ import { Lifetime } from "./Nodes/Initialize/Lifetime";
 import { Position } from "./Nodes/Initialize/Position";
 import { RandomNumberNode } from "./Nodes/Logic/Math/RandomNumberNode";
 import { ParticlePlane } from "./Nodes/Render/ParticlePlane";
+import { BurstSpawn } from "./Nodes/Spawn/BurstSpawn";
 import { ConstantSpawnNode } from "./Nodes/Spawn/ConstantSpawn";
 import { StaticForce } from "./Nodes/Update/StaticForce";
 
@@ -13,14 +14,15 @@ export function CreateBasicNodeSystem() {
 	const nodeSystem = new NodeSystem();
 
 	const constantSpawnNode = new ConstantSpawnNode();
+	constantSpawnNode.nodeFields.rate.SetValue(5);
 	nodeSystem.AddNode(constantSpawnNode);
 
 	const lifetimeNode = new Lifetime();
-	lifetimeNode.nodeFields.time.SetValue(2);
+	lifetimeNode.nodeFields.time.SetValue(3);
 	nodeSystem.AddNode(lifetimeNode);
 
 	const randomNumberNode1 = new RandomNumberNode();
-	randomNumberNode1.nodeFields.range.SetValue(new Vector2(-10, 10));
+	randomNumberNode1.nodeFields.range.SetValue(new Vector2(-5, 5));
 
 	const positionNode = new Position();
 	positionNode.nodeFields.position.SetValue(new Vector3(0, 10, 0));
@@ -38,11 +40,14 @@ export function CreateBasicNodeSystem() {
 	staticForceNode.nodeFields.isLocal.SetValue(true);
 	nodeSystem.AddNode(staticForceNode);
 
-	nodeSystem.AddNode(new ParticlePlane());
+	const particlePlane = new ParticlePlane();
+	particlePlane.nodeFields.color.SetValue(new Vector3(0, 0, 0));
+	particlePlane.nodeFields.emission.SetValue(0);
+	nodeSystem.AddNode(particlePlane);
 
 	nodeSystem.Run();
 
-	task.wait(1);
+	task.wait(10);
 
 	nodeSystem.Stop();
 }

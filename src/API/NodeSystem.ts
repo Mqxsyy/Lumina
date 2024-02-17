@@ -34,6 +34,7 @@ export class NodeSystem {
 	Run() {
 		for (const [i, v] of pairs(this.NodeGroups)) {
 			if (i === NodeGroups.Logic) continue;
+			if (i === NodeGroups.Update) continue;
 			if (v.GetNodes().size() === 0) return;
 		}
 
@@ -63,9 +64,10 @@ export class NodeSystem {
 						position: spawnPositionNode!.GetValue(particleId) as Vector3,
 					};
 
-					const UpdateParams: ParticleUpdateParams = {
-						position: [updatePositionNode!.UpdateValue] as PositionUpdateFn[],
-					};
+					const UpdateParams: ParticleUpdateParams = {};
+					if (updatePositionNode !== undefined) {
+						UpdateParams.position = [updatePositionNode!.UpdateValue] as PositionUpdateFn[];
+					}
 
 					const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as RenderNode;
 

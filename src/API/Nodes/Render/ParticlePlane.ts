@@ -4,19 +4,30 @@ import { RunService } from "@rbxts/services";
 import { ObjectPool } from "API/ObjectPool";
 import { GetLiveParticlesFolder } from "API/FolderLocations";
 import { RenderNode, ParticleInitParams, ParticleUpdateParams } from "./RenderNode";
+import { NumberField } from "API/Fields/NumberField";
+import { Vector3Field } from "API/Fields/Vector3Field";
+import { Orientation, OrientationField } from "API/Fields/OrientationField";
+import { RemapValue } from "API/Lib";
 
-// TODO: make double sided version
+// TODO: make double sided, required reversed image if not symmetrical
 
-const DEFAULT_SIZE = new Vector3(1, 1, 0.01);
-const DEFAULT_MESH_ID = "rbxassetid://16402058447";
+const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 const DEFAULT_TEXTURE = "rbxassetid://7848741169";
+const DEFAULT_COLOR = new Color3(1, 1, 1);
+const DEFAULT_EMISSION = 1;
 
-function CreateParticlePlane(): BasePart {
+interface PlaneParticle extends Part {
+	SurfaceGui: SurfaceGui & {
+		Image: ImageLabel;
+	};
+}
+
+function CreateParticlePlane(): PlaneParticle {
 	const particlePlane = new Instance("Part");
 	particlePlane.Name = "ParticlePlane";
 
 	particlePlane.Size = DEFAULT_SIZE;
-	particlePlane.Transparency = 0.015;
+	particlePlane.Transparency = 1;
 
 	particlePlane.CastShadow = false;
 
@@ -26,21 +37,29 @@ function CreateParticlePlane(): BasePart {
 	particlePlane.CanTouch = false;
 	particlePlane.Massless = true;
 
-	const mesh = new Instance("SpecialMesh");
-	mesh.MeshType = Enum.MeshType.FileMesh;
-	mesh.MeshId = DEFAULT_MESH_ID;
-	mesh.TextureId = DEFAULT_TEXTURE;
-	mesh.Parent = particlePlane;
+	const surfaceGui = new Instance("SurfaceGui");
+	surfaceGui.Parent = particlePlane;
+	surfaceGui.LightInfluence = 0;
+	surfaceGui.Brightness = DEFAULT_EMISSION;
 
-	mesh.VertexColor = new Vector3(2, 2, 2);
+	const imageLabel = new Instance("ImageLabel");
+	imageLabel.Size = new UDim2(1, 0, 1, 0);
+	imageLabel.BackgroundTransparency = 1;
+	imageLabel.Image = DEFAULT_TEXTURE;
+	imageLabel.ImageColor3 = DEFAULT_COLOR;
+	imageLabel.Parent = surfaceGui;
 
-	return particlePlane;
+	return particlePlane as PlaneParticle;
 }
 
 export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeType: NodeTypes = NodeTypes.ParticlePlane;
-	nodeFields = {};
+	nodeFields = {
+		color: new Vector3Field(new Vector3(1, 1, 1)),
+		emission: new NumberField(1),
+		orientation: new OrientationField(Orientation.FacingCamera),
+	};
 
 	objectPool: ObjectPool;
 	displayFolder: Folder;
@@ -61,15 +80,25 @@ export class ParticlePlane extends RenderNode {
 	}
 
 	Render = (init: ParticleInitParams, update: ParticleUpdateParams) => {
-		const particle = this.objectPool.GetItem();
+		const particle = this.objectPool.GetItem() as PlaneParticle;
 		particle.Position = init.position;
 
+		const orientation = this.nodeFields.orientation.GetValue();
+		if (orientation === Orientation.FacingCamera) {
+			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
+		}
+
 		let aliveTime = 0;
+
 		const connection = RunService.RenderStepped.Connect((dt) => {
 			if (aliveTime >= init.lifetime) {
 				connection.Disconnect();
 				this.objectPool.RemoveItem(particle);
 				return;
+			}
+
+			if (orientation === Orientation.FacingCamera) {
+				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
 			}
 
 			if (update.position !== undefined) {
