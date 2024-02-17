@@ -36,6 +36,10 @@ export const StyleColors = {
 
 export const StyleProperties = {
 	FontId: "rbxasset://fonts/families/Nunito.json",
+	FontWeight: Enum.FontWeight.SemiBold,
 	FontSize: 16,
+	BorderThicknes: 3,
 	CornerRadius: new UDim(0, 5),
 };
+
+export const StyleFont = new Font(StyleProperties.FontId, StyleProperties.FontWeight);

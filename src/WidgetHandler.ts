@@ -1,9 +1,16 @@
-import { GetCanvasFrame } from "Events";
+import { Event } from "API/Event";
+import { GetCanvas } from "Events";
 
 let widget: DockWidgetPluginGui;
 
+export const WidgetSizeChanged = new Event();
+
 export function SetWidget(dockWidgetPluginGui: DockWidgetPluginGui) {
 	widget = dockWidgetPluginGui;
+
+	widget.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+		WidgetSizeChanged.Fire(widget.AbsoluteSize);
+	});
 }
 
 export function GetMousePosition(): Vector2 {
@@ -11,7 +18,7 @@ export function GetMousePosition(): Vector2 {
 }
 
 export function GetMousePositionOnCanvas(): Vector2 {
-	const canvasFrame = GetCanvasFrame.Invoke() as Frame;
+	const canvasFrame = GetCanvas.Invoke() as Frame;
 	const pos = new Vector2(canvasFrame.AbsolutePosition.X, canvasFrame.AbsolutePosition.Y);
 	return GetMousePosition().sub(pos);
 }

@@ -1,7 +1,9 @@
-import { ZoomScaleUpdateEvent } from "Events";
+import { Event } from "API/Event";
 
 let zoomScale = 1;
 let lastZoomScale = 1;
+
+export const ZoomScaleChanged = new Event();
 
 export const ZoomScaleConstraint = {
 	min: 0.3,
@@ -19,5 +21,5 @@ export function GetLastZoomScale(): number {
 export function SetZoomScale(value: number) {
 	lastZoomScale = zoomScale;
 	zoomScale = value;
-	ZoomScaleUpdateEvent.Fire(zoomScale);
+	ZoomScaleChanged.Fire(zoomScale);
 }

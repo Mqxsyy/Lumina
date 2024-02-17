@@ -1,4 +1,3 @@
-import { CreateBasicNodeSystem } from "API/CreateBasicNodeSystem";
 import { InitUI } from "UIHandler";
 import { SetWidget } from "WidgetHandler";
 
@@ -17,4 +16,3 @@ button.Click.Connect(() => {
 });
 
 InitUI();
-CreateBasicNodeSystem();

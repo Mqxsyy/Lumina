@@ -55,7 +55,7 @@ export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeType: NodeTypes = NodeTypes.ParticlePlane;
 	nodeFields = {
-		transparency: new NumberField(0),
+		transparency: new NumberField(0), // value that can either exist on init or update
 		color: new Vector3Field(new Vector3(1, 1, 1)),
 		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),

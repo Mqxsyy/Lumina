@@ -1,22 +1,16 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
-import { NodesChanged, ZoomScaleUpdateEvent } from "Events";
-import { GetMousePosition, GetMousePositionOnCanvas, GetWidget } from "WidgetHandler";
-import { GetZoomScale, SetZoomScale, ZoomScaleConstraint } from "ZoomScale";
-import { GetNodeCollection, NODE_Z_INCREMENTS, NODE_Z_OFFSET } from "Nodes/NodesHandler";
-import { NodeSelection } from "./NodeSelection";
+import { GetMousePosition, GetWidget, WidgetSizeChanged } from "WidgetHandler";
+import { GetZoomScale, SetZoomScale, ZoomScaleConstraint, ZoomScaleChanged } from "ZoomScale";
 import { StyleColors } from "Style";
-import { BezierCurve } from "./Lines/BezierCurve";
+import { GetCanvas } from "Events";
+import { Controls } from "./Controls";
 
-// TODO: add widget size tracking
 // TODO: make zoom go to mouse
 
-interface AppProps {
-	fn: (frame: Frame) => void;
-}
-
-export function App({ fn }: AppProps) {
+export function App() {
 	const canvasRef = useRef(undefined as Frame | undefined);
+	GetCanvas.OnInvoke = () => canvasRef.current;
 
 	const [widgetSize, setWidgetSize] = useState(GetWidget().AbsoluteSize);
 
@@ -24,12 +18,6 @@ export function App({ fn }: AppProps) {
 	const [canvasSize, setCanvasSize] = useState(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
-	const isDraggingRef = useRef(false);
-	const [_, setNodesChanged] = useState(false);
-
-	const [nodeSelectionPosition, setNodeSelectionPosition] = useState(new Vector2(0, 0));
-	const [displayNodeSelection, setDisplayNodeSelection] = useState(false);
 
 	const StartMoveCanvas = (frame: Frame) => {
 		const mousePositionVec2 = GetMousePosition();
@@ -72,46 +60,12 @@ export function App({ fn }: AppProps) {
 	};
 
 	useEffect(() => {
-		fn(canvasRef.current as Frame);
-
-		// force re-render when nodes change
-		NodesChanged.Event.Connect(() => {
-			setNodesChanged((prevValue) => !prevValue);
+		WidgetSizeChanged.Connect((size) => {
+			setWidgetSize(size as Vector2);
 		});
 
-		ZoomScaleUpdateEvent.Event.Connect((zoomScale: number) => {
-			// const delta = -(1 - zoomScale / GetLastZoomScale());
-
-			/*
-			// const mousePosition = GetMousePositionOnCanvas();
-			// const canvasOffset = mousePosition.mul(delta);
-
-			// const currentPos = canvasRef.current!.Position;
-			// const newPosition = UDim2.fromOffset(
-			// 	currentPos.X.Offset - canvasOffset.X,
-			// 	currentPos.Y.Offset - canvasOffset.Y,
-			// );
-            
-            // setCanvasPosition(newPosition);
-            */
-
-			// const mousePositionVec2 = GetMousePosition().mul(delta);
-			// const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
-
-			// const widgetSize = GetWidget().AbsoluteSize.mul(0.5);
-
-			// mouseOffset = canvasRef
-			// 	.current!.Position.sub(mousePosition)
-			// 	.add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
-
-			// const currentPos = canvasRef.current!.Position;
-			// const newPosition = UDim2.fromOffset(
-			// 	currentPos.X.Offset - mouseOffset.X.Offset,
-			// 	currentPos.Y.Offset - mouseOffset.Y.Offset,
-			// );
-
-			// setCanvasPosition(mousePosition);
-			setZoomScale(zoomScale);
+		ZoomScaleChanged.Connect((zoom) => {
+			setZoomScale(zoom as number);
 		});
 	}, []);
 
@@ -121,115 +75,102 @@ export function App({ fn }: AppProps) {
 		);
 
 		setCanvasSize(size);
-	}, [canvasPosition]);
+	}, [widgetSize, canvasPosition]);
 
 	return (
-		<frame
-			AnchorPoint={new Vector2(0.5, 0.5)}
-			Position={UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5).add(canvasPosition)}
-			Size={canvasSize}
-			BackgroundColor3={StyleColors.hex900}
-			Event={{
-				InputBegan: (_, inputObject: InputObject) => {
-					if (inputObject.KeyCode === Enum.KeyCode.Space) {
-						setNodeSelectionPosition(GetMousePositionOnCanvas());
-						setDisplayNodeSelection(true);
-					} else if (
-						inputObject.UserInputType === Enum.UserInputType.MouseButton1 ||
-						inputObject.UserInputType === Enum.UserInputType.MouseButton3
-					) {
-						setDisplayNodeSelection(false);
-					}
-				},
-			}}
-			ref={canvasRef}
-		>
-			<imagelabel
-				Position={UDim2.fromOffset(0, 0)}
-				Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
-				Rotation={180}
-				BackgroundTransparency={1}
-				Image={"rbxassetid://15952812715"} // alt: 15952811095
-				ImageTransparency={0.5}
-				ScaleType={"Tile"}
-				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
-			/>
-			<imagelabel
-				Position={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
-				Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
-				BackgroundTransparency={1}
-				Image={"rbxassetid://15952812715"} // alt: 15952811095
-				ImageTransparency={0.5}
-				ScaleType={"Tile"}
-				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
-			/>
-			<imagelabel
-				Position={
-					new UDim2(
-						0.5,
-						canvasSize.X.Offset * 0.25 - canvasSize.Y.Offset * 0.25,
-						0,
-						canvasSize.Y.Offset * 0.25 - canvasSize.X.Offset * 0.25,
-					)
-				}
-				Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
-				Rotation={270}
-				BackgroundTransparency={1}
-				Image={"rbxassetid://15952812715"} // alt: 15952811095
-				ImageTransparency={0.5}
-				ScaleType={"Tile"}
-				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
-			/>
-			<imagelabel
-				Position={
-					new UDim2(
-						0,
-						canvasSize.X.Offset * 0.25 - canvasSize.Y.Offset * 0.25,
-						0.5,
-						canvasSize.Y.Offset * 0.25 - canvasSize.X.Offset * 0.25,
-					)
-				}
-				Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
-				Rotation={90}
-				BackgroundTransparency={1}
-				Image={"rbxassetid://15952812715"} // alt: 15952811095
-				ImageTransparency={0.5}
-				ScaleType={"Tile"}
-				TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
-			/>
-			{GetNodeCollection().map((node) => {
-				const canvasData: CanvasData = {
-					size: canvasSize,
-					isMoving: isDraggingRef.current,
-				};
-				return node.Node(node.Id, canvasData, node.Params);
-			})}
+		<>
 			<frame
-				Size={UDim2.fromScale(1, 1)}
-				BackgroundTransparency={1}
+				AnchorPoint={new Vector2(0.5, 0.5)}
+				Position={UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5).add(canvasPosition)}
+				Size={canvasSize}
+				BackgroundColor3={StyleColors.hex900}
 				Event={{
-					InputBegan: (element, inputObject: InputObject) => {
-						if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
-						StartMoveCanvas(element.Parent as Frame);
-					},
-					InputEnded: (_, inputObject: InputObject) => {
-						if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
-						EndMoveCanvas();
-					},
-					InputChanged: (_, inputObject: InputObject) => {
-						if (inputObject.UserInputType !== Enum.UserInputType.MouseWheel) return;
-						UpdateZoom(inputObject);
+					InputBegan: (_, inputObject: InputObject) => {
+						if (inputObject.KeyCode === Enum.KeyCode.Space) {
+							// open node selection
+						} else if (
+							inputObject.UserInputType === Enum.UserInputType.MouseButton1 ||
+							inputObject.UserInputType === Enum.UserInputType.MouseButton3
+						) {
+							// Close node selection
+						}
 					},
 				}}
-			/>
-			{displayNodeSelection && (
-				<NodeSelection
-					canvasPosition={canvasRef.current!.Position}
-					position={nodeSelectionPosition}
-					zIndex={(GetNodeCollection().size() + 1) * NODE_Z_INCREMENTS + NODE_Z_OFFSET - 1}
-					closeSelection={() => setDisplayNodeSelection(false)}
+				ref={canvasRef}
+			>
+				<imagelabel
+					Position={UDim2.fromOffset(0, 0)}
+					Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
+					Rotation={180}
+					BackgroundTransparency={1}
+					Image={"rbxassetid://15952812715"} // alt: 15952811095
+					ImageTransparency={0.5}
+					ScaleType={"Tile"}
+					TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 				/>
-			)}
-		</frame>
+				<imagelabel
+					Position={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
+					Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
+					BackgroundTransparency={1}
+					Image={"rbxassetid://15952812715"} // alt: 15952811095
+					ImageTransparency={0.5}
+					ScaleType={"Tile"}
+					TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
+				/>
+				<imagelabel
+					Position={
+						new UDim2(
+							0.5,
+							canvasSize.X.Offset * 0.25 - canvasSize.Y.Offset * 0.25,
+							0,
+							canvasSize.Y.Offset * 0.25 - canvasSize.X.Offset * 0.25,
+						)
+					}
+					Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
+					Rotation={270}
+					BackgroundTransparency={1}
+					Image={"rbxassetid://15952812715"} // alt: 15952811095
+					ImageTransparency={0.5}
+					ScaleType={"Tile"}
+					TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
+				/>
+				<imagelabel
+					Position={
+						new UDim2(
+							0,
+							canvasSize.X.Offset * 0.25 - canvasSize.Y.Offset * 0.25,
+							0.5,
+							canvasSize.Y.Offset * 0.25 - canvasSize.X.Offset * 0.25,
+						)
+					}
+					Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
+					Rotation={90}
+					BackgroundTransparency={1}
+					Image={"rbxassetid://15952812715"} // alt: 15952811095
+					ImageTransparency={0.5}
+					ScaleType={"Tile"}
+					TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
+				/>
+				<frame
+					Size={UDim2.fromScale(1, 1)}
+					BackgroundTransparency={1}
+					Event={{
+						InputBegan: (element, inputObject: InputObject) => {
+							if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
+							StartMoveCanvas(element.Parent as Frame);
+						},
+						InputEnded: (_, inputObject: InputObject) => {
+							if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
+							EndMoveCanvas();
+						},
+						InputChanged: (_, inputObject: InputObject) => {
+							if (inputObject.UserInputType !== Enum.UserInputType.MouseWheel) return;
+							UpdateZoom(inputObject);
+						},
+					}}
+				/>
+			</frame>
+			<Controls />
+		</>
 	);
 }
