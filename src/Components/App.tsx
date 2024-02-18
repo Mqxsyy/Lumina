@@ -1,10 +1,11 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { GetMousePosition, GetWidget, WidgetSizeChanged } from "WidgetHandler";
-import { GetZoomScale, SetZoomScale, ZoomScaleConstraint, ZoomScaleChanged } from "ZoomScale";
+import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { StyleColors } from "Style";
 import { GetCanvas } from "Events";
 import { Controls } from "./Controls";
+import { NodeSelection } from "./NodeSelection";
 
 // TODO: make zoom go to mouse
 
@@ -18,6 +19,8 @@ export function App() {
 	const [canvasSize, setCanvasSize] = useState(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
+
+	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
 
 	const StartMoveCanvas = (frame: Frame) => {
 		const mousePositionVec2 = GetMousePosition();
@@ -43,19 +46,9 @@ export function App() {
 
 	const UpdateZoom = (inputObject: InputObject) => {
 		if (inputObject.Position.Z > 0) {
-			const newZoomScale = GetZoomScale() + 0.1;
-			if (newZoomScale > ZoomScaleConstraint.max) {
-				SetZoomScale(ZoomScaleConstraint.max);
-			} else {
-				SetZoomScale(newZoomScale);
-			}
+			UpdateZoomScale(0.1);
 		} else if (inputObject.Position.Z < 0) {
-			const newZoomScale = GetZoomScale() - 0.1;
-			if (newZoomScale < ZoomScaleConstraint.min) {
-				SetZoomScale(ZoomScaleConstraint.min);
-			} else {
-				SetZoomScale(newZoomScale);
-			}
+			UpdateZoomScale(-0.1);
 		}
 	};
 
@@ -87,12 +80,13 @@ export function App() {
 				Event={{
 					InputBegan: (_, inputObject: InputObject) => {
 						if (inputObject.KeyCode === Enum.KeyCode.Space) {
-							// open node selection
+							const mousePositionVec2 = GetMousePosition();
+							setDisplayNodeSelection(UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y));
 						} else if (
 							inputObject.UserInputType === Enum.UserInputType.MouseButton1 ||
 							inputObject.UserInputType === Enum.UserInputType.MouseButton3
 						) {
-							// Close node selection
+							setDisplayNodeSelection(undefined);
 						}
 					},
 				}}
@@ -171,6 +165,7 @@ export function App() {
 				/>
 			</frame>
 			<Controls />
+			{displayNodeSelection !== undefined && <NodeSelection Position={displayNodeSelection} />}
 		</>
 	);
 }

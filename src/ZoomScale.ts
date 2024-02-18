@@ -18,8 +18,16 @@ export function GetLastZoomScale(): number {
 	return lastZoomScale;
 }
 
-export function SetZoomScale(value: number) {
+export function UpdateZoomScale(value: number) {
+	let newZoomScale = GetZoomScale() + value;
+
+	if (newZoomScale > ZoomScaleConstraint.max) {
+		newZoomScale = ZoomScaleConstraint.max;
+	} else if (newZoomScale < ZoomScaleConstraint.min) {
+		newZoomScale = ZoomScaleConstraint.min;
+	}
+
 	lastZoomScale = zoomScale;
-	zoomScale = value;
+	zoomScale = newZoomScale;
 	ZoomScaleChanged.Fire(zoomScale);
 }
