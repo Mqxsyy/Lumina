@@ -4,7 +4,7 @@ import { NodeTypes } from "API/Nodes/NodeTypes";
 import { LogicNode } from "../LogicNode";
 import { BooleanField } from "API/Fields/BooleanField";
 
-export class RandomNumberNode extends LogicNode {
+export class RandomNumber extends LogicNode {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
 	nodeType: NodeTypes = NodeTypes.RandomNumber;
 	nodeFields: {

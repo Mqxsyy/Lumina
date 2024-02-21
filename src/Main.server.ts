@@ -16,3 +16,5 @@ button.Click.Connect(() => {
 });
 
 InitUI();
+
+// CreateBasicNodeSystem();

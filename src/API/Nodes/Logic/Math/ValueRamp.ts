@@ -4,7 +4,7 @@ import { NodeTypes } from "API/Nodes/NodeTypes";
 import { LogicNode } from "../LogicNode";
 import { NumberField } from "API/Fields/NumberField";
 
-export class RampNode extends LogicNode {
+export class ValueRamp extends LogicNode {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
 	nodeType: NodeTypes = NodeTypes.Ramp;
 	nodeFields: {

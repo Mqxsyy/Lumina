@@ -6,6 +6,7 @@ import { StyleColors } from "Style";
 import { GetCanvas } from "Events";
 import { Controls } from "./Controls";
 import { NodeSelection } from "./NodeSelection";
+import { GetNodeSystems } from "./Services/NodeSystemService";
 
 // TODO: make zoom go to mouse
 
@@ -164,8 +165,11 @@ export function App() {
 					}}
 				/>
 			</frame>
-			<Controls />
+			{GetNodeSystems().map((nodeSystem) => {
+				return nodeSystem.create(nodeSystem.data);
+			})}
 			{displayNodeSelection !== undefined && <NodeSelection Position={displayNodeSelection} />}
+			<Controls />
 		</>
 	);
 }

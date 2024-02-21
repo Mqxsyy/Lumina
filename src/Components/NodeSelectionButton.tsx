@@ -4,9 +4,10 @@ import { StyleColors, StyleFont, StyleProperties } from "Style";
 
 interface Props {
 	Text: string;
+	CreateFn?: () => void;
 }
 
-export function NodeSelectionButton({ Text }: Props) {
+export function NodeSelectionButton({ Text, CreateFn }: Props) {
 	const [displayHighlight, setDisplayHighlight] = useState(false);
 
 	const onHover = () => {
@@ -17,8 +18,14 @@ export function NodeSelectionButton({ Text }: Props) {
 		setDisplayHighlight(false);
 	};
 
+	const onClick = () => {
+		if (CreateFn !== undefined) {
+			CreateFn();
+		}
+	};
+
 	return (
-		<Div Size={new UDim2(1, 0, 0, 25)} onHover={onHover} onUnhover={onUnhover}>
+		<Div Size={new UDim2(1, 0, 0, 25)} onHover={onHover} onUnhover={onUnhover} onMouseButton1Down={onClick}>
 			{displayHighlight && (
 				<frame
 					AnchorPoint={new Vector2(0.5, 0.5)}
