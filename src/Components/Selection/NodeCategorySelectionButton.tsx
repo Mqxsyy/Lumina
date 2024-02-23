@@ -1,8 +1,9 @@
 import Roact, { useEffect, useState } from "@rbxts/roact";
-import { Div } from "./Div";
-import { StyleColors, StyleFont, StyleProperties } from "Style";
+import { Div } from "../Div";
+import { StyleColors, StyleProperties } from "Style";
 import { NodeSelectionButton } from "./NodeSelectionButton";
 import { SelectionEntry } from "API/SelectionEntry";
+import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 
 interface Props {
 	Text: string;
@@ -55,31 +56,16 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					Position={UDim2.fromScale(0.5, 0.5)}
 					Size={new UDim2(0.95, -10, 0.9, 0)}
-					BackgroundColor3={StyleColors.hex600}
+					BackgroundColor3={StyleColors.Highlight}
 				>
 					<uicorner CornerRadius={StyleProperties.CornerRadius} />
 				</frame>
 			)}
 			<Div Size={new UDim2(1, -10, 1, 0)}>
 				<uipadding PaddingLeft={new UDim(0, 15)} PaddingRight={new UDim(0, 15)} />
-				<textlabel
-					Size={UDim2.fromScale(1, 1)}
-					BackgroundTransparency={1}
-					Text={Text}
-					FontFace={StyleFont}
-					TextColor3={StyleColors.hex100}
-					TextXAlignment={"Center"}
-					TextSize={StyleProperties.FontSize}
-				/>
-				<textlabel
-					Size={UDim2.fromScale(1, 1)}
-					BackgroundTransparency={1}
-					Text={">"}
-					FontFace={StyleFont}
-					TextColor3={StyleColors.hex100}
-					TextXAlignment={"Right"}
-					TextSize={StyleProperties.FontSize}
-				/>
+
+				<BasicTextLabel Text={Text} TextXAlignment={Enum.TextXAlignment.Center} IsAffectedByZoom={false} />
+				<BasicTextLabel Text=">" TextXAlignment={Enum.TextXAlignment.Right} IsAffectedByZoom={false} />
 			</Div>
 			{hovering && (
 				<Div
@@ -92,7 +78,7 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 						AnchorPoint={new Vector2(0.5, 0)}
 						Position={new UDim2(0.5, 0, 0, -3)}
 						Size={new UDim2(1, 0, 0, 0)}
-						BackgroundColor3={StyleColors.hex800}
+						BackgroundColor3={StyleColors.Primary}
 						AutomaticSize={"Y"}
 					>
 						<uicorner CornerRadius={StyleProperties.CornerRadius} />

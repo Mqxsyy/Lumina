@@ -1,5 +1,5 @@
 import { SelectionEntry } from "API/SelectionEntry";
-import { CreateEmptySystem } from "Components/NodeSystem";
+import { CreateEmptySystem } from "Components/System/CreateEmptySystem";
 
 export const NodeSystems: { [key: string]: SelectionEntry } = {
 	Simple: {

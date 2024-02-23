@@ -1,45 +1,62 @@
 export const StyleColorHexes = {
-	// Text: "#F3F4F8",
-	// Background: "#101223",
-	// Primary: "#1E90FF",
-	// Secondary: "#FFD700",
-	// Accent: "#FF0000",
+	// Main
+	Background: "#101223",
+	Primary: "#282A3A",
+	Secondary: "#404252",
+	White: "#F3F4F8",
+	FullWhite: "#FFFFFF",
 
-	hex100: "#F3F4F8",
-	hex200: "#D2D4DA",
-	hex300: "#B3B5BD",
-	hex400: "#9496A1",
-	hex500: "#777986",
-	hex600: "#5B5D6B",
-	hex700: "#404252",
-	hex800: "#282A3A",
-	hex900: "#101223",
+	TextLight: "#F3F4F8",
+	TextDark: "#1A1A2E",
+	Highlight: "#5B5D6B",
+
+	// Node Group
+	SpawnGroup: "#7FFF7F",
+	InitializeGroup: "#00FF00",
+	UpdateGroup: "#FFFF00",
+	RenderGroup: "#FFA500",
+	EndGroup: "#FF0000",
+
+	// --
+
+	// hex100: "#F3F4F8",
+	// hex200: "#D2D4DA",
+	// hex300: "#B3B5BD",
+	// hex400: "#9496A1",
+	// hex500: "#777986",
+	// hex600: "#5B5D6B",
+	// hex700: "#404252",
+	// hex800: "#282A3A",
+	// hex900: "#101223",
 };
 
 export const StyleColors = {
-	// Text: Color3.fromHex(StyleColorHexes.Text),
-	// Background: Color3.fromHex(StyleColorHexes.Background),
-	// Primary: Color3.fromHex(StyleColorHexes.Primary),
-	// Secondary: Color3.fromHex(StyleColorHexes.Secondary),
-	// Accent: Color3.fromHex(StyleColorHexes.Accent),
+	// Main
+	Background: Color3.fromHex(StyleColorHexes.Background),
+	Primary: Color3.fromHex(StyleColorHexes.Primary),
+	Secondary: Color3.fromHex(StyleColorHexes.Secondary),
+	White: Color3.fromHex(StyleColorHexes.White),
+	FullWhite: Color3.fromHex(StyleColorHexes.FullWhite),
 
-	hex100: Color3.fromHex(StyleColorHexes.hex100),
-	hex200: Color3.fromHex(StyleColorHexes.hex200),
-	hex300: Color3.fromHex(StyleColorHexes.hex300),
-	hex400: Color3.fromHex(StyleColorHexes.hex400),
-	hex500: Color3.fromHex(StyleColorHexes.hex500),
-	hex600: Color3.fromHex(StyleColorHexes.hex600),
-	hex700: Color3.fromHex(StyleColorHexes.hex700),
-	hex800: Color3.fromHex(StyleColorHexes.hex800),
-	hex900: Color3.fromHex(StyleColorHexes.hex900),
+	TextLight: Color3.fromHex(StyleColorHexes.TextLight),
+	TextDark: Color3.fromHex(StyleColorHexes.TextDark),
+	Highlight: Color3.fromHex(StyleColorHexes.Highlight),
+
+	// Node Group
+	SpawnGroup: Color3.fromHex(StyleColorHexes.SpawnGroup),
+	InitializeGroup: Color3.fromHex(StyleColorHexes.InitializeGroup),
+	UpdateGroup: Color3.fromHex(StyleColorHexes.UpdateGroup),
+	RenderGroup: Color3.fromHex(StyleColorHexes.RenderGroup),
+	EndGroup: Color3.fromHex(StyleColorHexes.EndGroup),
 };
 
 export const StyleProperties = {
-	FontId: "rbxasset://fonts/families/Nunito.json",
-	FontWeight: Enum.FontWeight.SemiBold,
-	FontSize: 18,
 	BorderThicknes: 3,
 	CornerRadius: new UDim(0, 5),
 };
 
-export const StyleFont = new Font(StyleProperties.FontId, StyleProperties.FontWeight);
+export const StyleText = {
+	FontId: "rbxasset://fonts/families/Nunito.json",
+	FontSize: 18,
+	FontWeight: Enum.FontWeight.SemiBold,
+};

@@ -1,6 +1,7 @@
 import Roact, { useState } from "@rbxts/roact";
-import { Div } from "./Div";
-import { StyleColors, StyleFont, StyleProperties } from "Style";
+import { Div } from "../Div";
+import { StyleColors, StyleProperties } from "Style";
+import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 
 interface Props {
 	Text: string;
@@ -31,20 +32,13 @@ export function NodeSelectionButton({ Text, CreateFn }: Props) {
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					Position={UDim2.fromScale(0.5, 0.5)}
 					Size={UDim2.fromScale(0.95, 0.9)}
-					BackgroundColor3={StyleColors.hex600}
+					BackgroundColor3={StyleColors.Highlight}
 				>
 					<uicorner CornerRadius={StyleProperties.CornerRadius} />
 				</frame>
 			)}
-			<textlabel
-				Size={UDim2.fromScale(1, 1)}
-				BackgroundTransparency={1}
-				Text={Text}
-				FontFace={StyleFont}
-				TextColor3={StyleColors.hex100}
-				TextXAlignment={"Center"}
-				TextSize={StyleProperties.FontSize}
-			/>
+
+			<BasicTextLabel Text={Text} TextXAlignment={Enum.TextXAlignment.Center} IsAffectedByZoom={false} />
 		</Div>
 	);
 }

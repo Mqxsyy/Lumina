@@ -4,9 +4,9 @@ import { GetMousePosition, GetWidget, WidgetSizeChanged } from "WidgetHandler";
 import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { StyleColors } from "Style";
 import { GetCanvas } from "Events";
-import { Controls } from "./Controls";
-import { NodeSelection } from "./NodeSelection";
-import { GetNodeSystems } from "./Services/NodeSystemService";
+import { Controls } from "./Controls/Controls";
+import { NodeSelection } from "./Selection/NodeSelection";
+import { GetNodeSystems, NodeSystemsChanged } from "./Services/NodeSystemService";
 
 // TODO: make zoom go to mouse
 
@@ -22,6 +22,8 @@ export function App() {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
 	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
+
+	const [forceRender, setForceRender] = useState(false);
 
 	const StartMoveCanvas = (frame: Frame) => {
 		const mousePositionVec2 = GetMousePosition();
@@ -40,7 +42,6 @@ export function App() {
 	const MoveCanvas = (mouseOffset: UDim2) => {
 		const mousePositionVec2 = GetMousePosition();
 		const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
-
 		const newPosition = mousePosition.sub(mouseOffset);
 		setCanvasPosition(newPosition);
 	};
@@ -61,6 +62,10 @@ export function App() {
 		ZoomScaleChanged.Connect((zoom) => {
 			setZoomScale(zoom as number);
 		});
+
+		NodeSystemsChanged.Connect(() => {
+			setForceRender((prevValue) => !prevValue);
+		});
 	}, []);
 
 	useEffect(() => {
@@ -77,7 +82,7 @@ export function App() {
 				AnchorPoint={new Vector2(0.5, 0.5)}
 				Position={UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5).add(canvasPosition)}
 				Size={canvasSize}
-				BackgroundColor3={StyleColors.hex900}
+				BackgroundColor3={StyleColors.Background}
 				Event={{
 					InputBegan: (_, inputObject: InputObject) => {
 						if (inputObject.KeyCode === Enum.KeyCode.Space) {

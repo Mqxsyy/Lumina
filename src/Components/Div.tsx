@@ -4,8 +4,9 @@ interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
-	DisplayBackground?: boolean;
-	Active?: boolean;
+	AutomaticSize?: "X" | "Y" | "XY" | "None";
+	BackgroundColor?: Color3 | undefined;
+	// Active?: boolean;
 	onHover?: () => void;
 	onUnhover?: () => void;
 	onMouseButton1Down?: (element: GuiObject) => void;
@@ -16,8 +17,9 @@ export function Div({
 	AnchorPoint = new Vector2(0, 0),
 	Position = new UDim2(0, 0, 0, 0),
 	Size = UDim2.fromScale(1, 1),
-	DisplayBackground = false,
-	Active = false,
+	AutomaticSize = "None",
+	BackgroundColor = undefined,
+	// Active = false,
 	onHover = undefined,
 	onUnhover = undefined,
 	onMouseButton1Down = undefined,
@@ -29,7 +31,9 @@ export function Div({
 			AnchorPoint={AnchorPoint}
 			Position={Position}
 			Size={Size}
-			BackgroundTransparency={DisplayBackground ? 0 : 1}
+			AutomaticSize={AutomaticSize}
+			BackgroundColor3={BackgroundColor === undefined ? Color3.fromHex("#FFFFFF") : BackgroundColor}
+			BackgroundTransparency={BackgroundColor === undefined ? 1 : 0}
 			BorderSizePixel={0}
 			Event={{
 				MouseEnter: () => {
