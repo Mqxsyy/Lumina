@@ -2,6 +2,7 @@ import { NodeGroups } from "API/NodeGroup";
 import { NodeTypes } from "API/Nodes/NodeTypes";
 import { NumberField } from "API/Fields/NumberField";
 import { LogicNode } from "./LogicNode";
+import { Element } from "@rbxts/roact";
 
 export class AliveTime extends LogicNode {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
@@ -9,6 +10,7 @@ export class AliveTime extends LogicNode {
 	nodeFields: {
 		value: NumberField;
 	};
+	nodeElement?: (() => Element) | undefined;
 
 	constructor() {
 		super();

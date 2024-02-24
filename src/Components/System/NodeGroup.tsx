@@ -1,9 +1,8 @@
 import Roact, { useEffect, useState } from "@rbxts/roact";
 import { Div } from "../Div";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors } from "Style";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { Node } from "Components/Nodes/Node";
 
 const BORDER_THICKNESS = 2;
 
@@ -11,9 +10,10 @@ interface Props {
 	Title: string;
 	GradientStart: Color3;
 	GradientEnd: Color3;
+	Nodes: Roact.Element[];
 }
 
-export function NodeGroup({ Title, GradientStart, GradientEnd }: Props) {
+export function NodeGroup({ Title, GradientStart, GradientEnd, Nodes }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
 	useEffect(() => {
@@ -59,9 +59,7 @@ export function NodeGroup({ Title, GradientStart, GradientEnd }: Props) {
 					/>
 
 					<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Title} />
-					<Node />
-					<Node />
-					<Node />
+					{Nodes}
 				</Div>
 			</Div>
 		</Div>

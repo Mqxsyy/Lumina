@@ -2,6 +2,7 @@ import { Vector3Field } from "API/Fields/Vector3Field";
 import { NodeGroups } from "../../NodeGroup";
 import { NodeTypes } from "../NodeTypes";
 import { InitializeNode } from "./InitializeNode";
+import { Element } from "@rbxts/roact";
 
 export class Position extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -9,6 +10,7 @@ export class Position extends InitializeNode {
 	nodeFields: {
 		position: Vector3Field;
 	};
+	nodeElement?: (() => Element) | undefined;
 
 	constructor() {
 		super();

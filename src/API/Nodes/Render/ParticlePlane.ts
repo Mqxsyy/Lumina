@@ -7,6 +7,7 @@ import { RenderNode, ParticleInitParams, ParticleUpdateParams } from "./RenderNo
 import { NumberField } from "API/Fields/NumberField";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
+import { Element } from "@rbxts/roact";
 
 // TODO: make double sided, required reversed image if not symmetrical
 
@@ -60,6 +61,7 @@ export class ParticlePlane extends RenderNode {
 		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),
 	};
+	nodeElement?: (() => Element) | undefined;
 
 	objectPool: ObjectPool;
 	displayFolder: Folder;

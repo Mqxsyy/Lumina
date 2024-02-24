@@ -1,3 +1,4 @@
+import { Element } from "@rbxts/roact";
 import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { NodeTypes } from "../NodeTypes";
@@ -9,6 +10,7 @@ export class Lifetime extends InitializeNode {
 	nodeFields: {
 		time: NumberField;
 	};
+	nodeElement?: (() => Element) | undefined;
 
 	constructor() {
 		super();

@@ -3,6 +3,7 @@ import { NodeGroups } from "API/NodeGroup";
 import { NodeTypes } from "API/Nodes/NodeTypes";
 import { LogicNode } from "../LogicNode";
 import { BooleanField } from "API/Fields/BooleanField";
+import { Element } from "@rbxts/roact";
 
 export class RandomNumber extends LogicNode {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
@@ -12,6 +13,7 @@ export class RandomNumber extends LogicNode {
 		isInt: BooleanField;
 		randomizeOnce: BooleanField;
 	};
+	nodeElement?: (() => Element) | undefined;
 
 	random: Random;
 

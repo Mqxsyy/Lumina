@@ -1,13 +1,17 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { GetCanvas } from "Events";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors } from "Style";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../Services/NodeSystemService";
 import { Div } from "../Div";
 import { NodeGroup } from "./NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { NodeSystem as NodeSystemAPI } from "API/Systems/NodeSystem";
+import { NodeGroups } from "API/NodeGroup";
+import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
+import { SpawnNode } from "API/Nodes/Spawn/SpawnNode";
 
 const BORDER_THICKNESS = 3;
 const SYSTEM_WIDTH = 300;
@@ -30,6 +34,9 @@ export function NodeSystem({ data }: Props) {
 	const systemRef = useRef(undefined as undefined | TextButton);
 
 	const [forceRender, setForceRender] = useState(false);
+
+	const nodeSystemRef = useRef(undefined as undefined | NodeSystemAPI);
+	const [spawnNodes, setSpawnNodes] = useState([] as Roact.Element[]);
 
 	const getMouseOffset = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
@@ -73,6 +80,15 @@ export function NodeSystem({ data }: Props) {
 		ZoomScaleChanged.Connect((zoomScale) => {
 			setZoomScale(zoomScale as number);
 		});
+
+		nodeSystemRef.current = new NodeSystemAPI();
+		nodeSystemRef.current.NodeGroups[NodeGroups.Spawn].AddNode(new ConstantSpawn());
+
+		const spawnElements = nodeSystemRef
+			.current!.NodeGroups[NodeGroups.Spawn].GetNodes()
+			.map((node) => node.nodeElement!());
+
+		setSpawnNodes(spawnElements);
 	}, []);
 
 	useEffect(() => {
@@ -154,21 +170,25 @@ export function NodeSystem({ data }: Props) {
 						Title="Spawn"
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
+						Nodes={spawnNodes}
 					/>
 					<NodeGroup
 						Title="Initalize"
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
+						Nodes={[]}
 					/>
 					<NodeGroup
 						Title="Update"
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
+						Nodes={[]}
 					/>
 					<NodeGroup
 						Title="Render"
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
+						Nodes={[]}
 					/>
 				</Div>
 			</Div>

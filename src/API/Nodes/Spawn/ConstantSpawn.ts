@@ -1,6 +1,7 @@
 import { NumberField } from "API/Fields/NumberField";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeTypes } from "API/Nodes/NodeTypes";
+import { CreateConstantSpawnNode } from "Components/Nodes/Spawn/ConstantSpawn";
 import { SpawnNode } from "./SpawnNode";
 
 export class ConstantSpawn extends SpawnNode {
@@ -9,6 +10,7 @@ export class ConstantSpawn extends SpawnNode {
 	nodeFields: {
 		rate: NumberField; // per second
 	};
+	nodeElement = CreateConstantSpawnNode;
 
 	constructor() {
 		super();

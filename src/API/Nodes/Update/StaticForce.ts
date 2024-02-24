@@ -3,6 +3,7 @@ import { NodeGroups } from "../../NodeGroup";
 import { NodeTypes } from "../NodeTypes";
 import { BooleanField } from "API/Fields/BooleanField";
 import { UpdateNode } from "./UpdateNode";
+import { Element } from "@rbxts/roact";
 
 export class StaticForce extends UpdateNode<[Vector3]> {
 	nodeGroup: NodeGroups = NodeGroups.Update;
@@ -12,6 +13,7 @@ export class StaticForce extends UpdateNode<[Vector3]> {
 		isLocal: BooleanField;
 		storeValue: BooleanField;
 	};
+	nodeElement?: (() => Element) | undefined;
 
 	storedValues: Map<number, Vector3> = new Map<number, Vector3>();
 
