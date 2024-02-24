@@ -7,6 +7,7 @@ interface Props {
 	Position?: UDim2;
 	Size?: UDim2;
 	Text?: string;
+	MouseButton1Down?: () => void;
 }
 
 export function ControlButton({
@@ -14,6 +15,7 @@ export function ControlButton({
 	Position = new UDim2(0, 0, 0, 0),
 	Size = UDim2.fromScale(1, 1),
 	Text = "Button",
+	MouseButton1Down = undefined,
 }: Props) {
 	return (
 		<frame
@@ -22,6 +24,14 @@ export function ControlButton({
 			Size={Size}
 			BackgroundColor3={StyleColors.Primary}
 			BorderSizePixel={0}
+			Event={{
+				InputBegan: (_, inputObject) => {
+					if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
+						if (MouseButton1Down === undefined) return;
+						MouseButton1Down();
+					}
+				},
+			}}
 		>
 			<uicorner CornerRadius={StyleProperties.CornerRadius} />
 			<BasicTextLabel

@@ -8,10 +8,12 @@ import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from ".
 import { Div } from "../Div";
 import { NodeGroup } from "./NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { NodeSystem as NodeSystemAPI } from "API/Systems/NodeSystem";
 import { NodeGroups } from "API/NodeGroup";
 import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
-import { SpawnNode } from "API/Nodes/Spawn/SpawnNode";
+import { StaticForce } from "API/Nodes/Update/StaticForce";
+import { Lifetime } from "API/Nodes/Initialize/Lifetime";
+import { Position } from "API/Nodes/Initialize/Position";
+import { ParticlePlane } from "API/Nodes/Render/ParticlePlane";
 
 const BORDER_THICKNESS = 3;
 const SYSTEM_WIDTH = 300;
@@ -35,8 +37,10 @@ export function NodeSystem({ data }: Props) {
 
 	const [forceRender, setForceRender] = useState(false);
 
-	const nodeSystemRef = useRef(undefined as undefined | NodeSystemAPI);
 	const [spawnNodes, setSpawnNodes] = useState([] as Roact.Element[]);
+	const [initializeNodes, setInitializeNodes] = useState([] as Roact.Element[]);
+	const [updateNodes, setUpdateNodes] = useState([] as Roact.Element[]);
+	const [renderNodes, setRenderNodes] = useState([] as Roact.Element[]);
 
 	const getMouseOffset = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
@@ -81,14 +85,25 @@ export function NodeSystem({ data }: Props) {
 			setZoomScale(zoomScale as number);
 		});
 
-		nodeSystemRef.current = new NodeSystemAPI();
-		nodeSystemRef.current.NodeGroups[NodeGroups.Spawn].AddNode(new ConstantSpawn());
+		data.system.AddNode(new ConstantSpawn());
+		data.system.AddNode(new Lifetime());
+		data.system.AddNode(new Position());
+		data.system.AddNode(new StaticForce());
+		data.system.AddNode(new ParticlePlane());
 
-		const spawnElements = nodeSystemRef
-			.current!.NodeGroups[NodeGroups.Spawn].GetNodes()
-			.map((node) => node.nodeElement!());
-
+		const spawnElements = data.system.NodeGroups[NodeGroups.Spawn].GetNodes().map((node) => node.nodeElement!());
 		setSpawnNodes(spawnElements);
+
+		const initializeElements = data.system.NodeGroups[NodeGroups.Initialize]
+			.GetNodes()
+			.map((node) => node.nodeElement!());
+		setInitializeNodes(initializeElements);
+
+		const updateElements = data.system.NodeGroups[NodeGroups.Update].GetNodes().map((node) => node.nodeElement!());
+		setUpdateNodes(updateElements);
+
+		const renderElements = data.system.NodeGroups[NodeGroups.Render].GetNodes().map((node) => node.nodeElement!());
+		setRenderNodes(renderElements);
 	}, []);
 
 	useEffect(() => {
@@ -176,19 +191,19 @@ export function NodeSystem({ data }: Props) {
 						Title="Initalize"
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
-						Nodes={[]}
+						Nodes={initializeNodes}
 					/>
 					<NodeGroup
 						Title="Update"
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
-						Nodes={[]}
+						Nodes={updateNodes}
 					/>
 					<NodeGroup
 						Title="Render"
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
-						Nodes={[]}
+						Nodes={renderNodes}
 					/>
 				</Div>
 			</Div>

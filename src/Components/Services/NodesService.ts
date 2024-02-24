@@ -32,16 +32,16 @@ export function UpdateNodeAnchorPoint(id: number, offset: Vector2) {
 	}
 }
 
-export function GetNodeSystems(): NodeCollectionEntry[] {
+export function GetNodes(): NodeCollectionEntry[] {
 	return NodeCollection;
 }
 
-export function AddNodeSystem(nodeSystem: NodeCollectionEntry) {
+export function AddNode(nodeSystem: NodeCollectionEntry) {
 	NodeCollection.push(nodeSystem);
 	// NodesChanged.Fire();
 }
 
-export function RemoveNodeSystem(id: number) {
+export function RemoveNode(id: number) {
 	NodeCollection.remove(id);
 	NodesChanged.Fire();
 }

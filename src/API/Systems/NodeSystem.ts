@@ -9,6 +9,7 @@ import { UpdateNode } from "../Nodes/Update/UpdateNode";
 import { LogicNode } from "../Nodes/Logic/LogicNode";
 import { IdPool } from "../IdPool";
 
+// BUG: Lag builds up the longer it runs
 // OPTIMIZE?: look into an alt version for array.find
 
 export class NodeSystem {

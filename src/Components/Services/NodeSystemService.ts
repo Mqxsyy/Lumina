@@ -1,6 +1,7 @@
 import Roact from "@rbxts/roact";
 import { Event } from "API/Event";
 import { IdPool } from "API/IdPool";
+import { NodeSystem } from "API/Systems/NodeSystem";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 
 // TODO: Add render order changing
@@ -8,6 +9,7 @@ import { GetMousePositionOnCanvas } from "WidgetHandler";
 export interface NodeSystemData {
 	id: number;
 	anchorPoint: Vector2;
+	system: NodeSystem;
 }
 
 interface NodeSystemCollectioEntry {
