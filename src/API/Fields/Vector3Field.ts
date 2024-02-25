@@ -43,15 +43,15 @@ export class Vector3Field extends NodeField {
 		return new Vector3(x, y, z);
 	}
 
-	SetValue(newValue: Vector3): void {
+	SetValue = (newValue: unknown) => {
 		this.valueBind = undefined;
 
-		this.x = newValue.X;
-		this.y = newValue.Y;
-		this.z = newValue.Z;
+		this.x = (newValue as Vector3).X;
+		this.y = (newValue as Vector3).Y;
+		this.z = (newValue as Vector3).Z;
 
 		this.FieldChanged.Fire();
-	}
+	};
 
 	SetValueX(newValue: number): void {
 		this.x = newValue;

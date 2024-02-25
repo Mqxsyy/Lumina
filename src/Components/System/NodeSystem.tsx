@@ -1,19 +1,19 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
+import { NodeGroups } from "API/NodeGroup";
+import { Lifetime } from "API/Nodes/Initialize/Lifetime";
+import { Position } from "API/Nodes/Initialize/Position";
+import { ParticlePlane } from "API/Nodes/Render/ParticlePlane";
+import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
+import { StaticForce } from "API/Nodes/Update/StaticForce";
+import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetCanvas } from "Events";
 import { StyleColors } from "Style";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../Services/NodeSystemService";
 import { Div } from "../Div";
+import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../Services/NodeSystemService";
 import { NodeGroup } from "./NodeGroup";
-import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { NodeGroups } from "API/NodeGroup";
-import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
-import { StaticForce } from "API/Nodes/Update/StaticForce";
-import { Lifetime } from "API/Nodes/Initialize/Lifetime";
-import { Position } from "API/Nodes/Initialize/Position";
-import { ParticlePlane } from "API/Nodes/Render/ParticlePlane";
 
 const BORDER_THICKNESS = 3;
 const SYSTEM_WIDTH = 300;

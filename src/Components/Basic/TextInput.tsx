@@ -1,4 +1,4 @@
-import Roact, { useEffect, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { StyleColors, StyleProperties, StyleText } from "Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 
@@ -12,8 +12,11 @@ interface Props {
 	TextColor?: Color3;
 	TextXAlignment?: Enum.TextXAlignment;
 	PlaceholderText: string;
+	Text?: string;
 
 	IsAffectedByZoom?: boolean;
+
+	TextChanged?: (text: string) => void;
 }
 
 export function TextInput({
@@ -25,9 +28,23 @@ export function TextInput({
 	TextColor = StyleColors.TextDark,
 	TextXAlignment = Enum.TextXAlignment.Left,
 	PlaceholderText,
+	Text = "",
 	IsAffectedByZoom = true,
+	TextChanged = undefined,
 }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
+
+	const textBoxRef = useRef<TextBox | undefined>();
+	const lastText = useRef<string>("");
+
+	const textChanged = () => {
+		if (textBoxRef.current!.Text === lastText.current) return;
+		lastText.current = textBoxRef.current!.Text;
+
+		if (TextChanged !== undefined) {
+			TextChanged(textBoxRef.current!.Text);
+		}
+	};
 
 	useEffect(() => {
 		if (!IsAffectedByZoom) return;
@@ -36,6 +53,15 @@ export function TextInput({
 			setZoomScale(zoomScale as number);
 		});
 	}, []);
+
+	useEffect(() => {
+		if (textBoxRef.current === undefined) return;
+		const conn = textBoxRef.current!.GetPropertyChangedSignal("Text").Connect(textChanged);
+
+		return () => {
+			conn.Disconnect();
+		};
+	}, [textBoxRef.current]);
 
 	return (
 		<textbox
@@ -52,7 +78,8 @@ export function TextInput({
 			PlaceholderColor3={TextColor}
 			TextWrapped={true}
 			TextTruncate={Enum.TextTruncate.AtEnd}
-			Text={""}
+			Text={Text}
+			ref={textBoxRef}
 		>
 			<uipadding PaddingLeft={new UDim(0, 5)} />
 			<uicorner CornerRadius={StyleProperties.CornerRadius} />

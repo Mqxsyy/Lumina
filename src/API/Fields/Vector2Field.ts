@@ -16,10 +16,10 @@ export class Vector2Field extends NodeField {
 		return this.value();
 	}
 
-	SetValue(newValue: Vector2): void {
-		this.value = newValue;
+	SetValue = (newValue: unknown) => {
+		this.value = newValue as Vector2;
 		this.FieldChanged.Fire();
-	}
+	};
 
 	BindValue(newValue: () => Vector2): void {
 		this.value = newValue;

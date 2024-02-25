@@ -16,9 +16,9 @@ export class OrientationField extends NodeField {
 		return this.value;
 	}
 
-	SetValue(newValue: number): void {
-		this.value = newValue;
-	}
+	SetValue = (newValue: unknown) => {
+		this.value = newValue as number;
+	};
 
 	BindValue(): void {
 		warn("OrientationField cannot be bound to a function");

@@ -9,7 +9,7 @@ import { UpdateNode } from "../Nodes/Update/UpdateNode";
 import { LogicNode } from "../Nodes/Logic/LogicNode";
 import { IdPool } from "../IdPool";
 
-// BUG: Lag builds up the longer it runs
+// OPTIMIZE: make less laggy
 // OPTIMIZE?: look into an alt version for array.find
 
 export class NodeSystem {
@@ -76,47 +76,56 @@ export class NodeSystem {
 				});
 			}
 		} else if (spawnNode.nodeType === NodeTypes.ConstantSpawn) {
-			let amount = spawnNode.GetValue() as number;
-			let cd = math.round(1 / amount);
-			let lastSpawn = os.time();
+			let rate = spawnNode.GetValue() as number;
+			let cd = 1 / rate;
+			let amount = 1; // TODO: make amount more accurate, every 2nd frame spawns 2, every 3rd frame spawns 2, etc
+			let passedTime = 0;
 
-			this.SpawnConnection = RunService.RenderStepped.Connect(() => {
-				const newAmount = spawnNode.GetValue() as number;
-				if (newAmount !== amount) {
-					amount = newAmount;
-					cd = math.round(1 / amount);
+			this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
+				const newRate = spawnNode.GetValue() as number;
+				if (newRate !== rate) {
+					rate = newRate;
+					cd = 1 / rate;
+					amount = math.ceil(rate / 60);
 				}
 
-				if (os.time() - lastSpawn < cd) {
+				passedTime += dt;
+				if (passedTime < cd) {
 					return;
 				}
 
-				lastSpawn = os.time();
+				passedTime = 0;
 
-				const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes() as InitializeNode[];
-				const lifetimeNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Lifetime);
-				const spawnPositionNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Position);
+				for (let i = 0; i < amount; i++) {
+					task.spawn(() => {
+						const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes() as InitializeNode[];
+						const lifetimeNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Lifetime);
+						const spawnPositionNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Position);
 
-				const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
-				const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
+						const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
+						const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
 
-				const particleId = this.ParticleIdPool.GetNextId();
-				const InitParams: ParticleInitParams = {
-					id: particleId,
-					lifetime: lifetimeNode!.GetValue(particleId) as number,
-					position: spawnPositionNode!.GetValue(particleId) as Vector3,
-				};
+						const particleId = this.ParticleIdPool.GetNextId();
+						const InitParams: ParticleInitParams = {
+							id: particleId,
+							lifetime: lifetimeNode!.GetValue(particleId) as number,
+							position: spawnPositionNode!.GetValue(particleId) as Vector3,
+						};
 
-				const logicNodes = this.NodeGroups[NodeGroups.Logic].GetNodes();
+						const logicNodes = this.NodeGroups[NodeGroups.Logic].GetNodes();
 
-				const UpdateParams: ParticleUpdateParams = {
-					position: [updatePositionNode!.UpdateValue] as PositionUpdateFn[],
-					aliveNodes: logicNodes.filter((node) => node.nodeType === NodeTypes.AliveTime) as LogicNode[],
-				};
+						const UpdateParams: ParticleUpdateParams = {
+							position: [updatePositionNode!.UpdateValue] as PositionUpdateFn[],
+							aliveNodes: logicNodes.filter(
+								(node) => node.nodeType === NodeTypes.AliveTime,
+							) as LogicNode[],
+						};
 
-				const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as RenderNode;
+						const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as RenderNode;
 
-				outputNode.Render(InitParams, UpdateParams);
+						outputNode.Render(InitParams, UpdateParams);
+					});
+				}
 			});
 		}
 	}

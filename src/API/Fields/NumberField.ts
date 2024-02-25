@@ -16,9 +16,10 @@ export class NumberField extends NodeField {
 		return this.value();
 	}
 
-	SetValue(newValue: number): void {
-		this.value = newValue;
-	}
+	SetValue = (newValue: unknown) => {
+		print(newValue);
+		this.value = newValue as number;
+	};
 
 	BindValue(newValue: () => number): void {
 		this.value = newValue;

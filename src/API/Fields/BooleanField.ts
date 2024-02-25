@@ -16,10 +16,10 @@ export class BooleanField extends NodeField {
 		return this.value();
 	}
 
-	SetValue(newValue: boolean): void {
-		this.value = newValue;
+	SetValue = (newValue: unknown) => {
+		this.value = newValue as boolean;
 		this.FieldChanged.Fire();
-	}
+	};
 
 	BindValue(newValue: () => boolean): void {
 		this.value = newValue;

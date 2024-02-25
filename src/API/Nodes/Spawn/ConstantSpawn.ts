@@ -10,7 +10,7 @@ export class ConstantSpawn extends SpawnNode {
 	nodeFields: {
 		rate: NumberField; // per second
 	};
-	nodeElement = CreateConstantSpawnNode;
+	nodeElement = () => CreateConstantSpawnNode(this.nodeFields.rate.SetValue);
 
 	constructor() {
 		super();
