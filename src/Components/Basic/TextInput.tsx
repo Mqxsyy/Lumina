@@ -16,7 +16,7 @@ interface Props {
 
 	IsAffectedByZoom?: boolean;
 
-	TextChanged?: (text: string) => void;
+	TextChanged?: (text: string) => string;
 }
 
 export function TextInput({
@@ -42,7 +42,7 @@ export function TextInput({
 		lastText.current = textBoxRef.current!.Text;
 
 		if (TextChanged !== undefined) {
-			TextChanged(textBoxRef.current!.Text);
+			textBoxRef.current!.Text = TextChanged(textBoxRef.current!.Text);
 		}
 	};
 

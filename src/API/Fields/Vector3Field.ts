@@ -53,20 +53,20 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	SetValueX(newValue: number): void {
+	SetValueX = (newValue: number) => {
 		this.x = newValue;
 		this.FieldChanged.Fire();
-	}
+	};
 
-	SetValueY(newValue: number): void {
+	SetValueY = (newValue: number) => {
 		this.y = newValue;
 		this.FieldChanged.Fire();
-	}
+	};
 
-	SetValueZ(newValue: number): void {
+	SetValueZ = (newValue: number) => {
 		this.z = newValue;
 		this.FieldChanged.Fire();
-	}
+	};
 
 	BindValue(newValue: () => Vector3): void {
 		this.valueBind = newValue;

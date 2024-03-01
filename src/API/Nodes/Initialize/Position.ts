@@ -10,7 +10,12 @@ export class Position extends InitializeNode {
 	nodeFields: {
 		position: Vector3Field;
 	};
-	nodeElement = CreatePositionNode;
+	nodeElement = () =>
+		CreatePositionNode(
+			this.nodeFields.position.SetValueX,
+			this.nodeFields.position.SetValueY,
+			this.nodeFields.position.SetValueZ,
+		);
 
 	constructor() {
 		super();
