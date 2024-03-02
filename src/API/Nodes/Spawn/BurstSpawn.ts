@@ -1,4 +1,3 @@
-import { Element } from "@rbxts/roact";
 import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { NodeTypes } from "../NodeTypes";
@@ -10,7 +9,6 @@ export class BurstSpawn extends SpawnNode {
 	nodeFields: {
 		amount: NumberField;
 	};
-	nodeElement?: (() => Element) | undefined;
 
 	constructor() {
 		super();

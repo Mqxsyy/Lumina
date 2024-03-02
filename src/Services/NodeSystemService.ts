@@ -1,7 +1,7 @@
 import Roact from "@rbxts/roact";
 import { Event } from "API/Event";
 import { IdPool } from "API/IdPool";
-import { NodeSystem } from "API/Systems/NodeSystem";
+import { NodeSystem } from "API/NodeSystem";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 
 // TODO: Add render order changing
@@ -30,7 +30,9 @@ export function UpdateNodeSystemAnchorPoint(id: number, offset: Vector2) {
 	const nodeSystem = NodeSystemCollection.find((system) => system.data.id === id);
 	if (nodeSystem) {
 		nodeSystem.data.anchorPoint = GetMousePositionOnCanvas().add(offset);
-		// NodeSystemsChanged.Fire();
+		NodeSystemsChanged.Fire();
+	} else {
+		warn(`NodeSystem with id ${id} not found`);
 	}
 }
 
@@ -40,7 +42,7 @@ export function GetNodeSystems(): NodeSystemCollectioEntry[] {
 
 export function AddNodeSystem(nodeSystem: NodeSystemCollectioEntry) {
 	NodeSystemCollection.push(nodeSystem);
-	// NodeSystemsChanged.Fire();
+	NodeSystemsChanged.Fire();
 }
 
 export function RemoveNodeSystem(id: number) {

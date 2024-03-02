@@ -43,6 +43,8 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 
 	useEffect(() => {
 		for (const [_, v] of pairs(NodeCategory)) {
+			if (v.create === undefined) continue;
+
 			setNodes((prev) => {
 				return [...prev, v];
 			});

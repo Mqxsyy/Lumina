@@ -1,13 +1,13 @@
-import { INode } from "../Nodes/Node";
-import { NodeGroup, NodeGroups } from "../NodeGroup";
-import { NodeTypes } from "../Nodes/NodeTypes";
+import { INode } from "./Nodes/Node";
+import { NodeGroup, NodeGroups } from "./NodeGroup";
+import { NodeTypes } from "./Nodes/NodeTypes";
 import { RunService } from "@rbxts/services";
-import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "../Nodes/Render/RenderNode";
-import { SpawnNode } from "../Nodes/Spawn/SpawnNode";
-import { InitializeNode } from "../Nodes/Initialize/InitializeNode";
-import { UpdateNode } from "../Nodes/Update/UpdateNode";
-import { LogicNode } from "../Nodes/Logic/LogicNode";
-import { IdPool } from "../IdPool";
+import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./Nodes/Render/RenderNode";
+import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
+import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
+import { UpdateNode } from "./Nodes/Update/UpdateNode";
+import { LogicNode } from "./Nodes/Logic/LogicNode";
+import { IdPool } from "./IdPool";
 
 // OPTIMIZE: make less laggy
 // OPTIMIZE?: look into an alt version for array.find

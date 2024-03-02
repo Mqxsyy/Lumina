@@ -2,7 +2,6 @@ import { Vector3Field } from "API/Fields/Vector3Field";
 import { NodeGroups } from "../../NodeGroup";
 import { NodeTypes } from "../NodeTypes";
 import { InitializeNode } from "./InitializeNode";
-import { CreatePositionNode } from "Components/Nodes/Initialize/Position";
 
 export class Position extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -10,12 +9,6 @@ export class Position extends InitializeNode {
 	nodeFields: {
 		position: Vector3Field;
 	};
-	nodeElement = () =>
-		CreatePositionNode(
-			this.nodeFields.position.SetValueX,
-			this.nodeFields.position.SetValueY,
-			this.nodeFields.position.SetValueZ,
-		);
 
 	constructor() {
 		super();

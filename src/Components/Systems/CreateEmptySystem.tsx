@@ -1,8 +1,8 @@
 import Roact from "@rbxts/roact";
-import { AddNodeSystem, GetNextNodeSystemId } from "Components/Services/NodeSystemService";
+import { AddNodeSystem, GetNextNodeSystemId } from "Services/NodeSystemService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
 import { NodeSystem } from "./NodeSystem";
-import { NodeSystem as NodeSystemAPI } from "API/Systems/NodeSystem";
 
 export function CreateEmptySystem() {
 	AddNodeSystem({

@@ -10,7 +10,6 @@ export class AliveTime extends LogicNode {
 	nodeFields: {
 		value: NumberField;
 	};
-	nodeElement?: (() => Element) | undefined;
 
 	constructor() {
 		super();

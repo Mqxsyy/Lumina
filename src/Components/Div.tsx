@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import Roact, { useEffect } from "@rbxts/roact";
 
 interface Props {
 	AnchorPoint?: Vector2;
@@ -7,6 +7,7 @@ interface Props {
 	AutomaticSize?: "X" | "Y" | "XY" | "None";
 	BackgroundColor?: Color3 | undefined;
 	// Active?: boolean;
+	getFrame?: (frame: Frame) => void;
 	onHover?: () => void;
 	onUnhover?: () => void;
 	onMouseButton1Down?: (element: GuiObject) => void;
@@ -24,8 +25,18 @@ export function Div({
 	onUnhover = undefined,
 	onMouseButton1Down = undefined,
 	onMouseButton1Up = undefined,
+	getFrame = undefined,
 	children,
 }: Roact.PropsWithChildren<Props>) {
+	const frameRef = Roact.createRef<Frame>();
+
+	useEffect(() => {
+		if (frameRef.current === undefined) return;
+		if (getFrame === undefined) return;
+
+		getFrame(frameRef.current);
+	}, [frameRef.current]);
+
 	return (
 		<frame
 			AnchorPoint={AnchorPoint}
@@ -35,6 +46,7 @@ export function Div({
 			BackgroundColor3={BackgroundColor === undefined ? Color3.fromHex("#FFFFFF") : BackgroundColor}
 			BackgroundTransparency={BackgroundColor === undefined ? 1 : 0}
 			BorderSizePixel={0}
+			ref={frameRef}
 			Event={{
 				MouseEnter: () => {
 					if (onHover !== undefined) {

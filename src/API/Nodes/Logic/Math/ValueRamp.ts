@@ -3,7 +3,6 @@ import { NodeGroups } from "API/NodeGroup";
 import { NodeTypes } from "API/Nodes/NodeTypes";
 import { LogicNode } from "../LogicNode";
 import { NumberField } from "API/Fields/NumberField";
-import { Element } from "@rbxts/roact";
 
 export class ValueRamp extends LogicNode {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
@@ -12,7 +11,6 @@ export class ValueRamp extends LogicNode {
 		value: NumberField;
 		range: Vector2Field;
 	};
-	nodeElement?: (() => Element) | undefined;
 
 	constructor() {
 		super();

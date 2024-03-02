@@ -21,6 +21,18 @@ export class Vector2Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
+	SetMinValue = (min: number) => {
+		const value = this.GetValue();
+		this.SetValue(new Vector2(min, value.Y));
+		this.FieldChanged.Fire();
+	};
+
+	SetMaxValue = (max: number) => {
+		const value = this.GetValue();
+		this.SetValue(new Vector2(value.X, max));
+		this.FieldChanged.Fire();
+	};
+
 	BindValue(newValue: () => Vector2): void {
 		this.value = newValue;
 		this.FieldChanged.Fire();

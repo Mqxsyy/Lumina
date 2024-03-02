@@ -3,10 +3,10 @@ import { Event } from "API/Event";
 let zoomScale = 1;
 let lastZoomScale = 1;
 
-export const ZoomScaleChanged = new Event();
+export const ZoomScaleChanged = new Event<[number]>();
 
 export const ZoomScaleConstraint = {
-	min: 0.3,
+	min: 0.5,
 	max: 1.5,
 };
 

@@ -7,7 +7,6 @@ import { RenderNode, ParticleInitParams, ParticleUpdateParams } from "./RenderNo
 import { NumberField } from "API/Fields/NumberField";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
-import { CreateParticlePlaneNode } from "Components/Nodes/Render/ParticlePlane";
 
 // TODO: make double sided, required reversed image if not symmetrical
 
@@ -61,7 +60,6 @@ export class ParticlePlane extends RenderNode {
 		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),
 	};
-	nodeElement = CreateParticlePlaneNode;
 
 	objectPool: ObjectPool;
 	displayFolder: Folder;

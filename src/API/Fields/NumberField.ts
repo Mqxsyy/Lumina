@@ -17,7 +17,6 @@ export class NumberField extends NodeField {
 	}
 
 	SetValue = (newValue: unknown) => {
-		print(newValue);
 		this.value = newValue as number;
 	};
 

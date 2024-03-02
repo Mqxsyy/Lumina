@@ -1,19 +1,14 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
-import { NodeGroups } from "API/NodeGroup";
-import { Lifetime } from "API/Nodes/Initialize/Lifetime";
-import { Position } from "API/Nodes/Initialize/Position";
-import { ParticlePlane } from "API/Nodes/Render/ParticlePlane";
-import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
-import { StaticForce } from "API/Nodes/Update/StaticForce";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetCanvas } from "Events";
 import { StyleColors } from "Style";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { Div } from "../Div";
-import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../Services/NodeSystemService";
+import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../../Services/NodeSystemService";
 import { NodeGroup } from "./NodeGroup";
+import { NodeGroups } from "API/NodeGroup";
 
 const BORDER_THICKNESS = 3;
 const SYSTEM_WIDTH = 300;
@@ -36,11 +31,6 @@ export function NodeSystem({ data }: Props) {
 	const systemRef = useRef(undefined as undefined | TextButton);
 
 	const [forceRender, setForceRender] = useState(false);
-
-	const [spawnNodes, setSpawnNodes] = useState([] as Roact.Element[]);
-	const [initializeNodes, setInitializeNodes] = useState([] as Roact.Element[]);
-	const [updateNodes, setUpdateNodes] = useState([] as Roact.Element[]);
-	const [renderNodes, setRenderNodes] = useState([] as Roact.Element[]);
 
 	const getMouseOffset = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
@@ -84,26 +74,6 @@ export function NodeSystem({ data }: Props) {
 		ZoomScaleChanged.Connect((zoomScale) => {
 			setZoomScale(zoomScale as number);
 		});
-
-		data.system.AddNode(new ConstantSpawn());
-		data.system.AddNode(new Lifetime());
-		data.system.AddNode(new Position());
-		data.system.AddNode(new StaticForce());
-		data.system.AddNode(new ParticlePlane());
-
-		const spawnElements = data.system.NodeGroups[NodeGroups.Spawn].GetNodes().map((node) => node.nodeElement!());
-		setSpawnNodes(spawnElements);
-
-		const initializeElements = data.system.NodeGroups[NodeGroups.Initialize]
-			.GetNodes()
-			.map((node) => node.nodeElement!());
-		setInitializeNodes(initializeElements);
-
-		const updateElements = data.system.NodeGroups[NodeGroups.Update].GetNodes().map((node) => node.nodeElement!());
-		setUpdateNodes(updateElements);
-
-		const renderElements = data.system.NodeGroups[NodeGroups.Render].GetNodes().map((node) => node.nodeElement!());
-		setRenderNodes(renderElements);
 	}, []);
 
 	useEffect(() => {
@@ -182,28 +152,24 @@ export function NodeSystem({ data }: Props) {
 					<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={`VFX System (${data.id})`} />
 
 					<NodeGroup
-						Title="Spawn"
+						NodeGroup={NodeGroups.Spawn}
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
-						Nodes={spawnNodes}
 					/>
 					<NodeGroup
-						Title="Initalize"
+						NodeGroup={NodeGroups.Initialize}
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
-						Nodes={initializeNodes}
 					/>
 					<NodeGroup
-						Title="Update"
+						NodeGroup={NodeGroups.Update}
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
-						Nodes={updateNodes}
 					/>
 					<NodeGroup
-						Title="Render"
+						NodeGroup={NodeGroups.Render}
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
-						Nodes={renderNodes}
 					/>
 				</Div>
 			</Div>

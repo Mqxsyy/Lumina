@@ -1,7 +1,7 @@
 import Roact from "@rbxts/roact";
 import { Div } from "../Div";
 import { ControlButton } from "./ControlButton";
-import { GetNodeSystems } from "Components/Services/NodeSystemService";
+import { GetNodeSystems } from "Services/NodeSystemService";
 
 const CANVAS_PADDING = 5;
 const BUTTONS_PADDING = 5;

@@ -1,5 +1,5 @@
 import { ClearParticles } from "./FolderLocations";
-import { NodeSystem } from "./Systems/NodeSystem";
+import { NodeSystem } from "./NodeSystem";
 import { Lifetime } from "./Nodes/Initialize/Lifetime";
 import { Position } from "./Nodes/Initialize/Position";
 import { AliveTime } from "./Nodes/Logic/AliveTime";

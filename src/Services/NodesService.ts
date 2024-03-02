@@ -1,13 +1,14 @@
 import Roact from "@rbxts/roact";
 import { Event } from "API/Event";
 import { IdPool } from "API/IdPool";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { Node } from "API/Nodes/Node";
 
 // TODO: Add render order changing
 
 export interface NodeData {
 	id: number;
 	anchorPoint: Vector2;
+	node: Node;
 }
 
 interface NodeCollectionEntry {
@@ -24,21 +25,27 @@ export function GetNextNodeId(): number {
 	return idPool.GetNextId();
 }
 
-export function UpdateNodeAnchorPoint(id: number, offset: Vector2) {
+export function UpdateNodeAnchorPoint(id: number, anchorPoint: Vector2) {
 	const node = NodeCollection.find((node) => node.data.id === id);
 	if (node) {
-		node.data.anchorPoint = GetMousePositionOnCanvas().add(offset);
-		// NodesChanged.Fire();
+		node.data.anchorPoint = anchorPoint;
+		NodesChanged.Fire();
+	} else {
+		warn(`Node with id ${id} not found`);
 	}
 }
 
-export function GetNodes(): NodeCollectionEntry[] {
+export function GetAllNodes(): NodeCollectionEntry[] {
 	return NodeCollection;
+}
+
+export function GetNodeById(id: number) {
+	return NodeCollection.find((node) => node.data.id === id);
 }
 
 export function AddNode(nodeSystem: NodeCollectionEntry) {
 	NodeCollection.push(nodeSystem);
-	// NodesChanged.Fire();
+	NodesChanged.Fire();
 }
 
 export function RemoveNode(id: number) {

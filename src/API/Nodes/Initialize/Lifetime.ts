@@ -10,7 +10,6 @@ export class Lifetime extends InitializeNode {
 	nodeFields: {
 		time: NumberField;
 	};
-	nodeElement = CreateLifetimeNode;
 
 	constructor() {
 		super();

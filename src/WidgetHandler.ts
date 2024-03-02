@@ -3,7 +3,7 @@ import { GetCanvas } from "Events";
 
 let widget: DockWidgetPluginGui;
 
-export const WidgetSizeChanged = new Event();
+export const WidgetSizeChanged = new Event<[Vector2]>();
 
 export function SetWidget(dockWidgetPluginGui: DockWidgetPluginGui) {
 	widget = dockWidgetPluginGui;

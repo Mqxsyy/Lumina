@@ -6,7 +6,8 @@ import { StyleColors } from "Style";
 import { GetCanvas } from "Events";
 import { Controls } from "./Controls/Controls";
 import { NodeSelection } from "./Selection/NodeSelection";
-import { GetNodeSystems, NodeSystemsChanged } from "./Services/NodeSystemService";
+import { GetNodeSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
+import { GetAllNodes, NodesChanged } from "../Services/NodesService";
 
 // TODO: make zoom go to mouse
 
@@ -55,12 +56,16 @@ export function App() {
 	};
 
 	useEffect(() => {
-		WidgetSizeChanged.Connect((size) => {
-			setWidgetSize(size as Vector2);
+		WidgetSizeChanged.Connect((newSize) => {
+			setWidgetSize(newSize as Vector2);
 		});
 
 		ZoomScaleChanged.Connect((zoom) => {
 			setZoomScale(zoom as number);
+		});
+
+		NodesChanged.Connect(() => {
+			setForceRender((prevValue) => !prevValue);
 		});
 
 		NodeSystemsChanged.Connect(() => {
@@ -172,6 +177,9 @@ export function App() {
 			</frame>
 			{GetNodeSystems().map((nodeSystem) => {
 				return nodeSystem.create(nodeSystem.data);
+			})}
+			{GetAllNodes().map((node) => {
+				return node.create(node.data);
 			})}
 			{displayNodeSelection !== undefined && <NodeSelection Position={displayNodeSelection} />}
 			<Controls />

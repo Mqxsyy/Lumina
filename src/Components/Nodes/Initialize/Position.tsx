@@ -3,39 +3,41 @@ import { Node } from "../Node";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { Div } from "Components/Div";
 import { NumberInput } from "Components/Basic/NumeberInput";
+import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
+import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { Position as PositionAPI } from "API/Nodes/Initialize/Position";
 
-export function CreatePositionNode(
-	setX: (x: number) => void,
-	setY: (y: number) => void,
-	setZ: (z: number) => void,
-): Roact.Element {
-	return <Position SetX={setX} SetY={setY} SetZ={setZ} />;
+export function CreatePositionNode() {
+	AddNode({
+		data: {
+			id: GetNextNodeId(),
+			anchorPoint: GetMousePositionOnCanvas(),
+			node: new PositionAPI(),
+		},
+		create: (data: NodeData) => {
+			return <Position key={data.id} data={data} />;
+		},
+	});
 }
 
-interface Props {
-	SetX?: (x: number) => void;
-	SetY?: (y: number) => void;
-	SetZ?: (z: number) => void;
-}
-
-function Position({ SetX, SetY, SetZ }: Props) {
+function Position({ data }: { data: NodeData }) {
 	const xChanged = (number: number) => {
-		if (SetX === undefined) return;
-		SetX(number);
+		const positionField = (data.node as PositionAPI).nodeFields.position;
+		positionField.SetValueX(number);
 	};
 
 	const yChanged = (number: number) => {
-		if (SetY === undefined) return;
-		SetY(number);
+		const positionField = (data.node as PositionAPI).nodeFields.position;
+		positionField.SetValueY(number);
 	};
 
 	const zChanged = (number: number) => {
-		if (SetZ === undefined) return;
-		SetZ(number);
+		const positionField = (data.node as PositionAPI).nodeFields.position;
+		positionField.SetValueZ(number);
 	};
 
 	return (
-		<Node Name="Position">
+		<Node Name="Position" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 			<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5)} />
 

@@ -1,9 +1,9 @@
 import { SelectionEntry } from "API/SelectionEntry";
-import { CreateEmptySystem } from "Components/System/CreateEmptySystem";
+import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 
 export const NodeSystems: { [key: string]: SelectionEntry } = {
 	Simple: {
-		name: "Simple",
+		name: "Empty",
 		create: () => CreateEmptySystem(),
 	},
 };

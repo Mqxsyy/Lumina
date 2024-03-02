@@ -36,7 +36,6 @@ export function NumberInput({
 }: Props) {
 	const onTextChanged = (text: string) => {
 		const number = tonumber(text);
-		print(number);
 
 		if (number === undefined) {
 			if (AllowNegative) {
