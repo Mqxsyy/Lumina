@@ -78,19 +78,20 @@ export function NodeSystem({ data }: Props) {
 
 	useEffect(() => {
 		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);
-		const systemHeight = systemRef.current === undefined ? 0 : systemRef.current.AbsoluteSize.Y;
-		const nodeCenter = data.anchorPoint.add(new Vector2(SYSTEM_WIDTH * 0.5 * zoomScale, systemHeight * 0.5));
-
-		setOffsetFromCenter(nodeCenter.sub(canvasCenter).div(zoomScale));
-	}, [data.anchorPoint, systemRef.current?.AbsoluteSize]);
+		setOffsetFromCenter(data.anchorPoint.sub(canvasCenter).div(zoomScale));
+	}, [data.anchorPoint]);
 
 	useEffect(() => {
 		const canvasPosition = new Vector2(canvas.current.AbsolutePosition.X, canvas.current.AbsolutePosition.Y);
 		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);
-		const position = canvasPosition.add(canvasCenter).add(offsetFromCenter.mul(zoomScale));
+
+		const systemHeight = systemRef.current === undefined ? 0 : systemRef.current.AbsoluteSize.Y;
+		const nodeCenter = new Vector2(SYSTEM_WIDTH * 0.5 * zoomScale, systemHeight * 0.5);
+
+		const position = canvasPosition.add(canvasCenter).add(nodeCenter).add(offsetFromCenter.mul(zoomScale));
 
 		setPosition(position);
-	}, [canvas.current.AbsoluteSize, offsetFromCenter, zoomScale]);
+	}, [canvas.current.AbsoluteSize, systemRef.current?.AbsoluteSize, offsetFromCenter, zoomScale, forceRender]);
 
 	return (
 		<textbutton
@@ -155,21 +156,25 @@ export function NodeSystem({ data }: Props) {
 						NodeGroup={NodeGroups.Spawn}
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
+						ForceReRenderSystem={() => setForceRender((prev) => !prev)}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Initialize}
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
+						ForceReRenderSystem={() => setForceRender((prev) => !prev)}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Update}
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
+						ForceReRenderSystem={() => setForceRender((prev) => !prev)}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Render}
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
+						ForceReRenderSystem={() => setForceRender((prev) => !prev)}
 					/>
 				</Div>
 			</Div>

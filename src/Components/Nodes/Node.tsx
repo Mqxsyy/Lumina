@@ -6,7 +6,7 @@ import { GetCanvas } from "Events";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { SetDraggingNodeId } from "Services/DraggingService";
+import { SetDraggingNode } from "Services/DraggingService";
 
 const NODE_WIDTH = 250;
 
@@ -29,18 +29,16 @@ export function Node({ Name, Id, AnchorPoint, children }: Roact.PropsWithChildre
 
 	const nodeRef = useRef(undefined as undefined | TextButton);
 
-	const [_, setForceRender] = useState(false);
-
 	const onMouseButton1Down = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
 		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
 
-		SetDraggingNodeId(Id);
+		SetDraggingNode({ id: Id, element });
 		setIsDragging(true);
 	};
 
 	const onMouseButton1Up = () => {
-		SetDraggingNodeId(undefined);
+		SetDraggingNode(undefined);
 		setIsDragging(false);
 
 		RunService.UnbindFromRenderStep("MoveNode");
@@ -52,11 +50,9 @@ export function Node({ Name, Id, AnchorPoint, children }: Roact.PropsWithChildre
 
 	useEffect(() => {
 		if (isDragging) {
-			RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => {
+			RunService.BindToRenderStep("MoveNode", 110, () => {
 				const mousePosition = GetMousePositionOnCanvas();
 				UpdateNodeAnchorPoint(Id, mousePosition.add(mouseOffsetRef.current));
-
-				setForceRender((prev) => !prev);
 			});
 		}
 

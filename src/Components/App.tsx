@@ -24,7 +24,7 @@ export function App() {
 
 	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
 
-	const [forceRender, setForceRender] = useState(false);
+	const [_, setForceRender] = useState(0);
 
 	const StartMoveCanvas = (frame: Frame) => {
 		const mousePositionVec2 = GetMousePosition();
@@ -65,11 +65,11 @@ export function App() {
 		});
 
 		NodesChanged.Connect(() => {
-			setForceRender((prevValue) => !prevValue);
+			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
 
 		NodeSystemsChanged.Connect(() => {
-			setForceRender((prevValue) => !prevValue);
+			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
 	}, []);
 
@@ -103,25 +103,32 @@ export function App() {
 				}}
 				ref={canvasRef}
 			>
+				{/* Top Left */}
 				<imagelabel
 					Position={UDim2.fromOffset(0, 0)}
 					Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
 					Rotation={180}
 					BackgroundTransparency={1}
+					// BackgroundTransparency={0.95}
+					// BackgroundColor3={Color3.fromRGB(255, 0, 0)}
 					Image={"rbxassetid://15952812715"} // alt: 15952811095
 					ImageTransparency={0.5}
 					ScaleType={"Tile"}
 					TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 				/>
+				{/* Bottom Right */}
 				<imagelabel
 					Position={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
 					Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
 					BackgroundTransparency={1}
+					// BackgroundTransparency={0.95}
+					// BackgroundColor3={Color3.fromRGB(0, 255, 0)}
 					Image={"rbxassetid://15952812715"} // alt: 15952811095
 					ImageTransparency={0.5}
 					ScaleType={"Tile"}
 					TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 				/>
+				{/* Top Right */}
 				<imagelabel
 					Position={
 						new UDim2(
@@ -134,11 +141,14 @@ export function App() {
 					Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
 					Rotation={270}
 					BackgroundTransparency={1}
+					// BackgroundTransparency={0.95}
+					// BackgroundColor3={Color3.fromRGB(0, 0, 255)}
 					Image={"rbxassetid://15952812715"} // alt: 15952811095
 					ImageTransparency={0.5}
 					ScaleType={"Tile"}
 					TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
 				/>
+				{/* Bottom Left */}
 				<imagelabel
 					Position={
 						new UDim2(
@@ -151,6 +161,8 @@ export function App() {
 					Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
 					Rotation={90}
 					BackgroundTransparency={1}
+					// BackgroundTransparency={0.95}
+					// BackgroundColor3={Color3.fromRGB(255, 0, 255)}
 					Image={"rbxassetid://15952812715"} // alt: 15952811095
 					ImageTransparency={0.5}
 					ScaleType={"Tile"}
