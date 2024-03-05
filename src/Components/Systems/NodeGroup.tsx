@@ -7,7 +7,6 @@ import { DraggingNode, GetDraggingNode, NodeDraggingEnded } from "Services/Dragg
 import { GetNodeById, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { NodeGroups } from "API/NodeGroup";
 import { RunService } from "@rbxts/services";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetCanvas } from "Events";
 
 const BORDER_THICKNESS = 2;
@@ -43,10 +42,13 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, ForceReRender
 
 			if (draggingNodeData.data.node.nodeGroup !== NodeGroup) return;
 
-			setChildContainerSize(new UDim2(1, 0, 0, draggingNode.element.AbsoluteSize.Y + 5));
+			UpdateChildNodes();
+
+			const containerSize = GetContainerSize();
+			setChildContainerSize(new UDim2(1, 0, 0, containerSize + draggingNode.element.AbsoluteSize.Y));
 
 			const xOffset = (divRef.current!.AbsoluteSize.X - 250) * 0.5;
-			const yOffset = 20 + 10;
+			const yOffset = 20 + 10 + containerSize;
 
 			const canvasFrame = GetCanvas.Invoke() as Frame;
 			const canvasPos = new Vector2(canvasFrame.AbsolutePosition.X, canvasFrame.AbsolutePosition.Y);
@@ -75,7 +77,33 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, ForceReRender
 			containerSizeY += node.element.AbsoluteSize.Y + 5;
 		});
 
-		setChildContainerSize(new UDim2(1, 0, 0, containerSizeY));
+		setChildContainerSize(new UDim2(1, 0, 0, containerSizeY === 0 ? 0 : containerSizeY - 5));
+		UpdateChildNodes();
+	};
+
+	const GetContainerSize = () => {
+		let containerSizeY = 0;
+
+		childNodesRef.current.forEach((node) => {
+			containerSizeY += node.element.AbsoluteSize.Y + 5;
+		});
+
+		return containerSizeY;
+	};
+
+	const UpdateChildNodes = () => {
+		const xOffset = (divRef.current!.AbsoluteSize.X - 250) * 0.5;
+		let yOffset = 20 + 10;
+
+		for (const node of childNodesRef.current) {
+			const canvasFrame = GetCanvas.Invoke() as Frame;
+			const canvasPos = new Vector2(canvasFrame.AbsolutePosition.X, canvasFrame.AbsolutePosition.Y);
+
+			const offset = new Vector2(xOffset, yOffset);
+			UpdateNodeAnchorPoint(node.id, divRef.current!.AbsolutePosition.add(offset).sub(canvasPos));
+
+			yOffset += node.element.AbsoluteSize.Y + 5;
+		}
 	};
 
 	useEffect(() => {
@@ -90,6 +118,7 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, ForceReRender
 				if (draggingNodeData.data.node.nodeGroup !== NodeGroup) return;
 
 				childNodesRef.current.push(draggingNode);
+				UpdateChildNodes();
 			}
 		});
 
