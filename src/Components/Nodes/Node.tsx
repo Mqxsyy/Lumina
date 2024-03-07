@@ -121,6 +121,7 @@ export function Node({ Name, Id, AnchorPoint, children }: Roact.PropsWithChildre
 
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Name} />
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+				<uilistlayout Padding={new UDim(0, 5 * zoomScale)} HorizontalAlignment={"Center"} />
 				{children}
 			</Div>
 		</textbutton>

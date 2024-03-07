@@ -17,9 +17,10 @@ interface Props {
 	GradientStart: Color3;
 	GradientEnd: Color3;
 	NodeSystem: NodeSystem;
+	NodeSystemPosition?: Vector2;
 }
 
-export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem }: Props) {
+export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem, NodeSystemPosition }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 	const [childContainerSize, setChildContainerSize] = useState(new UDim2(1, 0, 0, 0));
 
@@ -135,6 +136,10 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem }:
 			zoomConnection.Disconnect();
 		};
 	}, []);
+
+	useEffect(() => {
+		UpdateChildNodes();
+	}, [NodeSystemPosition]);
 
 	return (
 		<Div

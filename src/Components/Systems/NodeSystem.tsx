@@ -38,7 +38,7 @@ export function NodeSystem({ data }: Props) {
 	};
 
 	const bindDrag = () => {
-		RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => {
+		RunService.BindToRenderStep("MoveSystem", Enum.RenderPriority.Input.Value, () => {
 			UpdateNodeSystemAnchorPoint(data.id, mouseOffsetRef.current);
 			setForceRender((prev) => !prev);
 		});
@@ -51,7 +51,7 @@ export function NodeSystem({ data }: Props) {
 
 	const onMouseButton1Up = () => {
 		setIsDragging(false);
-		RunService.UnbindFromRenderStep("MoveNode");
+		RunService.UnbindFromRenderStep("MoveSystem");
 	};
 
 	const onMouseButton2Down = () => {
@@ -64,7 +64,7 @@ export function NodeSystem({ data }: Props) {
 		}
 
 		return () => {
-			RunService.UnbindFromRenderStep("MoveNode");
+			RunService.UnbindFromRenderStep("MoveSystem");
 		};
 	});
 
@@ -155,25 +155,31 @@ export function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
 						NodeSystem={data.system}
+						NodeSystemPosition={systemRef.current?.AbsolutePosition}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Initialize}
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
 						NodeSystem={data.system}
+						NodeSystemPosition={systemRef.current?.AbsolutePosition}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Update}
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
 						NodeSystem={data.system}
+						NodeSystemPosition={systemRef.current?.AbsolutePosition}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Render}
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
 						NodeSystem={data.system}
+						NodeSystemPosition={systemRef.current?.AbsolutePosition}
 					/>
+
+					{/* need instant trigger child update */}
 				</Div>
 			</Div>
 		</textbutton>

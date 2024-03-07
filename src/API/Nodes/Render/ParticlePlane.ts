@@ -3,7 +3,7 @@ import { NodeTypes } from "../NodeTypes";
 import { RunService } from "@rbxts/services";
 import { ObjectPool } from "API/ObjectPool";
 import { GetLiveParticlesFolder } from "API/FolderLocations";
-import { RenderNode, ParticleInitParams } from "./RenderNode";
+import { RenderNode, ParticleInitParams, ParticleUpdateParams } from "./RenderNode";
 import { NumberField } from "API/Fields/NumberField";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
@@ -79,7 +79,7 @@ export class ParticlePlane extends RenderNode {
 		this.displayFolder = displayPlaneParticlesFolder as Folder;
 	}
 
-	Render = (init: ParticleInitParams) => {
+	Render = (init: ParticleInitParams, update: ParticleUpdateParams) => {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
 		particle.Position = new Vector3(0, 10, 0);
 
@@ -102,6 +102,12 @@ export class ParticlePlane extends RenderNode {
 				connection.Disconnect();
 				this.objectPool.RemoveItem(particle);
 				return;
+			}
+
+			if (update.position !== undefined) {
+				update.position.forEach((updateFn) => {
+					particle.Position = updateFn(init.id, particle.Position);
+				});
 			}
 
 			if (orientation === Orientation.FacingCamera) {

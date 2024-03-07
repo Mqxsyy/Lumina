@@ -2,7 +2,6 @@ import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { NodeTypes } from "../NodeTypes";
 import { InitializeNode } from "./InitializeNode";
-import { CreateLifetimeNode } from "Components/Nodes/Initialize/Lifetime";
 
 export class Lifetime extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

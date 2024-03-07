@@ -2,7 +2,7 @@ import { INode } from "./Nodes/Node";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
 import { NodeTypes } from "./Nodes/NodeTypes";
 import { RunService } from "@rbxts/services";
-import { RenderNode, ParticleInitParams } from "./Nodes/Render/RenderNode";
+import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./Nodes/Render/RenderNode";
 import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
 import { UpdateNode } from "./Nodes/Update/UpdateNode";
@@ -21,7 +21,9 @@ export class NodeSystem {
 	initializeNodes = {
 		lifetime: undefined as InitializeNode | undefined,
 	};
-	updateNodes: UpdateNode[] | undefined;
+	updateNodes = {
+		position: undefined as PositionUpdateFn[] | undefined,
+	};
 	renderNode: RenderNode | undefined;
 
 	constructor() {
@@ -56,6 +58,7 @@ export class NodeSystem {
 
 		this.UpdateSpawnNodes();
 		this.UpdateInitializeNodes();
+		this.UpdateUpdateNodes();
 		this.UpdateRenderNodes();
 
 		if (restart) {
@@ -129,12 +132,16 @@ export class NodeSystem {
 	private SpawnParticle() {
 		task.spawn(() => {
 			const particleId = this.ParticleIdPool.GetNextId();
-			const InitParams: ParticleInitParams = {
+			const initParams: ParticleInitParams = {
 				id: particleId,
 				lifetime: this.initializeNodes.lifetime!.GetValue(particleId) as number,
 			};
 
-			this.renderNode!.Render(InitParams);
+			const updateParams: ParticleUpdateParams = {
+				position: this.updateNodes.position,
+			};
+
+			this.renderNode!.Render(initParams, updateParams);
 		});
 	}
 
@@ -166,7 +173,10 @@ export class NodeSystem {
 			this.initializeNodes[k] = undefined;
 		}
 
-		this.updateNodes = undefined;
+		for (const [k, _] of pairs(this.updateNodes)) {
+			this.updateNodes[k] = undefined;
+		}
+
 		this.renderNode = undefined;
 	}
 
@@ -193,6 +203,22 @@ export class NodeSystem {
 		this.CheckNodesAmount(lifetimeNode);
 		if (lifetimeNode.size() >= 1) {
 			this.initializeNodes.lifetime = lifetimeNode[0] as InitializeNode;
+		}
+	}
+
+	private UpdateUpdateNodes() {
+		const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes();
+
+		const positionNodes = updateNodes.filter((node) => node.nodeType === NodeTypes.Position);
+
+		if (positionNodes.size() >= 1) {
+			if (this.updateNodes.position === undefined) {
+				this.updateNodes.position = [];
+			}
+
+			positionNodes.forEach((node) => {
+				this.updateNodes.position!.push((node as UpdateNode).UpdateValue as PositionUpdateFn);
+			});
 		}
 	}
 

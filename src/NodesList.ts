@@ -18,13 +18,13 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 		},
 	},
 	[NodeGroups.Initialize]: {
-		Lifetime: {
-			name: "Lifetime",
-			create: () => CreateLifetimeNode(),
-		},
 		Position: {
 			name: "Position",
 			create: () => CreatePositionNode(),
+		},
+		Lifetime: {
+			name: "Lifetime",
+			create: () => CreateLifetimeNode(),
 		},
 	},
 	[NodeGroups.Update]: {

@@ -26,11 +26,9 @@ function ConstantSpawn({ data }: { data: NodeData }) {
 
 		if (number > 1000) {
 			rateField.SetValue(1000);
-			return;
 		}
 
 		rateField.SetValue(number);
-		return;
 	};
 
 	return (
@@ -42,7 +40,7 @@ function ConstantSpawn({ data }: { data: NodeData }) {
 				<NumberInput
 					Position={UDim2.fromScale(0.25, 0)}
 					Size={new UDim2(0.75, 0, 0, 20)}
-					PlaceholderText={"Num"}
+					PlaceholderText={"..."}
 					Text="20"
 					NumberChanged={rateChanged}
 				/>
