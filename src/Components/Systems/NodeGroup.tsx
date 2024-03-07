@@ -8,6 +8,7 @@ import { GetNodeById, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { NodeGroups } from "API/NodeGroup";
 import { RunService } from "@rbxts/services";
 import { GetCanvas } from "Events";
+import { NodeSystem } from "API/NodeSystem";
 
 const BORDER_THICKNESS = 2;
 
@@ -15,10 +16,10 @@ interface Props {
 	NodeGroup: NodeGroups;
 	GradientStart: Color3;
 	GradientEnd: Color3;
-	ForceReRenderSystem: () => void;
+	NodeSystem: NodeSystem;
 }
 
-export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, ForceReRenderSystem }: Props) {
+export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 	const [childContainerSize, setChildContainerSize] = useState(new UDim2(1, 0, 0, 0));
 
@@ -69,6 +70,7 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, ForceReRender
 			const draggingNodeIndex = childNodesRef.current.findIndex((node) => node.id === draggingNode.id);
 			if (draggingNodeIndex !== -1) {
 				childNodesRef.current.remove(draggingNodeIndex);
+				NodeSystem.RemoveNode(GetNodeById(draggingNode.id)!.data.node);
 			}
 		}
 
@@ -119,6 +121,8 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, ForceReRender
 
 				childNodesRef.current.push(draggingNode);
 				UpdateChildNodes();
+
+				NodeSystem.AddNode(draggingNodeData.data.node);
 			}
 		});
 

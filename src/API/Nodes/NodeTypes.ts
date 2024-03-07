@@ -11,5 +11,4 @@ export enum NodeTypes {
 
 	RandomNumber,
 	Ramp,
-	AliveTime,
 }

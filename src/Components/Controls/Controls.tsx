@@ -2,25 +2,30 @@ import Roact from "@rbxts/roact";
 import { Div } from "../Div";
 import { ControlButton } from "./ControlButton";
 import { GetNodeSystems } from "Services/NodeSystemService";
+import { ClearParticles } from "API/FolderLocations";
 
 const CANVAS_PADDING = 5;
 const BUTTONS_PADDING = 5;
-const BUTTON_WIDTH = 100;
+const BUTTON_WIDTH = 125;
 const BUTTON_HEIGHT = 25;
 
 export function Controls() {
-	const OnStart = () => {
+	const Start = () => {
 		const nodeSystems = GetNodeSystems();
 		nodeSystems.forEach((nodeSystem) => {
 			nodeSystem.data.system.Run();
 		});
 	};
 
-	const OnStop = () => {
+	const Stop = () => {
 		const nodeSystems = GetNodeSystems();
 		nodeSystems.forEach((nodeSystem) => {
 			nodeSystem.data.system.Stop();
 		});
+	};
+
+	const ClearLeftover = () => {
+		ClearParticles();
 	};
 
 	return (
@@ -33,13 +38,19 @@ export function Controls() {
 				Position={UDim2.fromOffset(0, 0)}
 				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
 				Text="Start"
-				MouseButton1Down={OnStart}
+				MouseButton1Down={Start}
 			/>
 			<ControlButton
 				Position={UDim2.fromOffset(0, BUTTON_HEIGHT + BUTTONS_PADDING)}
 				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
 				Text="Stop"
-				MouseButton1Down={OnStop}
+				MouseButton1Down={Stop}
+			/>
+			<ControlButton
+				Position={UDim2.fromOffset(0, (BUTTON_HEIGHT + BUTTONS_PADDING) * 2)}
+				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
+				Text="Clear Leftover"
+				MouseButton1Down={ClearLeftover}
 			/>
 		</Div>
 	);

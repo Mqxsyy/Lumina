@@ -7,6 +7,7 @@ import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { SetDraggingNode } from "Services/DraggingService";
+import { Div } from "Components/Div";
 
 const NODE_WIDTH = 250;
 
@@ -119,7 +120,9 @@ export function Node({ Name, Id, AnchorPoint, children }: Roact.PropsWithChildre
 			/>
 
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Name} />
-			{children}
+			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+				{children}
+			</Div>
 		</textbutton>
 	);
 }

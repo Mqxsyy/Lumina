@@ -19,6 +19,13 @@ export class NodeGroup<T extends INode> {
 		this.Nodes.push(node);
 	}
 
+	RemoveNode(node: T) {
+		const index = this.Nodes.findIndex((n) => n.id === node.id);
+		if (index !== -1) {
+			this.Nodes.remove(index);
+		}
+	}
+
 	GetNodes(): T[] {
 		return this.Nodes;
 	}

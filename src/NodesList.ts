@@ -47,8 +47,5 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 			name: "Random Number",
 			create: () => CreateRandomNumberNode(),
 		},
-		AliveTime: {
-			name: "Alive time",
-		},
 	},
 };

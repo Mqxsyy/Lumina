@@ -40,9 +40,7 @@ export function NodeSystem({ data }: Props) {
 	const bindDrag = () => {
 		RunService.BindToRenderStep("MoveNode", Enum.RenderPriority.Input.Value, () => {
 			UpdateNodeSystemAnchorPoint(data.id, mouseOffsetRef.current);
-
-			const invertedForceRender = !forceRender;
-			setForceRender(invertedForceRender);
+			setForceRender((prev) => !prev);
 		});
 	};
 
@@ -156,25 +154,25 @@ export function NodeSystem({ data }: Props) {
 						NodeGroup={NodeGroups.Spawn}
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
-						ForceReRenderSystem={() => setForceRender((prev) => !prev)}
+						NodeSystem={data.system}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Initialize}
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
-						ForceReRenderSystem={() => setForceRender((prev) => !prev)}
+						NodeSystem={data.system}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Update}
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
-						ForceReRenderSystem={() => setForceRender((prev) => !prev)}
+						NodeSystem={data.system}
 					/>
 					<NodeGroup
 						NodeGroup={NodeGroups.Render}
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
-						ForceReRenderSystem={() => setForceRender((prev) => !prev)}
+						NodeSystem={data.system}
 					/>
 				</Div>
 			</Div>

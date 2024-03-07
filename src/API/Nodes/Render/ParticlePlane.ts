@@ -3,7 +3,7 @@ import { NodeTypes } from "../NodeTypes";
 import { RunService } from "@rbxts/services";
 import { ObjectPool } from "API/ObjectPool";
 import { GetLiveParticlesFolder } from "API/FolderLocations";
-import { RenderNode, ParticleInitParams, ParticleUpdateParams } from "./RenderNode";
+import { RenderNode, ParticleInitParams } from "./RenderNode";
 import { NumberField } from "API/Fields/NumberField";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
@@ -79,9 +79,9 @@ export class ParticlePlane extends RenderNode {
 		this.displayFolder = displayPlaneParticlesFolder as Folder;
 	}
 
-	Render = (init: ParticleInitParams, update: ParticleUpdateParams) => {
+	Render = (init: ParticleInitParams) => {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
-		particle.Position = init.position;
+		particle.Position = new Vector3(0, 10, 0);
 
 		const colorVec3 = this.nodeFields.color.GetValue();
 		particle.SurfaceGui.ImageLabel.ImageColor3 = new Color3(colorVec3.X, colorVec3.Y, colorVec3.Z);
@@ -95,6 +95,8 @@ export class ParticlePlane extends RenderNode {
 
 		let aliveTime = 0;
 
+		particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
+
 		const connection = RunService.RenderStepped.Connect((dt) => {
 			if (aliveTime >= init.lifetime) {
 				connection.Disconnect();
@@ -102,29 +104,14 @@ export class ParticlePlane extends RenderNode {
 				return;
 			}
 
-			if (update.aliveNodes !== undefined && update.aliveNodes.size() > 0) {
-				for (const aliveNode of update.aliveNodes) {
-					aliveNode.nodeFields.value.SetValue(aliveTime / init.lifetime);
-				}
-			}
-
 			if (orientation === Orientation.FacingCamera) {
 				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
 			}
-
-			if (update.position !== undefined) {
-				for (const fn of update.position) {
-					particle.Position = fn(init.id, particle.Position);
-				}
-			}
-
-			particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
 
 			aliveTime += dt;
 		});
 
 		particle.Parent = this.displayFolder;
-
 		return;
 	};
 

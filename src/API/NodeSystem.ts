@@ -2,11 +2,10 @@ import { INode } from "./Nodes/Node";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
 import { NodeTypes } from "./Nodes/NodeTypes";
 import { RunService } from "@rbxts/services";
-import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./Nodes/Render/RenderNode";
+import { RenderNode, ParticleInitParams } from "./Nodes/Render/RenderNode";
 import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
 import { UpdateNode } from "./Nodes/Update/UpdateNode";
-import { LogicNode } from "./Nodes/Logic/LogicNode";
 import { IdPool } from "./IdPool";
 
 // OPTIMIZE: make less laggy
@@ -18,126 +17,191 @@ export class NodeSystem {
 	NodeGroups: { [key in NodeGroups]: NodeGroup<INode> };
 	SpawnConnection: RBXScriptConnection | undefined;
 
+	spawnNode: SpawnNode | undefined;
+	initializeNodes = {
+		lifetime: undefined as InitializeNode | undefined,
+	};
+	updateNodes: UpdateNode[] | undefined;
+	renderNode: RenderNode | undefined;
+
 	constructor() {
 		this.NodeGroups = {
 			[NodeGroups.Spawn]: new NodeGroup<SpawnNode>(),
 			[NodeGroups.Initialize]: new NodeGroup<InitializeNode>(),
 			[NodeGroups.Update]: new NodeGroup<UpdateNode>(),
 			[NodeGroups.Render]: new NodeGroup<RenderNode>(),
-			[NodeGroups.Logic]: new NodeGroup<LogicNode>(),
+			[NodeGroups.Logic]: undefined as never,
 		};
 	}
 
 	AddNode(node: INode) {
 		this.NodeGroups[node.nodeGroup as NodeGroups].AddNode(node);
+		this.UpdateNodes();
+	}
+
+	RemoveNode(node: INode) {
+		this.NodeGroups[node.nodeGroup as NodeGroups].RemoveNode(node);
+		this.UpdateNodes();
+	}
+
+	UpdateNodes() {
+		let restart = false;
+
+		if (this.SpawnConnection !== undefined) {
+			this.Stop();
+			restart = true;
+		}
+
+		this.ResetNodes();
+
+		this.UpdateSpawnNodes();
+		this.UpdateInitializeNodes();
+		this.UpdateRenderNodes();
+
+		if (restart) {
+			this.Run();
+		}
 	}
 
 	Run() {
-		for (const [i, v] of pairs(this.NodeGroups)) {
-			if (i === NodeGroups.Logic) continue;
-			if (i === NodeGroups.Update) continue;
-			if (v.GetNodes().size() === 0) return;
+		if (!this.CheckRequireNodes()) return;
+		if (this.SpawnConnection !== undefined) {
+			warn("System already running.");
+			return;
 		}
 
-		const spawnNodes = this.NodeGroups[NodeGroups.Spawn].GetNodes();
-		if (spawnNodes.size() > 1) {
-			warn("More than one spawn node used, only the first will be used.");
-		}
-
-		const spawnNode = spawnNodes[0] as SpawnNode;
-
-		if (spawnNode.nodeType === NodeTypes.BurstSpawn) {
-			const amount = spawnNode.GetValue() as number;
-
-			for (let i = 0; i < amount; i++) {
-				task.spawn(() => {
-					const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes() as InitializeNode[];
-					const lifetimeNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Lifetime);
-					const spawnPositionNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Position);
-
-					const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
-					const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
-
-					const particleId = this.ParticleIdPool.GetNextId();
-					const InitParams: ParticleInitParams = {
-						id: particleId,
-						lifetime: lifetimeNode!.GetValue(particleId) as number,
-						position: spawnPositionNode!.GetValue(particleId) as Vector3,
-					};
-
-					const UpdateParams: ParticleUpdateParams = {};
-					if (updatePositionNode !== undefined) {
-						UpdateParams.position = [updatePositionNode!.UpdateValue] as PositionUpdateFn[];
-					}
-
-					const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as RenderNode;
-
-					outputNode.Render(InitParams, UpdateParams);
-				});
-			}
-		} else if (spawnNode.nodeType === NodeTypes.ConstantSpawn) {
-			let rate = spawnNode.GetValue() as number;
-			let cd = 1 / rate;
-			let amount = 1; // TODO: make amount more accurate, every 2nd frame spawns 2, every 3rd frame spawns 2, etc
-			let passedTime = 0;
-
-			this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
-				const newRate = spawnNode.GetValue() as number;
-				if (newRate !== rate) {
-					rate = newRate;
-					cd = 1 / rate;
-					amount = math.ceil(rate / 60);
-				}
-
-				passedTime += dt;
-				if (passedTime < cd) {
-					return;
-				}
-
-				passedTime = 0;
+		switch (this.spawnNode!.nodeType) {
+			case NodeTypes.BurstSpawn: {
+				const amount = this.spawnNode!.GetValue() as number;
 
 				for (let i = 0; i < amount; i++) {
-					task.spawn(() => {
-						const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes() as InitializeNode[];
-						const lifetimeNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Lifetime);
-						const spawnPositionNode = initializeNodes.find((node) => node.nodeType === NodeTypes.Position);
-
-						const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
-						const updatePositionNode = updateNodes.find((node) => node.nodeType === NodeTypes.Position);
-
-						const particleId = this.ParticleIdPool.GetNextId();
-						const InitParams: ParticleInitParams = {
-							id: particleId,
-							lifetime: lifetimeNode!.GetValue(particleId) as number,
-							position: spawnPositionNode!.GetValue(particleId) as Vector3,
-						};
-
-						const logicNodes = this.NodeGroups[NodeGroups.Logic].GetNodes();
-
-						const UpdateParams: ParticleUpdateParams = {
-							position: [updatePositionNode!.UpdateValue] as PositionUpdateFn[],
-							aliveNodes: logicNodes.filter(
-								(node) => node.nodeType === NodeTypes.AliveTime,
-							) as LogicNode[],
-						};
-
-						const outputNode = this.NodeGroups[NodeGroups.Render].GetNodes()[0] as RenderNode;
-
-						outputNode.Render(InitParams, UpdateParams);
-					});
+					this.SpawnParticle();
 				}
-			});
+
+				break;
+			}
+			case NodeTypes.ConstantSpawn: {
+				let rate = this.spawnNode!.GetValue() as number;
+				let cd = 1 / rate;
+				let amount = 1; // TODO: make amount more accurate, every 2nd frame spawns 2, every 3rd frame spawns 2, etc
+
+				// OPTIMIZE: can bind multiple times to same node
+				this.spawnNode!.nodeFields.rate.FieldChanged.Connect(() => {
+					const newRate = this.spawnNode!.GetValue() as number;
+					if (newRate !== rate) {
+						rate = newRate;
+						cd = 1 / rate;
+						amount = math.ceil(rate / 60);
+					}
+				});
+
+				let passedTime = 0;
+				this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
+					passedTime += dt;
+					if (passedTime < cd) return;
+
+					passedTime = 0;
+
+					for (let i = 0; i < amount; i++) {
+						this.SpawnParticle();
+					}
+				});
+
+				break;
+			}
 		}
 	}
 
 	Stop(clearCache: boolean = false) {
 		if (this.SpawnConnection !== undefined) {
 			this.SpawnConnection.Disconnect();
+			this.SpawnConnection = undefined;
 		}
 
 		if (clearCache) {
 			const renderNodes = this.NodeGroups[NodeGroups.Render].GetNodes() as RenderNode[];
-			renderNodes[0].Destroy();
+			if (renderNodes[0] !== undefined) {
+				renderNodes[0].Destroy();
+			}
+		}
+	}
+
+	private SpawnParticle() {
+		task.spawn(() => {
+			const particleId = this.ParticleIdPool.GetNextId();
+			const InitParams: ParticleInitParams = {
+				id: particleId,
+				lifetime: this.initializeNodes.lifetime!.GetValue(particleId) as number,
+			};
+
+			this.renderNode!.Render(InitParams);
+		});
+	}
+
+	private CheckRequireNodes(): boolean {
+		let passedChecks = true;
+
+		if (this.spawnNode === undefined) {
+			warn("Missing spawn node.");
+			passedChecks = false;
+		}
+
+		if (this.initializeNodes.lifetime === undefined) {
+			warn("Missing lifetime node.");
+			passedChecks = false;
+		}
+
+		if (this.renderNode === undefined) {
+			warn("Missing render node.");
+			passedChecks = false;
+		}
+
+		return passedChecks;
+	}
+
+	private ResetNodes() {
+		this.spawnNode = undefined;
+
+		for (const [k, _] of pairs(this.initializeNodes)) {
+			this.initializeNodes[k] = undefined;
+		}
+
+		this.updateNodes = undefined;
+		this.renderNode = undefined;
+	}
+
+	private CheckNodesAmount(nodes: INode[]) {
+		if (nodes.size() > 1) {
+			warn("More than one node used, only one will be used.");
+		}
+	}
+
+	private UpdateSpawnNodes() {
+		const spawnNodes = this.NodeGroups[NodeGroups.Spawn].GetNodes();
+
+		this.CheckNodesAmount(spawnNodes);
+		if (spawnNodes.size() >= 1) {
+			this.spawnNode = spawnNodes[0] as SpawnNode;
+		}
+	}
+
+	private UpdateInitializeNodes() {
+		const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes();
+
+		const lifetimeNode = initializeNodes.filter((node) => node.nodeType === NodeTypes.Lifetime);
+
+		this.CheckNodesAmount(lifetimeNode);
+		if (lifetimeNode.size() >= 1) {
+			this.initializeNodes.lifetime = lifetimeNode[0] as InitializeNode;
+		}
+	}
+
+	private UpdateRenderNodes() {
+		const renderNodes = this.NodeGroups[NodeGroups.Render].GetNodes();
+
+		this.CheckNodesAmount(renderNodes);
+		if (renderNodes.size() >= 1) {
+			this.renderNode = renderNodes[0] as RenderNode;
 		}
 	}
 }
