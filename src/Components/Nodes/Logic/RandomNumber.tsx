@@ -1,8 +1,9 @@
 import Roact from "@rbxts/roact";
-import { Node } from "../Node";
+import { RandomNumber as RandomNumberAPI } from "API/Nodes/Logic/Math/RandomNumber";
+import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
-import { RandomNumber as RandomNumberAPI } from "API/Nodes/Logic/Math/RandomNumber";
+import { Node } from "../Node";
 
 export function CreateRandomNumberNode() {
 	AddNode({
@@ -18,5 +19,20 @@ export function CreateRandomNumberNode() {
 }
 
 function RandomNumber({ data }: { data: NodeData }) {
-	return <Node Name="Random Number" Id={data.id} AnchorPoint={data.anchorPoint} />;
+	const vector2Changed = (vector2: Vector2) => {
+		const vector2Field = (data.node as RandomNumberAPI).nodeFields.range;
+		vector2Field.SetValue(vector2);
+	};
+
+	return (
+		<Node Name="Position" Id={data.id} AnchorPoint={data.anchorPoint}>
+			<uipadding PaddingLeft={new UDim(0, 10)} />
+			<Vector2Field
+				Label={"Vector3"}
+				ValueLabels={["Min", "Max"]}
+				DefaultValue={new Vector2(0, 10)}
+				Vector2Changed={vector2Changed}
+			/>
+		</Node>
+	);
 }

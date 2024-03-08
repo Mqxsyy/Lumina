@@ -1,6 +1,6 @@
 import Roact from "@rbxts/roact";
 import { Position as PositionAPI } from "API/Nodes/Initialize/Position";
-import { Vector3Field } from "Components/NodeFields/Vector3Input";
+import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { Node } from "../Node";
