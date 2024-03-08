@@ -1,11 +1,9 @@
 import Roact from "@rbxts/roact";
-import { Node } from "../Node";
-import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { Div } from "Components/Div";
-import { NumberInput } from "Components/Basic/NumeberInput";
+import { Position as PositionAPI } from "API/Nodes/Initialize/Position";
+import { Vector3Field } from "Components/NodeFields/Vector3Input";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
-import { Position as PositionAPI } from "API/Nodes/Initialize/Position";
+import { Node } from "../Node";
 
 export function CreatePositionNode() {
 	AddNode({
@@ -21,61 +19,15 @@ export function CreatePositionNode() {
 }
 
 function Position({ data }: { data: NodeData }) {
-	const xChanged = (number: number) => {
-		const positionField = (data.node as PositionAPI).nodeFields.position;
-		positionField.SetValueX(number);
-	};
-
-	const yChanged = (number: number) => {
-		const positionField = (data.node as PositionAPI).nodeFields.position;
-		positionField.SetValueY(number);
-	};
-
-	const zChanged = (number: number) => {
-		const positionField = (data.node as PositionAPI).nodeFields.position;
-		positionField.SetValueZ(number);
+	const vector3Changed = (vector3: Vector3) => {
+		const vector3Field = (data.node as PositionAPI).nodeFields.position;
+		vector3Field.SetValue(vector3);
 	};
 
 	return (
 		<Node Name="Position" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
-			<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5)} />
-
-			<Div Size={new UDim2(1, 0, 0, 20)}>
-				<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} Text={"X"} />
-				<NumberInput
-					Position={UDim2.fromScale(0.25, 0)}
-					Size={new UDim2(0.75, 0, 0, 20)}
-					PlaceholderText={"..."}
-					Text="0"
-					AllowNegative={true}
-					NumberChanged={xChanged}
-				/>
-			</Div>
-
-			<Div Size={new UDim2(1, 0, 0, 20)}>
-				<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} Text={"Y"} />
-				<NumberInput
-					Position={UDim2.fromScale(0.25, 0)}
-					Size={new UDim2(0.75, 0, 0, 20)}
-					PlaceholderText={"..."}
-					Text="0"
-					AllowNegative={true}
-					NumberChanged={yChanged}
-				/>
-			</Div>
-
-			<Div Size={new UDim2(1, 0, 0, 20)}>
-				<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} Text={"Z"} />
-				<NumberInput
-					Position={UDim2.fromScale(0.25, 0)}
-					Size={new UDim2(0.75, 0, 0, 20)}
-					PlaceholderText={"..."}
-					Text="0"
-					AllowNegative={true}
-					NumberChanged={zChanged}
-				/>
-			</Div>
+			<Vector3Field Label={"Vector3"} DefaultValue={Vector3.zero} Vector3Changed={vector3Changed} />
 		</Node>
 	);
 }

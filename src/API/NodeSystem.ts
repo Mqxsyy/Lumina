@@ -20,6 +20,7 @@ export class NodeSystem {
 	spawnNode: SpawnNode | undefined;
 	initializeNodes = {
 		lifetime: undefined as InitializeNode | undefined,
+		position: undefined as InitializeNode | undefined,
 	};
 	updateNodes = {
 		position: undefined as PositionUpdateFn[] | undefined,
@@ -137,6 +138,10 @@ export class NodeSystem {
 				lifetime: this.initializeNodes.lifetime!.GetValue(particleId) as number,
 			};
 
+			if (this.initializeNodes.position !== undefined) {
+				initParams.position = this.initializeNodes.position.GetValue(particleId) as Vector3;
+			}
+
 			const updateParams: ParticleUpdateParams = {
 				position: this.updateNodes.position,
 			};
@@ -198,11 +203,18 @@ export class NodeSystem {
 	private UpdateInitializeNodes() {
 		const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes();
 
-		const lifetimeNode = initializeNodes.filter((node) => node.nodeType === NodeTypes.Lifetime);
+		const lifetimeNodes = initializeNodes.filter((node) => node.nodeType === NodeTypes.Lifetime);
 
-		this.CheckNodesAmount(lifetimeNode);
-		if (lifetimeNode.size() >= 1) {
-			this.initializeNodes.lifetime = lifetimeNode[0] as InitializeNode;
+		this.CheckNodesAmount(lifetimeNodes);
+		if (lifetimeNodes.size() >= 1) {
+			this.initializeNodes.lifetime = lifetimeNodes[0] as InitializeNode;
+		}
+
+		const positionNodes = initializeNodes.filter((node) => node.nodeType === NodeTypes.Position);
+
+		this.CheckNodesAmount(positionNodes);
+		if (positionNodes.size() >= 1) {
+			this.initializeNodes.position = positionNodes[0] as InitializeNode;
 		}
 	}
 

@@ -81,7 +81,7 @@ export class ParticlePlane extends RenderNode {
 
 	Render = (init: ParticleInitParams, update: ParticleUpdateParams) => {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
-		particle.Position = new Vector3(0, 10, 0);
+		particle.Position = init.position !== undefined ? init.position : new Vector3(0, 10, 0);
 
 		const colorVec3 = this.nodeFields.color.GetValue();
 		particle.SurfaceGui.ImageLabel.ImageColor3 = new Color3(colorVec3.X, colorVec3.Y, colorVec3.Z);

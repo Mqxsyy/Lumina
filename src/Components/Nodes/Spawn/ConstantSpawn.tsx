@@ -1,8 +1,6 @@
 import Roact from "@rbxts/roact";
 import { ConstantSpawn as ConstantSpawnAPI } from "API/Nodes/Spawn/ConstantSpawn";
-import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { NumberInput } from "Components/Basic/NumeberInput";
-import { Div } from "Components/Div";
+import { NumberField } from "Components/NodeFields/NumberField";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { Node } from "../Node";
@@ -34,17 +32,7 @@ function ConstantSpawn({ data }: { data: NodeData }) {
 	return (
 		<Node Name="Constant Spawn" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
-
-			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-				<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} Text={"Rate"} />
-				<NumberInput
-					Position={UDim2.fromScale(0.25, 0)}
-					Size={new UDim2(0.75, 0, 0, 20)}
-					PlaceholderText={"..."}
-					Text="20"
-					NumberChanged={rateChanged}
-				/>
-			</Div>
+			<NumberField Label="Rate" DefaultText="20" NumberChanged={rateChanged} />
 		</Node>
 	);
 }

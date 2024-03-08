@@ -1,11 +1,10 @@
 import Roact from "@rbxts/roact";
-import { Node } from "../Node";
+import { ParticlePlane as ParticlePlaneAPI } from "API/Nodes/Render/ParticlePlane";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { NumberField } from "Components/NodeFields/NumberField";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
-import { ParticlePlane as ParticlePlaneAPI } from "API/Nodes/Render/ParticlePlane";
-import { Div } from "Components/Div";
-import { NumberInput } from "Components/Basic/NumeberInput";
+import { Node } from "../Node";
 
 export function CreateParticlePlaneNode() {
 	AddNode({
@@ -35,28 +34,8 @@ function ParticlePlane({ data }: { data: NodeData }) {
 		<Node Name="Particle Plane" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
-			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-				<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} Text={"Transparency"} />
-				<NumberInput
-					AnchorPoint={new Vector2(1, 0)}
-					Position={UDim2.fromScale(1, 0)}
-					Size={new UDim2(0.5, 0, 0, 20)}
-					PlaceholderText={"..."}
-					Text="0"
-					NumberChanged={transparencyChanged}
-				/>
-			</Div>
-			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-				<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} Text={"Emission"} />
-				<NumberInput
-					AnchorPoint={new Vector2(1, 0)}
-					Position={UDim2.fromScale(1, 0)}
-					Size={new UDim2(0.5, 0, 0, 20)}
-					PlaceholderText={"..."}
-					Text="1"
-					NumberChanged={emissionChanged}
-				/>
-			</Div>
+			<NumberField Label="Transparency" DefaultText="0" NumberChanged={transparencyChanged} />
+			<NumberField Label="Emission" DefaultText="1" NumberChanged={emissionChanged} />
 
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Color - White"} />
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Orientation - Facing camera"} />
