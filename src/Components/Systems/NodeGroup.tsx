@@ -3,16 +3,18 @@ import { Div } from "../Div";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { StyleColors } from "Style";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { DraggingNode, GetDraggingNode, NodeDraggingEnded } from "Services/DraggingService";
+import { GetDraggingNodeId, NodeDraggingEnded } from "Services/DraggingService";
 import { GetNodeById, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { NodeGroups } from "API/NodeGroup";
 import { RunService } from "@rbxts/services";
 import { GetCanvas } from "Events";
 import { NodeSystem } from "API/NodeSystem";
+import { BindNodeGroupFunction } from "Services/NodeSystemService";
 
 const BORDER_THICKNESS = 2;
 
 interface Props {
+	SystemId: number;
 	NodeGroup: NodeGroups;
 	GradientStart: Color3;
 	GradientEnd: Color3;
@@ -20,11 +22,18 @@ interface Props {
 	NodeSystemPosition?: Vector2;
 }
 
-export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem, NodeSystemPosition }: Props) {
+export default function NodeGroup({
+	SystemId,
+	NodeGroup,
+	GradientStart,
+	GradientEnd,
+	NodeSystem,
+	NodeSystemPosition,
+}: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 	const [childContainerSize, setChildContainerSize] = useState(new UDim2(1, 0, 0, 0));
 
-	const childNodesRef = useRef([] as DraggingNode[]);
+	const childNodesIdRef = useRef([] as number[]);
 	const divRef = useRef(undefined as undefined | Frame);
 	const isHovering = useRef(false);
 
@@ -36,18 +45,18 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem, N
 		isHovering.current = true;
 
 		RunService.BindToRenderStep(`OverrideDraggingNodePosition${NodeGroup}`, 120, () => {
-			const draggingNode = GetDraggingNode();
-			if (draggingNode === undefined) return;
+			const draggingNodeId = GetDraggingNodeId();
+			if (draggingNodeId === undefined) return;
 
-			const draggingNodeData = GetNodeById(draggingNode.id);
+			const draggingNodeData = GetNodeById(draggingNodeId);
 			if (draggingNodeData === undefined) return;
 
 			if (draggingNodeData.data.node.nodeGroup !== NodeGroup) return;
 
 			UpdateChildNodes();
 
-			const containerSize = GetContainerSize();
-			setChildContainerSize(new UDim2(1, 0, 0, containerSize + draggingNode.element.AbsoluteSize.Y));
+			const containerSize = GetContainerSize(draggingNodeId);
+			setChildContainerSize(new UDim2(1, 0, 0, containerSize + draggingNodeData.data.element!.AbsoluteSize.Y));
 
 			const xOffset = (divRef.current!.AbsoluteSize.X - 250) * 0.5;
 			const yOffset = 20 + 10 + containerSize;
@@ -56,7 +65,7 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem, N
 			const canvasPos = new Vector2(canvasFrame.AbsolutePosition.X, canvasFrame.AbsolutePosition.Y);
 
 			const offset = new Vector2(xOffset, yOffset);
-			UpdateNodeAnchorPoint(draggingNode.id, divRef.current!.AbsolutePosition.add(offset).sub(canvasPos));
+			UpdateNodeAnchorPoint(draggingNodeId, divRef.current!.AbsolutePosition.add(offset).sub(canvasPos));
 		});
 	};
 
@@ -65,31 +74,35 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem, N
 
 		RunService.UnbindFromRenderStep(`OverrideDraggingNodePosition${NodeGroup}`);
 
-		const draggingNode = GetDraggingNode();
+		const draggingNodeId = GetDraggingNodeId();
 
-		if (draggingNode !== undefined) {
-			const draggingNodeIndex = childNodesRef.current.findIndex((node) => node.id === draggingNode.id);
+		if (draggingNodeId !== undefined) {
+			const draggingNodeIndex = childNodesIdRef.current.findIndex((nodeId) => nodeId === draggingNodeId);
 			if (draggingNodeIndex !== -1) {
-				childNodesRef.current.remove(draggingNodeIndex);
-				NodeSystem.RemoveNode(GetNodeById(draggingNode.id)!.data.node);
+				childNodesIdRef.current.remove(draggingNodeIndex);
+				NodeSystem.RemoveNode(GetNodeById(draggingNodeId)!.data.node);
 			}
 		}
 
 		let containerSizeY = 0;
-		childNodesRef.current.forEach((node) => {
-			containerSizeY += node.element.AbsoluteSize.Y + 5;
+		childNodesIdRef.current.forEach((id) => {
+			const node = GetNodeById(id)!;
+			containerSizeY += node.data.element!.AbsoluteSize.Y + 5;
 		});
 
 		setChildContainerSize(new UDim2(1, 0, 0, containerSizeY === 0 ? 0 : containerSizeY - 5));
 		UpdateChildNodes();
 	};
 
-	const GetContainerSize = () => {
+	const GetContainerSize = (ignoreId?: number) => {
 		let containerSizeY = 0;
 
-		childNodesRef.current.forEach((node) => {
-			containerSizeY += node.element.AbsoluteSize.Y + 5;
-		});
+		for (const id of childNodesIdRef.current) {
+			if (id === ignoreId) continue;
+
+			const node = GetNodeById(id)!;
+			containerSizeY += node.data.element!.AbsoluteSize.Y + 5;
+		}
 
 		return containerSizeY;
 	};
@@ -98,29 +111,48 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem, N
 		const xOffset = (divRef.current!.AbsoluteSize.X - 250) * 0.5;
 		let yOffset = 20 + 10;
 
-		for (const node of childNodesRef.current) {
+		for (const id of childNodesIdRef.current) {
 			const canvasFrame = GetCanvas.Invoke() as Frame;
 			const canvasPos = new Vector2(canvasFrame.AbsolutePosition.X, canvasFrame.AbsolutePosition.Y);
 
 			const offset = new Vector2(xOffset, yOffset);
-			UpdateNodeAnchorPoint(node.id, divRef.current!.AbsolutePosition.add(offset).sub(canvasPos));
+			UpdateNodeAnchorPoint(id, divRef.current!.AbsolutePosition.add(offset).sub(canvasPos));
 
-			yOffset += node.element.AbsoluteSize.Y + 5;
+			const node = GetNodeById(id)!;
+			yOffset += node.data.element!.AbsoluteSize.Y + 5;
 		}
 	};
 
+	const AddChildNode = (id: number) => {
+		childNodesIdRef.current.push(id);
+
+		const node = GetNodeById(id)!;
+		NodeSystem.AddNode(node.data.node);
+
+		let containerSizeY = 0;
+		childNodesIdRef.current.forEach((childId) => {
+			const node = GetNodeById(childId)!;
+			containerSizeY += node.data.element!.AbsoluteSize.Y + 5;
+		});
+
+		setChildContainerSize(new UDim2(1, 0, 0, containerSizeY === 0 ? 0 : containerSizeY - 5));
+		task.wait();
+
+		UpdateChildNodes();
+	};
+
 	useEffect(() => {
-		const dragConnection = NodeDraggingEnded.Connect((draggingNode) => {
+		const dragConnection = NodeDraggingEnded.Connect((id) => {
 			if (isHovering.current) {
-				const draggingNodeIndex = childNodesRef.current.findIndex((node) => node.id === draggingNode.id);
+				const draggingNodeIndex = childNodesIdRef.current.findIndex((nodeId) => nodeId === id);
 				if (draggingNodeIndex !== -1) return;
 
-				const draggingNodeData = GetNodeById(draggingNode.id);
+				const draggingNodeData = GetNodeById(id);
 				if (draggingNodeData === undefined) return;
 
 				if (draggingNodeData.data.node.nodeGroup !== NodeGroup) return;
 
-				childNodesRef.current.push(draggingNode);
+				childNodesIdRef.current.push(id);
 				UpdateChildNodes();
 
 				NodeSystem.AddNode(draggingNodeData.data.node);
@@ -130,6 +162,8 @@ export function NodeGroup({ NodeGroup, GradientStart, GradientEnd, NodeSystem, N
 		const zoomConnection = ZoomScaleChanged.Connect((zoomScale) => {
 			setZoomScale(zoomScale as number);
 		});
+
+		BindNodeGroupFunction(SystemId, NodeGroup, AddChildNode);
 
 		return () => {
 			dragConnection.Disconnect();

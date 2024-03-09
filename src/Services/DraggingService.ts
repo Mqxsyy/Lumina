@@ -1,22 +1,17 @@
 import { Event } from "API/Event";
 
-export interface DraggingNode {
-	id: number;
-	element: TextButton;
-}
+export const NodeDraggingEnded = new Event<[number]>();
 
-export const NodeDraggingEnded = new Event<[DraggingNode]>();
+let draggingNodeId: number | undefined;
 
-let draggingNode: DraggingNode | undefined;
-
-export function SetDraggingNode(node: DraggingNode | undefined) {
-	if (node === undefined) {
-		NodeDraggingEnded.Fire(draggingNode as DraggingNode);
+export function SetDraggingNodeId(id: number | undefined) {
+	if (id === undefined && draggingNodeId !== undefined) {
+		NodeDraggingEnded.Fire(draggingNodeId!);
 	}
 
-	draggingNode = node;
+	draggingNodeId = id;
 }
 
-export function GetDraggingNode() {
-	return draggingNode;
+export function GetDraggingNodeId() {
+	return draggingNodeId;
 }

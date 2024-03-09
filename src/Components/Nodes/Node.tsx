@@ -1,12 +1,12 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { RemoveNode, UpdateNodeAnchorPoint } from "Services/NodesService";
+import { RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { GetCanvas } from "Events";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { SetDraggingNode } from "Services/DraggingService";
+import { SetDraggingNodeId } from "Services/DraggingService";
 import { Div } from "Components/Div";
 
 const NODE_WIDTH = 250;
@@ -34,12 +34,12 @@ export function Node({ Name, Id, AnchorPoint, children }: Roact.PropsWithChildre
 		const mousePosition = GetMousePosition();
 		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
 
-		SetDraggingNode({ id: Id, element });
+		SetDraggingNodeId(Id);
 		setIsDragging(true);
 	};
 
 	const onMouseButton1Up = () => {
-		SetDraggingNode(undefined);
+		SetDraggingNodeId(undefined);
 		setIsDragging(false);
 
 		RunService.UnbindFromRenderStep("MoveNode");
@@ -67,6 +67,11 @@ export function Node({ Name, Id, AnchorPoint, children }: Roact.PropsWithChildre
 			setZoomScale(zoomScale as number);
 		});
 	}, []);
+
+	useEffect(() => {
+		if (nodeRef.current === undefined) return;
+		SetNodeElement(Id, nodeRef.current);
+	}, [nodeRef.current]);
 
 	useEffect(() => {
 		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);

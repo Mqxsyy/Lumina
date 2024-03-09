@@ -4,6 +4,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { StaticForce as StaticForceAPI } from "API/Nodes/Update/StaticForce";
+import { Event } from "API/Event";
 
 export function CreateStaticForceNode() {
 	AddNode({
@@ -11,6 +12,7 @@ export function CreateStaticForceNode() {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),
 			node: new StaticForceAPI(),
+			elementLoaded: new Event(),
 		},
 		create: (data: NodeData) => {
 			return <StaticForce key={data.id} data={data} />;

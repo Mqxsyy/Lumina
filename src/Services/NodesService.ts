@@ -8,6 +8,8 @@ import { Node } from "API/Nodes/Node";
 export interface NodeData {
 	id: number;
 	anchorPoint: Vector2;
+	element?: TextButton;
+	elementLoaded: Event;
 	node: Node;
 }
 
@@ -46,6 +48,21 @@ export function GetNodeById(id: number) {
 export function AddNode(nodeSystem: NodeCollectionEntry) {
 	NodeCollection.push(nodeSystem);
 	NodesChanged.Fire();
+	return nodeSystem.data;
+}
+
+export function SetNodeElement(id: number, element: TextButton) {
+	const node = NodeCollection.find((node) => node.data.id === id);
+
+	if (node) {
+		if (node.data.element !== undefined) return;
+
+		node.data.element = element;
+		node.data.elementLoaded.Fire();
+		return;
+	}
+
+	warn(`Node with id ${id} not found`);
 }
 
 export function RemoveNode(id: number) {

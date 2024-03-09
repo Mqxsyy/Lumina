@@ -7,8 +7,8 @@ import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { Div } from "../Div";
 import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../../Services/NodeSystemService";
-import { NodeGroup } from "./NodeGroup";
 import { NodeGroups } from "API/NodeGroup";
+import NodeGroup from "./NodeGroup";
 
 const BORDER_THICKNESS = 3;
 const SYSTEM_WIDTH = 300;
@@ -17,7 +17,7 @@ interface Props {
 	data: NodeSystemData;
 }
 
-export function NodeSystem({ data }: Props) {
+export default function NodeSystem({ data }: Props) {
 	const [position, setPosition] = useState(new Vector2(0, 0));
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 
@@ -151,6 +151,7 @@ export function NodeSystem({ data }: Props) {
 					<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={`VFX System (${data.id})`} />
 
 					<NodeGroup
+						SystemId={data.id}
 						NodeGroup={NodeGroups.Spawn}
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
@@ -158,6 +159,7 @@ export function NodeSystem({ data }: Props) {
 						NodeSystemPosition={systemRef.current?.AbsolutePosition}
 					/>
 					<NodeGroup
+						SystemId={data.id}
 						NodeGroup={NodeGroups.Initialize}
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
@@ -165,6 +167,7 @@ export function NodeSystem({ data }: Props) {
 						NodeSystemPosition={systemRef.current?.AbsolutePosition}
 					/>
 					<NodeGroup
+						SystemId={data.id}
 						NodeGroup={NodeGroups.Update}
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
@@ -172,6 +175,7 @@ export function NodeSystem({ data }: Props) {
 						NodeSystemPosition={systemRef.current?.AbsolutePosition}
 					/>
 					<NodeGroup
+						SystemId={data.id}
 						NodeGroup={NodeGroups.Render}
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}

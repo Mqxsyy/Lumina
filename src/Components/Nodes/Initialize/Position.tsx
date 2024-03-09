@@ -4,6 +4,7 @@ import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { Node } from "../Node";
+import { Event } from "API/Event";
 
 export function CreatePositionNode() {
 	AddNode({
@@ -11,6 +12,7 @@ export function CreatePositionNode() {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),
 			node: new PositionAPI(),
+			elementLoaded: new Event(),
 		},
 		create: (data: NodeData) => {
 			return <Position key={data.id} data={data} />;

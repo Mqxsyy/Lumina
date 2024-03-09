@@ -4,6 +4,7 @@ import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { Node } from "../Node";
+import { Event } from "API/Event";
 
 export function CreateRandomNumberNode() {
 	AddNode({
@@ -11,6 +12,7 @@ export function CreateRandomNumberNode() {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),
 			node: new RandomNumberAPI(),
+			elementLoaded: new Event(),
 		},
 		create: (data: NodeData) => {
 			return <RandomNumber key={data.id} data={data} />;

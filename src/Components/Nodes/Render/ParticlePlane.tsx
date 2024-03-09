@@ -5,13 +5,15 @@ import { NumberField } from "Components/NodeFields/NumberField";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { Node } from "../Node";
+import { Event } from "API/Event";
 
 export function CreateParticlePlaneNode() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),
 			node: new ParticlePlaneAPI(),
+			elementLoaded: new Event(),
 		},
 		create: (data: NodeData) => {
 			return <ParticlePlane key={data.id} data={data} />;
