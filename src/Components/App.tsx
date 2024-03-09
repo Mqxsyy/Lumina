@@ -8,6 +8,7 @@ import { Controls } from "./Controls/Controls";
 import { NodeSelection } from "./Selection/NodeSelection";
 import { GetNodeSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
 import { GetAllNodes, NodesChanged } from "../Services/NodesService";
+import { ConnectionsChanged, GetAllConnections } from "Services/ConnectionsService";
 
 // TODO: make zoom go to mouse
 
@@ -69,6 +70,10 @@ export function App() {
 		});
 
 		NodeSystemsChanged.Connect(() => {
+			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+		});
+
+		ConnectionsChanged.Connect(() => {
 			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
 	}, []);
@@ -192,6 +197,9 @@ export function App() {
 			})}
 			{GetAllNodes().map((node) => {
 				return node.create(node.data);
+			})}
+			{GetAllConnections().map((connection) => {
+				return connection.create(connection.data);
 			})}
 			{displayNodeSelection !== undefined && <NodeSelection Position={displayNodeSelection} />}
 			<Controls />

@@ -8,6 +8,7 @@ import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { Div } from "Components/Div";
+import ConnectionPoint from "Components/Connections/ConnectionPoint";
 
 const NODE_WIDTH = 250;
 
@@ -15,9 +16,10 @@ interface Props {
 	Name: string;
 	Id: number;
 	AnchorPoint: Vector2;
+	UseConnection?: boolean;
 }
 
-export function Node({ Name, Id, AnchorPoint, children }: Roact.PropsWithChildren<Props>) {
+export function Node({ Name, Id, AnchorPoint, UseConnection = false, children }: Roact.PropsWithChildren<Props>) {
 	const [position, setPosition] = useState(new Vector2(0, 0));
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 
@@ -124,7 +126,16 @@ export function Node({ Name, Id, AnchorPoint, children }: Roact.PropsWithChildre
 				PaddingBottom={new UDim(0, 5 * zoomScale)}
 			/>
 
-			<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Name} />
+			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+				<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Name} />
+				{UseConnection ? (
+					<ConnectionPoint
+						AnchorPoint={new Vector2(1, 0)}
+						Position={UDim2.fromScale(1, 0)}
+						Size={UDim2.fromOffset(20, 20)}
+					/>
+				) : undefined}
+			</Div>
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout Padding={new UDim(0, 5 * zoomScale)} HorizontalAlignment={"Center"} />
 				{children}

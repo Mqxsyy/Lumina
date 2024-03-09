@@ -27,7 +27,7 @@ function RandomNumber({ data }: { data: NodeData }) {
 	};
 
 	return (
-		<Node Name="Position" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Random Number" Id={data.id} AnchorPoint={data.anchorPoint} UseConnection={true}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 			<Vector2Field
 				Label={"Vector3"}

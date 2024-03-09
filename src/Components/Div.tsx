@@ -5,6 +5,7 @@ interface Props {
 	Position?: UDim2;
 	Size?: UDim2;
 	AutomaticSize?: "X" | "Y" | "XY" | "None";
+	SizeConstaint?: "RelativeXY" | "RelativeXX" | "RelativeYY";
 	BackgroundColor?: Color3 | undefined;
 	// Active?: boolean;
 	getFrame?: (frame: Frame) => void;
@@ -20,6 +21,7 @@ export function Div({
 	Size = UDim2.fromScale(1, 1),
 	AutomaticSize = "None",
 	BackgroundColor = undefined,
+	SizeConstaint = "RelativeXY",
 	// Active = false,
 	onHover = undefined,
 	onUnhover = undefined,
@@ -42,6 +44,7 @@ export function Div({
 			AnchorPoint={AnchorPoint}
 			Position={Position}
 			Size={Size}
+			SizeConstraint={SizeConstaint}
 			AutomaticSize={AutomaticSize}
 			BackgroundColor3={BackgroundColor === undefined ? Color3.fromHex("#FFFFFF") : BackgroundColor}
 			BackgroundTransparency={BackgroundColor === undefined ? 1 : 0}

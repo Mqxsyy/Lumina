@@ -92,6 +92,14 @@ export function BindNodeGroupFunction(id: number, group: NodeGroups, fn: (id: nu
 }
 
 export function RemoveNodeSystem(id: number) {
-	NodeSystemCollection.remove(id);
-	NodeSystemsChanged.Fire();
+	const index = NodeSystemCollection.findIndex((system) => system.data.id === id);
+	if (index !== -1) {
+		idPool.ReleaseId(id);
+
+		NodeSystemCollection.remove(index);
+		NodeSystemsChanged.Fire();
+		return;
+	}
+
+	warn(`Failed to delete system. Id not found`);
 }

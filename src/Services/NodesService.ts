@@ -45,10 +45,10 @@ export function GetNodeById(id: number) {
 	return NodeCollection.find((node) => node.data.id === id);
 }
 
-export function AddNode(nodeSystem: NodeCollectionEntry) {
-	NodeCollection.push(nodeSystem);
+export function AddNode(node: NodeCollectionEntry) {
+	NodeCollection.push(node);
 	NodesChanged.Fire();
-	return nodeSystem.data;
+	return node.data;
 }
 
 export function SetNodeElement(id: number, element: TextButton) {
@@ -66,6 +66,14 @@ export function SetNodeElement(id: number, element: TextButton) {
 }
 
 export function RemoveNode(id: number) {
-	NodeCollection.remove(id);
-	NodesChanged.Fire();
+	const index = NodeCollection.findIndex((node) => node.data.id === id);
+	if (index !== -1) {
+		idPool.ReleaseId(id);
+
+		NodeCollection.remove(index);
+		NodesChanged.Fire();
+		return;
+	}
+
+	warn(`Failed to delete node. Id not found`);
 }
