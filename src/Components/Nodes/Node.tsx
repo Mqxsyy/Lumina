@@ -8,7 +8,7 @@ import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { Div } from "Components/Div";
-import ConnectionPoint from "Components/Connections/ConnectionPoint";
+import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
 
 const NODE_WIDTH = 250;
 
@@ -128,13 +128,13 @@ export function Node({ Name, Id, AnchorPoint, UseConnection = false, children }:
 
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Name} />
-				{UseConnection ? (
-					<ConnectionPoint
+				{UseConnection && (
+					<ConnectionPointOut
 						AnchorPoint={new Vector2(1, 0)}
 						Position={UDim2.fromScale(1, 0)}
 						Size={UDim2.fromOffset(20, 20)}
 					/>
-				) : undefined}
+				)}
 			</Div>
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout Padding={new UDim(0, 5 * zoomScale)} HorizontalAlignment={"Center"} />

@@ -1,31 +1,34 @@
-import Roact, { useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef } from "@rbxts/roact";
 import { Div } from "Components/Div";
 import { StyleColors } from "Style";
-import { CreateConnection } from "./Connection";
-import { RemoveConnection } from "Services/ConnectionsService";
 
 interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
+	ConnectionId?: number;
+	MouseButton1Down?: (element: TextButton) => void;
+	MouseButton1Up?: (element: TextButton) => void;
+	UpdateConnecton?: (element: TextButton) => void;
 }
 
 export default function ConnectionPoint({
 	AnchorPoint = new Vector2(0, 0),
 	Position = UDim2.fromScale(0, 0),
 	Size = UDim2.fromScale(1, 1),
+	ConnectionId = undefined,
+	MouseButton1Down = undefined,
+	MouseButton1Up = undefined,
+	UpdateConnecton = undefined,
 }: Props) {
-	const [connectionId, setConnectionId] = useState(-1);
+	const connectionPointRef = useRef(undefined as undefined | TextButton);
 
-	const onMouseButton1Down = () => {
-		if (connectionId !== -1) {
-			RemoveConnection(connectionId);
-			setConnectionId(-1);
-			return;
-		}
+	useEffect(() => {
+		if (ConnectionId === undefined) return;
+		if (UpdateConnecton === undefined) return;
 
-		setConnectionId(CreateConnection().id);
-	};
+		UpdateConnecton(connectionPointRef.current!);
+	}, [connectionPointRef.current?.AbsolutePosition, ConnectionId]);
 
 	return (
 		<textbutton
@@ -37,11 +40,20 @@ export default function ConnectionPoint({
 			AutoButtonColor={false}
 			Text={""}
 			Active={true}
+			ref={connectionPointRef}
 			Event={{
-				InputBegan: (_, input) => {
-					if (input.UserInputType === Enum.UserInputType.MouseButton1) {
-						onMouseButton1Down();
-					}
+				InputBegan: (element, input) => {
+					if (input.UserInputType !== Enum.UserInputType.MouseButton1) return;
+					if (MouseButton1Down === undefined) return;
+
+					MouseButton1Down(element);
+				},
+
+				InputEnded: (element, input) => {
+					if (input.UserInputType !== Enum.UserInputType.MouseButton1) return;
+					if (MouseButton1Up === undefined) return;
+
+					MouseButton1Up(element);
 				},
 			}}
 		>
@@ -62,14 +74,14 @@ export default function ConnectionPoint({
 					PaddingTop={new UDim(0, 2)}
 				/>
 
-				{connectionId !== -1 ? (
+				{ConnectionId !== undefined && (
 					<frame
 						Size={UDim2.fromOffset(Size.X.Offset - 14, Size.Y.Offset - 14)}
 						BackgroundColor3={StyleColors.Highlight}
 					>
 						<uicorner CornerRadius={new UDim(2, 0)} />
 					</frame>
-				) : undefined}
+				)}
 			</Div>
 		</textbutton>
 	);

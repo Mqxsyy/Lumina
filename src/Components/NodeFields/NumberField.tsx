@@ -4,6 +4,8 @@ import { NumberInput } from "Components/Basic/NumeberInput";
 import { Div } from "Components/Div";
 
 interface Props {
+	Size?: UDim2;
+
 	Label: string;
 
 	DefaultText: string;
@@ -16,6 +18,7 @@ interface Props {
 }
 
 export function NumberField({
+	Size = UDim2.fromScale(1, 0),
 	Label,
 	DefaultText,
 	PlaceholderText = "...",
@@ -24,7 +27,7 @@ export function NumberField({
 	NumberChanged,
 }: Props) {
 	return (
-		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+		<Div Size={Size} AutomaticSize="Y">
 			<BasicTextLabel Size={new UDim2(TextToInputRatio, 0, 0, 20)} Text={Label} />
 			<NumberInput
 				AnchorPoint={new Vector2(1, 0)}

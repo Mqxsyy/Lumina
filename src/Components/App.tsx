@@ -1,14 +1,14 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
+import { GetCanvas } from "Events";
+import { ConnectionsChanged, GetAllConnections, UnbindConnectionMoving } from "Services/ConnectionsService";
+import { StyleColors } from "Style";
 import { GetMousePosition, GetWidget, WidgetSizeChanged } from "WidgetHandler";
 import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { StyleColors } from "Style";
-import { GetCanvas } from "Events";
-import { Controls } from "./Controls/Controls";
-import { NodeSelection } from "./Selection/NodeSelection";
 import { GetNodeSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
 import { GetAllNodes, NodesChanged } from "../Services/NodesService";
-import { ConnectionsChanged, GetAllConnections } from "Services/ConnectionsService";
+import { Controls } from "./Controls/Controls";
+import { NodeSelection } from "./Selection/NodeSelection";
 
 // TODO: make zoom go to mouse
 
@@ -94,14 +94,14 @@ export function App() {
 				Size={canvasSize}
 				BackgroundColor3={StyleColors.Background}
 				Event={{
-					InputBegan: (_, inputObject: InputObject) => {
-						if (inputObject.KeyCode === Enum.KeyCode.Space) {
+					InputBegan: (_, input: InputObject) => {
+						if (input.KeyCode === Enum.KeyCode.Space) {
 							const mousePositionVec2 = GetMousePosition();
 							setDisplayNodeSelection(UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y));
-						} else if (
-							inputObject.UserInputType === Enum.UserInputType.MouseButton1 ||
-							inputObject.UserInputType === Enum.UserInputType.MouseButton3
-						) {
+						} else if (input.UserInputType === Enum.UserInputType.MouseButton1) {
+							UnbindConnectionMoving(true);
+							setDisplayNodeSelection(undefined);
+						} else if (input.UserInputType === Enum.UserInputType.MouseButton3) {
 							setDisplayNodeSelection(undefined);
 						}
 					},

@@ -1,17 +1,22 @@
 import Roact from "@rbxts/roact";
+import { RunService } from "@rbxts/services";
 import { Event } from "API/Event";
 import { IdPool } from "API/IdPool";
+import { GetMousePositionOnCanvas } from "WidgetHandler";
 
 export interface ConnectionData {
 	id: number;
 	startPoint: Vector2;
 	endPoint: Vector2;
+	onDestroy: Event;
 }
 
 interface ConnectionCollectionEntry {
 	data: ConnectionData;
 	create: (props: ConnectionData) => Roact.Element;
 }
+
+let movingConnectionId = -1;
 
 const idPool = new IdPool();
 const ConnectionCollection = [] as ConnectionCollectionEntry[];
@@ -61,10 +66,35 @@ export function RemoveConnection(id: number) {
 	if (index !== -1) {
 		idPool.ReleaseId(id);
 
-		ConnectionCollection.remove(index);
+		const connection = ConnectionCollection.remove(index);
+		connection!.data.onDestroy.Fire();
 		ConnectionsChanged.Fire();
 		return;
 	}
 
 	warn(`Failed to delete connection. Id not found`);
+}
+
+export function BindConnectionMoving(id: number) {
+	movingConnectionId = id;
+
+	RunService.BindToRenderStep("MoveConnection", 200, () => {
+		UpdateConnectionEnd(id, GetMousePositionOnCanvas());
+	});
+}
+
+export function UnbindConnectionMoving(destroyConnection = false) {
+	if (movingConnectionId === -1) return;
+
+	RunService.UnbindFromRenderStep("MoveConnection");
+
+	if (destroyConnection) {
+		RemoveConnection(movingConnectionId);
+	}
+
+	movingConnectionId = -1;
+}
+
+export function GetMovingConnectionId(): number {
+	return movingConnectionId;
 }
