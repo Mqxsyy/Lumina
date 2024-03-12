@@ -1,5 +1,5 @@
 import { Node } from "../Node";
 
 export abstract class LogicNode extends Node {
-	abstract Calculate: (id: number) => unknown;
+	abstract Calculate: () => unknown;
 }

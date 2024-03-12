@@ -5,6 +5,7 @@ import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { Node } from "../Node";
 import { Event } from "API/Event";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 export function CreateRandomNumberNode() {
 	AddNode({
@@ -26,8 +27,12 @@ function RandomNumber({ data }: { data: NodeData }) {
 		vector2Field.SetValue(vector2);
 	};
 
+	const GetValue = () => {
+		return (data.node as LogicNode).Calculate() as number;
+	};
+
 	return (
-		<Node Name="Random Number" Id={data.id} AnchorPoint={data.anchorPoint} UseConnection={true}>
+		<Node Name="Random Number" Id={data.id} AnchorPoint={data.anchorPoint} ConnectionFunction={GetValue}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 			<Vector2Field
 				Label={"Vector3"}

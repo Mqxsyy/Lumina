@@ -3,9 +3,9 @@ import { StyleColors, StyleProperties } from "Style";
 import { Div } from "../Div";
 import { NodeSelectionLabel } from "./NodeSelectionLabel";
 import { NodeCategorySelectionButton } from "./NodeCategorySelectionButton";
-import { NodeList } from "NodesList";
+import { NodeList } from "Lists/NodesList";
 import { NodeGroups } from "API/NodeGroup";
-import { NodeSystems } from "SystemsList";
+import { NodeSystems } from "Lists/SystemsList";
 
 // TODO: make button connect to selection; add tracker which selection is open
 

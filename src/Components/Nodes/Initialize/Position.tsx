@@ -21,15 +21,10 @@ export function CreatePositionNode() {
 }
 
 function Position({ data }: { data: NodeData }) {
-	const vector3Changed = (vector3: Vector3) => {
-		const vector3Field = (data.node as PositionAPI).nodeFields.position;
-		vector3Field.SetValue(vector3);
-	};
-
 	return (
 		<Node Name="Position" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
-			<Vector3Field Label={"Vector3"} DefaultValue={Vector3.zero} Vector3Changed={vector3Changed} />
+			<Vector3Field NodeData={data} Label={"Vector3"} DefaultValue={Vector3.zero} />
 		</Node>
 	);
 }

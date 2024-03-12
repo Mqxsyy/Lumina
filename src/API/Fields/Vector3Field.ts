@@ -1,9 +1,12 @@
 import { NodeField } from "./NodeField";
 
 export class Vector3Field extends NodeField {
-	private x: number | (() => number);
-	private y: number | (() => number);
-	private z: number | (() => number);
+	private x: number;
+	private xBind: undefined | (() => number);
+	private y: number;
+	private yBind: undefined | (() => number);
+	private z: number;
+	private zBind: undefined | (() => number);
 	private valueBind: undefined | (() => Vector3);
 
 	constructor(defaultValue: Vector3) {
@@ -20,24 +23,24 @@ export class Vector3Field extends NodeField {
 		}
 
 		let x;
-		if (typeIs(this.x, "number")) {
-			x = this.x;
+		if (this.xBind !== undefined) {
+			x = this.xBind();
 		} else {
-			x = this.x();
+			x = this.x;
 		}
 
 		let y;
-		if (typeIs(this.y, "number")) {
-			y = this.y;
+		if (this.yBind !== undefined) {
+			y = this.yBind();
 		} else {
-			y = this.y();
+			y = this.y;
 		}
 
 		let z;
-		if (typeIs(this.z, "number")) {
-			z = this.z;
+		if (this.zBind !== undefined) {
+			z = this.zBind();
 		} else {
-			z = this.z();
+			z = this.z;
 		}
 
 		return new Vector3(x, y, z);
@@ -73,18 +76,18 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	}
 
-	BindValueX(newValue: () => number): void {
-		this.x = newValue;
+	BindValueX = (newValue: undefined | (() => number)) => {
+		this.xBind = newValue;
 		this.FieldChanged.Fire();
-	}
+	};
 
-	BindValueY(newValue: () => number): void {
-		this.y = newValue;
+	BindValueY = (newValue: undefined | (() => number)) => {
+		this.yBind = newValue;
 		this.FieldChanged.Fire();
-	}
+	};
 
-	BindValueZ(newValue: () => number): void {
-		this.z = newValue;
+	BindValueZ = (newValue: undefined | (() => number)) => {
+		this.zBind = newValue;
 		this.FieldChanged.Fire();
-	}
+	};
 }

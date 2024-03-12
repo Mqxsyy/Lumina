@@ -16,10 +16,16 @@ interface Props {
 	Name: string;
 	Id: number;
 	AnchorPoint: Vector2;
-	UseConnection?: boolean;
+	ConnectionFunction?: () => number;
 }
 
-export function Node({ Name, Id, AnchorPoint, UseConnection = false, children }: Roact.PropsWithChildren<Props>) {
+export function Node({
+	Name,
+	Id,
+	AnchorPoint,
+	ConnectionFunction = undefined,
+	children,
+}: Roact.PropsWithChildren<Props>) {
 	const [position, setPosition] = useState(new Vector2(0, 0));
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 
@@ -30,7 +36,7 @@ export function Node({ Name, Id, AnchorPoint, UseConnection = false, children }:
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const canvas = useRef(GetCanvas.Invoke() as Frame);
 
-	const nodeRef = useRef(undefined as undefined | TextButton);
+	const elementRef = useRef(undefined as undefined | TextButton);
 
 	const onMouseButton1Down = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
@@ -71,17 +77,17 @@ export function Node({ Name, Id, AnchorPoint, UseConnection = false, children }:
 	}, []);
 
 	useEffect(() => {
-		if (nodeRef.current === undefined) return;
-		SetNodeElement(Id, nodeRef.current);
-	}, [nodeRef.current]);
+		if (elementRef.current === undefined) return;
+		SetNodeElement(Id, elementRef.current);
+	}, [elementRef.current]);
 
 	useEffect(() => {
 		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);
-		const systemHeight = nodeRef.current === undefined ? 0 : nodeRef.current.AbsoluteSize.Y;
+		const systemHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
 		const nodeCenter = AnchorPoint.add(new Vector2(NODE_WIDTH * 0.5 * zoomScale, systemHeight * 0.5));
 
 		setOffsetFromCenter(nodeCenter.sub(canvasCenter).div(zoomScale));
-	}, [AnchorPoint, nodeRef.current?.AbsoluteSize]);
+	}, [AnchorPoint, elementRef.current?.AbsoluteSize]);
 
 	useEffect(() => {
 		const canvasPosition = new Vector2(canvas.current.AbsolutePosition.X, canvas.current.AbsolutePosition.Y);
@@ -101,7 +107,7 @@ export function Node({ Name, Id, AnchorPoint, UseConnection = false, children }:
 			AutoButtonColor={false}
 			Text={""}
 			Active={true}
-			ref={nodeRef}
+			ref={elementRef}
 			Event={{
 				InputBegan: (element, inputObject) => {
 					if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
@@ -128,11 +134,12 @@ export function Node({ Name, Id, AnchorPoint, UseConnection = false, children }:
 
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Name} />
-				{UseConnection && (
+				{ConnectionFunction !== undefined && (
 					<ConnectionPointOut
 						AnchorPoint={new Vector2(1, 0)}
 						Position={UDim2.fromScale(1, 0)}
 						Size={UDim2.fromOffset(20, 20)}
+						Fn={ConnectionFunction}
 					/>
 				)}
 			</Div>

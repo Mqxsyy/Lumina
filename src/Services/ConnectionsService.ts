@@ -16,6 +16,7 @@ interface ConnectionCollectionEntry {
 	create: (props: ConnectionData) => Roact.Element;
 }
 
+let movingConnectionFn = undefined as (() => number) | undefined;
 let movingConnectionId = -1;
 
 const idPool = new IdPool();
@@ -75,8 +76,9 @@ export function RemoveConnection(id: number) {
 	warn(`Failed to delete connection. Id not found`);
 }
 
-export function BindConnectionMoving(id: number) {
+export function BindConnectionMoving(id: number, fn: () => number) {
 	movingConnectionId = id;
+	movingConnectionFn = fn;
 
 	RunService.BindToRenderStep("MoveConnection", 200, () => {
 		UpdateConnectionEnd(id, GetMousePositionOnCanvas());
@@ -93,8 +95,9 @@ export function UnbindConnectionMoving(destroyConnection = false) {
 	}
 
 	movingConnectionId = -1;
+	movingConnectionFn = undefined;
 }
 
-export function GetMovingConnectionId(): number {
-	return movingConnectionId;
+export function GetMovingConnection() {
+	return { id: movingConnectionId, fn: movingConnectionFn };
 }

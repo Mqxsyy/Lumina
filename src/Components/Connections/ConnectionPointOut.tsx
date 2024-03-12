@@ -13,12 +13,14 @@ interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
+	Fn: () => number;
 }
 
 export default function ConnectionPointOut({
 	AnchorPoint = new Vector2(0, 0),
 	Position = UDim2.fromScale(0, 0),
 	Size = UDim2.fromScale(1, 1),
+	Fn,
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
 	const destroyRef = useRef(undefined as undefined | RBXScriptConnection);
@@ -31,7 +33,7 @@ export default function ConnectionPointOut({
 
 			const connectionData = CreateConnection(pos.add(size.mul(0.5)), mousePosition);
 			setConnectionId(connectionData.id);
-			BindConnectionMoving(connectionData.id);
+			BindConnectionMoving(connectionData.id, Fn);
 
 			destroyRef.current = connectionData.onDestroy.Connect(() => {
 				setConnectionId(-1);
