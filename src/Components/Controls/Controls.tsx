@@ -3,6 +3,8 @@ import { Div } from "../Div";
 import { ControlButton } from "./ControlButton";
 import { GetNodeSystems } from "Services/NodeSystemService";
 import { ClearParticles } from "API/FolderLocations";
+import { GetWidget } from "WidgetHandler";
+import ExportAPI from "API/ExportAPI";
 
 const CANVAS_PADDING = 5;
 const BUTTONS_PADDING = 5;
@@ -51,6 +53,12 @@ export function Controls() {
 				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
 				Text="Clear Leftover"
 				MouseButton1Down={ClearLeftover}
+			/>
+			<ControlButton
+				Position={UDim2.fromOffset(0, (BUTTON_HEIGHT + BUTTONS_PADDING) * 3)}
+				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
+				Text="Export"
+				MouseButton1Down={ExportAPI}
 			/>
 		</Div>
 	);

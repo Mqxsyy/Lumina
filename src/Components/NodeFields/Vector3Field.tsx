@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function Vector3Field({ NodeData, Label, DefaultValue, PlaceholderValues = ["...", "...", "..."] }: Props) {
-	const nodeRef = useRef(NodeData.node.nodeFields.position as Vector3FieldAPI);
+	const positionFieldRef = useRef(NodeData.node.nodeFields.position as Vector3FieldAPI);
 
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
@@ -27,7 +27,10 @@ export function Vector3Field({ NodeData, Label, DefaultValue, PlaceholderValues 
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={nodeRef.current.BindValueX} />
+					<ConnectionPointIn
+						Size={UDim2.fromOffset(20, 20)}
+						BindFunction={positionFieldRef.current.BindValueX}
+					/>
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"X"}
@@ -35,13 +38,16 @@ export function Vector3Field({ NodeData, Label, DefaultValue, PlaceholderValues 
 						PlaceholderText={PlaceholderValues[0]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}
-						NumberChanged={nodeRef.current.SetValueX}
+						NumberChanged={positionFieldRef.current.SetValueX}
 					/>
 				</Div>
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={nodeRef.current.BindValueY} />
+					<ConnectionPointIn
+						Size={UDim2.fromOffset(20, 20)}
+						BindFunction={positionFieldRef.current.BindValueY}
+					/>
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"Y"}
@@ -49,13 +55,16 @@ export function Vector3Field({ NodeData, Label, DefaultValue, PlaceholderValues 
 						PlaceholderText={PlaceholderValues[1]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}
-						NumberChanged={nodeRef.current.SetValueY}
+						NumberChanged={positionFieldRef.current.SetValueY}
 					/>
 				</Div>
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={nodeRef.current.BindValueZ} />
+					<ConnectionPointIn
+						Size={UDim2.fromOffset(20, 20)}
+						BindFunction={positionFieldRef.current.BindValueZ}
+					/>
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"Z"}
@@ -63,7 +72,7 @@ export function Vector3Field({ NodeData, Label, DefaultValue, PlaceholderValues 
 						PlaceholderText={PlaceholderValues[2]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}
-						NumberChanged={nodeRef.current.SetValueZ}
+						NumberChanged={positionFieldRef.current.SetValueZ}
 					/>
 				</Div>
 			</Div>
