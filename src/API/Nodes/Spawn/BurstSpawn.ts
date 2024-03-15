@@ -21,4 +21,8 @@ export class BurstSpawn extends SpawnNode {
 	GetValue = (): number => {
 		return this.nodeFields.amount.GetValue() as number;
 	};
+
+	GetAutoGenerationCode(): string {
+		return ``;
+	}
 }

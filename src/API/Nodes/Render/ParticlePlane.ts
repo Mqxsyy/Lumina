@@ -15,6 +15,11 @@ const DEFAULT_TEXTURE = "rbxassetid://7848741169";
 const DEFAULT_COLOR = new Color3(1, 1, 1);
 const DEFAULT_EMISSION = 1;
 
+const autoGenCode = `
+local ParticlePlane = TS.import(script, APIFolder, "Nodes", "Render", "ParticlePlane").ParticlePlane
+local particlePlane = ParticlePlane.new()
+nodeSystem:AddNode(particlePlane)`;
+
 interface PlaneParticle extends Part {
 	SurfaceGui: SurfaceGui & {
 		ImageLabel: ImageLabel;
@@ -120,6 +125,10 @@ export class ParticlePlane extends RenderNode {
 		particle.Parent = this.displayFolder;
 		return;
 	};
+
+	GetAutoGenerationCode() {
+		return autoGenCode;
+	}
 
 	Destroy() {
 		this.objectPool.ClearStandby();

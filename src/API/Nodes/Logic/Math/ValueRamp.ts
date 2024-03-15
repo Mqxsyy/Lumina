@@ -25,4 +25,8 @@ export class ValueRamp extends LogicNode {
 		const range = this.nodeFields.range.GetValue();
 		return range.X + (range.Y - range.X) * this.nodeFields.value.GetValue();
 	};
+
+	GetAutoGenerationCode(): string {
+		return ``;
+	}
 }

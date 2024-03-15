@@ -40,4 +40,8 @@ export class StaticForce extends UpdateNode<[Vector3]> {
 
 		return position.add(this.nodeFields.direction.GetValue());
 	};
+
+	GetAutoGenerationCode(): string {
+		return ``;
+	}
 }

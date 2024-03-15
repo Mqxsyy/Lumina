@@ -3,6 +3,11 @@ import { NodeGroups } from "API/NodeGroup";
 import { NodeTypes } from "API/Nodes/NodeTypes";
 import { SpawnNode } from "./SpawnNode";
 
+const autoGenCode = `
+local ConstantSpawn = TS.import(script, APIFolder, "Nodes", "Spawn", "ConstantSpawn").ConstantSpawn
+local constantSpawn = ConstantSpawn.new()
+nodeSystem:AddNode(constantSpawn)`;
+
 export class ConstantSpawn extends SpawnNode {
 	nodeGroup: NodeGroups = NodeGroups.Spawn;
 	nodeType: NodeTypes = NodeTypes.ConstantSpawn;
@@ -21,4 +26,8 @@ export class ConstantSpawn extends SpawnNode {
 	GetValue = (): number => {
 		return this.nodeFields.rate.GetValue() as number;
 	};
+
+	GetAutoGenerationCode() {
+		return autoGenCode;
+	}
 }

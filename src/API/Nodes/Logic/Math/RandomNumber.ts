@@ -37,4 +37,8 @@ export class RandomNumber extends LogicNode {
 
 		return range.X + this.random.NextNumber() * (range.Y - range.X);
 	};
+
+	GetAutoGenerationCode(): string {
+		return ``;
+	}
 }

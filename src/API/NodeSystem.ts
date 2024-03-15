@@ -130,27 +130,7 @@ export class NodeSystem {
 		}
 	}
 
-	private SpawnParticle() {
-		task.spawn(() => {
-			const particleId = this.ParticleIdPool.GetNextId();
-			const initParams: ParticleInitParams = {
-				id: particleId,
-				lifetime: this.initializeNodes.lifetime!.GetValue(particleId) as number,
-			};
-
-			if (this.initializeNodes.position !== undefined) {
-				initParams.position = this.initializeNodes.position.GetValue(particleId) as Vector3;
-			}
-
-			const updateParams: ParticleUpdateParams = {
-				position: this.updateNodes.position,
-			};
-
-			this.renderNode!.Render(initParams, updateParams);
-		});
-	}
-
-	private CheckRequireNodes(): boolean {
+	CheckRequireNodes(): boolean {
 		let passedChecks = true;
 
 		if (this.spawnNode === undefined) {
@@ -169,6 +149,26 @@ export class NodeSystem {
 		}
 
 		return passedChecks;
+	}
+
+	private SpawnParticle() {
+		task.spawn(() => {
+			const particleId = this.ParticleIdPool.GetNextId();
+			const initParams: ParticleInitParams = {
+				id: particleId,
+				lifetime: this.initializeNodes.lifetime!.GetValue(particleId) as number,
+			};
+
+			if (this.initializeNodes.position !== undefined) {
+				initParams.position = this.initializeNodes.position.GetValue(particleId) as Vector3;
+			}
+
+			const updateParams: ParticleUpdateParams = {
+				position: this.updateNodes.position,
+			};
+
+			this.renderNode!.Render(initParams, updateParams);
+		});
 	}
 
 	private ResetNodes() {
