@@ -32,7 +32,13 @@ function RandomNumber({ data }: { data: NodeData }) {
 	};
 
 	return (
-		<Node Name="Random Number" Id={data.id} AnchorPoint={data.anchorPoint} ConnectionFunction={GetValue}>
+		<Node
+			Name="Random Number"
+			Id={data.id}
+			AnchorPoint={data.anchorPoint}
+			ConnectionFunction={GetValue}
+			ConnectioNode={data.node as LogicNode}
+		>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 			<Vector2Field
 				Label={"Vector3"}

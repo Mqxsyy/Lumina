@@ -4,6 +4,11 @@ import { NodeTypes } from "../NodeTypes";
 import { BooleanField } from "API/Fields/BooleanField";
 import { UpdateNode } from "./UpdateNode";
 
+const autoGenCode = `
+local StaticForce = TS.import(script, APIFolder, "Nodes", "Update", "StaticForce").StaticForce
+local staticForce = StaticForce.new()
+nodeSystem:AddNode(staticForce)`;
+
 export class StaticForce extends UpdateNode<[Vector3]> {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeType: NodeTypes = NodeTypes.Position;
@@ -42,6 +47,6 @@ export class StaticForce extends UpdateNode<[Vector3]> {
 	};
 
 	GetAutoGenerationCode(): string {
-		return ``;
+		return autoGenCode;
 	}
 }

@@ -23,7 +23,7 @@ export class NodeSystem {
 		position: undefined as InitializeNode | undefined,
 	};
 	updateNodes = {
-		position: undefined as PositionUpdateFn[] | undefined,
+		position: undefined as UpdateNode[] | undefined,
 	};
 	renderNode: RenderNode | undefined;
 
@@ -229,7 +229,7 @@ export class NodeSystem {
 			}
 
 			positionNodes.forEach((node) => {
-				this.updateNodes.position!.push((node as UpdateNode).UpdateValue as PositionUpdateFn);
+				this.updateNodes.position!.push(node as UpdateNode);
 			});
 		}
 	}

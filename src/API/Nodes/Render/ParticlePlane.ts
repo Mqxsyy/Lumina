@@ -3,7 +3,7 @@ import { NodeTypes } from "../NodeTypes";
 import { RunService } from "@rbxts/services";
 import { ObjectPool } from "API/ObjectPool";
 import { GetLiveParticlesFolder } from "API/FolderLocations";
-import { RenderNode, ParticleInitParams, ParticleUpdateParams } from "./RenderNode";
+import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./RenderNode";
 import { NumberField } from "API/Fields/NumberField";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
@@ -110,8 +110,8 @@ export class ParticlePlane extends RenderNode {
 			}
 
 			if (update.position !== undefined) {
-				update.position.forEach((updateFn) => {
-					particle.Position = updateFn(init.id, particle.Position);
+				update.position.forEach((positionNode) => {
+					particle.Position = (positionNode.UpdateValue as PositionUpdateFn)(init.id, particle.Position);
 				});
 			}
 

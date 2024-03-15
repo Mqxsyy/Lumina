@@ -13,7 +13,7 @@ export interface INode {
 	nodeType: NodeTypes;
 	nodeGroup: NodeGroups;
 	nodeFields: { [key: string]: INodeField };
-	GetAutoGenerationCode(): string;
+	GetAutoGenerationCode(wrapper?: string): string;
 }
 
 export abstract class Node implements INode {
@@ -26,5 +26,5 @@ export abstract class Node implements INode {
 		this.id = NodeIdPool.GetNextId();
 	}
 
-	abstract GetAutoGenerationCode(): string;
+	abstract GetAutoGenerationCode(wrapper?: string): string;
 }

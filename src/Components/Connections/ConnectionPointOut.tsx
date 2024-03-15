@@ -8,12 +8,14 @@ import {
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { CreateConnection } from "./ConnectionLine";
 import ConnectionPoint from "./ConnectionPoint";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
 	Fn: () => number;
+	ConnectionNode: LogicNode;
 }
 
 export default function ConnectionPointOut({
@@ -21,6 +23,7 @@ export default function ConnectionPointOut({
 	Position = UDim2.fromScale(0, 0),
 	Size = UDim2.fromScale(1, 1),
 	Fn,
+	ConnectionNode,
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
 	const destroyRef = useRef(undefined as undefined | RBXScriptConnection);
@@ -33,7 +36,7 @@ export default function ConnectionPointOut({
 
 			const connectionData = CreateConnection(pos.add(size.mul(0.5)), mousePosition);
 			setConnectionId(connectionData.id);
-			BindConnectionMoving(connectionData.id, Fn);
+			BindConnectionMoving(connectionData.id, Fn, ConnectionNode);
 
 			destroyRef.current = connectionData.onDestroy.Connect(() => {
 				setConnectionId(-1);

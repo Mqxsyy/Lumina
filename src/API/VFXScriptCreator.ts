@@ -44,10 +44,25 @@ local NodeSystem = TS.import(script, APIFolder, "NodeSystem").NodeSystem
 local nodeSystem = NodeSystem.new()`;
 
 	src += "\n\n";
+
 	src += nodeSystem.spawnNode!.GetAutoGenerationCode();
 	src += "\n\n";
+
 	src += nodeSystem.initializeNodes.lifetime!.GetAutoGenerationCode();
 	src += "\n\n";
+
+	if (nodeSystem.initializeNodes.position !== undefined) {
+		src += nodeSystem.initializeNodes.position.GetAutoGenerationCode();
+		src += "\n\n";
+	}
+
+	if (nodeSystem.updateNodes.position !== undefined) {
+		for (const positionNode of nodeSystem.updateNodes.position) {
+			src += positionNode.GetAutoGenerationCode();
+			src += "\n\n";
+		}
+	}
+
 	src += nodeSystem.renderNode!.GetAutoGenerationCode();
 	src += "\n\n";
 

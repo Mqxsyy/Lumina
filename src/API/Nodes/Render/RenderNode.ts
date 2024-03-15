@@ -1,4 +1,5 @@
 import { Node } from "../Node";
+import { UpdateNode } from "../Update/UpdateNode";
 
 export type PositionUpdateFn = (id: number, position: Vector3) => Vector3;
 
@@ -9,7 +10,7 @@ export interface ParticleInitParams {
 }
 
 export interface ParticleUpdateParams {
-	position?: PositionUpdateFn[];
+	position?: UpdateNode[];
 }
 
 export abstract class RenderNode extends Node {

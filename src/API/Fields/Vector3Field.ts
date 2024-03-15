@@ -1,12 +1,19 @@
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
 export class Vector3Field extends NodeField {
-	private x: number;
+	x: number;
+	xBindNode: undefined | LogicNode;
 	private xBind: undefined | (() => number);
-	private y: number;
+
+	y: number;
+	zBindNode: undefined | LogicNode;
 	private yBind: undefined | (() => number);
-	private z: number;
+
+	z: number;
+	yBindNode: undefined | LogicNode;
 	private zBind: undefined | (() => number);
+
 	private valueBind: undefined | (() => Vector3);
 
 	constructor(defaultValue: Vector3) {
@@ -76,18 +83,21 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	}
 
-	BindValueX = (newValue: undefined | (() => number)) => {
+	BindValueX = (newValue: undefined | (() => number), boundNode: LogicNode | undefined) => {
 		this.xBind = newValue;
+		this.xBindNode = boundNode;
 		this.FieldChanged.Fire();
 	};
 
-	BindValueY = (newValue: undefined | (() => number)) => {
+	BindValueY = (newValue: undefined | (() => number), boundNode: LogicNode | undefined) => {
 		this.yBind = newValue;
+		this.yBindNode = boundNode;
 		this.FieldChanged.Fire();
 	};
 
-	BindValueZ = (newValue: undefined | (() => number)) => {
+	BindValueZ = (newValue: undefined | (() => number), boundNode: LogicNode | undefined) => {
 		this.zBind = newValue;
+		this.zBindNode = boundNode;
 		this.FieldChanged.Fire();
 	};
 }

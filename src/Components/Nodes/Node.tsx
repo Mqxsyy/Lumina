@@ -1,7 +1,7 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
+import { NodeData, RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { GetCanvas } from "Events";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
@@ -9,6 +9,7 @@ import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { Div } from "Components/Div";
 import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 const NODE_WIDTH = 250;
 
@@ -17,6 +18,7 @@ interface Props {
 	Id: number;
 	AnchorPoint: Vector2;
 	ConnectionFunction?: () => number;
+	ConnectioNode?: LogicNode;
 }
 
 export function Node({
@@ -24,6 +26,7 @@ export function Node({
 	Id,
 	AnchorPoint,
 	ConnectionFunction = undefined,
+	ConnectioNode = undefined,
 	children,
 }: Roact.PropsWithChildren<Props>) {
 	const [position, setPosition] = useState(new Vector2(0, 0));
@@ -134,12 +137,13 @@ export function Node({
 
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Name} />
-				{ConnectionFunction !== undefined && (
+				{ConnectionFunction !== undefined && ConnectioNode !== undefined && (
 					<ConnectionPointOut
 						AnchorPoint={new Vector2(1, 0)}
 						Position={UDim2.fromScale(1, 0)}
 						Size={UDim2.fromOffset(20, 20)}
 						Fn={ConnectionFunction}
+						ConnectionNode={ConnectioNode}
 					/>
 				)}
 			</Div>

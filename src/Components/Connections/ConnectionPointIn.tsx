@@ -6,12 +6,13 @@ import {
 	UpdateConnectionEnd,
 } from "Services/ConnectionsService";
 import ConnectionPoint from "./ConnectionPoint";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
-	BindFunction: (newValue: undefined | (() => number)) => void;
+	BindFunction: (newValue: undefined | (() => number), boundNode: LogicNode | undefined) => void;
 }
 
 export default function ConnectionPointIn({
@@ -37,11 +38,11 @@ export default function ConnectionPointIn({
 		const connection = GetConnectionById(movingConnection.id);
 		destroyRef.current = connection!.data.onDestroy.Connect(() => {
 			setConnectionId(-1);
-			BindFunction(undefined);
+			BindFunction(undefined, undefined);
 			destroyRef.current!.Disconnect();
 		});
 
-		BindFunction(movingConnection.fn!);
+		BindFunction(movingConnection.fn!, movingConnection.node!);
 	};
 
 	const UpdateConnection = (element: TextButton) => {

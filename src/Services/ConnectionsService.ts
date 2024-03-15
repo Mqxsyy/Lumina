@@ -2,6 +2,7 @@ import Roact from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Event";
 import { IdPool } from "API/IdPool";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 
 export interface ConnectionData {
@@ -17,6 +18,7 @@ interface ConnectionCollectionEntry {
 }
 
 let movingConnectionFn = undefined as (() => number) | undefined;
+let movingConnectioNode = undefined as LogicNode | undefined;
 let movingConnectionId = -1;
 
 const idPool = new IdPool();
@@ -76,9 +78,10 @@ export function RemoveConnection(id: number) {
 	warn(`Failed to delete connection. Id not found`);
 }
 
-export function BindConnectionMoving(id: number, fn: () => number) {
+export function BindConnectionMoving(id: number, fn: () => number, node: LogicNode) {
 	movingConnectionId = id;
 	movingConnectionFn = fn;
+	movingConnectioNode = node;
 
 	RunService.BindToRenderStep("MoveConnection", 200, () => {
 		UpdateConnectionEnd(id, GetMousePositionOnCanvas());
@@ -96,8 +99,9 @@ export function UnbindConnectionMoving(destroyConnection = false) {
 
 	movingConnectionId = -1;
 	movingConnectionFn = undefined;
+	movingConnectioNode = undefined;
 }
 
 export function GetMovingConnection() {
-	return { id: movingConnectionId, fn: movingConnectionFn };
+	return { id: movingConnectionId, fn: movingConnectionFn, node: movingConnectioNode };
 }
