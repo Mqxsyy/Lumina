@@ -51,7 +51,7 @@ export function Vector2Field({
 					NumberChanged={xChanged}
 				/>
 				<NumberField
-					Label={ValueLabels[0]}
+					Label={ValueLabels[1]}
 					DefaultText={tostring(DefaultValue.Y)}
 					PlaceholderText={PlaceholderValues[1]}
 					AllowNegative={true}

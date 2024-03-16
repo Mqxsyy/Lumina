@@ -1,26 +1,32 @@
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
-export class NumberField extends NodeField {
-	private value: number | (() => number);
+export class NumberField extends NodeField<number> {
+	value: number;
+	valueBindNode: undefined | LogicNode;
+	private valueBind: undefined | (() => number);
 
 	constructor(defaultValue: number) {
 		super();
 		this.value = defaultValue;
 	}
 
-	GetValue(): number {
-		if (typeIs(this.value, "number")) {
-			return this.value;
+	GetValue() {
+		if (this.valueBind !== undefined) {
+			return this.valueBind();
 		}
 
-		return this.value();
+		return this.value;
 	}
 
-	SetValue = (newValue: unknown) => {
-		this.value = newValue as number;
+	SetValue = (newValue: number) => {
+		this.value = newValue;
+		this.FieldChanged.Fire();
 	};
 
-	BindValue(newValue: () => number): void {
-		this.value = newValue;
-	}
+	BindValue = (newValue: (() => number) | undefined, boundNode: LogicNode | undefined) => {
+		this.valueBind = newValue;
+		this.valueBindNode = boundNode;
+		this.FieldChanged.Fire();
+	};
 }

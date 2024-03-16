@@ -13,3 +13,8 @@
 - Do NOT alter the API folder, doing so WILL break it
 - The API can be used independently, though it is recommended to use it with the plugin (for simplicity reasons)
 */
+
+/*
+- Yes, autogen code disgusting, might move to diff files
+- also need to be hella careful with naming and moving now, yay
+*/

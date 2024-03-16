@@ -1,4 +1,4 @@
-import { INode } from "./Nodes/Node";
+import { Node } from "./Nodes/Node";
 
 export enum NodeGroups {
 	Spawn,
@@ -8,7 +8,7 @@ export enum NodeGroups {
 	Logic,
 }
 
-export class NodeGroup<T extends INode> {
+export class NodeGroup<T extends Node> {
 	private Nodes: T[];
 
 	constructor() {

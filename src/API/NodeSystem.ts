@@ -1,12 +1,12 @@
-import { INode } from "./Nodes/Node";
-import { NodeGroup, NodeGroups } from "./NodeGroup";
-import { NodeTypes } from "./Nodes/NodeTypes";
 import { RunService } from "@rbxts/services";
-import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./Nodes/Render/RenderNode";
-import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
-import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
-import { UpdateNode } from "./Nodes/Update/UpdateNode";
 import { IdPool } from "./IdPool";
+import { NodeGroup, NodeGroups } from "./NodeGroup";
+import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
+import { Node } from "./Nodes/Node";
+import { NodeTypes } from "./Nodes/NodeTypes";
+import { ParticleInitParams, ParticleUpdateParams, RenderNode } from "./Nodes/Render/RenderNode";
+import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
+import { UpdateNode } from "./Nodes/Update/UpdateNode";
 
 // OPTIMIZE: make less laggy
 // OPTIMIZE?: look into an alt version for array.find
@@ -14,7 +14,7 @@ import { IdPool } from "./IdPool";
 export class NodeSystem {
 	ParticleIdPool = new IdPool();
 
-	NodeGroups: { [key in NodeGroups]: NodeGroup<INode> };
+	NodeGroups: { [key in NodeGroups]: NodeGroup<Node> };
 	SpawnConnection: RBXScriptConnection | undefined;
 
 	spawnNode: SpawnNode | undefined;
@@ -37,12 +37,12 @@ export class NodeSystem {
 		};
 	}
 
-	AddNode(node: INode) {
+	AddNode(node: Node) {
 		this.NodeGroups[node.nodeGroup as NodeGroups].AddNode(node);
 		this.UpdateNodes();
 	}
 
-	RemoveNode(node: INode) {
+	RemoveNode(node: Node) {
 		this.NodeGroups[node.nodeGroup as NodeGroups].RemoveNode(node);
 		this.UpdateNodes();
 	}
@@ -185,7 +185,7 @@ export class NodeSystem {
 		this.renderNode = undefined;
 	}
 
-	private CheckNodesAmount(nodes: INode[]) {
+	private CheckNodesAmount(nodes: Node[]) {
 		if (nodes.size() > 1) {
 			warn("More than one node used, only one will be used.");
 		}

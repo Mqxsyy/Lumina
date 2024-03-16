@@ -5,6 +5,7 @@ import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { StaticForce as StaticForceAPI } from "API/Nodes/Update/StaticForce";
 import { Event } from "API/Event";
+import { Vector3Field } from "Components/NodeFields/Vector3Field";
 
 export function CreateStaticForceNode() {
 	AddNode({
@@ -19,10 +20,18 @@ export function CreateStaticForceNode() {
 		},
 	});
 }
+
 function StaticForce({ data }: { data: NodeData }) {
 	return (
 		<Node Name="Static Force" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Position"} />
+			<uipadding PaddingLeft={new UDim(0, 10)} />
+
+			<Vector3Field
+				NodeField={(data.node as StaticForceAPI).nodeFields.direction}
+				Label={"Vector3"}
+				DefaultValue={new Vector3(0, 1, 0)}
+			/>
+
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"IsLocal"} />
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"StoreValue"} />
 		</Node>

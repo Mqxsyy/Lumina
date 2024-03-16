@@ -1,28 +1,32 @@
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
-export class BooleanField extends NodeField {
-	private value: boolean | (() => boolean);
+export class BooleanField extends NodeField<boolean> {
+	value: boolean;
+	valueBindNode: undefined | LogicNode;
+	private valueBind: undefined | (() => boolean);
 
 	constructor(defaultValue: boolean) {
 		super();
 		this.value = defaultValue;
 	}
 
-	GetValue(): boolean {
-		if (typeIs(this.value, "boolean")) {
-			return this.value;
+	GetValue() {
+		if (this.valueBind !== undefined) {
+			return this.valueBind();
 		}
 
-		return this.value();
+		return this.value;
 	}
 
-	SetValue = (newValue: unknown) => {
-		this.value = newValue as boolean;
+	SetValue = (newValue: boolean) => {
+		this.value = newValue;
 		this.FieldChanged.Fire();
 	};
 
-	BindValue(newValue: () => boolean): void {
-		this.value = newValue;
+	BindValue = (newValue: (() => boolean) | undefined, boundNode: LogicNode | undefined) => {
+		this.valueBind = newValue;
+		this.valueBindNode = boundNode;
 		this.FieldChanged.Fire();
-	}
+	};
 }

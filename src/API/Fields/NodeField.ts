@@ -1,16 +1,10 @@
 import { Event } from "API/Event";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
-export interface INodeField {
-	GetValue(): unknown;
-	SetValue: (newValue: unknown) => void;
-	BindValue(newValue: unknown): void;
-	FieldChanged: Event;
-}
-
-export abstract class NodeField implements INodeField {
-	abstract GetValue(): unknown;
-	abstract SetValue: (newValue: unknown) => void;
-	abstract BindValue(newValue: unknown): void;
+export abstract class NodeField<T> {
+	abstract GetValue(): T;
+	abstract SetValue: (newValue: T) => void;
+	abstract BindValue: (newValue: (() => T) | undefined, boundNode: LogicNode | undefined) => void;
 
 	FieldChanged = new Event();
 }

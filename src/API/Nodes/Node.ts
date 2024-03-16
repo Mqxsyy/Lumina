@@ -1,4 +1,4 @@
-import { INodeField } from "../Fields/NodeField";
+import { NodeFields } from "API/Fields/NodeFields";
 import { NodeGroups } from "../NodeGroup";
 import { NodeIdPool } from "./NodeIdPool";
 import { NodeTypes } from "./NodeTypes";
@@ -8,19 +8,12 @@ export interface ParticleInitData {
 	spawnPosition?: Vector3;
 }
 
-export interface INode {
+export abstract class Node {
 	id: number;
-	nodeType: NodeTypes;
-	nodeGroup: NodeGroups;
-	nodeFields: { [key: string]: INodeField };
-	GetAutoGenerationCode(wrapper?: string): string;
-}
 
-export abstract class Node implements INode {
-	id: number;
 	abstract nodeGroup: NodeGroups;
 	abstract nodeType: NodeTypes;
-	abstract nodeFields: { [key: string]: INodeField };
+	abstract nodeFields: { [key: string]: NodeFields };
 
 	constructor() {
 		this.id = NodeIdPool.GetNextId();
