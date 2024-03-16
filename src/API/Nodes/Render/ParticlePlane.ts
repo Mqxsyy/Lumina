@@ -7,6 +7,7 @@ import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn 
 import { NumberField } from "API/Fields/NumberField";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
+import { AutogenParticlePlane } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
 
 // TODO: make double sided, required reversed image if not symmetrical
 
@@ -14,11 +15,6 @@ const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 const DEFAULT_TEXTURE = "rbxassetid://7848741169";
 const DEFAULT_COLOR = new Color3(1, 1, 1);
 const DEFAULT_EMISSION = 1;
-
-const autoGenCode = `
-local ParticlePlane = TS.import(script, APIFolder, "Nodes", "Render", "ParticlePlane").ParticlePlane
-local particlePlane = ParticlePlane.new()
-nodeSystem:AddNode(particlePlane)`;
 
 interface PlaneParticle extends Part {
 	SurfaceGui: SurfaceGui & {
@@ -127,7 +123,7 @@ export class ParticlePlane extends RenderNode {
 	};
 
 	GetAutoGenerationCode() {
-		return autoGenCode;
+		return AutogenParticlePlane(this);
 	}
 
 	Destroy() {

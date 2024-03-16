@@ -1,12 +1,8 @@
 import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
+import { AutoGenLifetime } from "../AutoGeneration/InitializeNodes/AutoGenLifetime";
 import { NodeTypes } from "../NodeTypes";
 import { InitializeNode } from "./InitializeNode";
-
-const autoGenCode = `
-local Lifetime = TS.import(script, APIFolder, "Nodes", "Initialize", "Lifetime").Lifetime
-local lifetime = Lifetime.new()
-nodeSystem:AddNode(lifetime)`;
 
 export class Lifetime extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -28,6 +24,6 @@ export class Lifetime extends InitializeNode {
 	};
 
 	GetAutoGenerationCode() {
-		return autoGenCode;
+		return AutoGenLifetime(this);
 	}
 }

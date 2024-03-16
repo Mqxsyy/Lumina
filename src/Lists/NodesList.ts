@@ -1,5 +1,5 @@
 import { NodeGroups } from "API/NodeGroup";
-import { SelectionEntry } from "API/SelectionEntry";
+import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { CreateLifetimeNode } from "Components/Nodes/Initialize/Lifetime";
 import { CreatePositionNode } from "Components/Nodes/Initialize/Position";
 import { CreateRandomNumberNode } from "Components/Nodes/Logic/RandomNumber";

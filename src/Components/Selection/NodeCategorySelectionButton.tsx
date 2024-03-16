@@ -2,7 +2,7 @@ import Roact, { useEffect, useState } from "@rbxts/roact";
 import { Div } from "../Div";
 import { StyleColors, StyleProperties } from "Style";
 import { NodeSelectionButton } from "./NodeSelectionButton";
-import { SelectionEntry } from "API/SelectionEntry";
+import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 
 interface Props {

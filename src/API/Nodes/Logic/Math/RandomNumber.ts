@@ -4,6 +4,7 @@ import { NodeTypes } from "API/Nodes/NodeTypes";
 import { LogicNode } from "../LogicNode";
 import { BooleanField } from "API/Fields/BooleanField";
 import { Rand } from "API/Lib";
+import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
 
 export class RandomNumber extends LogicNode {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
@@ -35,21 +36,7 @@ export class RandomNumber extends LogicNode {
 		return value;
 	};
 
-	GetAutoGenerationCode(wrapper?: string): string {
-		const className = `RandomNumber${this.id}`;
-		const varName = `randomNumber${this.id}`;
-
-		let src = `\n\n`;
-		src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "Math", "RandomNumber").RandomNumber \n`;
-		src += `local ${varName} = ${className}.new() \n`;
-
-		const range = this.nodeFields.range.GetValue();
-		src += `${varName}.nodeFields.range.SetMinValue(${range.X}) \n`;
-		src += `${varName}.nodeFields.range.SetMaxValue(${range.Y}) \n`;
-
-		if (wrapper !== undefined) {
-			src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
-		}
-		return src;
+	GetAutoGenerationCode(wrapper: string) {
+		return AutoGenRandomNumber(this, wrapper);
 	}
 }

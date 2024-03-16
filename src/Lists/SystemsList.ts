@@ -1,4 +1,4 @@
-import { SelectionEntry } from "API/SelectionEntry";
+import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { CreateBasicSystem } from "Components/Systems/CreateBasicSystem";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 

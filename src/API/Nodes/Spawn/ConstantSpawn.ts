@@ -2,11 +2,7 @@ import { NumberField } from "API/Fields/NumberField";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeTypes } from "API/Nodes/NodeTypes";
 import { SpawnNode } from "./SpawnNode";
-
-const autoGenCode = `
-local ConstantSpawn = TS.import(script, APIFolder, "Nodes", "Spawn", "ConstantSpawn").ConstantSpawn
-local constantSpawn = ConstantSpawn.new()
-nodeSystem:AddNode(constantSpawn)`;
+import { AutoGenConstantSpawn } from "../AutoGeneration/SpawnNodes/AutoGenConstantSpawn";
 
 export class ConstantSpawn extends SpawnNode {
 	nodeGroup: NodeGroups = NodeGroups.Spawn;
@@ -28,6 +24,6 @@ export class ConstantSpawn extends SpawnNode {
 	};
 
 	GetAutoGenerationCode() {
-		return autoGenCode;
+		return AutoGenConstantSpawn(this);
 	}
 }
