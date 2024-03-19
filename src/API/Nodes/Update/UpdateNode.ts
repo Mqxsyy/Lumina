@@ -1,5 +1,5 @@
 import { Node } from "../Node";
 
-export abstract class UpdateNode<T extends unknown[] = []> extends Node {
-	abstract UpdateValue: (id: number, ...params: T) => unknown;
+export abstract class UpdateNode extends Node {
+	abstract Update(id: number): void;
 }

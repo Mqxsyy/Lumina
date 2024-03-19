@@ -1,12 +1,10 @@
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { NodeGroups } from "API/NodeGroup";
-import { NodeTypes } from "API/Nodes/NodeTypes";
-import { LogicNode } from "../LogicNode";
+import { LogicNode } from "./LogicNode";
 import { NumberField } from "API/Fields/NumberField";
 
-export class ValueRamp extends LogicNode {
+export class ValueRamp extends LogicNode<number> {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
-	nodeType: NodeTypes = NodeTypes.Ramp;
 	nodeFields: {
 		value: NumberField;
 		range: Vector2Field;
@@ -21,12 +19,12 @@ export class ValueRamp extends LogicNode {
 		};
 	}
 
-	Calculate = (): number => {
+	Calculate = () => {
 		const range = this.nodeFields.range.GetValue();
 		return range.X + (range.Y - range.X) * this.nodeFields.value.GetValue();
 	};
 
-	GetAutoGenerationCode(): string {
+	GetAutoGenerationCode() {
 		return ``;
 	}
 }

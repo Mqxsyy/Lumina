@@ -1,13 +1,12 @@
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { NodeGroups } from "../../NodeGroup";
-import { NodeTypes } from "../NodeTypes";
 import { BooleanField } from "API/Fields/BooleanField";
 import { UpdateNode } from "./UpdateNode";
 import { AutoGenStaticForce } from "../AutoGeneration/UpdateNodes/AutoGenStaticForce";
+import { GetParticleData } from "API/ParticleService";
 
-export class StaticForce extends UpdateNode<[Vector3]> {
+export class StaticForce extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
-	nodeType: NodeTypes = NodeTypes.Position;
 	nodeFields: {
 		direction: Vector3Field;
 		isLocal: BooleanField;
@@ -27,20 +26,24 @@ export class StaticForce extends UpdateNode<[Vector3]> {
 		};
 	}
 
-	UpdateValue = (id: number, position: Vector3): Vector3 => {
+	Update(id: number) {
+		const particle = GetParticleData(id).particle;
+
 		if (this.nodeFields.storeValue.GetValue()) {
-			const force = this.storedValues.get(id);
-			if (force !== undefined) {
-				return position.add(force);
+			let direction = this.storedValues.get(id);
+			if (direction !== undefined) {
+				particle.Position = particle.Position.add(direction);
+				return;
 			}
 
-			const direction = this.nodeFields.direction.GetValue();
+			direction = this.nodeFields.direction.GetValue();
 			this.storedValues.set(id, direction);
-			return position.add(direction);
+			particle.Position = particle.Position.add(direction);
+			return;
 		}
 
-		return position.add(this.nodeFields.direction.GetValue());
-	};
+		particle.Position = particle.Position.add(this.nodeFields.direction.GetValue());
+	}
 
 	GetAutoGenerationCode(): string {
 		return AutoGenStaticForce(this);

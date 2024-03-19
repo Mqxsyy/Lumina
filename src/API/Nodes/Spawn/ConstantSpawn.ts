@@ -1,12 +1,10 @@
 import { NumberField } from "API/Fields/NumberField";
 import { NodeGroups } from "API/NodeGroup";
-import { NodeTypes } from "API/Nodes/NodeTypes";
 import { SpawnNode } from "./SpawnNode";
 import { AutoGenConstantSpawn } from "../AutoGeneration/SpawnNodes/AutoGenConstantSpawn";
 
 export class ConstantSpawn extends SpawnNode {
 	nodeGroup: NodeGroups = NodeGroups.Spawn;
-	nodeType: NodeTypes = NodeTypes.ConstantSpawn;
 	nodeFields: {
 		rate: NumberField; // per second
 	};

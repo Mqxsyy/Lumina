@@ -1,12 +1,11 @@
+import { UpdateParticleData } from "API/ParticleService";
 import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenLifetime } from "../AutoGeneration/InitializeNodes/AutoGenLifetime";
-import { NodeTypes } from "../NodeTypes";
 import { InitializeNode } from "./InitializeNode";
 
 export class Lifetime extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
-	nodeType: NodeTypes = NodeTypes.Lifetime;
 	nodeFields: {
 		time: NumberField;
 	};
@@ -19,9 +18,12 @@ export class Lifetime extends InitializeNode {
 		};
 	}
 
-	GetValue = (): number => {
-		return this.nodeFields.time.GetValue() as number;
-	};
+	Initialize(id: number) {
+		UpdateParticleData(id, (data) => {
+			data.lifetime = this.nodeFields.time.GetValue();
+			return data;
+		});
+	}
 
 	GetAutoGenerationCode() {
 		return AutoGenLifetime(this);

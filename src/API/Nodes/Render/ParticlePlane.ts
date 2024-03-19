@@ -1,13 +1,15 @@
 import { NodeGroups } from "../../NodeGroup";
-import { NodeTypes } from "../NodeTypes";
 import { RunService } from "@rbxts/services";
 import { ObjectPool } from "API/ObjectPool";
 import { GetLiveParticlesFolder } from "API/FolderLocations";
-import { RenderNode, ParticleInitParams, ParticleUpdateParams, PositionUpdateFn } from "./RenderNode";
+import { RenderNode } from "./RenderNode";
 import { NumberField } from "API/Fields/NumberField";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
 import { AutogenParticlePlane } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
+import { GetNextParticleId, CreateParticleData, GetParticleData } from "API/ParticleService";
+import { InitializeNode } from "../Initialize/InitializeNode";
+import { UpdateNode } from "../Update/UpdateNode";
 
 // TODO: make double sided, required reversed image if not symmetrical
 
@@ -16,7 +18,7 @@ const DEFAULT_TEXTURE = "rbxassetid://7848741169";
 const DEFAULT_COLOR = new Color3(1, 1, 1);
 const DEFAULT_EMISSION = 1;
 
-interface PlaneParticle extends Part {
+export interface PlaneParticle extends Part {
 	SurfaceGui: SurfaceGui & {
 		ImageLabel: ImageLabel;
 	};
@@ -54,7 +56,6 @@ function CreateParticlePlane(): PlaneParticle {
 
 export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
-	nodeType: NodeTypes = NodeTypes.ParticlePlane;
 	nodeFields = {
 		transparency: new NumberField(0), // value that can either exist on init or update
 		color: new Vector3Field(new Vector3(1, 1, 1)),
@@ -80,9 +81,8 @@ export class ParticlePlane extends RenderNode {
 		this.displayFolder = displayPlaneParticlesFolder as Folder;
 	}
 
-	Render = (init: ParticleInitParams, update: ParticleUpdateParams) => {
+	Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
-		particle.Position = init.position !== undefined ? init.position : new Vector3(0, 10, 0);
 
 		const colorVec3 = this.nodeFields.color.GetValue();
 		particle.SurfaceGui.ImageLabel.ImageColor3 = new Color3(colorVec3.X, colorVec3.Y, colorVec3.Z);
@@ -94,22 +94,27 @@ export class ParticlePlane extends RenderNode {
 			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
 		}
 
-		let aliveTime = 0;
-
 		particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
 
+		const id = GetNextParticleId();
+		CreateParticleData(id, particle);
+
+		initializeNodes.forEach((node) => {
+			node.Initialize(id);
+		});
+
+		let aliveTime = 0;
+		const lifetime = GetParticleData(id).lifetime;
 		const connection = RunService.RenderStepped.Connect((dt) => {
-			if (aliveTime >= init.lifetime) {
+			if (aliveTime >= lifetime) {
 				connection.Disconnect();
 				this.objectPool.RemoveItem(particle);
 				return;
 			}
 
-			if (update.position !== undefined) {
-				update.position.forEach((positionNode) => {
-					particle.Position = (positionNode.UpdateValue as PositionUpdateFn)(init.id, particle.Position);
-				});
-			}
+			updateNodes.forEach((node) => {
+				node.Update(id);
+			});
 
 			if (orientation === Orientation.FacingCamera) {
 				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);

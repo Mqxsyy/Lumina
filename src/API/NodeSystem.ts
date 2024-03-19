@@ -3,10 +3,9 @@ import { IdPool } from "./IdPool";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
 import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
 import { Node } from "./Nodes/Node";
-import { NodeTypes } from "./Nodes/NodeTypes";
-import { ParticleInitParams, ParticleUpdateParams, RenderNode } from "./Nodes/Render/RenderNode";
 import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 import { UpdateNode } from "./Nodes/Update/UpdateNode";
+import { RenderNode } from "./Nodes/Render/RenderNode";
 
 // OPTIMIZE: make less laggy
 // OPTIMIZE?: look into an alt version for array.find
@@ -18,13 +17,8 @@ export class NodeSystem {
 	SpawnConnection: RBXScriptConnection | undefined;
 
 	spawnNode: SpawnNode | undefined;
-	initializeNodes = {
-		lifetime: undefined as InitializeNode | undefined,
-		position: undefined as InitializeNode | undefined,
-	};
-	updateNodes = {
-		position: undefined as UpdateNode[] | undefined,
-	};
+	initializeNodes: InitializeNode[] = [];
+	updateNodes: UpdateNode[] = [];
 	renderNode: RenderNode | undefined;
 
 	constructor() {
@@ -68,51 +62,37 @@ export class NodeSystem {
 	}
 
 	Run() {
-		if (!this.CheckRequireNodes()) return;
 		if (this.SpawnConnection !== undefined) {
 			warn("System already running.");
 			return;
 		}
 
-		switch (this.spawnNode!.nodeType) {
-			case NodeTypes.BurstSpawn: {
-				const amount = this.spawnNode!.GetValue() as number;
+		if (this.spawnNode) {
+			let rate = this.spawnNode!.GetValue() as number;
+			let cd = 1 / rate;
+			let amount = 1; // TODO: make amount more accurate, every 2nd frame spawns 2, every 3rd frame spawns 2, etc
+
+			// OPTIMIZE: can bind multiple times to same node
+			this.spawnNode!.nodeFields.rate.FieldChanged.Connect(() => {
+				const newRate = this.spawnNode!.GetValue() as number;
+				if (newRate !== rate) {
+					rate = newRate;
+					cd = 1 / rate;
+					amount = math.ceil(rate / 60);
+				}
+			});
+
+			let passedTime = 0;
+			this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
+				passedTime += dt;
+				if (passedTime < cd) return;
+
+				passedTime = 0;
 
 				for (let i = 0; i < amount; i++) {
 					this.SpawnParticle();
 				}
-
-				break;
-			}
-			case NodeTypes.ConstantSpawn: {
-				let rate = this.spawnNode!.GetValue() as number;
-				let cd = 1 / rate;
-				let amount = 1; // TODO: make amount more accurate, every 2nd frame spawns 2, every 3rd frame spawns 2, etc
-
-				// OPTIMIZE: can bind multiple times to same node
-				this.spawnNode!.nodeFields.rate.FieldChanged.Connect(() => {
-					const newRate = this.spawnNode!.GetValue() as number;
-					if (newRate !== rate) {
-						rate = newRate;
-						cd = 1 / rate;
-						amount = math.ceil(rate / 60);
-					}
-				});
-
-				let passedTime = 0;
-				this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
-					passedTime += dt;
-					if (passedTime < cd) return;
-
-					passedTime = 0;
-
-					for (let i = 0; i < amount; i++) {
-						this.SpawnParticle();
-					}
-				});
-
-				break;
-			}
+			});
 		}
 	}
 
@@ -130,114 +110,46 @@ export class NodeSystem {
 		}
 	}
 
-	CheckRequireNodes(): boolean {
-		let passedChecks = true;
-
-		if (this.spawnNode === undefined) {
-			warn("Missing spawn node.");
-			passedChecks = false;
-		}
-
-		if (this.initializeNodes.lifetime === undefined) {
-			warn("Missing lifetime node.");
-			passedChecks = false;
-		}
-
-		if (this.renderNode === undefined) {
-			warn("Missing render node.");
-			passedChecks = false;
-		}
-
-		return passedChecks;
-	}
-
 	private SpawnParticle() {
 		task.spawn(() => {
-			const particleId = this.ParticleIdPool.GetNextId();
-			const initParams: ParticleInitParams = {
-				id: particleId,
-				lifetime: this.initializeNodes.lifetime!.GetValue(particleId) as number,
-			};
-
-			if (this.initializeNodes.position !== undefined) {
-				initParams.position = this.initializeNodes.position.GetValue(particleId) as Vector3;
-			}
-
-			const updateParams: ParticleUpdateParams = {
-				position: this.updateNodes.position,
-			};
-
-			this.renderNode!.Render(initParams, updateParams);
+			this.renderNode!.Render(this.initializeNodes, this.updateNodes);
 		});
 	}
 
 	private ResetNodes() {
 		this.spawnNode = undefined;
-
-		for (const [k, _] of pairs(this.initializeNodes)) {
-			this.initializeNodes[k] = undefined;
-		}
-
-		for (const [k, _] of pairs(this.updateNodes)) {
-			this.updateNodes[k] = undefined;
-		}
-
+		this.initializeNodes = [];
+		this.updateNodes = [];
 		this.renderNode = undefined;
-	}
-
-	private CheckNodesAmount(nodes: Node[]) {
-		if (nodes.size() > 1) {
-			warn("More than one node used, only one will be used.");
-		}
 	}
 
 	private UpdateSpawnNodes() {
 		const spawnNodes = this.NodeGroups[NodeGroups.Spawn].GetNodes();
 
-		this.CheckNodesAmount(spawnNodes);
+		if (spawnNodes.size() > 1) {
+			warn("More than one node used, only one will be used.");
+		}
+
 		if (spawnNodes.size() >= 1) {
 			this.spawnNode = spawnNodes[0] as SpawnNode;
 		}
 	}
 
 	private UpdateInitializeNodes() {
-		const initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes();
-
-		const lifetimeNodes = initializeNodes.filter((node) => node.nodeType === NodeTypes.Lifetime);
-
-		this.CheckNodesAmount(lifetimeNodes);
-		if (lifetimeNodes.size() >= 1) {
-			this.initializeNodes.lifetime = lifetimeNodes[0] as InitializeNode;
-		}
-
-		const positionNodes = initializeNodes.filter((node) => node.nodeType === NodeTypes.Position);
-
-		this.CheckNodesAmount(positionNodes);
-		if (positionNodes.size() >= 1) {
-			this.initializeNodes.position = positionNodes[0] as InitializeNode;
-		}
+		this.initializeNodes = this.NodeGroups[NodeGroups.Initialize].GetNodes() as InitializeNode[];
 	}
 
 	private UpdateUpdateNodes() {
-		const updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes();
-
-		const positionNodes = updateNodes.filter((node) => node.nodeType === NodeTypes.Position);
-
-		if (positionNodes.size() >= 1) {
-			if (this.updateNodes.position === undefined) {
-				this.updateNodes.position = [];
-			}
-
-			positionNodes.forEach((node) => {
-				this.updateNodes.position!.push(node as UpdateNode);
-			});
-		}
+		this.updateNodes = this.NodeGroups[NodeGroups.Update].GetNodes() as UpdateNode[];
 	}
 
 	private UpdateRenderNodes() {
 		const renderNodes = this.NodeGroups[NodeGroups.Render].GetNodes();
 
-		this.CheckNodesAmount(renderNodes);
+		if (renderNodes.size() > 1) {
+			warn("More than one node used, only one will be used.");
+		}
+
 		if (renderNodes.size() >= 1) {
 			this.renderNode = renderNodes[0] as RenderNode;
 		}

@@ -12,11 +12,7 @@ if (VFXExportFolder === undefined) {
 
 export default function ExportAsScript() {
 	GetNodeSystems().forEach((nodeSystem) => {
-		const system = nodeSystem.data.system;
-
-		if (system.CheckRequireNodes()) {
-			CreateScript(tostring(nodeSystem.data.id), nodeSystem.data.system);
-		}
+		CreateScript(tostring(nodeSystem.data.id), nodeSystem.data.system);
 	});
 }
 
@@ -49,20 +45,15 @@ local nodeSystem = NodeSystem.new()`;
 	src += nodeSystem.spawnNode!.GetAutoGenerationCode();
 	src += "\n\n";
 
-	src += nodeSystem.initializeNodes.lifetime!.GetAutoGenerationCode();
-	src += "\n\n";
-
-	if (nodeSystem.initializeNodes.position !== undefined) {
-		src += nodeSystem.initializeNodes.position.GetAutoGenerationCode();
+	nodeSystem.initializeNodes.forEach((node) => {
+		src += node.GetAutoGenerationCode();
 		src += "\n\n";
-	}
+	});
 
-	if (nodeSystem.updateNodes.position !== undefined) {
-		for (const positionNode of nodeSystem.updateNodes.position) {
-			src += positionNode.GetAutoGenerationCode();
-			src += "\n\n";
-		}
-	}
+	nodeSystem.updateNodes.forEach((node) => {
+		src += node.GetAutoGenerationCode();
+		src += "\n\n";
+	});
 
 	src += nodeSystem.renderNode!.GetAutoGenerationCode();
 	src += "\n\n";

@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { RandomNumber as RandomNumberAPI } from "API/Nodes/Logic/Math/RandomNumber";
+import { RandomNumber as RandomNumberAPI } from "API/Nodes/Logic/RandomNumber";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
@@ -28,7 +28,7 @@ function RandomNumber({ data }: { data: NodeData }) {
 	};
 
 	const GetValue = () => {
-		return (data.node as LogicNode).Calculate() as number;
+		return (data.node as LogicNode<number>).Calculate();
 	};
 
 	return (

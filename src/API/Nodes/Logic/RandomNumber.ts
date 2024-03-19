@@ -1,14 +1,12 @@
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { NodeGroups } from "API/NodeGroup";
-import { NodeTypes } from "API/Nodes/NodeTypes";
-import { LogicNode } from "../LogicNode";
+import { LogicNode } from "./LogicNode";
 import { BooleanField } from "API/Fields/BooleanField";
 import { Rand } from "API/Lib";
 import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
 
-export class RandomNumber extends LogicNode {
+export class RandomNumber extends LogicNode<number> {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
-	nodeType: NodeTypes = NodeTypes.RandomNumber;
 	nodeFields: {
 		range: Vector2Field;
 		isInt: BooleanField;
@@ -25,7 +23,7 @@ export class RandomNumber extends LogicNode {
 		};
 	}
 
-	Calculate = (): number => {
+	Calculate = () => {
 		const range = this.nodeFields.range.GetValue();
 		let value = range.X + Rand.NextNumber() * (range.Y - range.X);
 
