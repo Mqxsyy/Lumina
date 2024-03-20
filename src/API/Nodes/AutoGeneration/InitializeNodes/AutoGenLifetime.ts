@@ -12,7 +12,7 @@ export function AutoGenLifetime(node: Lifetime) {
 		src += node.nodeFields.time.valueBindNode.GetAutoGenerationCode(`${varName}.nodeFields.time.BindValue(..)`);
 		src += "\n";
 	} else {
-		src += `${varName}.nodeFields.time.SetValue(${node.nodeFields.time}) \n`;
+		src += `${varName}.nodeFields.time.SetValue(${node.nodeFields.time.GetValue()}) \n`;
 	}
 
 	src += `nodeSystem:AddNode(${varName})`;

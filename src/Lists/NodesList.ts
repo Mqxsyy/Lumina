@@ -6,6 +6,7 @@ import { CreateRandomNumberNode } from "Components/Nodes/Logic/RandomNumber";
 import { CreateParticlePlaneNode } from "Components/Nodes/Render/ParticlePlane";
 import { CreateConstantSpawnNode } from "Components/Nodes/Spawn/ConstantSpawn";
 import { CreateStaticForceNode } from "Components/Nodes/Update/StaticForce";
+import { CreateTransparencyOverLife } from "Components/Nodes/Update/TransparencyOverLife";
 
 export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } } = {
 	[NodeGroups.Spawn]: {
@@ -31,6 +32,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 		StaticForce: {
 			name: "Static Force",
 			create: () => CreateStaticForceNode(),
+		},
+		TransparencyOverLife: {
+			name: "Transparency Over Life",
+			create: () => CreateTransparencyOverLife(),
 		},
 	},
 	[NodeGroups.Render]: {
