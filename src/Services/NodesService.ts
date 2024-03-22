@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { Node } from "API/Nodes/Node";
 

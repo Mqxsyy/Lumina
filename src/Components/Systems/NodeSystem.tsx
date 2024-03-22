@@ -1,13 +1,13 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
+import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetCanvas } from "Events";
 import { StyleColors } from "Style";
 import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { Div } from "../Div";
 import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../../Services/NodeSystemService";
-import { NodeGroups } from "API/NodeGroup";
+import Div from "../Div";
 import NodeGroup from "./NodeGroup";
 
 const BORDER_THICKNESS = 3;

@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
 import { AddNodeSystem, GetNextNodeSystemId } from "Services/NodeSystemService";

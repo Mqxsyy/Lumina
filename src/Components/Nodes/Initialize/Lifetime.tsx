@@ -1,8 +1,8 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { Lifetime as LifetimeAPI } from "API/Nodes/Initialize/Lifetime";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
-import { Div } from "Components/Div";
+import Div from "Components/Div";
 import { NumberField } from "Components/NodeFields/NumberField";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";

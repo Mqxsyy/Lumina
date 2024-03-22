@@ -10,3 +10,7 @@ export function RemapValue(value: number, oldMin: number, oldMax: number, newMin
 
 	return value * rangeFactor + offset;
 }
+
+export function LerpNumber(a: number, b: number, t: number): number {
+	return a + (b - a) * t;
+}

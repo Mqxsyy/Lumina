@@ -2,7 +2,7 @@ import Roact from "@rbxts/roact";
 import { Vector3Field as Vector3FieldAPI } from "API/Fields/Vector3Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
-import { Div } from "Components/Div";
+import Div from "Components/Div";
 import { NumberField } from "./NumberField";
 
 interface Props {

@@ -1,15 +1,15 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
-import { Div } from "../Div";
-import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { StyleColors } from "Style";
-import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { GetDraggingNodeId, NodeDraggingEnded } from "Services/DraggingService";
-import { GetNodeById, UpdateNodeAnchorPoint } from "Services/NodesService";
-import { NodeGroups } from "API/NodeGroup";
 import { RunService } from "@rbxts/services";
-import { GetCanvas } from "Events";
+import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem } from "API/NodeSystem";
+import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { GetCanvas } from "Events";
+import { GetDraggingNodeId, NodeDraggingEnded } from "Services/DraggingService";
 import { BindNodeGroupFunction } from "Services/NodeSystemService";
+import { GetNodeById, UpdateNodeAnchorPoint } from "Services/NodesService";
+import { StyleColors } from "Style";
+import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
+import Div from "../Div";
 
 const BORDER_THICKNESS = 2;
 

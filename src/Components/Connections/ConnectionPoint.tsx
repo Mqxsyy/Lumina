@@ -1,5 +1,5 @@
 import Roact, { useEffect, useRef } from "@rbxts/roact";
-import { Div } from "Components/Div";
+import Div from "Components/Div";
 import { StyleColors } from "Style";
 
 interface Props {

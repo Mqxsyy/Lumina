@@ -1,5 +1,5 @@
 import Roact, { useEffect, useState } from "@rbxts/roact";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { AddConnection, ConnectionData, GetNextConnectionId } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
 

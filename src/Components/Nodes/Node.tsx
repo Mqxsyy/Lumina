@@ -1,15 +1,15 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { NodeData, RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
+import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
+import Div from "Components/Div";
 import { GetCanvas } from "Events";
+import { SetDraggingNodeId } from "Services/DraggingService";
+import { RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { SetDraggingNodeId } from "Services/DraggingService";
-import { Div } from "Components/Div";
-import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 const NODE_WIDTH = 250;
 

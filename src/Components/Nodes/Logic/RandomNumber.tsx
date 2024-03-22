@@ -4,7 +4,7 @@ import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { Node } from "../Node";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 export function CreateRandomNumberNode() {

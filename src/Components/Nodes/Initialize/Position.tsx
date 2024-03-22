@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { Position as PositionAPI } from "API/Nodes/Initialize/Position";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";

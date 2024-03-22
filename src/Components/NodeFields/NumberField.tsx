@@ -1,7 +1,7 @@
 import Roact from "@rbxts/roact";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumeberInput";
-import { Div } from "Components/Div";
+import Div from "Components/Div";
 
 interface Props {
 	Size?: UDim2;

@@ -1,6 +1,6 @@
 import Roact, { useRef } from "@rbxts/roact";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { Div } from "Components/Div";
+import Div from "Components/Div";
 import { NumberField } from "./NumberField";
 
 interface Props {

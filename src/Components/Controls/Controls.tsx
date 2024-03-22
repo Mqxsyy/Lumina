@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { Div } from "../Div";
+import Div from "../Div";
 import { ControlButton } from "./ControlButton";
 import { GetNodeSystems } from "Services/NodeSystemService";
 import { ClearParticles } from "API/FolderLocations";

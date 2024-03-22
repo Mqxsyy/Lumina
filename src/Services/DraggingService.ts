@@ -1,4 +1,4 @@
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 
 export const NodeDraggingEnded = new Event<[number]>();
 

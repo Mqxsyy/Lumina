@@ -1,4 +1,4 @@
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { GetCanvas } from "Events";
 
 let widget: DockWidgetPluginGui;

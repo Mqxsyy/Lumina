@@ -3,7 +3,8 @@ import { Node } from "../Node";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { TransparencyOverLife as TransparencyOverLifeAPI } from "API/Nodes/Update/TransparencyOverLife";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
+import { LineGraphField } from "Components/NodeFields/LineGraphField";
 
 export function CreateTransparencyOverLife() {
 	AddNode({
@@ -20,5 +21,9 @@ export function CreateTransparencyOverLife() {
 }
 
 function TransparencyOverLife({ data }: { data: NodeData }) {
-	return <Node Name="Transparency Over Life" Id={data.id} AnchorPoint={data.anchorPoint} />;
+	return (
+		<Node Name="Transparency Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
+			<LineGraphField Label={"Graph"} />
+		</Node>
+	);
 }

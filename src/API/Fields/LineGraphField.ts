@@ -1,0 +1,65 @@
+import { IdPool } from "API/IdPool";
+import { LerpNumber } from "API/Lib";
+
+interface GraphPoint {
+	id: number;
+	time: number;
+	value: number;
+}
+
+export class LineGraphField {
+	idPool = new IdPool();
+
+	startPoint: GraphPoint = {
+		id: this.idPool.GetNextId(),
+		time: 0,
+		value: 0,
+	};
+
+	endPoint: GraphPoint = {
+		id: this.idPool.GetNextId(),
+		time: 1,
+		value: 0,
+	};
+
+	graphPoints: GraphPoint[] = [];
+
+	GetValue(t: number) {
+		if (this.graphPoints.size() === 0) {
+			return LerpNumber(this.startPoint.value, this.endPoint.value, t);
+		}
+
+		let lastPoint = this.startPoint;
+		for (const point of this.graphPoints) {
+			if (t < point.time) {
+				return LerpNumber(lastPoint.value, point.value, (t - lastPoint.time) / (point.time - lastPoint.time));
+			}
+
+			lastPoint = point;
+		}
+
+		return LerpNumber(
+			lastPoint.value,
+			this.endPoint.value,
+			(t - lastPoint.time) / (this.endPoint.time - lastPoint.time),
+		);
+	}
+
+	AddGraphPoint(time: number, value: number) {
+		const data = { id: this.idPool.GetNextId(), time, value };
+		this.graphPoints.push(data);
+		return data;
+	}
+
+	RemoveGraphPoint(id: number) {
+		delete this.graphPoints[this.graphPoints.findIndex((point) => point.id === id)];
+	}
+
+	UpdateGraphPoint(id: number, time: number, value: number) {
+		const index = this.graphPoints.findIndex((point) => point.id === id);
+		if (index !== -1) {
+			this.graphPoints[index].time = time;
+			this.graphPoints[index].value = value;
+		}
+	}
+}

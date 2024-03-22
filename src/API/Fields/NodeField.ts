@@ -1,4 +1,4 @@
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 export abstract class NodeField<T> {

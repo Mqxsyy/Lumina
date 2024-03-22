@@ -1,4 +1,4 @@
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 
 let zoomScale = 1;
 let lastZoomScale = 1;

@@ -1,6 +1,6 @@
 import Roact from "@rbxts/roact";
 import { StyleColors, StyleProperties } from "Style";
-import { Div } from "../Div";
+import Div from "../Div";
 import { NodeSelectionLabel } from "./NodeSelectionLabel";
 import { NodeCategorySelectionButton } from "./NodeCategorySelectionButton";
 import { NodeList } from "Lists/NodesList";

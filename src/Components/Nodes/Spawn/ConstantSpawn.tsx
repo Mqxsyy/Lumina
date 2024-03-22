@@ -4,7 +4,7 @@ import { NumberField } from "Components/NodeFields/NumberField";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { Node } from "../Node";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 
 export function CreateConstantSpawnNode() {
 	return AddNode({

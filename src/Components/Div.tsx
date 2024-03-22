@@ -15,7 +15,7 @@ interface Props {
 	onMouseButton1Up?: (element: GuiObject) => void;
 }
 
-export function Div({
+export default function Div({
 	AnchorPoint = new Vector2(0, 0),
 	Position = new UDim2(0, 0, 0, 0),
 	Size = UDim2.fromScale(1, 1),

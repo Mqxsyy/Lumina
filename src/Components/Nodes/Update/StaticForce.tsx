@@ -4,7 +4,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "WidgetHandler";
 import { StaticForce as StaticForceAPI } from "API/Nodes/Update/StaticForce";
-import { Event } from "API/Event";
+import { Event } from "API/Bindables/Event";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 
 export function CreateStaticForceNode() {

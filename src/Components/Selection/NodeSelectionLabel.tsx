@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { Div } from "../Div";
+import Div from "../Div";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 
 interface Props {

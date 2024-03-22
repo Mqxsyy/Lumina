@@ -1,5 +1,5 @@
 import Roact, { useState } from "@rbxts/roact";
-import { Div } from "../Div";
+import Div from "../Div";
 import { StyleColors, StyleProperties } from "Style";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 
