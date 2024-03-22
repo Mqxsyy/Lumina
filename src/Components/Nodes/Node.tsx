@@ -8,7 +8,7 @@ import { GetCanvas } from "Events";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
-import { GetMousePosition, GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 
 const NODE_WIDTH = 250;

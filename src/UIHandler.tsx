@@ -1,12 +1,12 @@
 import Roact from "@rbxts/roact";
 import { App } from "Components/App";
-import { GetWidget } from "WidgetHandler";
+import { GetWindow, Windows } from "Windows/WindowSevice";
 
 let canvas = undefined as Roact.Tree | undefined;
 
 export function InitUI() {
-	const widget = GetWidget();
-	canvas = Roact.mount(<App />, widget, "Graph");
+	const window = GetWindow(Windows.CrescentVFX)!;
+	canvas = Roact.mount(<App />, window, "Graph");
 }
 
 export function GetCanvas() {

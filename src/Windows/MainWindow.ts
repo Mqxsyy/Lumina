@@ -1,28 +1,24 @@
 import { Event } from "API/Bindables/Event";
+import { GetWindow, OnWinowLoaded, Windows } from "./WindowSevice";
 import { GetCanvas } from "Events";
-
-let widget: DockWidgetPluginGui;
 
 export const WidgetSizeChanged = new Event<[Vector2]>();
 
-export function SetWidget(dockWidgetPluginGui: DockWidgetPluginGui) {
-	widget = dockWidgetPluginGui;
+OnWinowLoaded.Connect((loadedWindow) => {
+	if (loadedWindow !== Windows.CrescentVFX) return;
 
-	widget.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
-		WidgetSizeChanged.Fire(widget.AbsoluteSize);
+	const window = GetWindow(Windows.CrescentVFX)!;
+	window.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+		WidgetSizeChanged.Fire(window.AbsoluteSize);
 	});
-}
+});
 
 export function GetMousePosition(): Vector2 {
-	return widget.GetRelativeMousePosition();
+	return GetWindow(Windows.CrescentVFX)!.GetRelativeMousePosition();
 }
 
 export function GetMousePositionOnCanvas(): Vector2 {
 	const canvasFrame = GetCanvas.Invoke() as Frame;
 	const pos = new Vector2(canvasFrame.AbsolutePosition.X, canvasFrame.AbsolutePosition.Y);
 	return GetMousePosition().sub(pos);
-}
-
-export function GetWidget(): DockWidgetPluginGui {
-	return widget;
 }

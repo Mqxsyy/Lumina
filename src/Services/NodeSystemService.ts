@@ -3,7 +3,7 @@ import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem } from "API/NodeSystem";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 // TODO: Add render order changing
 

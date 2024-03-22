@@ -3,7 +3,7 @@ import { ParticlePlane as ParticlePlaneAPI } from "API/Nodes/Render/ParticlePlan
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberField } from "Components/NodeFields/NumberField";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 import { Event } from "API/Bindables/Event";
 

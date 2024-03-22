@@ -3,7 +3,7 @@ import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 export interface ConnectionData {
 	id: number;

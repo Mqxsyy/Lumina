@@ -5,7 +5,7 @@ import {
 	UnbindConnectionMoving,
 	UpdateConnectionStart,
 } from "Services/ConnectionsService";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { CreateConnection } from "./ConnectionLine";
 import ConnectionPoint from "./ConnectionPoint";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";

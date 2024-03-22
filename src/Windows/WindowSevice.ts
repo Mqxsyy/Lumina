@@ -1,8 +1,17 @@
+import { Event } from "API/Bindables/Event";
+
 export enum Windows {
+	CrescentVFX = "CrescentVFX",
 	ValueGraph = "Value Graph",
 }
 
+export const OnWinowLoaded = new Event<[Windows]>();
+
 const windows = {
+	[Windows.CrescentVFX]: {
+		Widget: undefined as DockWidgetPluginGui | undefined,
+		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 600, 500, 200, 150),
+	},
 	[Windows.ValueGraph]: {
 		Widget: undefined as DockWidgetPluginGui | undefined,
 		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 300, 200, 200, 150),
@@ -14,6 +23,7 @@ export function InitializeWindows(plugin: Plugin) {
 		windows[key].Widget = plugin.CreateDockWidgetPluginGui(key, value.Info);
 		windows[key].Widget!.Title = key;
 		windows[key].Widget!.Enabled = false;
+		OnWinowLoaded.Fire(key);
 	}
 }
 

@@ -2,7 +2,7 @@ import Roact from "@rbxts/roact";
 import { Node } from "../Node";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { StaticForce as StaticForceAPI } from "API/Nodes/Update/StaticForce";
 import { Event } from "API/Bindables/Event";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";

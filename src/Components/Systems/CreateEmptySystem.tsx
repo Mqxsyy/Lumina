@@ -3,8 +3,8 @@ import { Event } from "API/Bindables/Event";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
 import { AddNodeSystem, GetNextNodeSystemId } from "Services/NodeSystemService";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
 import NodeSystem from "./NodeSystem";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 export function CreateEmptySystem() {
 	return AddNodeSystem({

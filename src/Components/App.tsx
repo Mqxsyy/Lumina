@@ -3,12 +3,13 @@ import { RunService } from "@rbxts/services";
 import { GetCanvas } from "Events";
 import { ConnectionsChanged, GetAllConnections, UnbindConnectionMoving } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
-import { GetMousePosition, GetWidget, WidgetSizeChanged } from "WidgetHandler";
 import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { GetNodeSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
 import { GetAllNodes, NodesChanged } from "../Services/NodesService";
 import { Controls } from "./Controls/Controls";
 import { NodeSelection } from "./Selection/NodeSelection";
+import { GetMousePosition, WidgetSizeChanged } from "Windows/MainWindow";
+import { GetWindow, Windows } from "Windows/WindowSevice";
 
 // TODO: make zoom go to mouse
 
@@ -16,7 +17,7 @@ export function App() {
 	const canvasRef = useRef(undefined as Frame | undefined);
 	GetCanvas.OnInvoke = () => canvasRef.current;
 
-	const [widgetSize, setWidgetSize] = useState(GetWidget().AbsoluteSize);
+	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.CrescentVFX)!.AbsoluteSize);
 
 	const [canvasPosition, setCanvasPosition] = useState(UDim2.fromOffset(0, 0));
 	const [canvasSize, setCanvasSize] = useState(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
@@ -29,7 +30,7 @@ export function App() {
 
 	const StartMoveCanvas = (frame: Frame) => {
 		const mousePositionVec2 = GetMousePosition();
-		const widgetSize = GetWidget().AbsoluteSize.mul(0.5);
+		const widgetSize = GetWindow(Windows.CrescentVFX)!.AbsoluteSize.mul(0.5);
 
 		const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
 		const mouseOffset = mousePosition.sub(frame.Position).add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));

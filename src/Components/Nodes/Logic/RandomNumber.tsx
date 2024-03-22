@@ -2,7 +2,7 @@ import Roact from "@rbxts/roact";
 import { RandomNumber as RandomNumberAPI } from "API/Nodes/Logic/RandomNumber";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 import { Event } from "API/Bindables/Event";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";

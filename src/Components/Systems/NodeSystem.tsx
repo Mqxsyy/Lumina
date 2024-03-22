@@ -4,11 +4,11 @@ import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetCanvas } from "Events";
 import { StyleColors } from "Style";
-import { GetMousePosition } from "WidgetHandler";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../../Services/NodeSystemService";
 import Div from "../Div";
 import NodeGroup from "./NodeGroup";
+import { GetMousePosition } from "Windows/MainWindow";
 
 const BORDER_THICKNESS = 3;
 const SYSTEM_WIDTH = 300;

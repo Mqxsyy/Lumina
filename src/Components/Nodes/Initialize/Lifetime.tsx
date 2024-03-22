@@ -5,7 +5,7 @@ import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
 import { NumberField } from "Components/NodeFields/NumberField";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "WidgetHandler";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 
 export function CreateLifetimeNode() {
