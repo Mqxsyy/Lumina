@@ -46,6 +46,7 @@ function SetTransparency({ data }: { data: NodeData }) {
 					DefaultText={tostring(transparencyFieldRef.current.GetValue())}
 					PlaceholderText={"..."}
 					TextToInputRatio={0.25}
+					Disabled={(data.node as SetTransparencyAPI).nodeFields.transparency.valueBindNode !== undefined}
 					NumberChanged={transparencyChanged}
 				/>
 			</Div>

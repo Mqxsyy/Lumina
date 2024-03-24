@@ -21,6 +21,8 @@ export class NumberField extends NodeField<number> {
 
 	SetValue = (newValue: number) => {
 		this.value = newValue;
+		this.valueBind = undefined;
+		this.valueBindNode = undefined;
 		this.FieldChanged.Fire();
 	};
 

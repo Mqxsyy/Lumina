@@ -8,7 +8,9 @@ export const StyleColorHexes = {
 
 	TextLight: "#F3F4F8",
 	TextDark: "#1A1A2E",
+
 	Highlight: "#5B5D6B",
+	Disabled: "#3d3d4d",
 
 	// Node Group
 	SpawnGroup: "#7FFF7F",
@@ -28,7 +30,9 @@ export const StyleColors = {
 
 	TextLight: Color3.fromHex(StyleColorHexes.TextLight),
 	TextDark: Color3.fromHex(StyleColorHexes.TextDark),
+
 	Highlight: Color3.fromHex(StyleColorHexes.Highlight),
+	Disabled: Color3.fromHex(StyleColorHexes.Disabled),
 
 	// Node Group
 	SpawnGroup: Color3.fromHex(StyleColorHexes.SpawnGroup),

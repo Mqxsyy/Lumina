@@ -17,6 +17,8 @@ interface Props {
 	IsAffectedByZoom?: boolean;
 	AllowNegative?: boolean;
 
+	Disabled?: boolean;
+
 	NumberChanged?: (number: number) => void;
 }
 
@@ -32,6 +34,7 @@ export function NumberInput({
 	Text = "",
 	IsAffectedByZoom = true,
 	AllowNegative = false,
+	Disabled = false,
 	NumberChanged = undefined,
 }: Props) {
 	const onTextChanged = (text: string) => {
@@ -63,6 +66,7 @@ export function NumberInput({
 			PlaceholderText={PlaceholderText}
 			Text={Text}
 			IsAffectedByZoom={IsAffectedByZoom}
+			Disabled={Disabled}
 			TextChanged={onTextChanged}
 		/>
 	);

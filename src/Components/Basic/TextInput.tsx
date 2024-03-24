@@ -16,6 +16,7 @@ interface Props {
 
 	IsAffectedByZoom?: boolean;
 
+	Disabled?: boolean;
 	TextChanged?: (text: string) => string;
 }
 
@@ -30,6 +31,7 @@ export function TextInput({
 	PlaceholderText,
 	Text = "",
 	IsAffectedByZoom = true,
+	Disabled = false,
 	TextChanged = undefined,
 }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
@@ -56,12 +58,17 @@ export function TextInput({
 
 	useEffect(() => {
 		if (textBoxRef.current === undefined) return;
-		const conn = textBoxRef.current!.GetPropertyChangedSignal("Text").Connect(textChanged);
+		let connection: undefined | RBXScriptConnection;
+
+		if (!Disabled) {
+			connection = textBoxRef.current.FocusLost.Connect(textChanged);
+		}
 
 		return () => {
-			conn.Disconnect();
+			if (connection === undefined) return;
+			connection.Disconnect();
 		};
-	}, [textBoxRef.current]);
+	}, [textBoxRef.current, Disabled]);
 
 	return (
 		<textbox
@@ -72,17 +79,19 @@ export function TextInput({
 					? new UDim2(Size.X.Scale, Size.X.Offset, Size.Y.Scale, Size.Y.Offset * zoomScale)
 					: Size
 			}
-			BackgroundColor3={StyleColors.Highlight}
+			BackgroundColor3={Disabled ? StyleColors.Disabled : StyleColors.Highlight}
 			BorderSizePixel={0}
 			TextSize={IsAffectedByZoom ? TextSize * zoomScale : TextSize}
 			FontFace={new Font(StyleText.FontId, FontWeight)}
-			TextColor3={TextColor}
+			TextColor3={Disabled ? StyleColors.TextLight : TextColor}
 			TextXAlignment={TextXAlignment}
 			PlaceholderText={PlaceholderText}
 			PlaceholderColor3={TextColor}
 			TextWrapped={true}
 			TextTruncate={Enum.TextTruncate.AtEnd}
-			Text={Text}
+			ClearTextOnFocus={!Disabled}
+			TextEditable={!Disabled}
+			Text={Disabled ? "-" : Text}
 			ref={textBoxRef}
 		>
 			<uipadding PaddingLeft={new UDim(0, 5)} />

@@ -14,6 +14,7 @@ interface Props {
 	TextToInputRatio?: number;
 	AllowNegative?: boolean;
 
+	Disabled?: boolean;
 	NumberChanged: (number: number) => void;
 }
 
@@ -24,6 +25,7 @@ export function NumberField({
 	PlaceholderText = "...",
 	TextToInputRatio = 0.5,
 	AllowNegative = false,
+	Disabled = false,
 	NumberChanged,
 }: Props) {
 	return (
@@ -36,6 +38,7 @@ export function NumberField({
 				PlaceholderText={PlaceholderText}
 				Text={DefaultText}
 				AllowNegative={AllowNegative}
+				Disabled={Disabled}
 				NumberChanged={NumberChanged}
 			/>
 		</Div>
