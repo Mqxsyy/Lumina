@@ -22,11 +22,6 @@ export function CreateParticlePlaneNode() {
 }
 
 function ParticlePlane({ data }: { data: NodeData }) {
-	const transparencyChanged = (number: number) => {
-		const transparencyField = (data.node as ParticlePlaneAPI).nodeFields.transparency;
-		transparencyField.SetValue(number);
-	};
-
 	const emissionChanged = (number: number) => {
 		const emissionField = (data.node as ParticlePlaneAPI).nodeFields.emission;
 		emissionField.SetValue(number);
@@ -36,7 +31,6 @@ function ParticlePlane({ data }: { data: NodeData }) {
 		<Node Name="Particle Plane" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
-			<NumberField Label="Transparency" DefaultText="0" NumberChanged={transparencyChanged} />
 			<NumberField Label="Emission" DefaultText="1" NumberChanged={emissionChanged} />
 
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Color - White"} />

@@ -1,3 +1,4 @@
+import { InitializeLineGraph } from "Components/Graphs/Line/LineGraph";
 import { InitUI } from "UIHandler";
 import { GetWindow, InitializeWindows, Windows } from "Windows/WindowSevice";
 
@@ -7,7 +8,6 @@ const button = toolbar.CreateButton("Open Graph", "Opens Graph", "rbxassetid://7
 InitializeWindows(plugin); // widgets are bloody annoying to work with
 
 const window = GetWindow(Windows.CrescentVFX)!;
-window.Name = "CrescentVFX Graph";
 window.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; //--> why tf does this make the background images disappear near corners
 
 button.Click.Connect(() => {
@@ -15,5 +15,6 @@ button.Click.Connect(() => {
 });
 
 InitUI();
+InitializeLineGraph();
 
 // CreateBasicNodeSystem();

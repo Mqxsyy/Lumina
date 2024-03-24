@@ -23,7 +23,8 @@ export function CreateTransparencyOverLife() {
 function TransparencyOverLife({ data }: { data: NodeData }) {
 	return (
 		<Node Name="Transparency Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<LineGraphField Label={"Graph"} />
+			<uipadding PaddingLeft={new UDim(0, 10)} />
+			<LineGraphField Label={"Graph"} Graph={(data.node as TransparencyOverLifeAPI).graph} />
 		</Node>
 	);
 }

@@ -16,18 +16,6 @@ export const StyleColorHexes = {
 	UpdateGroup: "#FFFF00",
 	RenderGroup: "#FFA500",
 	EndGroup: "#FF0000",
-
-	// --
-
-	// hex100: "#F3F4F8",
-	// hex200: "#D2D4DA",
-	// hex300: "#B3B5BD",
-	// hex400: "#9496A1",
-	// hex500: "#777986",
-	// hex600: "#5B5D6B",
-	// hex700: "#404252",
-	// hex800: "#282A3A",
-	// hex900: "#101223",
 };
 
 export const StyleColors = {

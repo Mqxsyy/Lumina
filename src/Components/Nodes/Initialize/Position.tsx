@@ -7,7 +7,7 @@ import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 
 export function CreatePositionNode() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),
@@ -28,7 +28,7 @@ function Position({ data }: { data: NodeData }) {
 			<Vector3Field
 				NodeField={(data.node as PositionAPI).nodeFields.position}
 				Label={"Vector3"}
-				DefaultValue={Vector3.zero}
+				DefaultValue={(data.node as PositionAPI).nodeFields.position.GetValue()}
 			/>
 		</Node>
 	);

@@ -7,7 +7,6 @@ export function AutogenParticlePlane(node: ParticlePlane) {
 	let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Render", "ParticlePlane").ParticlePlane \n`;
 	src += `local ${varName} = ${className}.new() \n`;
 
-	src += `${varName}.nodeFields.transparency.SetValue(${node.nodeFields.transparency.GetValue()}) \n`;
 	src += `${varName}.nodeFields.color.SetValue(Vector3.new(${node.nodeFields.color.GetValue()})) \n`;
 	src += `${varName}.nodeFields.emission.SetValue(${node.nodeFields.emission.GetValue()}) \n`;
 	src += `${varName}.nodeFields.orientation.SetValue(${node.nodeFields.orientation.GetValue()}) \n`;

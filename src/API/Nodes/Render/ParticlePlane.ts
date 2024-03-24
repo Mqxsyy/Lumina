@@ -57,7 +57,6 @@ function CreateParticlePlane(): PlaneParticle {
 export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeFields = {
-		transparency: new NumberField(0), // value that can either exist on init or update
 		color: new Vector3Field(new Vector3(1, 1, 1)),
 		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),
@@ -87,14 +86,13 @@ export class ParticlePlane extends RenderNode {
 		const colorVec3 = this.nodeFields.color.GetValue();
 		particle.SurfaceGui.ImageLabel.ImageColor3 = new Color3(colorVec3.X, colorVec3.Y, colorVec3.Z);
 		particle.SurfaceGui.Brightness = this.nodeFields.emission.GetValue();
-		particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
+		particle.SurfaceGui.ImageLabel.ImageTransparency = 0;
+		particle.Position = Vector3.zero;
 
 		const orientation = this.nodeFields.orientation.GetValue();
 		if (orientation === Orientation.FacingCamera) {
 			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
 		}
-
-		particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
 
 		const id = GetNextParticleId();
 		CreateParticleData(id, particle);

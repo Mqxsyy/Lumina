@@ -1,2 +1,2 @@
-// Graph editors; curve & line
+// FIX AUTOGEN
 // Color picker; gradient

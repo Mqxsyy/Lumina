@@ -8,7 +8,7 @@ import { Event } from "API/Bindables/Event";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 
 export function CreateStaticForceNode() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),

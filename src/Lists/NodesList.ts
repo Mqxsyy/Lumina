@@ -2,6 +2,7 @@ import { NodeGroups } from "API/NodeGroup";
 import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { CreateLifetimeNode } from "Components/Nodes/Initialize/Lifetime";
 import { CreatePositionNode } from "Components/Nodes/Initialize/Position";
+import { CreateSetTransparencyNode } from "Components/Nodes/Initialize/SetTransparency";
 import { CreateRandomNumberNode } from "Components/Nodes/Logic/RandomNumber";
 import { CreateParticlePlaneNode } from "Components/Nodes/Render/ParticlePlane";
 import { CreateConstantSpawnNode } from "Components/Nodes/Spawn/ConstantSpawn";
@@ -26,6 +27,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 		Lifetime: {
 			name: "Lifetime",
 			create: () => CreateLifetimeNode(),
+		},
+		SetTranspaarency: {
+			name: "Set Transparency",
+			create: () => CreateSetTransparencyNode(),
 		},
 	},
 	[NodeGroups.Update]: {

@@ -1,7 +1,7 @@
 import { IdPool } from "API/IdPool";
 import { LerpNumber } from "API/Lib";
 
-interface GraphPoint {
+export interface GraphPoint {
 	id: number;
 	time: number;
 	value: number;
@@ -19,7 +19,7 @@ export class LineGraphField {
 	endPoint: GraphPoint = {
 		id: this.idPool.GetNextId(),
 		time: 1,
-		value: 0,
+		value: 1,
 	};
 
 	graphPoints: GraphPoint[] = [];

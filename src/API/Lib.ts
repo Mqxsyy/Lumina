@@ -14,3 +14,12 @@ export function RemapValue(value: number, oldMin: number, oldMax: number, newMin
 export function LerpNumber(a: number, b: number, t: number): number {
 	return a + (b - a) * t;
 }
+
+export function RoundDecimal(x: number, decimal: number) {
+	return FixFloatingPointError(math.round(x / decimal) * decimal);
+}
+
+export function FixFloatingPointError(value: number): number {
+	const shortened = string.format("%.3f", tostring(value));
+	return tonumber(shortened.gsub("%.?0+$", "")[0])!;
+}
