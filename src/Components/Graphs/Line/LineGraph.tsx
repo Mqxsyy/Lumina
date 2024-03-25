@@ -1,4 +1,4 @@
-import Roact, { useEffect, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { GraphPoint, LineGraphField } from "API/Fields/LineGraphField";
 import { RemapValue, RoundDecimal } from "API/Lib";
 import Div from "Components/Div";
@@ -6,6 +6,8 @@ import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import LineGraphPoint from "./LineGraphPoint";
 import { Event } from "API/Bindables/Event";
+
+const DOUBLE_CLICK_TIME = 0.25;
 
 export function InitializeLineGraph() {
 	Roact.mount(<LineGraph />, GetWindow(Windows.ValueGraph)!, "LineGraph");
@@ -31,6 +33,7 @@ export function LoadGraph(graph: LineGraphField) {
 function LineGraph() {
 	const [windowSize, setWindowSize] = useState(new Vector2(0, 0));
 	const [_, setForceRender] = useState(0);
+	const lastClickTime = useRef(0);
 
 	const UpdatePoint = (id: number, time: number, value: number) => {
 		const index = points.findIndex((point) => point.id === id);
@@ -40,8 +43,39 @@ function LineGraph() {
 		points[index].value = value;
 
 		graphAPI!.UpdateGraphPoint(id, time, value);
-
 		pointsChanged.Fire();
+
+		// may be less efficient than reloading each frame idk
+		const apiPoints = graphAPI!.GetPoints();
+		for (let i = 0; i < points.size() - 2; i++) {
+			if (points[i + 1].id !== apiPoints[i].id) {
+				LoadGraph(graphAPI!);
+			}
+		}
+	};
+
+	const RemovePoint = (id: number) => {
+		graphAPI!.RemoveGraphPoint(id);
+		LoadGraph(graphAPI!);
+	};
+
+	const OnBackgroundClick = () => {
+		if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
+			const window = GetWindow(Windows.ValueGraph)!;
+			const mousePosition = window.GetRelativeMousePosition();
+
+			const percentX = mousePosition.X / window.AbsoluteSize.X;
+			const percentY = mousePosition.Y / window.AbsoluteSize.Y;
+
+			const x = RoundDecimal(math.clamp(percentX, 0.1, 0.9), 0.01);
+			const y = RoundDecimal(math.clamp(1 - percentY, 0.1, 0.9), 0.01);
+
+			graphAPI!.AddGraphPoint(RemapValue(x, 0.1, 0.9, 0, 1), RemapValue(y, 0.1, 0.9, 0, 1));
+			LoadGraph(graphAPI!);
+			return;
+		}
+
+		lastClickTime.current = os.clock();
 	};
 
 	useEffect(() => {
@@ -59,7 +93,11 @@ function LineGraph() {
 
 	return (
 		<>
-			<Div Size={UDim2.fromScale(1, 1)} BackgroundColor={StyleColors.Background}>
+			<Div
+				Size={UDim2.fromScale(1, 1)}
+				BackgroundColor={StyleColors.Background}
+				onMouseButton1Down={OnBackgroundClick}
+			>
 				<frame
 					AnchorPoint={new Vector2(0, 0.5)}
 					Position={UDim2.fromOffset(0, 0.1 * windowSize.Y)}
@@ -104,6 +142,7 @@ function LineGraph() {
 				if (index === 0 || index === points.size() - 1) {
 					return (
 						<LineGraphPoint
+							key={point.id}
 							Id={point.id}
 							Position={position}
 							LockHorizontal={index === 0 ? 0 : 1}
@@ -112,7 +151,15 @@ function LineGraph() {
 					);
 				}
 
-				return <LineGraphPoint Id={point.id} Position={position} UpdatePoint={UpdatePoint} />;
+				return (
+					<LineGraphPoint
+						key={point.id}
+						Id={point.id}
+						Position={position}
+						UpdatePoint={UpdatePoint}
+						RemovePoint={RemovePoint}
+					/>
+				);
 			})}
 			{points.map((_, index) => {
 				if (index === points.size() - 1) return;

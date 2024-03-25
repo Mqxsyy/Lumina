@@ -10,9 +10,16 @@ interface Props {
 	Position: UDim2;
 	LockHorizontal?: number;
 	UpdatePoint: (id: number, time: number, value: number) => void;
+	RemovePoint?: (id: number) => void;
 }
 
-export default function LineGraphPoint({ Id, Position, LockHorizontal = -1, UpdatePoint }: Props) {
+export default function LineGraphPoint({
+	Id,
+	Position,
+	LockHorizontal = -1,
+	UpdatePoint,
+	RemovePoint = undefined,
+}: Props) {
 	const [isDragging, setIsDragging] = useState(false);
 
 	const onMouseButton1Down = () => {
@@ -22,6 +29,11 @@ export default function LineGraphPoint({ Id, Position, LockHorizontal = -1, Upda
 	const onMouseButton1Up = () => {
 		setIsDragging(false);
 		RunService.UnbindFromRenderStep("MoveGraphPoint");
+	};
+
+	const onMouseButton2Up = () => {
+		if (RemovePoint === undefined) return;
+		RemovePoint(Id);
 	};
 
 	useEffect(() => {
@@ -58,6 +70,7 @@ export default function LineGraphPoint({ Id, Position, LockHorizontal = -1, Upda
 			BackgroundColor={StyleColors.Highlight}
 			onMouseButton1Down={onMouseButton1Down}
 			onMouseButton1Up={onMouseButton1Up}
+			onMouseButton2Up={onMouseButton2Up}
 		>
 			<uicorner CornerRadius={new UDim(1, 0)} />
 		</Div>

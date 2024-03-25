@@ -13,7 +13,9 @@ interface Props {
 	onHover?: () => void;
 	onUnhover?: () => void;
 	onMouseButton1Down?: (element: GuiObject) => void;
+	onMouseButton2Down?: (element: GuiObject) => void;
 	onMouseButton1Up?: (element: GuiObject) => void;
+	onMouseButton2Up?: (element: GuiObject) => void;
 }
 
 export default function Div({
@@ -28,7 +30,9 @@ export default function Div({
 	onHover = undefined,
 	onUnhover = undefined,
 	onMouseButton1Down = undefined,
+	onMouseButton2Down = undefined,
 	onMouseButton1Up = undefined,
+	onMouseButton2Up = undefined,
 	getFrame = undefined,
 	children,
 }: Roact.PropsWithChildren<Props>) {
@@ -65,16 +69,26 @@ export default function Div({
 					}
 				},
 				InputBegan: (element, inputObject) => {
-					if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
-						if (onMouseButton1Down !== undefined) {
-							onMouseButton1Down(element);
+					switch (inputObject.UserInputType) {
+						case Enum.UserInputType.MouseButton1: {
+							if (onMouseButton1Down !== undefined) onMouseButton1Down(element);
+							break;
+						}
+						case Enum.UserInputType.MouseButton2: {
+							if (onMouseButton2Down !== undefined) onMouseButton2Down(element);
+							break;
 						}
 					}
 				},
 				InputEnded: (element, inputObject) => {
-					if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
-						if (onMouseButton1Up !== undefined) {
-							onMouseButton1Up(element);
+					switch (inputObject.UserInputType) {
+						case Enum.UserInputType.MouseButton1: {
+							if (onMouseButton1Up !== undefined) onMouseButton1Up(element);
+							break;
+						}
+						case Enum.UserInputType.MouseButton2: {
+							if (onMouseButton2Up !== undefined) onMouseButton2Up(element);
+							break;
 						}
 					}
 				},

@@ -24,6 +24,10 @@ export class LineGraphField {
 
 	graphPoints: GraphPoint[] = [];
 
+	GetPoints() {
+		return this.graphPoints;
+	}
+
 	GetValue(t: number) {
 		if (this.graphPoints.size() === 0) {
 			return LerpNumber(this.startPoint.value, this.endPoint.value, t);
@@ -48,11 +52,8 @@ export class LineGraphField {
 	AddGraphPoint(time: number, value: number) {
 		const data = { id: this.idPool.GetNextId(), time, value };
 		this.graphPoints.push(data);
+		this.graphPoints.sort((a, b) => a.time < b.time);
 		return data;
-	}
-
-	RemoveGraphPoint(id: number) {
-		delete this.graphPoints[this.graphPoints.findIndex((point) => point.id === id)];
 	}
 
 	UpdateGraphPoint(id: number, time: number, value: number) {
@@ -61,5 +62,10 @@ export class LineGraphField {
 			this.graphPoints[index].time = time;
 			this.graphPoints[index].value = value;
 		}
+		this.graphPoints.sort((a, b) => a.time < b.time);
+	}
+
+	RemoveGraphPoint(id: number) {
+		delete this.graphPoints[this.graphPoints.findIndex((point) => point.id === id)];
 	}
 }
