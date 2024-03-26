@@ -6,7 +6,7 @@ import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 import { Event } from "API/Bindables/Event";
-import { ColorPickerField } from "Components/NodeFields/ColorPicker";
+import { ColorPickerField } from "Components/NodeFields/ColorPickerField";
 
 export function CreateParticlePlaneNode() {
 	return AddNode({
