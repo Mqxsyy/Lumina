@@ -1,4 +1,5 @@
-import { InitializeLineGraph } from "Components/Graphs/Line/LineGraph";
+import { InitializeLineGraph } from "Components/Windows/Line/LineGraph";
+import { InitializeColorPicker } from "Components/Windows/Pickers.tsx/ColorPicker";
 import { InitUI } from "UIHandler";
 import { GetWindow, InitializeWindows, Windows } from "Windows/WindowSevice";
 
@@ -15,6 +16,8 @@ button.Click.Connect(() => {
 });
 
 InitUI();
+
 InitializeLineGraph();
+InitializeColorPicker();
 
 // CreateBasicNodeSystem();

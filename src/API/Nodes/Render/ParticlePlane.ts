@@ -10,6 +10,7 @@ import { AutogenParticlePlane } from "../AutoGeneration/RenderNodes/AutoGenParti
 import { GetNextParticleId, CreateParticleData, GetParticleData } from "API/ParticleService";
 import { InitializeNode } from "../Initialize/InitializeNode";
 import { UpdateNode } from "../Update/UpdateNode";
+import { ColorField } from "API/Fields/ColorField";
 
 // TODO: make double sided, required reversed image if not symmetrical
 
@@ -57,7 +58,7 @@ function CreateParticlePlane(): PlaneParticle {
 export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeFields = {
-		color: new Vector3Field(new Vector3(1, 1, 1)),
+		color: new ColorField(255, 255, 255),
 		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),
 	};
@@ -82,9 +83,7 @@ export class ParticlePlane extends RenderNode {
 
 	Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
-
-		const colorVec3 = this.nodeFields.color.GetValue();
-		particle.SurfaceGui.ImageLabel.ImageColor3 = new Color3(colorVec3.X, colorVec3.Y, colorVec3.Z);
+		particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.color.GetColor();
 		particle.SurfaceGui.Brightness = this.nodeFields.emission.GetValue();
 		particle.SurfaceGui.ImageLabel.ImageTransparency = 0;
 		particle.Position = Vector3.zero;

@@ -1,26 +1,22 @@
 import Roact, { useEffect, useRef } from "@rbxts/roact";
-import { LineGraphField as LineGraphFieldAPI } from "API/Fields/LineGraphField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
-import { LoadGraph } from "Components/Windows/Line/LineGraph";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 
 interface Props {
 	Label: string;
 	TextToInputRatio?: number;
-	Graph: LineGraphFieldAPI;
 }
 
-export function LineGraphField({ Label, TextToInputRatio = 0.5, Graph }: Props) {
+export function ColorPickerField({ Label, TextToInputRatio = 0.5 }: Props) {
 	const windowRef = useRef<DockWidgetPluginGui>();
 
 	useEffect(() => {
-		windowRef.current = GetWindow(Windows.ValueGraph)!;
+		windowRef.current = GetWindow(Windows.ColorPicker)!;
 	}, []);
 
 	const OnMouseButton1Down = () => {
-		LoadGraph(Graph);
 		windowRef.current!.Enabled = !windowRef.current!.Enabled;
 	};
 

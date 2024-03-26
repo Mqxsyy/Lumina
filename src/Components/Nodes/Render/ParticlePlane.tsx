@@ -6,6 +6,7 @@ import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 import { Event } from "API/Bindables/Event";
+import { ColorPickerField } from "Components/NodeFields/ColorPicker";
 
 export function CreateParticlePlaneNode() {
 	return AddNode({
@@ -32,8 +33,7 @@ function ParticlePlane({ data }: { data: NodeData }) {
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
 			<NumberField Label="Emission" DefaultText="1" NumberChanged={emissionChanged} />
-
-			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Color - White"} />
+			<ColorPickerField Label="Color" />
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Orientation - Facing camera"} />
 		</Node>
 	);

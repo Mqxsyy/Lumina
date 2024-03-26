@@ -3,6 +3,7 @@ import { Event } from "API/Bindables/Event";
 export enum Windows {
 	CrescentVFX = "CrescentVFX",
 	ValueGraph = "Value Graph",
+	ColorPicker = "Color Picker",
 }
 
 export const OnWinowLoaded = new Event<[Windows]>();
@@ -15,6 +16,10 @@ const windows = {
 	[Windows.ValueGraph]: {
 		Widget: undefined as DockWidgetPluginGui | undefined,
 		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 500, 400, 200, 150),
+	},
+	[Windows.ColorPicker]: {
+		Widget: undefined as DockWidgetPluginGui | undefined,
+		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 400, 200, 200),
 	},
 };
 
