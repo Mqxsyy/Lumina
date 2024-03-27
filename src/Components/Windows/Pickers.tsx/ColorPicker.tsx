@@ -1,24 +1,20 @@
-import Roact from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import PickerCursor from "./PickerCursor";
+import { RunService } from "@rbxts/services";
 
 export function InitializeColorPicker() {
 	Roact.mount(<ColorPicker />, GetWindow(Windows.ColorPicker)!, "LineGraph");
 }
 
-const colorSequence1 = new ColorSequence([
-	new ColorSequenceKeypoint(0, Color3.fromRGB(255, 0, 0)),
-	new ColorSequenceKeypoint(1, Color3.fromRGB(255, 0, 0)),
-]);
-
-const colorSequence2 = new ColorSequence([
+const blackGradient = new ColorSequence([
 	new ColorSequenceKeypoint(0, Color3.fromRGB(0, 0, 0)),
 	new ColorSequenceKeypoint(1, Color3.fromRGB(0, 0, 0)),
 ]);
 
-const colorSequence3 = new ColorSequence([
+const hueRangeGradient = new ColorSequence([
 	new ColorSequenceKeypoint(0, Color3.fromRGB(255, 0, 0)),
 	new ColorSequenceKeypoint(1 / 6, Color3.fromRGB(255, 255, 0)),
 	new ColorSequenceKeypoint(2 / 6, Color3.fromRGB(0, 255, 0)),
@@ -31,26 +27,80 @@ const colorSequence3 = new ColorSequence([
 const transparency = new NumberSequence([new NumberSequenceKeypoint(0, 0), new NumberSequenceKeypoint(1, 1)]);
 
 function ColorPicker() {
+	const [cursor1, setCursor1] = useState(UDim2.fromScale(0, 0));
+	const [cursor2, setCursor2] = useState(UDim2.fromScale(0, 0.5));
+	const [hue, setHue] = useState(
+		new ColorSequence([
+			new ColorSequenceKeypoint(0, Color3.fromRGB(255, 0, 0)),
+			new ColorSequenceKeypoint(1, Color3.fromRGB(255, 0, 0)),
+		]),
+	);
+
+	const window = useRef<DockWidgetPluginGui>();
+
+	const onCursor1Down = () => {
+		RunService.BindToRenderStep("ColorPickerCursor1", Enum.RenderPriority.Input.Value, () => {
+			const mousePosition = window.current!.GetRelativeMousePosition();
+
+			const paddingX = window.current!.AbsoluteSize.X * 0.1;
+			const maxX = window.current!.AbsoluteSize.X * 0.8;
+			const x = math.clamp(mousePosition.X - paddingX, 1, maxX - 4);
+
+			const paddingY = window.current!.AbsoluteSize.Y * 0.1;
+			const maxY = window.current!.AbsoluteSize.Y * 0.7;
+			const y = math.clamp(mousePosition.Y - paddingY, 1, maxY - 4);
+
+			setCursor1(UDim2.fromOffset(x - 4.5, y - 4.5));
+		});
+	};
+
+	const onCursor1Up = () => {
+		RunService.UnbindFromRenderStep("ColorPickerCursor1");
+	};
+
+	const onCursor2Down = () => {
+		RunService.BindToRenderStep("ColorPickerCursor2", Enum.RenderPriority.Input.Value, () => {
+			const mousePosition = window.current!.GetRelativeMousePosition();
+
+			const paddingX = window.current!.AbsoluteSize.X * 0.1;
+			const maxX = window.current!.AbsoluteSize.X * 0.8;
+			const x = math.clamp(mousePosition.X - paddingX, 1, maxX - 4);
+
+			setCursor2(new UDim2(0, x - 4.5, 0.5, 0));
+
+			const hue = Color3.fromHSV(x / maxX, 1, 1);
+			setHue(new ColorSequence([new ColorSequenceKeypoint(0, hue), new ColorSequenceKeypoint(1, hue)]));
+		});
+	};
+
+	const onCursor2Up = () => {
+		RunService.UnbindFromRenderStep("ColorPickerCursor2");
+	};
+
+	useEffect(() => {
+		window.current = GetWindow(Windows.ColorPicker);
+	}, []);
+
 	return (
 		<Div BackgroundColor={StyleColors.Background}>
-			{/* padding */}
-
 			<Div
 				AnchorPoint={new Vector2(0.5, 0)}
+				Size={UDim2.fromScale(0.8, 0.7)}
 				Position={UDim2.fromScale(0.5, 0.1)}
-				Size={UDim2.fromScale(0.75, 0.5)}
 				BackgroundColor={Color3.fromHex("#FFFFFF")}
+				onMouseButton1Down={onCursor1Down}
+				onMouseButton1Up={onCursor1Up}
 			>
 				<uicorner CornerRadius={new UDim(0, 6)} />
 
 				<Div BackgroundColor={StyleColors.FullWhite}>
 					<uicorner CornerRadius={new UDim(0, 6)} />
-					<uigradient Color={colorSequence1} Transparency={transparency} Rotation={180} />
+					<uigradient Color={hue} Transparency={transparency} Rotation={180} />
 					<uistroke Color={StyleColors.Background} Thickness={1} />
 				</Div>
 				<Div BackgroundColor={StyleColors.FullWhite}>
 					<uicorner CornerRadius={new UDim(0, 6)} />
-					<uigradient Color={colorSequence2} Transparency={transparency} Rotation={-90} />
+					<uigradient Color={blackGradient} Transparency={transparency} Rotation={-90} />
 					<uistroke Color={StyleColors.Background} Thickness={1} />
 				</Div>
 				<Div>
@@ -61,20 +111,22 @@ function ColorPicker() {
 						PaddingRight={new UDim(0, 6)}
 					/>
 
-					<PickerCursor Position={UDim2.fromScale(0, 0)} />
+					<PickerCursor Position={cursor1} />
 				</Div>
 			</Div>
 			<Div
-				AnchorPoint={new Vector2(0.5, 0)}
-				Position={UDim2.fromScale(0.5, 0.65)}
-				Size={new UDim2(0.75, 0, 0, 10)}
+				AnchorPoint={new Vector2(0.5, 1)}
+				Position={UDim2.fromScale(0.5, 0.9)}
+				Size={new UDim2(0.8, 0, 0, 10)}
 				BackgroundColor={Color3.fromHex("#FFFFFF")}
+				onMouseButton1Down={onCursor2Down}
+				onMouseButton1Up={onCursor2Up}
 			>
 				<uicorner CornerRadius={new UDim(0, 6)} />
-				<uigradient Color={colorSequence3} />
+				<uigradient Color={hueRangeGradient} />
 				<uipadding PaddingLeft={new UDim(0, 6)} PaddingRight={new UDim(0, 6)} />
 
-				<PickerCursor Position={UDim2.fromScale(0, 0.5)} />
+				<PickerCursor Position={cursor2} />
 			</Div>
 		</Div>
 	);
