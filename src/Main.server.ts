@@ -1,5 +1,6 @@
 import { InitializeLineGraph } from "Components/Windows/Line/LineGraph";
 import { InitializeColorPicker } from "Components/Windows/Pickers.tsx/ColorPicker";
+import { InitializeColorRamp } from "Components/Windows/Ramps/ColorRamp";
 import { InitUI } from "UIHandler";
 import { GetWindow, InitializeWindows, Windows } from "Windows/WindowSevice";
 
@@ -19,5 +20,6 @@ InitUI();
 
 InitializeLineGraph();
 InitializeColorPicker();
+InitializeColorRamp();
 
 // CreateBasicNodeSystem();

@@ -104,6 +104,16 @@ function ColorPicker() {
 	}, []);
 
 	useEffect(() => {
+		if (window.current!.AbsoluteSize !== Vector2.zero) {
+			const maxX = window.current!.AbsoluteSize.X * 0.8;
+			const x = math.clamp(saturation * maxX, 1, maxX - 4);
+
+			const maxY = window.current!.AbsoluteSize.Y * 0.5;
+			const y = math.clamp((1 - value) * maxY, 1, maxY - 4);
+
+			setCursor1(UDim2.fromOffset(x - 4.5, y - 4.5));
+		}
+
 		const connection = window.current!.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
 			const maxX = window.current!.AbsoluteSize.X * 0.8;
 			const x = math.clamp(saturation * maxX, 1, maxX - 4);
@@ -118,6 +128,12 @@ function ColorPicker() {
 	}, [saturation, value]);
 
 	useEffect(() => {
+		if (window.current!.AbsoluteSize !== Vector2.zero) {
+			const maxX = window.current!.AbsoluteSize.X * 0.8;
+			const x = math.clamp(hue * maxX, 1, maxX - 4);
+			setCursor2(new UDim2(0, x - 4.5, 0.5, 0));
+		}
+
 		const connection = window.current!.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
 			const maxX = window.current!.AbsoluteSize.X * 0.8;
 			const x = math.clamp(hue * maxX, 1, maxX - 4);

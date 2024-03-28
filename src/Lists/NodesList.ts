@@ -6,6 +6,7 @@ import { CreateSetTransparencyNode } from "Components/Nodes/Initialize/SetTransp
 import { CreateRandomNumberNode } from "Components/Nodes/Logic/RandomNumber";
 import { CreateParticlePlaneNode } from "Components/Nodes/Render/ParticlePlane";
 import { CreateConstantSpawnNode } from "Components/Nodes/Spawn/ConstantSpawn";
+import { CreateColorOverLife } from "Components/Nodes/Update/ColorOverLife";
 import { CreateStaticForceNode } from "Components/Nodes/Update/StaticForce";
 import { CreateTransparencyOverLife } from "Components/Nodes/Update/TransparencyOverLife";
 
@@ -41,6 +42,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 		TransparencyOverLife: {
 			name: "Transparency Over Life",
 			create: () => CreateTransparencyOverLife(),
+		},
+		ColorOverLife: {
+			name: "Color Over Life",
+			create: () => CreateColorOverLife(),
 		},
 	},
 	[NodeGroups.Render]: {

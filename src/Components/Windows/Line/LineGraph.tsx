@@ -15,7 +15,7 @@ export function InitializeLineGraph() {
 
 const points: GraphPoint[] = [];
 const pointsChanged = new Event();
-let graphAPI: undefined | LineGraphField;
+let graphAPI: LineGraphField;
 
 export function LoadGraph(graph: LineGraphField) {
 	points.clear();
@@ -80,7 +80,7 @@ function LineGraph() {
 
 	useEffect(() => {
 		pointsChanged.Connect(() => {
-			setForceRender((prev) => (prev + 1 > 10 ? 0 : prev + 1));
+			setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 		});
 
 		const window = GetWindow(Windows.ValueGraph)!;
@@ -93,11 +93,7 @@ function LineGraph() {
 
 	return (
 		<>
-			<Div
-				Size={UDim2.fromScale(1, 1)}
-				BackgroundColor={StyleColors.Background}
-				onMouseButton1Down={OnBackgroundClick}
-			>
+			<Div BackgroundColor={StyleColors.Background} onMouseButton1Down={OnBackgroundClick}>
 				<frame
 					AnchorPoint={new Vector2(0, 0.5)}
 					Position={UDim2.fromOffset(0, 0.1 * windowSize.Y)}

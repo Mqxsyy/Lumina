@@ -4,6 +4,7 @@ export enum Windows {
 	CrescentVFX = "CrescentVFX",
 	ValueGraph = "Value Graph",
 	ColorPicker = "Color Picker",
+	ColorRamp = "Color Ramp",
 }
 
 export const OnWinowLoaded = new Event<[Windows]>();
@@ -20,6 +21,10 @@ const windows = {
 	[Windows.ColorPicker]: {
 		Widget: undefined as DockWidgetPluginGui | undefined,
 		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 400, 200, 200),
+	},
+	[Windows.ColorRamp]: {
+		Widget: undefined as DockWidgetPluginGui | undefined,
+		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 150, 200, 100),
 	},
 };
 
