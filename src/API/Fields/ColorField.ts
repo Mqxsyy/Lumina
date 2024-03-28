@@ -19,13 +19,16 @@ export class ColorField {
 
 	SetHue = (hue: number) => {
 		this.hue = hue;
+		this.FieldChanged.Fire();
 	};
 
 	SetSaturation = (saturation: number) => {
 		this.saturation = saturation;
+		this.FieldChanged.Fire();
 	};
 
 	SetValue = (value: number) => {
 		this.value = value;
+		this.FieldChanged.Fire();
 	};
 }

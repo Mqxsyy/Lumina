@@ -58,7 +58,7 @@ function CreateParticlePlane(): PlaneParticle {
 export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeFields = {
-		color: new ColorField(255, 255, 255),
+		color: new ColorField(0, 0, 1),
 		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),
 	};

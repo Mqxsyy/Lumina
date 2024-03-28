@@ -33,7 +33,7 @@ function ParticlePlane({ data }: { data: NodeData }) {
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
 			<NumberField Label="Emission" DefaultText="1" NumberChanged={emissionChanged} />
-			<ColorPickerField Label="Color" />
+			<ColorPickerField Label="Color" ColorPicker={(data.node as ParticlePlaneAPI).nodeFields.color} />
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Orientation - Facing camera"} />
 		</Node>
 	);
