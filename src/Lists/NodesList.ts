@@ -1,20 +1,12 @@
 import { NodeGroups } from "API/NodeGroup";
 import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
-import { CreateLifetimeNode } from "Components/Nodes/Initialize/Lifetime";
-import { CreatePositionNode } from "Components/Nodes/Initialize/Position";
-import { CreateSetTransparencyNode } from "Components/Nodes/Initialize/SetTransparency";
-import { CreateRandomNumberNode } from "Components/Nodes/Logic/RandomNumber";
-import { CreateParticlePlaneNode } from "Components/Nodes/Render/ParticlePlane";
-import { CreateConstantSpawnNode } from "Components/Nodes/Spawn/ConstantSpawn";
-import { CreateColorOverLife } from "Components/Nodes/Update/ColorOverLife";
-import { CreateStaticForceNode } from "Components/Nodes/Update/StaticForce";
-import { CreateTransparencyOverLife } from "Components/Nodes/Update/TransparencyOverLife";
+import * as Barrel from "./NodesListNodeBarrel";
 
 export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } } = {
 	[NodeGroups.Spawn]: {
 		ConstantSpawn: {
 			name: "Constant Spawn",
-			create: () => CreateConstantSpawnNode(),
+			create: () => Barrel.CreateConstantSpawnNode(),
 		},
 		BurstSpawn: {
 			name: "Burst Spawn",
@@ -23,35 +15,43 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 	[NodeGroups.Initialize]: {
 		Position: {
 			name: "Position",
-			create: () => CreatePositionNode(),
+			create: () => Barrel.CreatePositionNode(),
 		},
 		Lifetime: {
 			name: "Lifetime",
-			create: () => CreateLifetimeNode(),
+			create: () => Barrel.CreateLifetimeNode(),
+		},
+		SetSize: {
+			name: "Set Size",
+			create: () => Barrel.CreateSetSizeNode(),
+		},
+		SetColor: {
+			name: "Set Color",
+			create: () => Barrel.CreateSetColorNode(),
 		},
 		SetTranspaarency: {
 			name: "Set Transparency",
-			create: () => CreateSetTransparencyNode(),
+			create: () => Barrel.CreateSetTransparencyNode(),
 		},
 	},
 	[NodeGroups.Update]: {
 		StaticForce: {
 			name: "Static Force",
-			create: () => CreateStaticForceNode(),
+			create: () => Barrel.CreateStaticForceNode(),
 		},
 		TransparencyOverLife: {
 			name: "Transparency Over Life",
-			create: () => CreateTransparencyOverLife(),
+			create: () => Barrel.CreateTransparencyOverLife(),
 		},
 		ColorOverLife: {
 			name: "Color Over Life",
-			create: () => CreateColorOverLife(),
+			create: () => Barrel.CreateColorOverLife(),
 		},
 	},
 	[NodeGroups.Render]: {
 		ParticlePlane: {
 			name: "Plane",
-			create: () => CreateParticlePlaneNode(),
+			create: () => Barrel.CreateParticlePlaneNode(),
 		},
 	},
 	[NodeGroups.Logic]: {
@@ -60,7 +60,7 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 		},
 		RandomNumber: {
 			name: "Random Number",
-			create: () => CreateRandomNumberNode(),
+			create: () => Barrel.CreateRandomNumberNode(),
 		},
 	},
 };

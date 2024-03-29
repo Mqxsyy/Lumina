@@ -1,16 +1,14 @@
-import { NodeGroups } from "../../NodeGroup";
 import { RunService } from "@rbxts/services";
-import { ObjectPool } from "API/ObjectPool";
-import { GetLiveParticlesFolder } from "API/FolderLocations";
-import { RenderNode } from "./RenderNode";
 import { NumberField } from "API/Fields/NumberField";
-import { Vector3Field } from "API/Fields/Vector3Field";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
+import { GetLiveParticlesFolder } from "API/FolderLocations";
+import { ObjectPool } from "API/ObjectPool";
+import { CreateParticleData, GetNextParticleId, GetParticleData } from "API/ParticleService";
+import { NodeGroups } from "../../NodeGroup";
 import { AutogenParticlePlane } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
-import { GetNextParticleId, CreateParticleData, GetParticleData } from "API/ParticleService";
 import { InitializeNode } from "../Initialize/InitializeNode";
 import { UpdateNode } from "../Update/UpdateNode";
-import { ColorField } from "API/Fields/ColorField";
+import { RenderNode } from "./RenderNode";
 
 // TODO: make double sided, required reversed image if not symmetrical
 
@@ -58,7 +56,6 @@ function CreateParticlePlane(): PlaneParticle {
 export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeFields = {
-		color: new ColorField(0, 0, 1),
 		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),
 	};
@@ -83,7 +80,6 @@ export class ParticlePlane extends RenderNode {
 
 	Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
-		particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.color.GetColor();
 		particle.SurfaceGui.Brightness = this.nodeFields.emission.GetValue();
 		particle.SurfaceGui.ImageLabel.ImageTransparency = 0;
 		particle.Position = Vector3.zero;

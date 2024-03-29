@@ -1,12 +1,11 @@
 import Roact from "@rbxts/roact";
+import { Event } from "API/Bindables/Event";
 import { ParticlePlane as ParticlePlaneAPI } from "API/Nodes/Render/ParticlePlane";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberField } from "Components/NodeFields/NumberField";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
-import { Event } from "API/Bindables/Event";
-import { ColorPickerField } from "Components/NodeFields/ColorPickerField";
 
 export function CreateParticlePlaneNode() {
 	return AddNode({
@@ -33,7 +32,6 @@ function ParticlePlane({ data }: { data: NodeData }) {
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
 			<NumberField Label="Emission" DefaultText="1" NumberChanged={emissionChanged} />
-			<ColorPickerField Label="Color" ColorPicker={(data.node as ParticlePlaneAPI).nodeFields.color} />
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Orientation - Facing camera"} />
 		</Node>
 	);
