@@ -16,7 +16,7 @@ const windows = {
 	},
 	[Windows.ValueGraph]: {
 		Widget: undefined as DockWidgetPluginGui | undefined,
-		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 500, 400, 200, 150),
+		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 300, 200, 150),
 	},
 	[Windows.ColorPicker]: {
 		Widget: undefined as DockWidgetPluginGui | undefined,
