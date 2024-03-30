@@ -68,4 +68,20 @@ export class LineGraphField {
 	RemoveGraphPoint(id: number) {
 		delete this.graphPoints[this.graphPoints.findIndex((point) => point.id === id)];
 	}
+
+	GetLargestValue() {
+		let largest = this.startPoint.value;
+
+		for (const point of this.graphPoints) {
+			if (point.value > largest) {
+				largest = point.value;
+			}
+		}
+
+		if (this.endPoint.value > largest) {
+			largest = this.endPoint.value;
+		}
+
+		return largest;
+	}
 }

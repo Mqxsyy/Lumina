@@ -10,9 +10,10 @@ interface Props {
 	Label: string;
 	TextToInputRatio?: number;
 	Graph: LineGraphFieldAPI;
+	MaxValue?: number;
 }
 
-export function LineGraphField({ Label, TextToInputRatio = 0.5, Graph }: Props) {
+export function LineGraphField({ Label, TextToInputRatio = 0.5, Graph, MaxValue = 1 }: Props) {
 	const windowRef = useRef<DockWidgetPluginGui>();
 
 	useEffect(() => {
@@ -20,7 +21,7 @@ export function LineGraphField({ Label, TextToInputRatio = 0.5, Graph }: Props) 
 	}, []);
 
 	const OnMouseButton1Down = () => {
-		LoadGraph(Graph);
+		LoadGraph(Graph, MaxValue);
 		windowRef.current!.Enabled = !windowRef.current!.Enabled;
 	};
 

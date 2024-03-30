@@ -18,9 +18,16 @@ export function InitializeLineGraph() {
 
 const points: GraphPoint[] = [];
 const pointsChanged = new Event();
+let maxValue = 1;
 let graphAPI: LineGraphField;
 
-export function LoadGraph(graph: LineGraphField) {
+export function LoadGraph(graph: LineGraphField, max?: number) {
+	if (max !== undefined) {
+		maxValue = max;
+	} else {
+		maxValue = 1;
+	}
+
 	points.clear();
 
 	graphAPI = graph;
@@ -54,7 +61,7 @@ function LineGraph() {
 		return false;
 	};
 
-	const GetPointPosition = () => {
+	const GetPointPositionPercent = () => {
 		const window = GetWindow(Windows.ValueGraph)!;
 		const mousePosition = window.GetRelativeMousePosition();
 
@@ -68,7 +75,10 @@ function LineGraph() {
 	};
 
 	const UpdatePoint = (id: number, timeLock: number) => {
-		const [time, value] = GetPointPosition();
+		const [timePercent, valuePercent] = GetPointPositionPercent();
+
+		const time = RemapValue(timePercent, 0, 1, 0, maxValue);
+		const value = RemapValue(valuePercent, 0, 1, 0, maxValue);
 
 		if (timeLock !== -1) {
 			graphAPI!.UpdateGraphPoint(id, timeLock, value);
@@ -97,9 +107,14 @@ function LineGraph() {
 
 	const OnBackgroundClick = () => {
 		if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
-			const [x, y] = GetPointPosition();
-			graphAPI!.AddGraphPoint(x, y);
+			const [timePercent, valuePercent] = GetPointPositionPercent();
+
+			const time = RemapValue(timePercent, 0, 1, 0, maxValue);
+			const value = RemapValue(valuePercent, 0, 1, 0, maxValue);
+
+			graphAPI!.AddGraphPoint(time, value);
 			LoadGraph(graphAPI!);
+
 			return;
 		}
 
@@ -116,7 +131,7 @@ function LineGraph() {
 	const OnTimeInputChanged = (time: number) => {
 		if (selectedPointTimeLockedRef.current === true) return;
 
-		const clampedTime = math.clamp(time, 0, 1);
+		const clampedTime = math.clamp(time, 0, maxValue);
 		graphAPI.UpdateGraphPoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
 
 		if (ComparePoints()) return;
@@ -126,7 +141,7 @@ function LineGraph() {
 	};
 
 	const OnValueInputChanged = (value: number) => {
-		const clampedValue = math.clamp(value, 0, 1);
+		const clampedValue = math.clamp(value, 0, maxValue);
 		graphAPI.UpdateGraphPoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
 
 		if (ComparePoints()) return;
@@ -154,7 +169,7 @@ function LineGraph() {
 				{/* Horizontal */}
 				<frame
 					AnchorPoint={new Vector2(0, 0.5)}
-					Position={new UDim2(0, 0, 0.1, 0)}
+					Position={UDim2.fromScale(0, 0.1)}
 					Size={UDim2.fromOffset(windowSize.X, 1)}
 					BackgroundColor3={StyleColors.FullWhite}
 					BackgroundTransparency={0.75}
@@ -185,16 +200,41 @@ function LineGraph() {
 					BackgroundTransparency={0.75}
 					BorderSizePixel={0}
 				/>
+				{/* Top Left Text */}
+				<BasicTextLabel
+					AnchorPoint={new Vector2(1, 0)}
+					Position={new UDim2(0.1, -4, 0.1, 0)}
+					Size={new UDim2(0.1, 0, 0, 20)}
+					Text={tostring(maxValue)}
+					TextXAlignment={Enum.TextXAlignment.Right}
+				/>
+				{/* Bottom Left Text */}
+				<BasicTextLabel
+					AnchorPoint={new Vector2(1, 0)}
+					Position={new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE)}
+					Size={new UDim2(0.1, 0, 0, 20)}
+					Text={"0"}
+					TextXAlignment={Enum.TextXAlignment.Right}
+				/>
+				{/* Bottom Right Text */}
+				<BasicTextLabel
+					AnchorPoint={new Vector2(1, 0)}
+					Position={new UDim2(0.9, -4, 0.9, -BOTTOM_SIZE)}
+					Size={new UDim2(0.1, 0, 0, 20)}
+					Text={"1"}
+					TextXAlignment={Enum.TextXAlignment.Right}
+				/>
 			</Div>
 			{points.map((point, index) => {
 				const positionPercent = new Vector2(
 					RemapValue(point.time, 0, 1, 0.1, 0.9),
-					RemapValue(1 - point.value, 0, 1, 0.1, 0.9),
+					RemapValue(maxValue - point.value, 0, maxValue, 0.1, 0.9),
 				);
 
 				const position = UDim2.fromOffset(
 					positionPercent.X * windowSize.X,
-					positionPercent.Y * windowSize.Y - (1 - point.value) * BOTTOM_SIZE,
+					positionPercent.Y * windowSize.Y -
+						RemapValue(maxValue - point.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
 				);
 
 				if (index === 0 || index === points.size() - 1) {
@@ -228,17 +268,17 @@ function LineGraph() {
 				const p2 = points[index + 1];
 
 				const startTimePercent = RemapValue(p1.time, 0, 1, 0.1, 0.9);
-				const startValuePercent = RemapValue(1 - p1.value, 0, 1, 0.1, 0.9);
+				const startValuePercent = RemapValue(maxValue - p1.value, 0, maxValue, 0.1, 0.9);
 				const startPos = new Vector2(
 					startTimePercent * windowSize.X,
-					startValuePercent * windowSize.Y - (1 - p1.value) * BOTTOM_SIZE,
+					startValuePercent * windowSize.Y - RemapValue(maxValue - p1.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
 				);
 
 				const endTimePercent = RemapValue(p2.time, 0, 1, 0.1, 0.9);
-				const endValuePercent = RemapValue(1 - p2.value, 0, 1, 0.1, 0.9);
+				const endValuePercent = RemapValue(maxValue - p2.value, 0, maxValue, 0.1, 0.9);
 				const endPos = new Vector2(
 					endTimePercent * windowSize.X,
-					endValuePercent * windowSize.Y - (1 - p2.value) * BOTTOM_SIZE,
+					endValuePercent * windowSize.Y - RemapValue(maxValue - p2.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
 				);
 
 				const position = startPos.add(endPos.sub(startPos).mul(0.5));
