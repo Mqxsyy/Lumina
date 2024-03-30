@@ -34,11 +34,13 @@ export function LoadGraph(graph: LineGraphField) {
 }
 
 function LineGraph() {
-	const [selectedPoint, setSelectedPoint] = useState(undefined as GraphPoint | undefined);
-	const [selectedPointTimeLocked, setSelectedPointTimeLocked] = useState(false);
 	const [windowSize, setWindowSize] = useState(new Vector2(0, 0));
 	const [_, setForceRender] = useState(0);
 	const lastClickTime = useRef(0);
+
+	// need ref cuz state won't update properly inside a function
+	const selectedPointRef = useRef(undefined as GraphPoint | undefined);
+	const selectedPointTimeLockedRef = useRef(false);
 
 	const ComparePoints = () => {
 		const apiPoints = graphAPI!.GetPoints();
@@ -106,29 +108,30 @@ function LineGraph() {
 
 	const SelectPoint = (id: number, isTimeLocked: boolean) => {
 		const point = points.find((point) => point.id === id);
-		setSelectedPoint(point);
-		setSelectedPointTimeLocked(isTimeLocked);
+		selectedPointRef.current = point;
+		selectedPointTimeLockedRef.current = isTimeLocked;
+		pointsChanged.Fire();
 	};
 
 	const OnTimeInputChanged = (time: number) => {
-		if (selectedPointTimeLocked) return;
+		if (selectedPointTimeLockedRef.current === true) return;
 
-		graphAPI.UpdateGraphPoint(selectedPoint!.id, math.clamp(time, 0, 1), selectedPoint!.value);
+		const clampedTime = math.clamp(time, 0, 1);
+		graphAPI.UpdateGraphPoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
 
 		if (ComparePoints()) return;
 
-		selectedPoint!.time = time;
+		selectedPointRef.current!.time = clampedTime;
 		pointsChanged.Fire();
 	};
 
 	const OnValueInputChanged = (value: number) => {
-		print(selectedPoint!.id); // why is this always the first selected point????????????
-		// it updates everywhere else????
-		graphAPI.UpdateGraphPoint(selectedPoint!.id, selectedPoint!.time, math.clamp(value, 0, 1));
+		const clampedValue = math.clamp(value, 0, 1);
+		graphAPI.UpdateGraphPoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
 
 		if (ComparePoints()) return;
 
-		selectedPoint!.value = value;
+		selectedPointRef.current!.value = clampedValue;
 		pointsChanged.Fire();
 	};
 
@@ -280,10 +283,10 @@ function LineGraph() {
 					/>
 					<NumberInput
 						Size={new UDim2(0.75, 0, 0, 20)}
-						Text={selectedPoint === undefined ? "" : tostring(selectedPoint.time)}
+						Text={selectedPointRef.current === undefined ? "" : tostring(selectedPointRef.current.time)}
 						PlaceholderText={"..."}
 						NumberChanged={OnTimeInputChanged}
-						Disabled={selectedPoint === undefined || selectedPointTimeLocked}
+						Disabled={selectedPointRef.current === undefined || selectedPointTimeLockedRef.current}
 					/>
 				</Div>
 				<Div Size={UDim2.fromScale(0.5, 1)}>
@@ -302,10 +305,10 @@ function LineGraph() {
 					/>
 					<NumberInput
 						Size={new UDim2(0.75, 0, 0, 20)}
-						Text={selectedPoint === undefined ? "" : tostring(selectedPoint.value)}
+						Text={selectedPointRef.current === undefined ? "" : tostring(selectedPointRef.current.value)}
 						PlaceholderText={"..."}
 						NumberChanged={OnValueInputChanged}
-						Disabled={selectedPoint === undefined}
+						Disabled={(selectedPointRef.current === undefined) === undefined}
 					/>
 				</Div>
 			</Div>
