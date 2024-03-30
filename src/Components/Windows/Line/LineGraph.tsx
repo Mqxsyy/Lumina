@@ -1,7 +1,7 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { Event } from "API/Bindables/Event";
 import { GraphPoint, LineGraphField } from "API/Fields/LineGraphField";
-import { RemapValue, RoundDecimal } from "API/Lib";
+import { FixFloatingPointError, RemapValue, RoundDecimal } from "API/Lib";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumeberInput";
 import Div from "Components/Div";
@@ -53,7 +53,7 @@ function LineGraph() {
 		const apiPoints = graphAPI!.GetPoints();
 		for (let i = 0; i < points.size() - 2; i++) {
 			if (points[i + 1].id !== apiPoints[i].id) {
-				LoadGraph(graphAPI!);
+				LoadGraph(graphAPI!, maxValue);
 				return true;
 			}
 		}
@@ -75,10 +75,8 @@ function LineGraph() {
 	};
 
 	const UpdatePoint = (id: number, timeLock: number) => {
-		const [timePercent, valuePercent] = GetPointPositionPercent();
-
-		const time = RemapValue(timePercent, 0, 1, 0, maxValue);
-		const value = RemapValue(valuePercent, 0, 1, 0, maxValue);
+		const [time, valuePercent] = GetPointPositionPercent();
+		const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
 		if (timeLock !== -1) {
 			graphAPI!.UpdateGraphPoint(id, timeLock, value);
@@ -102,18 +100,16 @@ function LineGraph() {
 
 	const RemovePoint = (id: number) => {
 		graphAPI!.RemoveGraphPoint(id);
-		LoadGraph(graphAPI!);
+		LoadGraph(graphAPI!, maxValue);
 	};
 
 	const OnBackgroundClick = () => {
 		if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
-			const [timePercent, valuePercent] = GetPointPositionPercent();
-
-			const time = RemapValue(timePercent, 0, 1, 0, maxValue);
-			const value = RemapValue(valuePercent, 0, 1, 0, maxValue);
+			const [time, valuePercent] = GetPointPositionPercent();
+			const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
 			graphAPI!.AddGraphPoint(time, value);
-			LoadGraph(graphAPI!);
+			LoadGraph(graphAPI!, maxValue);
 
 			return;
 		}
@@ -165,6 +161,7 @@ function LineGraph() {
 
 	return (
 		<>
+			{/* Background */}
 			<Div BackgroundColor={StyleColors.Background} onMouseButton1Down={OnBackgroundClick}>
 				{/* Horizontal */}
 				<frame
@@ -225,6 +222,7 @@ function LineGraph() {
 					TextXAlignment={Enum.TextXAlignment.Right}
 				/>
 			</Div>
+			{/* Points */}
 			{points.map((point, index) => {
 				const positionPercent = new Vector2(
 					RemapValue(point.time, 0, 1, 0.1, 0.9),
@@ -261,6 +259,7 @@ function LineGraph() {
 					/>
 				);
 			})}
+			{/* Lines */}
 			{points.map((_, index) => {
 				if (index === points.size() - 1) return;
 
@@ -299,6 +298,7 @@ function LineGraph() {
 					/>
 				);
 			})}
+			{/* Controls */}
 			<Div
 				AnchorPoint={new Vector2(0, 1)}
 				Position={UDim2.fromScale(0, 1)}

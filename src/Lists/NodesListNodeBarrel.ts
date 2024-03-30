@@ -7,5 +7,6 @@ export { CreateRandomNumberNode } from "Components/Nodes/Logic/RandomNumber";
 export { CreateParticlePlaneNode } from "Components/Nodes/Render/ParticlePlane";
 export { CreateConstantSpawnNode } from "Components/Nodes/Spawn/ConstantSpawn";
 export { CreateColorOverLife } from "Components/Nodes/Update/ColorOverLife";
+export { CreateSizeOverLife } from "Components/Nodes/Update/SizeOverLife";
 export { CreateStaticForceNode } from "Components/Nodes/Update/StaticForce";
 export { CreateTransparencyOverLife } from "Components/Nodes/Update/TransparencyOverLife";

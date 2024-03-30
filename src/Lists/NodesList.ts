@@ -47,6 +47,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 			name: "Color Over Life",
 			create: () => Barrel.CreateColorOverLife(),
 		},
+		SizeOverLife: {
+			name: "Size Over Life",
+			create: () => Barrel.CreateSizeOverLife(),
+		},
 	},
 	[NodeGroups.Render]: {
 		ParticlePlane: {

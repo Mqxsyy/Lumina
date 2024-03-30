@@ -2,7 +2,11 @@ export const Rand = new Random(os.clock());
 
 export function RemapValue(value: number, oldMin: number, oldMax: number, newMin: number, newMax: number): number {
 	if (value < oldMin || value > oldMax) {
-		error("Input value is outside the specified range.");
+		error(`Input value is outside the specified range
+            Input: ${value},
+            RangeOld: ${oldMin} - ${oldMax} 
+            RangeNew: ${newMin} - ${newMax}
+        `);
 	}
 
 	const rangeFactor = (newMax - newMin) / (oldMax - oldMin);
