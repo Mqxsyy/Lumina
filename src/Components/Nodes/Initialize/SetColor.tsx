@@ -7,7 +7,7 @@ import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 
-export function CreateSetColorNode() {
+export function CreateSetColor() {
 	return AddNode({
 		data: {
 			id: GetNextNodeId(),
@@ -23,7 +23,7 @@ export function CreateSetColorNode() {
 
 function SetColor({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Transparency" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Color" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">

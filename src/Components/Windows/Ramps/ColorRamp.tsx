@@ -6,6 +6,8 @@ import ColorRampPoint from "./ColorRampPoint";
 import { ColorPoint, ColorRampField } from "API/Fields/ColorRampField";
 import { Event } from "API/Bindables/Event";
 
+// TODO: add number field values
+
 const DOUBLE_CLICK_TIME = 0.25;
 
 export function InitializeColorRamp() {

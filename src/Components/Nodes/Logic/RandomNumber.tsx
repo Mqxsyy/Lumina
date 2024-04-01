@@ -7,7 +7,7 @@ import { Node } from "../Node";
 import { Event } from "API/Bindables/Event";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
-export function CreateRandomNumberNode() {
+export function CreateRandomNumber() {
 	AddNode({
 		data: {
 			id: GetNextNodeId(),

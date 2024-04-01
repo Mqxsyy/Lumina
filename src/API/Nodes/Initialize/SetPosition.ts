@@ -4,7 +4,7 @@ import { InitializeNode } from "./InitializeNode";
 import { AutoGenPosition } from "../AutoGeneration/InitializeNodes/AutoGenPosition";
 import { GetParticleData } from "API/ParticleService";
 
-export class Position extends InitializeNode {
+export class SetPosition extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
 		position: Vector3Field;

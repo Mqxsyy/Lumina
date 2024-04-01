@@ -1,24 +1,26 @@
-import { NumberField } from "API/Fields/NumberField";
+import { Vector2Field } from "API/Fields/Vector2Field";
+import { Rand, RoundDecimal } from "API/Lib";
 import { GetParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 
-export class SetSize extends InitializeNode {
+export class SetSizeRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
-		size: NumberField;
+		range: Vector2Field;
 	};
 
 	constructor() {
 		super();
 
 		this.nodeFields = {
-			size: new NumberField(1),
+			range: new Vector2Field(new Vector2(1, 2)),
 		};
 	}
 
 	Initialize(id: number) {
-		const size = this.nodeFields.size.GetValue();
+		const range = this.nodeFields.range.GetValue();
+		const size = RoundDecimal(Rand.NextNumber(range.X, range.Y), 0.01);
 		GetParticleData(id).particle.Size = new Vector3(size, size, 0.001);
 	}
 

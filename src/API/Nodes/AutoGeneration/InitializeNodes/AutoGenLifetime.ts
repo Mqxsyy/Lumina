@@ -1,6 +1,6 @@
-import { Lifetime } from "API/Nodes/Initialize/Lifetime";
+import { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
 
-export function AutoGenLifetime(node: Lifetime) {
+export function AutoGenLifetime(node: SetLifetime) {
 	const className = `Lifetime${node.id}`;
 	const varName = `lifetime${node.id}`;
 

@@ -7,6 +7,8 @@ import { RunService } from "@rbxts/services";
 import { ColorField } from "API/Fields/ColorField";
 import { Event } from "API/Bindables/Event";
 
+// TODO: add number field values
+
 export function InitializeColorPicker() {
 	Roact.mount(<ColorPicker />, GetWindow(Windows.ColorPicker)!, "LineGraph");
 }

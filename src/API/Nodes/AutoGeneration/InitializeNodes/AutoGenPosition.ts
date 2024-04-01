@@ -1,6 +1,6 @@
-import { Position } from "API/Nodes/Initialize/Position";
+import { SetPosition } from "API/Nodes/Initialize/SetPosition";
 
-export function AutoGenPosition(node: Position) {
+export function AutoGenPosition(node: SetPosition) {
 	const className = `Position${node.id}`;
 	const varName = `position${node.id}`;
 

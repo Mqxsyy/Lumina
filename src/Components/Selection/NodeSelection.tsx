@@ -7,7 +7,8 @@ import { NodeList } from "Lists/NodesList";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystems } from "Lists/SystemsList";
 
-// TODO: make button connect to selection; add tracker which selection is open
+// TODO: make button connect to selection; add tracker which selection is open / make selection display less scuffed
+// TODO: add search
 
 const DIVIDER_SIZE_Y = 2;
 const SELECTION_WIDTH = 150;

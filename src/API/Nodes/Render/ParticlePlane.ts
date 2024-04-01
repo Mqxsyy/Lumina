@@ -1,5 +1,4 @@
 import { RunService } from "@rbxts/services";
-import { NumberField } from "API/Fields/NumberField";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
 import { GetLiveParticlesFolder } from "API/FolderLocations";
 import { ObjectPool } from "API/ObjectPool";
@@ -56,7 +55,6 @@ function CreateParticlePlane(): PlaneParticle {
 export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeFields = {
-		emission: new NumberField(1),
 		orientation: new OrientationField(Orientation.FacingCamera),
 	};
 
@@ -80,7 +78,6 @@ export class ParticlePlane extends RenderNode {
 
 	Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
-		particle.SurfaceGui.Brightness = this.nodeFields.emission.GetValue();
 		particle.SurfaceGui.ImageLabel.ImageTransparency = 0;
 		particle.Position = Vector3.zero;
 
@@ -108,6 +105,11 @@ export class ParticlePlane extends RenderNode {
 			updateNodes.forEach((node) => {
 				node.Update(id);
 			});
+
+			const particleData = GetParticleData(id);
+			if (particleData.velocity !== Vector3.zero) {
+				particle.Position = particle.Position.add(particleData.velocity.mul(dt));
+			}
 
 			if (orientation === Orientation.FacingCamera) {
 				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);

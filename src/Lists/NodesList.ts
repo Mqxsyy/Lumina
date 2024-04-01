@@ -6,65 +6,99 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
 	[NodeGroups.Spawn]: {
 		ConstantSpawn: {
 			name: "Constant Spawn",
-			create: () => Barrel.CreateConstantSpawnNode(),
-		},
-		BurstSpawn: {
-			name: "Burst Spawn",
+			create: () => Barrel.CreateConstantSpawn(),
 		},
 	},
 	[NodeGroups.Initialize]: {
-		Position: {
-			name: "Position",
-			create: () => Barrel.CreatePositionNode(),
+		SetColor: {
+			name: "Set Color",
+			create: () => Barrel.CreateSetColor(),
 		},
-		Lifetime: {
-			name: "Lifetime",
-			create: () => Barrel.CreateLifetimeNode(),
+		SetEmission: {
+			name: "Set Emission",
+			create: () => Barrel.CreateSetEmission(),
+		},
+		SetLifetime: {
+			name: "Set Lifetime",
+			create: () => Barrel.CreateSetLifetime(),
+		},
+		SetLifetimeRandom: {
+			name: "Set Lifetime Random",
+			create: () => Barrel.CreateSetLifetimeRandom(),
+		},
+		SetPosition: {
+			name: "Set Position",
+			create: () => Barrel.CreateSetPosition(),
+		},
+		SetRotationZ: {
+			name: "Set Rotation Z",
+			create: () => Barrel.CreateSetRotationZ(),
+		},
+		SetRotationZRandom: {
+			name: "Set Rotation Z Random",
+			create: () => Barrel.CreateRotationZRandom(),
 		},
 		SetSize: {
 			name: "Set Size",
-			create: () => Barrel.CreateSetSizeNode(),
+			create: () => Barrel.CreateSetSize(),
 		},
-		SetColor: {
-			name: "Set Color",
-			create: () => Barrel.CreateSetColorNode(),
+		SetSizeRandom: {
+			name: "Set Size Random",
+			create: () => Barrel.CreateSetSizeRandom(),
 		},
-		SetTranspaarency: {
+		SetTransparency: {
 			name: "Set Transparency",
-			create: () => Barrel.CreateSetTransparencyNode(),
+			create: () => Barrel.CreateSetTransparency(),
+		},
+		SetVelocity: {
+			name: "Set Velocity",
+			create: () => Barrel.CreateSetVelocity(),
+		},
+		SetVelocityRandom: {
+			name: "Set Velocity Random",
+			create: () => Barrel.CreateSetVelocityRandom(),
 		},
 	},
 	[NodeGroups.Update]: {
-		StaticForce: {
-			name: "Static Force",
-			create: () => Barrel.CreateStaticForceNode(),
+		AddRotationZ: {
+			name: "Add Rotation Z",
+			create: () => Barrel.CreateAddRotationZ(),
 		},
-		TransparencyOverLife: {
-			name: "Transparency Over Life",
-			create: () => Barrel.CreateTransparencyOverLife(),
+		AddRotationZRandom: {
+			name: "Add Rotation Z Random",
+			create: () => Barrel.CreateAddRotationZRandom(),
 		},
-		ColorOverLife: {
-			name: "Color Over Life",
-			create: () => Barrel.CreateColorOverLife(),
+		Drag: {
+			name: "Set Drag",
+			create: () => Barrel.CreateDrag(),
 		},
-		SizeOverLife: {
-			name: "Size Over Life",
-			create: () => Barrel.CreateSizeOverLife(),
+		MultiplySizeOverLife: {
+			name: "Multiply Size Over Life",
+			create: () => Barrel.CreateMultiplySizeOverLife(),
+		},
+		SetColorOverLife: {
+			name: "Set Color Over Life",
+			create: () => Barrel.CreateSetColorOverLife(),
+		},
+		SetSizeOverLife: {
+			name: "Set Size Over Life",
+			create: () => Barrel.CreateSetSizeOverLife(),
+		},
+		SetTransparencyOverLife: {
+			name: "Set Transparency Over Life",
+			create: () => Barrel.CreateSetTransparencyOverLife(),
 		},
 	},
 	[NodeGroups.Render]: {
 		ParticlePlane: {
 			name: "Plane",
-			create: () => Barrel.CreateParticlePlaneNode(),
+			create: () => Barrel.CreateParticlePlane(),
 		},
 	},
 	[NodeGroups.Logic]: {
-		ValueRamp: {
-			name: "Value Ramp",
-		},
 		RandomNumber: {
 			name: "Random Number",
-			create: () => Barrel.CreateRandomNumberNode(),
+			create: () => Barrel.CreateRandomNumber(),
 		},
 	},
 };

@@ -1,25 +1,24 @@
-import { NumberField } from "API/Fields/NumberField";
 import { GetParticleData } from "API/ParticleService";
+import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 
-export class SetSize extends InitializeNode {
+export class SetEmission extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
-		size: NumberField;
+		emission: NumberField;
 	};
 
 	constructor() {
 		super();
 
 		this.nodeFields = {
-			size: new NumberField(1),
+			emission: new NumberField(1),
 		};
 	}
 
 	Initialize(id: number) {
-		const size = this.nodeFields.size.GetValue();
-		GetParticleData(id).particle.Size = new Vector3(size, size, 0.001);
+		GetParticleData(id).particle.SurfaceGui.Brightness = this.nodeFields.emission.GetValue();
 	}
 
 	GetAutoGenerationCode() {

@@ -12,6 +12,8 @@ interface Props {
 	PlaceholderValues?: [string, string, string];
 }
 
+// maybe don't receive nodeField but instead just receive functions like all other fields
+
 export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues = ["...", "...", "..."] }: Props) {
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">

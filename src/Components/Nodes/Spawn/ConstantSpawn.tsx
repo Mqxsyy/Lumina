@@ -6,7 +6,7 @@ import { Node } from "../Node";
 import { Event } from "API/Bindables/Event";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
-export function CreateConstantSpawnNode() {
+export function CreateConstantSpawn() {
 	return AddNode({
 		data: {
 			id: GetNextNodeId(),

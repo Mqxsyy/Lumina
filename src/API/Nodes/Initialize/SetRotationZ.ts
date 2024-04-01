@@ -3,23 +3,24 @@ import { GetParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 
-export class SetSize extends InitializeNode {
+export class SetRotationZ extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
-		size: NumberField;
+		rotation: NumberField;
 	};
 
 	constructor() {
 		super();
 
 		this.nodeFields = {
-			size: new NumberField(1),
+			rotation: new NumberField(0),
 		};
 	}
 
 	Initialize(id: number) {
-		const size = this.nodeFields.size.GetValue();
-		GetParticleData(id).particle.Size = new Vector3(size, size, 0.001);
+		const particle = GetParticleData(id).particle;
+		const rotation = new Vector3(particle.Rotation.X, particle.Rotation.Y, this.nodeFields.rotation.GetValue());
+		GetParticleData(id).particle.Rotation = rotation;
 	}
 
 	GetAutoGenerationCode() {

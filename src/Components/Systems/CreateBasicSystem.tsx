@@ -1,38 +1,32 @@
-import { CreateConstantSpawnNode } from "Components/Nodes/Spawn/ConstantSpawn";
+import { CreateConstantSpawn } from "Components/Nodes/Spawn/ConstantSpawn";
 import { CreateEmptySystem } from "./CreateEmptySystem";
-import { CreateLifetimeNode } from "Components/Nodes/Initialize/Lifetime";
-import { CreateParticlePlaneNode } from "Components/Nodes/Render/ParticlePlane";
+import { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
+import { CreateParticlePlane } from "Components/Nodes/Render/ParticlePlane";
 import { NodeGroups } from "API/NodeGroup";
-import { CreateStaticForceNode } from "Components/Nodes/Update/StaticForce";
-import { CreatePositionNode } from "Components/Nodes/Initialize/Position";
-import { Position } from "API/Nodes/Initialize/Position";
+import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
+import { SetPosition } from "API/Nodes/Initialize/SetPosition";
 
 export function CreateBasicSystem() {
 	const systemData = CreateEmptySystem();
 
 	systemData.finishedBindingGroups.Connect(() => {
-		const constantSpawnNode = CreateConstantSpawnNode();
+		const constantSpawnNode = CreateConstantSpawn();
 		constantSpawnNode.elementLoaded.Connect(() => {
 			systemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawnNode.id);
 		});
 
-		const lifetimeNode = CreateLifetimeNode();
+		const lifetimeNode = CreateSetLifetime();
 		lifetimeNode.elementLoaded.Connect(() => {
 			systemData.addToNodeGroup[NodeGroups.Initialize]!(lifetimeNode.id);
 		});
 
-		const positionNode = CreatePositionNode();
-		(positionNode.node as Position).nodeFields.position.SetValueY(5);
+		const positionNode = CreateSetPosition();
+		(positionNode.node as SetPosition).nodeFields.position.SetValueY(5);
 		positionNode.elementLoaded.Connect(() => {
 			systemData.addToNodeGroup[NodeGroups.Initialize]!(positionNode.id);
 		});
 
-		const staticForceNode = CreateStaticForceNode();
-		staticForceNode.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Update]!(staticForceNode.id);
-		});
-
-		const particlePlaneNode = CreateParticlePlaneNode();
+		const particlePlaneNode = CreateParticlePlane();
 		particlePlaneNode.elementLoaded.Connect(() => {
 			systemData.addToNodeGroup[NodeGroups.Render]!(particlePlaneNode.id);
 		});

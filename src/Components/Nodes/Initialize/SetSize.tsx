@@ -8,7 +8,7 @@ import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 
-export function CreateSetSizeNode() {
+export function CreateSetSize() {
 	return AddNode({
 		data: {
 			id: GetNextNodeId(),
@@ -41,8 +41,8 @@ function SetSize({ data }: { data: NodeData }) {
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Size"}
 					DefaultText={tostring(sizeFieldRef.current!.GetValue())}
-					PlaceholderText={"..."}
 					TextToInputRatio={0.25}
+					Disabled={sizeFieldRef.current!.valueBindNode !== undefined}
 					NumberChanged={sizeChanged}
 				/>
 			</Div>

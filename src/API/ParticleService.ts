@@ -5,6 +5,7 @@ interface ParticleData {
 	particle: PlaneParticle;
 	lifetime: number;
 	spawnTime: number;
+	velocity: Vector3;
 }
 
 const idPool = new IdPool();
@@ -19,6 +20,7 @@ export function CreateParticleData(id: number, particle: PlaneParticle) {
 		particle: particle,
 		lifetime: 0,
 		spawnTime: os.clock(),
+		velocity: Vector3.zero,
 	});
 }
 

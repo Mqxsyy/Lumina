@@ -1,6 +1,6 @@
 import Roact, { useRef } from "@rbxts/roact";
 import { Event } from "API/Bindables/Event";
-import { SetTransparency as SetTransparencyAPI } from "API/Nodes/Initialize/SetTransparency";
+import { SetEmission as SetEmissionAPI } from "API/Nodes/Initialize/SetEmission";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
 import { NumberField } from "Components/NodeFields/NumberField";
@@ -8,45 +8,42 @@ import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 
-export function CreateSetTransparency() {
+export function CreateSetEmission() {
 	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetTransparencyAPI(),
+			node: new SetEmissionAPI(),
 			elementLoaded: new Event(),
 		},
 		create: (data: NodeData) => {
-			return <SetTransparency key={data.id} data={data} />;
+			return <SetEmission key={data.id} data={data} />;
 		},
 	});
 }
 
-function SetTransparency({ data }: { data: NodeData }) {
-	const transparencyFieldRef = useRef((data.node as SetTransparencyAPI).nodeFields.transparency);
+function SetEmission({ data }: { data: NodeData }) {
+	const emissionFieldRef = useRef((data.node as SetEmissionAPI).nodeFields.emission);
 
-	const transparencyChanged = (number: number) => {
-		transparencyFieldRef.current.SetValue(number);
+	const emissionChanged = (number: number) => {
+		emissionFieldRef.current.SetValue(number);
 	};
 
 	return (
-		<Node Name="Set Transparency" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Emission" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn
-					Size={UDim2.fromOffset(20, 20)}
-					BindFunction={transparencyFieldRef.current.BindValue}
-				/>
+				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={emissionFieldRef.current.BindValue} />
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
-					Label={"Value"}
-					DefaultText={tostring(transparencyFieldRef.current.GetValue())}
+					Label={"Emission"}
+					DefaultText={tostring(emissionFieldRef.current.GetValue())}
 					TextToInputRatio={0.25}
-					Disabled={transparencyFieldRef.current.valueBindNode !== undefined}
-					NumberChanged={transparencyChanged}
+					Disabled={emissionFieldRef.current.valueBindNode !== undefined}
+					NumberChanged={emissionChanged}
 				/>
 			</Div>
 		</Node>

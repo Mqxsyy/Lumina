@@ -3,7 +3,7 @@ import { UpdateNode } from "./UpdateNode";
 import { GetParticleData } from "API/ParticleService";
 import { ColorRampField } from "API/Fields/ColorRampField";
 
-export class ColorOverLife extends UpdateNode {
+export class SetColorOverLife extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeFields = {
 		ramp: new ColorRampField(),

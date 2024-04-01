@@ -18,8 +18,7 @@ export class SetTransparency extends InitializeNode {
 	}
 
 	Initialize(id: number) {
-		const particleData = GetParticleData(id);
-		particleData.particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
+		GetParticleData(id).particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetValue();
 	}
 
 	GetAutoGenerationCode() {

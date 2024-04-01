@@ -45,6 +45,7 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 		for (const [_, v] of pairs(NodeCategory)) {
 			if (v.create === undefined) continue;
 
+			// order is off??
 			setNodes((prev) => {
 				return [...prev, v];
 			});
@@ -71,26 +72,32 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 			</Div>
 			{hovering && (
 				<Div
-					Position={UDim2.fromScale(1, 0)}
-					Size={UDim2.fromScale(1, 10)}
-					onHover={onHoverSelection}
-					onUnhover={onUnhoverSelection}
+					Position={new UDim2(1, 5, 0, -3)}
+					Size={UDim2.fromOffset(200, nodes.size() < 8 ? nodes.size() * 30 + 1 : 8 * 30 + 1)}
+					BackgroundColor={StyleColors.Primary}
 				>
-					<frame
-						AnchorPoint={new Vector2(0.5, 0)}
-						Position={new UDim2(0.5, 0, 0, -3)}
-						Size={new UDim2(1, 0, 0, 0)}
-						BackgroundColor3={StyleColors.Primary}
-						AutomaticSize={"Y"}
+					<uicorner CornerRadius={StyleProperties.CornerRadius} />
+					<uipadding PaddingTop={new UDim(0, 3)} PaddingBottom={new UDim(0, 3)} />
+
+					<scrollingframe
+						Size={UDim2.fromScale(1, 1)}
+						ScrollBarThickness={6}
+						CanvasSize={UDim2.fromScale(1, 0)}
+						AutomaticCanvasSize={"Y"}
+						BackgroundTransparency={1}
+						ScrollingDirection={"Y"}
+						Event={{
+							MouseEnter: onHoverSelection,
+							MouseLeave: onUnhoverSelection,
+						}}
 					>
-						<uicorner CornerRadius={StyleProperties.CornerRadius} />
-						<uipadding PaddingTop={new UDim(0, 3)} PaddingBottom={new UDim(0, 3)} />
 						<uilistlayout FillDirection={"Vertical"} Padding={new UDim(0, 5)} />
+						<uipadding PaddingRight={new UDim(0, nodes.size() > 8 ? 6 : 0)} />
 
 						{nodes.map((node) => {
 							return <NodeSelectionButton Text={node.name} CreateFn={node.create} />;
 						})}
-					</frame>
+					</scrollingframe>
 				</Div>
 			)}
 		</Div>

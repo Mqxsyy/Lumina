@@ -18,8 +18,7 @@ export class SetColor extends InitializeNode {
 	}
 
 	Initialize(id: number) {
-		const particleData = GetParticleData(id);
-		particleData.particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.color.GetColor();
+		GetParticleData(id).particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.color.GetColor();
 	}
 
 	GetAutoGenerationCode() {
