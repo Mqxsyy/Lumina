@@ -37,6 +37,7 @@ function SetLifetimeRandom({ data }: { data: NodeData }) {
 
 				<Vector2Field
 					Label={"Range"}
+					ValueLabels={["Min", "Max"]}
 					DefaultValue={rangeFieldRef.current.GetValue()}
 					Vector2Changed={rangeChanged}
 				/>

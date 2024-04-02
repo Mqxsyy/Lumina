@@ -41,7 +41,7 @@ function SetLifetime({ data }: { data: NodeData }) {
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Lifetime"}
 					DefaultText={tostring(timeFieldRef.current.GetValue())}
-					TextToInputRatio={0.25}
+					TextToInputRatio={0.3}
 					Disabled={timeFieldRef.current.valueBindNode !== undefined}
 					NumberChanged={timeChanged}
 				/>

@@ -2,7 +2,6 @@ import Roact from "@rbxts/roact";
 import Div from "../Div";
 import { ControlButton } from "./ControlButton";
 import { GetNodeSystems } from "Services/NodeSystemService";
-import { ClearParticles } from "API/FolderLocations";
 import ExportAPI from "API/ExportAPI";
 import ExportAsScript from "API/VFXScriptCreator";
 
@@ -24,10 +23,6 @@ export function Controls() {
 		nodeSystems.forEach((nodeSystem) => {
 			nodeSystem.data.system.Stop();
 		});
-	};
-
-	const ClearLeftover = () => {
-		ClearParticles();
 	};
 
 	const Export = () => {
@@ -52,12 +47,6 @@ export function Controls() {
 				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
 				Text="Stop"
 				MouseButton1Down={Stop}
-			/>
-			<ControlButton
-				Position={UDim2.fromOffset(0, (BUTTON_HEIGHT + BUTTONS_PADDING) * 2)}
-				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
-				Text="Clear Leftover"
-				MouseButton1Down={ClearLeftover}
 			/>
 			<ControlButton
 				Position={UDim2.fromOffset(0, (BUTTON_HEIGHT + BUTTONS_PADDING) * 3)}

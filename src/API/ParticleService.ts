@@ -5,6 +5,7 @@ interface ParticleData {
 	particle: PlaneParticle;
 	lifetime: number;
 	spawnTime: number;
+	size: Vector3;
 	velocity: Vector3;
 }
 
@@ -20,6 +21,7 @@ export function CreateParticleData(id: number, particle: PlaneParticle) {
 		particle: particle,
 		lifetime: 0,
 		spawnTime: os.clock(),
+		size: new Vector3(1, 1, 1),
 		velocity: Vector3.zero,
 	});
 }

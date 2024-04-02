@@ -22,7 +22,7 @@ export class AddRotationZ extends UpdateNode {
 		const particle = GetParticleData(id).particle;
 		const zAddition = this.nodeFields.rotation.GetValue() * FrameRateMultiplier;
 		const rotation = new Vector3(particle.Rotation.X, particle.Rotation.Y, particle.Rotation.Z + zAddition);
-		GetParticleData(id).particle.Rotation = rotation;
+		particle.Rotation = rotation;
 	}
 
 	GetAutoGenerationCode() {

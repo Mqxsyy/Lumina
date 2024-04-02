@@ -3,6 +3,8 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumeberInput";
 import Div from "Components/Div";
 
+// TODO: make display old value instead of "..."
+
 interface Props {
 	Size?: UDim2;
 

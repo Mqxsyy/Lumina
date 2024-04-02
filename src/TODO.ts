@@ -1,2 +1,2 @@
 // FIX AUTOGEN
-// Color picker; gradient
+// add extra size to bg

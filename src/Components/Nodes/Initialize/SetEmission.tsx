@@ -41,7 +41,7 @@ function SetEmission({ data }: { data: NodeData }) {
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Emission"}
 					DefaultText={tostring(emissionFieldRef.current.GetValue())}
-					TextToInputRatio={0.25}
+					TextToInputRatio={0.4}
 					Disabled={emissionFieldRef.current.valueBindNode !== undefined}
 					NumberChanged={emissionChanged}
 				/>

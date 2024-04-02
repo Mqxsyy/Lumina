@@ -28,7 +28,6 @@ function SetColor({ data }: { data: NodeData }) {
 
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
-
 				<ColorPickerField Label="Color" ColorPicker={(data.node as SetColorAPI).nodeFields.color} />
 			</Div>
 		</Node>

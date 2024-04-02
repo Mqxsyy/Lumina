@@ -93,6 +93,17 @@ export class ParticlePlane extends RenderNode {
 			node.Initialize(id);
 		});
 
+		updateNodes.forEach((node) => {
+			node.Update(id);
+		});
+
+		if (orientation === Orientation.FacingCamera) {
+			const z = math.rad(particle.Rotation.Z);
+			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position).mul(
+				CFrame.Angles(0, 0, z),
+			);
+		}
+
 		let aliveTime = 0;
 		const lifetime = GetParticleData(id).lifetime;
 		const connection = RunService.RenderStepped.Connect((dt) => {
@@ -112,7 +123,10 @@ export class ParticlePlane extends RenderNode {
 			}
 
 			if (orientation === Orientation.FacingCamera) {
-				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
+				const z = math.rad(particle.Rotation.Z);
+				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position).mul(
+					CFrame.Angles(0, 0, z),
+				);
 			}
 
 			aliveTime += dt;

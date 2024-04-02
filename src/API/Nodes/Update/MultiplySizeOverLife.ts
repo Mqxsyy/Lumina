@@ -17,9 +17,8 @@ export class MultiplySizeOverLife extends UpdateNode {
 		const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
 		const muliplier = this.graph.GetValue(lifetime);
 
-		const particle = particleData.particle;
-		const x = particle.Size.X * muliplier;
-		const y = particle.Size.Y * muliplier;
+		const x = particleData.size.X * muliplier;
+		const y = particleData.size.Y * muliplier;
 
 		particleData.particle.Size = new Vector3(x, y, 0.001);
 	}

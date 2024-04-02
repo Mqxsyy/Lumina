@@ -29,6 +29,7 @@ function AddRotationZRandom({ data }: { data: NodeData }) {
 
 			<Vector2Field
 				Label={"Range"}
+				ValueLabels={["Min", "Max"]}
 				DefaultValue={rangeFieldRef.current.GetValue()}
 				Vector2Changed={rangeFieldRef.current.SetValue}
 			/>

@@ -10,17 +10,3 @@ if (displayVfxFolder === undefined) {
 export function GetLiveParticlesFolder(): Folder {
 	return displayVfxFolder as Folder;
 }
-
-export function ClearParticles() {
-	if (displayVfxFolder !== undefined) {
-		for (const child of displayVfxFolder.GetChildren()) {
-			if (child.IsA("Folder")) {
-				for (const particle of child.GetChildren()) {
-					particle.Destroy();
-				}
-			}
-
-			child.Destroy();
-		}
-	}
-}

@@ -3,12 +3,14 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { NumberField } from "./NumberField";
 
+// TODO: add inputs (can't simply add cause API isn't individual binds);
+
 interface Props {
 	Label: string;
 	ValueLabels?: [string, string];
 
 	DefaultValue: Vector2;
-	PlaceholderValues?: [string, string];
+	TextToInputRatios?: [number, number];
 
 	Vector2Changed: (vector2: Vector2) => void;
 }
@@ -17,7 +19,7 @@ export function Vector2Field({
 	Label,
 	ValueLabels = ["X", "Y"],
 	DefaultValue,
-	PlaceholderValues = ["...", "..."],
+	TextToInputRatios = [0.15, 0.15],
 	Vector2Changed,
 }: Props) {
 	const vector2Ref = useRef(DefaultValue);
@@ -46,15 +48,15 @@ export function Vector2Field({
 				<NumberField
 					Label={ValueLabels[0]}
 					DefaultText={tostring(DefaultValue.X)}
-					PlaceholderText={PlaceholderValues[0]}
 					AllowNegative={true}
+					TextToInputRatio={TextToInputRatios[0]}
 					NumberChanged={xChanged}
 				/>
 				<NumberField
 					Label={ValueLabels[1]}
 					DefaultText={tostring(DefaultValue.Y)}
-					PlaceholderText={PlaceholderValues[1]}
 					AllowNegative={true}
+					TextToInputRatio={TextToInputRatios[0]}
 					NumberChanged={yChanged}
 				/>
 			</Div>

@@ -5,6 +5,8 @@ import { NodeSelectionButton } from "./NodeSelectionButton";
 import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 
+// TODO: fix nodes order
+
 interface Props {
 	Text: string;
 	NodeCategory: { [key: string]: SelectionEntry };

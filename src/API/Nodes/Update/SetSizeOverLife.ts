@@ -1,7 +1,7 @@
-import { NodeGroups } from "API/NodeGroup";
-import { UpdateNode } from "./UpdateNode";
-import { GetParticleData } from "API/ParticleService";
 import { LineGraphField } from "API/Fields/LineGraphField";
+import { NodeGroups } from "API/NodeGroup";
+import { UpdateParticleData } from "API/ParticleService";
+import { UpdateNode } from "./UpdateNode";
 
 export class SetSizeOverLife extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
@@ -13,10 +13,16 @@ export class SetSizeOverLife extends UpdateNode {
 	}
 
 	Update(id: number) {
-		const particleData = GetParticleData(id);
-		const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
-		const size = this.graph.GetValue(lifetime);
-		particleData.particle.Size = new Vector3(size, size, 0.001);
+		UpdateParticleData(id, (data) => {
+			const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
+			const size = this.graph.GetValue(lifetime);
+			const sizeVector3 = new Vector3(size, size, 0.001);
+
+			data.size = sizeVector3;
+			data.particle.Size = sizeVector3;
+
+			return data;
+		});
 	}
 
 	GetAutoGenerationCode() {

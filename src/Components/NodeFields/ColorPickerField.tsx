@@ -6,6 +6,8 @@ import { LoadColorPickerAPI } from "Components/Windows/Pickers.tsx/ColorPicker";
 import { StyleProperties } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 
+// TODO: make it display the color in the field
+
 interface Props {
 	Label: string;
 	TextToInputRatio?: number;
