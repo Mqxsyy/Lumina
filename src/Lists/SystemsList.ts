@@ -4,11 +4,11 @@ import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 
 export const NodeSystems: { [key: string]: SelectionEntry } = {
 	Empty: {
-		name: "Empty",
+		name: "Create Empty",
 		create: () => CreateEmptySystem(),
 	},
 	Basic: {
-		name: "Basic",
+		name: "Create Basic",
 		create: () => CreateBasicSystem(),
 	},
 };

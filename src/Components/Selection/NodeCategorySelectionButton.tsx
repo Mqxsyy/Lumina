@@ -5,8 +5,6 @@ import { NodeSelectionButton } from "./NodeSelectionButton";
 import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 
-// TODO: fix nodes order
-
 interface Props {
 	Text: string;
 	NodeCategory: { [key: string]: SelectionEntry };
@@ -44,14 +42,15 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 	};
 
 	useEffect(() => {
+		const nodes = [];
+
 		for (const [_, v] of pairs(NodeCategory)) {
 			if (v.create === undefined) continue;
-
-			// order is off??
-			setNodes((prev) => {
-				return [...prev, v];
-			});
+			nodes.push(v);
 		}
+
+		// Nodes are rendered in alphabetical order
+		setNodes(nodes);
 	}, []);
 
 	return (
@@ -97,7 +96,9 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 						<uipadding PaddingRight={new UDim(0, nodes.size() > 8 ? 6 : 0)} />
 
 						{nodes.map((node) => {
-							return <NodeSelectionButton Text={node.name} CreateFn={node.create} />;
+							return (
+								<NodeSelectionButton ElementName={node.name} Text={node.name} CreateFn={node.create} />
+							);
 						})}
 					</scrollingframe>
 				</Div>

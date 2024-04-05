@@ -4,11 +4,12 @@ import { StyleColors, StyleProperties } from "Style";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 
 interface Props {
+	ElementName: string;
 	Text: string;
 	CreateFn?: () => void;
 }
 
-export function NodeSelectionButton({ Text, CreateFn }: Props) {
+export function NodeSelectionButton({ ElementName, Text, CreateFn }: Props) {
 	const [displayHighlight, setDisplayHighlight] = useState(false);
 
 	const onHover = () => {
@@ -26,7 +27,13 @@ export function NodeSelectionButton({ Text, CreateFn }: Props) {
 	};
 
 	return (
-		<Div Size={new UDim2(1, 0, 0, 25)} onHover={onHover} onUnhover={onUnhover} onMouseButton1Down={onClick}>
+		<Div
+			ElementName={ElementName}
+			Size={new UDim2(1, 0, 0, 25)}
+			onHover={onHover}
+			onUnhover={onUnhover}
+			onMouseButton1Down={onClick}
+		>
 			{displayHighlight && (
 				<frame
 					AnchorPoint={new Vector2(0.5, 0.5)}

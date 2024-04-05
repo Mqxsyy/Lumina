@@ -1,6 +1,7 @@
 import Roact, { useEffect } from "@rbxts/roact";
 
 interface Props {
+	ElementName?: string;
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export default function Div({
+	ElementName = undefined,
 	AnchorPoint = new Vector2(0, 0),
 	Position = new UDim2(0, 0, 0, 0),
 	Size = UDim2.fromScale(1, 1),
@@ -40,9 +42,14 @@ export default function Div({
 
 	useEffect(() => {
 		if (frameRef.current === undefined) return;
-		if (getFrame === undefined) return;
 
-		getFrame(frameRef.current);
+		if (ElementName !== undefined) {
+			frameRef.current.Name = ElementName;
+		}
+
+		if (getFrame !== undefined) {
+			getFrame(frameRef.current);
+		}
 	}, [frameRef.current]);
 
 	return (

@@ -7,7 +7,8 @@ export const StyleColorHexes = {
 	FullWhite: "#FFFFFF",
 
 	TextLight: "#F3F4F8",
-	TextDark: "#1A1A2E",
+	TextDark: "#1A1A2F",
+	TextDarkPlaceholder: "#3A3A4F", //3b3b59
 
 	Highlight: "#5B5D6B",
 	Disabled: "#3d3d4d",
@@ -30,6 +31,7 @@ export const StyleColors = {
 
 	TextLight: Color3.fromHex(StyleColorHexes.TextLight),
 	TextDark: Color3.fromHex(StyleColorHexes.TextDark),
+	TextDarkPlaceholder: Color3.fromHex(StyleColorHexes.TextDarkPlaceholder),
 
 	Highlight: Color3.fromHex(StyleColorHexes.Highlight),
 	Disabled: Color3.fromHex(StyleColorHexes.Disabled),

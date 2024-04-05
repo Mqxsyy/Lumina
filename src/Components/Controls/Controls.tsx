@@ -49,7 +49,7 @@ export function Controls() {
 				MouseButton1Down={Stop}
 			/>
 			<ControlButton
-				Position={UDim2.fromOffset(0, (BUTTON_HEIGHT + BUTTONS_PADDING) * 3)}
+				Position={UDim2.fromOffset(0, (BUTTON_HEIGHT + BUTTONS_PADDING) * 2)}
 				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
 				Text="Export"
 				MouseButton1Down={Export}

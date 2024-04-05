@@ -14,10 +14,13 @@ interface Props {
 	PlaceholderText: string;
 	Text?: string;
 
+	ClearTextOnFocus?: boolean;
+	AutoFocus?: boolean;
 	IsAffectedByZoom?: boolean;
 
 	Disabled?: boolean;
-	TextChanged?: (text: string) => string;
+	TextChanged?: (text: string) => string | void;
+	GetRef?: (textBox: TextBox) => void;
 }
 
 export function TextInput({
@@ -30,21 +33,28 @@ export function TextInput({
 	TextXAlignment = Enum.TextXAlignment.Left,
 	PlaceholderText,
 	Text = "",
+	ClearTextOnFocus = true,
+	AutoFocus = false,
 	IsAffectedByZoom = true,
 	Disabled = false,
 	TextChanged = undefined,
+	GetRef = undefined,
 }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
 	const textBoxRef = useRef<TextBox | undefined>();
-	const lastText = useRef<string>("");
+	const lastText = useRef<string>(""); // not sure if i need to check anymore
 
 	const textChanged = () => {
 		if (textBoxRef.current!.Text === lastText.current) return;
 		lastText.current = textBoxRef.current!.Text;
 
 		if (TextChanged !== undefined) {
-			textBoxRef.current!.Text = TextChanged(textBoxRef.current!.Text);
+			const newText = TextChanged(textBoxRef.current!.Text);
+
+			if (newText !== undefined && newText !== textBoxRef.current!.Text) {
+				textBoxRef.current!.Text = newText;
+			}
 		}
 	};
 
@@ -60,8 +70,16 @@ export function TextInput({
 		if (textBoxRef.current === undefined) return;
 		let connection: undefined | RBXScriptConnection;
 
+		if (GetRef !== undefined) {
+			GetRef(textBoxRef.current);
+		}
+
 		if (!Disabled) {
-			connection = textBoxRef.current.FocusLost.Connect(textChanged);
+			connection = textBoxRef.current.GetPropertyChangedSignal("Text").Connect(textChanged);
+		}
+
+		if (AutoFocus && !Disabled) {
+			textBoxRef.current.CaptureFocus();
 		}
 
 		return () => {
@@ -86,10 +104,10 @@ export function TextInput({
 			TextColor3={Disabled ? StyleColors.TextLight : TextColor}
 			TextXAlignment={TextXAlignment}
 			PlaceholderText={PlaceholderText}
-			PlaceholderColor3={TextColor}
+			PlaceholderColor3={StyleColors.TextDarkPlaceholder}
 			TextWrapped={true}
 			TextTruncate={Enum.TextTruncate.AtEnd}
-			ClearTextOnFocus={!Disabled}
+			ClearTextOnFocus={Disabled ? false : ClearTextOnFocus}
 			TextEditable={!Disabled}
 			Text={Disabled ? "-" : Text}
 			ref={textBoxRef}
