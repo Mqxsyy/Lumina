@@ -30,7 +30,7 @@ function SetVelocity({ data }: { data: NodeData }) {
 			<Vector3Field
 				NodeField={velocityFieldRef.current}
 				Label={"Velocity"}
-				DefaultValue={velocityFieldRef.current.GetValue()}
+				DefaultValue={velocityFieldRef.current.GetVector3()}
 			/>
 		</Node>
 	);

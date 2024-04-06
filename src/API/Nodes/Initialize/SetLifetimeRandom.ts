@@ -3,6 +3,7 @@ import { Rand, RoundDecimal } from "API/Lib";
 import { UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
+import { AutoGenSetLifetimeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetimeRandom";
 
 export class SetLifetimeRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -14,12 +15,12 @@ export class SetLifetimeRandom extends InitializeNode {
 		super();
 
 		this.nodeFields = {
-			range: new Vector2Field(new Vector2(0.5, 1)),
+			range: new Vector2Field(0.5, 1),
 		};
 	}
 
 	Initialize(id: number) {
-		const range = this.nodeFields.range.GetValue();
+		const range = this.nodeFields.range.GetVector2();
 		const lifetime = RoundDecimal(Rand.NextNumber(range.X, range.Y), 0.01);
 
 		UpdateParticleData(id, (data) => {
@@ -29,6 +30,6 @@ export class SetLifetimeRandom extends InitializeNode {
 	}
 
 	GetAutoGenerationCode() {
-		return "";
+		return AutoGenSetLifetimeRandom(this);
 	}
 }

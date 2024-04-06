@@ -28,7 +28,6 @@ function CreateScript(name: string, nodeSystem: NodeSystem) {
 --[[
     Auto generated script.
     Call .Start() to run the VFX.
-    Feel free to move this file.
 ]]
 
 local VFXScript = {}

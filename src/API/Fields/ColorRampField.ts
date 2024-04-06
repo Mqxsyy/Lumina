@@ -1,6 +1,6 @@
 import { IdPool } from "API/IdPool";
 import { ColorField } from "./ColorField";
-import { Event } from "API/Bindables/Event";
+import { NodeField } from "./NodeField";
 
 // BUG: last frame sometimes diff color (white?)
 
@@ -10,10 +10,8 @@ export interface ColorPoint {
 	color: ColorField;
 }
 
-export class ColorRampField {
+export class ColorRampField extends NodeField {
 	idPool = new IdPool();
-
-	FieldChanged = new Event();
 
 	startPoint: ColorPoint = {
 		id: this.idPool.GetNextId(),
@@ -33,7 +31,7 @@ export class ColorRampField {
 		return this.colorPoints;
 	}
 
-	GetValue(t: number) {
+	GetColor(t: number) {
 		if (this.colorPoints.size() === 0) {
 			return this.startPoint.color.GetColor().Lerp(this.endPoint.color.GetColor(), t);
 		}
@@ -52,14 +50,14 @@ export class ColorRampField {
 		return lastPoint.color.GetColor().Lerp(this.endPoint.color.GetColor(), alpha);
 	}
 
-	AddRampPoint(time: number, color: Vector3) {
+	AddPoint(time: number, color: Vector3) {
 		const data = { id: this.idPool.GetNextId(), time, color: new ColorField(color.X, color.Y, color.Z) };
 		this.colorPoints.push(data);
 		this.colorPoints.sort((a, b) => a.time < b.time);
 		return data;
 	}
 
-	UpdateRampPointTime(id: number, time: number) {
+	UpdatePointTime(id: number, time: number) {
 		const index = this.colorPoints.findIndex((point) => point.id === id);
 		if (index !== -1) {
 			this.colorPoints[index].time = time;
@@ -67,7 +65,7 @@ export class ColorRampField {
 		this.colorPoints.sort((a, b) => a.time < b.time);
 	}
 
-	RemoveRampPoint(id: number) {
+	RemovePoint(id: number) {
 		delete this.colorPoints[this.colorPoints.findIndex((point) => point.id === id)];
 	}
 }

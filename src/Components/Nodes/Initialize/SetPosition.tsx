@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import Roact, { useRef } from "@rbxts/roact";
 import { Event } from "API/Bindables/Event";
 import { SetPosition as SetPositionAPI } from "API/Nodes/Initialize/SetPosition";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
@@ -21,14 +21,16 @@ export function CreateSetPosition() {
 }
 
 function SetPosition({ data }: { data: NodeData }) {
+	const positionFieldRef = useRef((data.node as SetPositionAPI).nodeFields.position);
+
 	return (
 		<Node Name="Set Position" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
 			<Vector3Field
-				NodeField={(data.node as SetPositionAPI).nodeFields.position}
+				NodeField={positionFieldRef.current}
 				Label={"Position"}
-				DefaultValue={(data.node as SetPositionAPI).nodeFields.position.GetValue()}
+				DefaultValue={positionFieldRef.current.GetVector3()}
 			/>
 		</Node>
 	);

@@ -25,10 +25,6 @@ export function CreateSetRotationZ() {
 function SetRotationZ({ data }: { data: NodeData }) {
 	const rotationFieldRef = useRef((data.node as SetRotationZAPI).nodeFields.rotation);
 
-	const timeChanged = (number: number) => {
-		rotationFieldRef.current.SetValue(number);
-	};
-
 	return (
 		<Node Name="Set Rotation Z" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
@@ -36,14 +32,14 @@ function SetRotationZ({ data }: { data: NodeData }) {
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={rotationFieldRef.current.BindValue} />
+				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={rotationFieldRef.current.BindNumber} />
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Rotation"}
-					DefaultText={tostring(rotationFieldRef.current.GetValue())}
+					DefaultText={tostring(rotationFieldRef.current.GetNumber())}
 					TextToInputRatio={0.25}
-					Disabled={rotationFieldRef.current.valueBindNode !== undefined}
-					NumberChanged={timeChanged}
+					Disabled={rotationFieldRef.current.boundNode !== undefined}
+					NumberChanged={rotationFieldRef.current.SetNumber}
 				/>
 			</Div>
 		</Node>

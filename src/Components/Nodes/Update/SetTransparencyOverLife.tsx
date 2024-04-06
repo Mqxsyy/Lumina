@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import Roact, { useRef } from "@rbxts/roact";
 import { Node } from "../Node";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { SetTransparencyOverLife as TransparencyOverLifeAPI } from "API/Nodes/Update/SetTransparencyOverLife";
@@ -21,10 +21,12 @@ export function CreateSetTransparencyOverLife() {
 }
 
 function SetTransparencyOverLife({ data }: { data: NodeData }) {
+	const graphFieldRef = useRef((data.node as TransparencyOverLifeAPI).nodeFields.graph);
+
 	return (
 		<Node Name="Set Transparency Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
-			<LineGraphField Label={"Graph"} Graph={(data.node as TransparencyOverLifeAPI).graph} />
+			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} />
 		</Node>
 	);
 }

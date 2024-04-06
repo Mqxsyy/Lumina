@@ -25,10 +25,6 @@ export function CreateSetEmission() {
 function SetEmission({ data }: { data: NodeData }) {
 	const emissionFieldRef = useRef((data.node as SetEmissionAPI).nodeFields.emission);
 
-	const emissionChanged = (number: number) => {
-		emissionFieldRef.current.SetValue(number);
-	};
-
 	return (
 		<Node Name="Set Emission" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
@@ -36,14 +32,14 @@ function SetEmission({ data }: { data: NodeData }) {
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={emissionFieldRef.current.BindValue} />
+				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={emissionFieldRef.current.BindNumber} />
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Emission"}
-					DefaultText={tostring(emissionFieldRef.current.GetValue())}
+					DefaultText={tostring(emissionFieldRef.current.GetNumber())}
 					TextToInputRatio={0.4}
-					Disabled={emissionFieldRef.current.valueBindNode !== undefined}
-					NumberChanged={emissionChanged}
+					Disabled={emissionFieldRef.current.boundNode !== undefined}
+					NumberChanged={emissionFieldRef.current.SetNumber}
 				/>
 			</Div>
 		</Node>

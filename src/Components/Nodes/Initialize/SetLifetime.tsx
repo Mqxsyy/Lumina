@@ -25,10 +25,6 @@ export function CreateSetLifetime() {
 function SetLifetime({ data }: { data: NodeData }) {
 	const timeFieldRef = useRef((data.node as SetLifetimeAPI).nodeFields.time);
 
-	const timeChanged = (number: number) => {
-		timeFieldRef.current.SetValue(number);
-	};
-
 	return (
 		<Node Name="Set Lifetime" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
@@ -36,14 +32,14 @@ function SetLifetime({ data }: { data: NodeData }) {
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={timeFieldRef.current.BindValue} />
+				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={timeFieldRef.current.BindNumber} />
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Lifetime"}
-					DefaultText={tostring(timeFieldRef.current.GetValue())}
+					DefaultText={tostring(timeFieldRef.current.GetNumber())}
 					TextToInputRatio={0.3}
-					Disabled={timeFieldRef.current.valueBindNode !== undefined}
-					NumberChanged={timeChanged}
+					Disabled={timeFieldRef.current.boundNode !== undefined}
+					NumberChanged={timeFieldRef.current.SetNumber}
 				/>
 			</Div>
 		</Node>

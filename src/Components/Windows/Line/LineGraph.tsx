@@ -81,9 +81,9 @@ function LineGraph() {
 		const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
 		if (timeLock !== -1) {
-			graphAPI!.UpdateGraphPoint(id, timeLock, value);
+			graphAPI!.UpdatePoint(id, timeLock, value);
 		} else {
-			graphAPI!.UpdateGraphPoint(id, time, value);
+			graphAPI!.UpdatePoint(id, time, value);
 		}
 
 		if (ComparePoints()) return;
@@ -101,7 +101,7 @@ function LineGraph() {
 	};
 
 	const RemovePoint = (id: number) => {
-		graphAPI!.RemoveGraphPoint(id);
+		graphAPI!.RemovePoint(id);
 		LoadGraph(graphAPI!, maxValue);
 	};
 
@@ -110,7 +110,7 @@ function LineGraph() {
 			const [time, valuePercent] = GetPointPositionPercent();
 			const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
-			graphAPI!.AddGraphPoint(time, value);
+			graphAPI!.AddPoint(time, value);
 			LoadGraph(graphAPI!, maxValue);
 
 			return;
@@ -130,7 +130,7 @@ function LineGraph() {
 		if (selectedPointTimeLockedRef.current === true) return;
 
 		const clampedTime = math.clamp(time, 0, maxValue);
-		graphAPI.UpdateGraphPoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
+		graphAPI.UpdatePoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
 
 		if (ComparePoints()) return;
 
@@ -140,7 +140,7 @@ function LineGraph() {
 
 	const OnValueInputChanged = (value: number) => {
 		const clampedValue = math.clamp(value, 0, maxValue);
-		graphAPI.UpdateGraphPoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
+		graphAPI.UpdatePoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
 
 		if (ComparePoints()) return;
 

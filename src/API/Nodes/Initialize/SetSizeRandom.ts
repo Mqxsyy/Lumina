@@ -3,6 +3,7 @@ import { Rand, RoundDecimal } from "API/Lib";
 import { UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
+import { AutoGenSetSizeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetSizeRandom";
 
 export class SetSizeRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -14,13 +15,13 @@ export class SetSizeRandom extends InitializeNode {
 		super();
 
 		this.nodeFields = {
-			range: new Vector2Field(new Vector2(1, 2)),
+			range: new Vector2Field(0, 0),
 		};
 	}
 
 	Initialize(id: number) {
 		UpdateParticleData(id, (data) => {
-			const range = this.nodeFields.range.GetValue();
+			const range = this.nodeFields.range.GetVector2();
 			const size = RoundDecimal(Rand.NextNumber(range.X, range.Y), 0.01);
 			const sizeVector3 = new Vector3(size, size, 0.001);
 
@@ -32,6 +33,6 @@ export class SetSizeRandom extends InitializeNode {
 	}
 
 	GetAutoGenerationCode() {
-		return "";
+		return AutoGenSetSizeRandom(this);
 	}
 }

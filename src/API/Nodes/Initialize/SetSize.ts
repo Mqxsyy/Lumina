@@ -2,6 +2,7 @@ import { NumberField } from "API/Fields/NumberField";
 import { UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
+import { AutoGenSetSize } from "../AutoGeneration/InitializeNodes/AutoGenSetSize";
 
 export class SetSize extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -19,7 +20,7 @@ export class SetSize extends InitializeNode {
 
 	Initialize(id: number) {
 		UpdateParticleData(id, (data) => {
-			const size = this.nodeFields.size.GetValue();
+			const size = this.nodeFields.size.GetNumber();
 			const sizeVector3 = new Vector3(size, size, 0.001);
 
 			data.size = sizeVector3;
@@ -30,6 +31,6 @@ export class SetSize extends InitializeNode {
 	}
 
 	GetAutoGenerationCode() {
-		return "";
+		return AutoGenSetSize(this);
 	}
 }

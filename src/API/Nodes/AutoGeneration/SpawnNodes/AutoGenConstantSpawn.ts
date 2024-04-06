@@ -6,7 +6,7 @@ export function AutoGenConstantSpawn(node: ConstantSpawn) {
 
 	let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Spawn", "ConstantSpawn").ConstantSpawn \n`;
 	src += `local ${varName} = ${className}.new() \n`;
-	src += `${varName}.nodeFields.rate.SetValue(${node.nodeFields.rate.GetValue()}) \n`;
+	src += `${varName}.nodeFields.rate.SetNumber(${node.nodeFields.rate.GetNumber()}) \n`;
 	src += `nodeSystem:AddNode(${varName})`;
 
 	return src;

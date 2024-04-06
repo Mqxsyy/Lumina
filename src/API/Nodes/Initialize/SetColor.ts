@@ -2,6 +2,7 @@ import { ColorField } from "API/Fields/ColorField";
 import { GetParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
+import { AutoGenSetColor } from "../AutoGeneration/InitializeNodes/AutoGenSetColor";
 
 export class SetColor extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -22,6 +23,6 @@ export class SetColor extends InitializeNode {
 	}
 
 	GetAutoGenerationCode() {
-		return "";
+		return AutoGenSetColor(this);
 	}
 }

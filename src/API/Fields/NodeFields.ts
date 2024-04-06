@@ -1,6 +1,7 @@
 import { BooleanField } from "./BooleanField";
 import { ColorField } from "./ColorField";
 import { ColorRampField } from "./ColorRampField";
+import { LineGraphField } from "./LineGraphField";
 import { NumberField } from "./NumberField";
 import { OrientationField } from "./OrientationField";
 import { Vector2Field } from "./Vector2Field";
@@ -12,5 +13,6 @@ export type NodeFields =
 	| Vector2Field
 	| Vector3Field
 	| OrientationField
+	| LineGraphField
 	| ColorField
 	| ColorRampField;

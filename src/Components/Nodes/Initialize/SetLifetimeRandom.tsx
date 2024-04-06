@@ -24,10 +24,6 @@ export function CreateSetLifetimeRandom() {
 function SetLifetimeRandom({ data }: { data: NodeData }) {
 	const rangeFieldRef = useRef((data.node as SetLifetimeRandomAPI).nodeFields.range);
 
-	const rangeChanged = (newRange: Vector2) => {
-		rangeFieldRef.current.SetValue(newRange);
-	};
-
 	return (
 		<Node Name="Set Lifetime Random" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
@@ -38,8 +34,8 @@ function SetLifetimeRandom({ data }: { data: NodeData }) {
 				<Vector2Field
 					Label={"Range"}
 					ValueLabels={["Min", "Max"]}
-					DefaultValue={rangeFieldRef.current.GetValue()}
-					Vector2Changed={rangeChanged}
+					DefaultValues={rangeFieldRef.current.GetVector2()}
+					Vector2Changed={rangeFieldRef.current.SetVector2}
 				/>
 			</Div>
 		</Node>

@@ -9,31 +9,30 @@ interface Props {
 	Label: string;
 	ValueLabels?: [string, string];
 
-	DefaultValue: Vector2;
+	DefaultValues: { X: number; Y: number };
 	TextToInputRatios?: [number, number];
 
-	Vector2Changed: (vector2: Vector2) => void;
+	Vector2Changed: (x: number, y: number) => void;
 }
 
 export function Vector2Field({
 	Label,
 	ValueLabels = ["X", "Y"],
-	DefaultValue,
+	DefaultValues,
 	TextToInputRatios = [0.15, 0.15],
 	Vector2Changed,
 }: Props) {
-	const vector2Ref = useRef(DefaultValue);
+	const xRef = useRef(DefaultValues.X);
+	const yRef = useRef(DefaultValues.Y);
 
 	const xChanged = (number: number) => {
-		const current = vector2Ref.current;
-		vector2Ref.current = new Vector2(number, current.Y);
-		Vector2Changed(vector2Ref.current);
+		xRef.current = number;
+		Vector2Changed(xRef.current, yRef.current);
 	};
 
 	const yChanged = (number: number) => {
-		const current = vector2Ref.current;
-		vector2Ref.current = new Vector2(current.X, number);
-		Vector2Changed(vector2Ref.current);
+		yRef.current = number;
+		Vector2Changed(xRef.current, yRef.current);
 	};
 
 	return (
@@ -47,14 +46,14 @@ export function Vector2Field({
 
 				<NumberField
 					Label={ValueLabels[0]}
-					DefaultText={tostring(DefaultValue.X)}
+					DefaultText={tostring(DefaultValues.X)}
 					AllowNegative={true}
 					TextToInputRatio={TextToInputRatios[0]}
 					NumberChanged={xChanged}
 				/>
 				<NumberField
 					Label={ValueLabels[1]}
-					DefaultText={tostring(DefaultValue.Y)}
+					DefaultText={tostring(DefaultValues.Y)}
 					AllowNegative={true}
 					TextToInputRatio={TextToInputRatios[0]}
 					NumberChanged={yChanged}

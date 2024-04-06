@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import Roact, { useRef } from "@rbxts/roact";
 import { Node } from "../Node";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { MultiplySizeOverLife as MultiplySizeOverLifeAPI } from "API/Nodes/Update/MultiplySizeOverLife";
@@ -21,10 +21,12 @@ export function CreateMultiplySizeOverLife() {
 }
 
 function MultiplySizeOverLife({ data }: { data: NodeData }) {
+	const graphFieldRef = useRef((data.node as MultiplySizeOverLifeAPI).nodeFields.graph);
+
 	return (
 		<Node Name="Multiple Size Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
-			<LineGraphField Label={"Graph"} Graph={(data.node as MultiplySizeOverLifeAPI).graph} MaxValue={10} />
+			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} MaxValue={10} />
 		</Node>
 	);
 }

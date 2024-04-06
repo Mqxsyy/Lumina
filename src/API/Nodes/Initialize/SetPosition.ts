@@ -1,7 +1,7 @@
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
-import { AutoGenPosition } from "../AutoGeneration/InitializeNodes/AutoGenPosition";
+import { AutoGenSetPosition } from "../AutoGeneration/InitializeNodes/AutoGenSetPosition";
 import { GetParticleData } from "API/ParticleService";
 
 export class SetPosition extends InitializeNode {
@@ -14,15 +14,15 @@ export class SetPosition extends InitializeNode {
 		super();
 
 		this.nodeFields = {
-			position: new Vector3Field(new Vector3(0, 0, 0)),
+			position: new Vector3Field(0, 0, 0),
 		};
 	}
 
 	Initialize(id: number) {
-		GetParticleData(id).particle.Position = this.nodeFields.position.GetValue();
+		GetParticleData(id).particle.Position = this.nodeFields.position.GetVector3();
 	}
 
 	GetAutoGenerationCode() {
-		return AutoGenPosition(this);
+		return AutoGenSetPosition(this);
 	}
 }

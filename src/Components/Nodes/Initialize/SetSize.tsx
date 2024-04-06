@@ -25,10 +25,6 @@ export function CreateSetSize() {
 function SetSize({ data }: { data: NodeData }) {
 	const sizeFieldRef = useRef((data.node as SetSizeAPI).nodeFields.size);
 
-	const sizeChanged = (number: number) => {
-		sizeFieldRef.current.SetValue(number);
-	};
-
 	return (
 		<Node Name="Set Size" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
@@ -36,14 +32,14 @@ function SetSize({ data }: { data: NodeData }) {
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={sizeFieldRef.current.BindValue} />
+				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={sizeFieldRef.current.BindNumber} />
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Size"}
-					DefaultText={tostring(sizeFieldRef.current!.GetValue())}
+					DefaultText={tostring(sizeFieldRef.current!.GetNumber())}
 					TextToInputRatio={0.25}
-					Disabled={sizeFieldRef.current!.valueBindNode !== undefined}
-					NumberChanged={sizeChanged}
+					Disabled={sizeFieldRef.current!.boundNode !== undefined}
+					NumberChanged={sizeFieldRef.current.SetNumber}
 				/>
 			</Div>
 		</Node>

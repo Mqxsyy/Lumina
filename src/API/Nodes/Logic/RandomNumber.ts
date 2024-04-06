@@ -17,17 +17,17 @@ export class RandomNumber extends LogicNode<number> {
 		super();
 
 		this.nodeFields = {
-			range: new Vector2Field(new Vector2(1, 10)),
+			range: new Vector2Field(0, 0),
 			isInt: new BooleanField(false),
 			randomizeOnce: new BooleanField(false),
 		};
 	}
 
 	Calculate = () => {
-		const range = this.nodeFields.range.GetValue();
+		const range = this.nodeFields.range.GetVector2();
 		let value = range.X + Rand.NextNumber() * (range.Y - range.X);
 
-		if (this.nodeFields.isInt.GetValue()) {
+		if (this.nodeFields.isInt.GetBoolean()) {
 			value = math.round(value);
 		}
 

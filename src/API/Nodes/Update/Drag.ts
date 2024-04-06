@@ -1,8 +1,9 @@
 import { NodeGroups } from "API/NodeGroup";
 import { UpdateNode } from "./UpdateNode";
 import { NumberField } from "API/Fields/NumberField";
-import { GetParticleData, UpdateParticleData } from "API/ParticleService";
+import { UpdateParticleData } from "API/ParticleService";
 import { FrameRateMultiplier, LerpNumber } from "API/Lib";
+import { AutoGenDrag } from "../AutoGeneration/UpdateNodes/AutoGenDrag";
 
 export class Drag extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
@@ -19,7 +20,7 @@ export class Drag extends UpdateNode {
 	}
 
 	Update(id: number) {
-		const drag = this.nodeFields.drag.GetValue() * FrameRateMultiplier;
+		const drag = this.nodeFields.drag.GetNumber() * FrameRateMultiplier;
 
 		UpdateParticleData(id, (data) => {
 			const oldVelocity = data.velocity;
@@ -34,6 +35,6 @@ export class Drag extends UpdateNode {
 	}
 
 	GetAutoGenerationCode() {
-		return "";
+		return AutoGenDrag(this);
 	}
 }

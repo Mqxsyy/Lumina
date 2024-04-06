@@ -31,4 +31,11 @@ export class ColorField {
 		this.value = value;
 		this.FieldChanged.Fire();
 	};
+
+	SetColor = (hue: number, saturation: number, value: number) => {
+		this.hue = hue;
+		this.saturation = saturation;
+		this.value = value;
+		this.FieldChanged.Fire();
+	};
 }

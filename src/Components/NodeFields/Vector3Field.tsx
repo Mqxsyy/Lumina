@@ -26,7 +26,7 @@ export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindValueX} />
+					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindX} />
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"X"}
@@ -34,13 +34,13 @@ export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues
 						PlaceholderText={PlaceholderValues[0]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}
-						NumberChanged={NodeField.SetValueX}
+						NumberChanged={NodeField.SetX}
 					/>
 				</Div>
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindValueY} />
+					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindY} />
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"Y"}
@@ -48,13 +48,13 @@ export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues
 						PlaceholderText={PlaceholderValues[1]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}
-						NumberChanged={NodeField.SetValueY}
+						NumberChanged={NodeField.SetY}
 					/>
 				</Div>
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindValueZ} />
+					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindZ} />
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"Z"}
@@ -62,7 +62,7 @@ export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues
 						PlaceholderText={PlaceholderValues[2]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}
-						NumberChanged={NodeField.SetValueZ}
+						NumberChanged={NodeField.SetZ}
 					/>
 				</Div>
 			</Div>

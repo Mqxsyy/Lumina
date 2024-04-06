@@ -32,20 +32,20 @@ function SetVelocityRandom({ data }: { data: NodeData }) {
 			<Vector2Field
 				Label={"X"}
 				ValueLabels={["Min", "Max"]}
-				DefaultValue={rangeXRef.current.GetValue()}
-				Vector2Changed={rangeXRef.current.SetValue}
+				DefaultValues={rangeXRef.current.GetVector2()}
+				Vector2Changed={rangeXRef.current.SetVector2}
 			/>
 			<Vector2Field
 				Label={"Y"}
 				ValueLabels={["Min", "Max"]}
-				DefaultValue={rangeYRef.current.GetValue()}
-				Vector2Changed={rangeYRef.current.SetValue}
+				DefaultValues={rangeYRef.current.GetVector2()}
+				Vector2Changed={rangeYRef.current.SetVector2}
 			/>
 			<Vector2Field
 				Label={"Z"}
 				ValueLabels={["Min", "Max"]}
-				DefaultValue={rangeZRef.current.GetValue()}
-				Vector2Changed={rangeZRef.current.SetValue}
+				DefaultValues={rangeZRef.current.GetVector2()}
+				Vector2Changed={rangeZRef.current.SetVector2}
 			/>
 		</Node>
 	);

@@ -1,39 +1,40 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
-export class Vector2Field extends NodeField<Vector2> {
+export class Vector2Field extends NodeField {
 	x: number;
-	xBindNode: undefined | LogicNode;
-	private xBind: undefined | (() => number);
+	boundNodeX: undefined | LogicNode;
+	private boundFunctionX: undefined | (() => number);
 
 	y: number;
-	yBindNode: undefined | LogicNode;
-	private yBind: undefined | (() => number);
+	boundNodeY: undefined | LogicNode;
+	private boundFunctionY: undefined | (() => number);
 
-	private valueBind: undefined | (() => Vector2);
+	boundNode: undefined | LogicNode;
+	private boundFunction: undefined | (() => Vector2);
 
-	constructor(defaultValue: Vector2) {
+	constructor(x: number, y: number) {
 		super();
 
-		this.x = defaultValue.X;
-		this.y = defaultValue.Y;
+		this.x = x;
+		this.y = y;
 	}
 
-	GetValue() {
-		if (this.valueBind !== undefined) {
-			return this.valueBind();
+	GetVector2() {
+		if (this.boundFunction !== undefined) {
+			return this.boundFunction();
 		}
 
 		let x;
-		if (this.xBind !== undefined) {
-			x = this.xBind();
+		if (this.boundFunctionX !== undefined) {
+			x = this.boundFunctionX();
 		} else {
 			x = this.x;
 		}
 
 		let y;
-		if (this.yBind !== undefined) {
-			y = this.yBind();
+		if (this.boundFunctionY !== undefined) {
+			y = this.boundFunctionY();
 		} else {
 			y = this.y;
 		}
@@ -41,43 +42,49 @@ export class Vector2Field extends NodeField<Vector2> {
 		return new Vector2(x, y);
 	}
 
-	SetValue = (newValue: Vector2) => {
-		this.valueBind = undefined;
+	SetVector2 = (x: number, y: number) => {
+		this.boundFunction = undefined;
+		this.boundNode = undefined;
 
-		this.x = newValue.X;
-		this.y = newValue.Y;
+		this.SetX(x, true);
+		this.SetY(y, true);
 
 		this.FieldChanged.Fire();
 	};
 
-	SetValueX = (newValue: number) => {
-		this.x = newValue;
-		this.xBind = undefined;
-		this.xBindNode = undefined;
+	SetX = (x: number, ignoreFieldChange: boolean = false) => {
+		this.x = x;
+		this.boundFunctionX = undefined;
+		this.boundNodeX = undefined;
+
+		if (!ignoreFieldChange) return;
 		this.FieldChanged.Fire();
 	};
 
-	SetValueY = (newValue: number) => {
-		this.y = newValue;
-		this.yBind = undefined;
-		this.yBindNode = undefined;
+	SetY = (y: number, ignoreFieldChange: boolean = false) => {
+		this.y = y;
+		this.boundFunctionY = undefined;
+		this.boundNodeY = undefined;
+
+		if (!ignoreFieldChange) return;
 		this.FieldChanged.Fire();
 	};
 
-	BindValue = (newValue: (() => Vector2) | undefined) => {
-		this.valueBind = newValue;
+	BindVector2 = (boundFunction: (() => Vector2) | undefined, boundNode: LogicNode | undefined) => {
+		this.boundFunction = boundFunction;
+		this.boundNode = boundNode;
 		this.FieldChanged.Fire();
 	};
 
-	BindValueX = (newValue: undefined | (() => number), boundNode: LogicNode | undefined) => {
-		this.xBind = newValue;
-		this.xBindNode = boundNode;
+	BindX = (boundFunction: undefined | (() => number), boundNode: LogicNode | undefined) => {
+		this.boundFunctionX = boundFunction;
+		this.boundNodeX = boundNode;
 		this.FieldChanged.Fire();
 	};
 
-	BindValueY = (newValue: undefined | (() => number), boundNode: LogicNode | undefined) => {
-		this.yBind = newValue;
-		this.yBindNode = boundNode;
+	BindY = (boundFunction: undefined | (() => number), boundNode: LogicNode | undefined) => {
+		this.boundFunctionY = boundFunction;
+		this.boundNodeY = boundNode;
 		this.FieldChanged.Fire();
 	};
 }

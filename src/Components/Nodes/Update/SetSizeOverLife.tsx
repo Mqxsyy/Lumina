@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import Roact, { useRef } from "@rbxts/roact";
 import { Node } from "../Node";
 import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { SetSizeOverLife as SizeOverLifeAPI } from "API/Nodes/Update/SetSizeOverLife";
@@ -21,10 +21,12 @@ export function CreateSetSizeOverLife() {
 }
 
 function SetSizeOverLife({ data }: { data: NodeData }) {
+	const graphFieldRef = useRef((data.node as SizeOverLifeAPI).nodeFields.graph);
+
 	return (
 		<Node Name="Set Size Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
-			<LineGraphField Label={"Graph"} Graph={(data.node as SizeOverLifeAPI).graph} MaxValue={10} />
+			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} MaxValue={10} />
 		</Node>
 	);
 }

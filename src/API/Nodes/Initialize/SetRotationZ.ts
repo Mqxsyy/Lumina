@@ -2,6 +2,7 @@ import { NumberField } from "API/Fields/NumberField";
 import { GetParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
+import { AutoGenSetRotationZ } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZ";
 
 export class SetRotationZ extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -18,12 +19,10 @@ export class SetRotationZ extends InitializeNode {
 	}
 
 	Initialize(id: number) {
-		const particle = GetParticleData(id).particle;
-		const rotation = new Vector3(particle.Rotation.X, particle.Rotation.Y, this.nodeFields.rotation.GetValue());
-		GetParticleData(id).particle.Rotation = rotation;
+		GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation = this.nodeFields.rotation.GetNumber();
 	}
 
 	GetAutoGenerationCode() {
-		return "";
+		return AutoGenSetRotationZ(this);
 	}
 }

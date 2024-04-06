@@ -2,6 +2,7 @@ import { UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 import { Vector3Field } from "API/Fields/Vector3Field";
+import { AutoGenSetVelocity } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocity";
 
 export class SetVelocity extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
@@ -13,18 +14,18 @@ export class SetVelocity extends InitializeNode {
 		super();
 
 		this.nodeFields = {
-			velocity: new Vector3Field(Vector3.zero),
+			velocity: new Vector3Field(0, 0, 0),
 		};
 	}
 
 	Initialize(id: number) {
 		UpdateParticleData(id, (data) => {
-			data.velocity = this.nodeFields.velocity.GetValue();
+			data.velocity = this.nodeFields.velocity.GetVector3();
 			return data;
 		});
 	}
 
 	GetAutoGenerationCode() {
-		return "";
+		return AutoGenSetVelocity(this);
 	}
 }

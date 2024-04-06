@@ -25,10 +25,6 @@ export function CreateSetTransparency() {
 function SetTransparency({ data }: { data: NodeData }) {
 	const transparencyFieldRef = useRef((data.node as SetTransparencyAPI).nodeFields.transparency);
 
-	const transparencyChanged = (number: number) => {
-		transparencyFieldRef.current.SetValue(number);
-	};
-
 	return (
 		<Node Name="Set Transparency" Id={data.id} AnchorPoint={data.anchorPoint}>
 			<uipadding PaddingLeft={new UDim(0, 10)} />
@@ -38,15 +34,15 @@ function SetTransparency({ data }: { data: NodeData }) {
 
 				<ConnectionPointIn
 					Size={UDim2.fromOffset(20, 20)}
-					BindFunction={transparencyFieldRef.current.BindValue}
+					BindFunction={transparencyFieldRef.current.BindNumber}
 				/>
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Value"}
-					DefaultText={tostring(transparencyFieldRef.current.GetValue())}
+					DefaultText={tostring(transparencyFieldRef.current.GetNumber())}
 					TextToInputRatio={0.25}
-					Disabled={transparencyFieldRef.current.valueBindNode !== undefined}
-					NumberChanged={transparencyChanged}
+					Disabled={transparencyFieldRef.current.boundNode !== undefined}
+					NumberChanged={transparencyFieldRef.current.SetNumber}
 				/>
 			</Div>
 		</Node>

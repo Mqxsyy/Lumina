@@ -57,7 +57,7 @@ function ColorRamp() {
 			const mousePosition = window.GetRelativeMousePosition();
 
 			const percentX = (mousePosition.X - window.AbsoluteSize.X * 0.1) / (window.AbsoluteSize.X * 0.8);
-			rampAPI.AddRampPoint(percentX, new Vector3(0, 0, 1));
+			rampAPI.AddPoint(percentX, new Vector3(0, 0, 1));
 			LoadColorRampAPI(rampAPI);
 
 			return;
@@ -70,7 +70,7 @@ function ColorRamp() {
 		const index = points.findIndex((point) => point.id === id);
 		if (index === -1) return;
 
-		rampAPI.UpdateRampPointTime(id, time);
+		rampAPI.UpdatePointTime(id, time);
 
 		const apiPoints = rampAPI!.GetPoints();
 		for (let i = 0; i < points.size() - 2; i++) {
@@ -86,7 +86,7 @@ function ColorRamp() {
 	};
 
 	const removePoint = (id: number) => {
-		rampAPI.RemoveRampPoint(id);
+		rampAPI.RemovePoint(id);
 		LoadColorRampAPI(rampAPI);
 	};
 

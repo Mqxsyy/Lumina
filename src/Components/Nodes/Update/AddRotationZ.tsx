@@ -32,13 +32,13 @@ function AddRotationZ({ data }: { data: NodeData }) {
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={rotationFieldRef.current.BindValue} />
+				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={rotationFieldRef.current.BindNumber} />
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Rotation"}
-					DefaultText={tostring(rotationFieldRef.current.GetValue())}
-					NumberChanged={rotationFieldRef.current.SetValue}
-					Disabled={rotationFieldRef.current.valueBindNode !== undefined}
+					DefaultText={tostring(rotationFieldRef.current.GetNumber())}
+					NumberChanged={rotationFieldRef.current.SetNumber}
+					Disabled={rotationFieldRef.current.boundNode !== undefined}
 				/>
 			</Div>
 		</Node>

@@ -1,34 +1,34 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
-export class NumberField extends NodeField<number> {
-	value: number;
-	valueBindNode: undefined | LogicNode;
-	private valueBind: undefined | (() => number);
+export class NumberField extends NodeField {
+	number: number;
+	boundNode: undefined | LogicNode;
+	private boundFunction: undefined | (() => number);
 
-	constructor(defaultValue: number) {
+	constructor(number: number) {
 		super();
-		this.value = defaultValue;
+		this.number = number;
 	}
 
-	GetValue() {
-		if (this.valueBind !== undefined) {
-			return this.valueBind();
+	GetNumber() {
+		if (this.boundFunction !== undefined) {
+			return this.boundFunction();
 		}
 
-		return this.value;
+		return this.number;
 	}
 
-	SetValue = (newValue: number) => {
-		this.value = newValue;
-		this.valueBind = undefined;
-		this.valueBindNode = undefined;
+	SetNumber = (number: number) => {
+		this.number = number;
+		this.boundFunction = undefined;
+		this.boundNode = undefined;
 		this.FieldChanged.Fire();
 	};
 
-	BindValue = (newValue: (() => number) | undefined, boundNode: LogicNode | undefined) => {
-		this.valueBind = newValue;
-		this.valueBindNode = boundNode;
+	BindNumber = (boundFunction: (() => number) | undefined, boundNode: LogicNode | undefined) => {
+		this.boundFunction = boundFunction;
+		this.boundNode = boundNode;
 		this.FieldChanged.Fire();
 	};
 }

@@ -7,8 +7,7 @@ export function AutogenParticlePlane(node: ParticlePlane) {
 	let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Render", "ParticlePlane").ParticlePlane \n`;
 	src += `local ${varName} = ${className}.new() \n`;
 
-	src += `${varName}.nodeFields.orientation.SetValue(${node.nodeFields.orientation.GetValue()}) \n`;
-
+	src += `${varName}.nodeFields.orientation.SetOrientation(${node.nodeFields.orientation.GetOrientation()}) \n`;
 	src += `nodeSystem:AddNode(${varName})`;
 
 	return src;

@@ -21,7 +21,7 @@ export function CreateBasicSystem() {
 		});
 
 		const positionNode = CreateSetPosition();
-		(positionNode.node as SetPosition).nodeFields.position.SetValueY(5);
+		(positionNode.node as SetPosition).nodeFields.position.SetY(5);
 		positionNode.elementLoaded.Connect(() => {
 			systemData.addToNodeGroup[NodeGroups.Initialize]!(positionNode.id);
 		});

@@ -15,13 +15,13 @@ export class ValueRamp extends LogicNode<number> {
 
 		this.nodeFields = {
 			value: new NumberField(0),
-			range: new Vector2Field(new Vector2(0, 1)),
+			range: new Vector2Field(0, 0),
 		};
 	}
 
 	Calculate = () => {
-		const range = this.nodeFields.range.GetValue();
-		return range.X + (range.Y - range.X) * this.nodeFields.value.GetValue();
+		const range = this.nodeFields.range.GetVector2();
+		return range.X + (range.Y - range.X) * this.nodeFields.value.GetNumber();
 	};
 
 	GetAutoGenerationCode() {

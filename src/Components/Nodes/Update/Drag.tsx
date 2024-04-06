@@ -32,13 +32,13 @@ function Drag({ data }: { data: NodeData }) {
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={dragFieldRef.current.BindValue} />
+				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={dragFieldRef.current.BindNumber} />
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Value"}
-					DefaultText={tostring(dragFieldRef.current.GetValue())}
-					NumberChanged={dragFieldRef.current.SetValue}
-					Disabled={dragFieldRef.current.valueBindNode !== undefined}
+					DefaultText={tostring(dragFieldRef.current.GetNumber())}
+					NumberChanged={dragFieldRef.current.SetNumber}
+					Disabled={dragFieldRef.current.boundNode !== undefined}
 				/>
 			</Div>
 		</Node>

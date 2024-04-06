@@ -1,32 +1,37 @@
+import { Event } from "API/Bindables/Event";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
-export class BooleanField extends NodeField<boolean> {
-	value: boolean;
-	valueBindNode: undefined | LogicNode;
-	private valueBind: undefined | (() => boolean);
+export class BooleanField extends NodeField {
+	boolean: boolean;
+	boundNode: undefined | LogicNode;
+	private boundFunction: undefined | (() => boolean);
 
-	constructor(defaultValue: boolean) {
+	FieldChanged = new Event();
+
+	constructor(boolean: boolean) {
 		super();
-		this.value = defaultValue;
+		this.boolean = boolean;
 	}
 
-	GetValue() {
-		if (this.valueBind !== undefined) {
-			return this.valueBind();
+	GetBoolean() {
+		if (this.boundFunction !== undefined) {
+			return this.boundFunction();
 		}
 
-		return this.value;
+		return this.boolean;
 	}
 
-	SetValue = (newValue: boolean) => {
-		this.value = newValue;
+	SetBoolean = (boolean: boolean) => {
+		this.boolean = boolean;
+		this.boundFunction = undefined;
+		this.boundNode = undefined;
 		this.FieldChanged.Fire();
 	};
 
-	BindValue = (newValue: (() => boolean) | undefined, boundNode: LogicNode | undefined) => {
-		this.valueBind = newValue;
-		this.valueBindNode = boundNode;
+	BindBoolean = (boundFunction: (() => boolean) | undefined, boundNode: LogicNode | undefined) => {
+		this.boundFunction = boundFunction;
+		this.boundNode = boundNode;
 		this.FieldChanged.Fire();
 	};
 }

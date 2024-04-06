@@ -4,24 +4,20 @@ export enum Orientation {
 	FacingCamera,
 }
 
-export class OrientationField extends NodeField<Orientation> {
-	value: Orientation;
+export class OrientationField extends NodeField {
+	orientation: Orientation;
 
-	constructor(defaultValue: Orientation) {
+	constructor(orientation: Orientation) {
 		super();
-		this.value = defaultValue;
+		this.orientation = orientation;
 	}
 
-	GetValue() {
-		return this.value;
+	GetOrientation() {
+		return this.orientation;
 	}
 
-	SetValue = (newValue: number) => {
-		this.value = newValue;
+	SetOrientation = (orientation: number) => {
+		this.orientation = orientation;
 		this.FieldChanged.Fire();
-	};
-
-	BindValue = () => {
-		warn("OrientationField cannot be bound to a function");
 	};
 }

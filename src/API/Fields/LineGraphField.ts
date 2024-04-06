@@ -1,5 +1,6 @@
 import { IdPool } from "API/IdPool";
 import { LerpNumber } from "API/Lib";
+import { NodeField } from "./NodeField";
 
 export interface GraphPoint {
 	id: number;
@@ -7,7 +8,7 @@ export interface GraphPoint {
 	value: number;
 }
 
-export class LineGraphField {
+export class LineGraphField extends NodeField {
 	idPool = new IdPool();
 
 	startPoint: GraphPoint = {
@@ -28,7 +29,7 @@ export class LineGraphField {
 		return this.graphPoints;
 	}
 
-	GetValue(t: number) {
+	GetNumber(t: number) {
 		if (this.graphPoints.size() === 0) {
 			return LerpNumber(this.startPoint.value, this.endPoint.value, t);
 		}
@@ -49,14 +50,14 @@ export class LineGraphField {
 		);
 	}
 
-	AddGraphPoint(time: number, value: number) {
+	AddPoint(time: number, value: number) {
 		const data = { id: this.idPool.GetNextId(), time, value };
 		this.graphPoints.push(data);
 		this.graphPoints.sort((a, b) => a.time < b.time);
 		return data;
 	}
 
-	UpdateGraphPoint(id: number, time: number, value: number) {
+	UpdatePoint(id: number, time: number, value: number) {
 		const index = this.graphPoints.findIndex((point) => point.id === id);
 		if (index !== -1) {
 			this.graphPoints[index].time = time;
@@ -65,23 +66,23 @@ export class LineGraphField {
 		this.graphPoints.sort((a, b) => a.time < b.time);
 	}
 
-	RemoveGraphPoint(id: number) {
+	RemovePoint(id: number) {
 		delete this.graphPoints[this.graphPoints.findIndex((point) => point.id === id)];
 	}
 
-	GetLargestValue() {
-		let largest = this.startPoint.value;
+	// GetLargestValue() {
+	// 	let largest = this.startPoint.value;
 
-		for (const point of this.graphPoints) {
-			if (point.value > largest) {
-				largest = point.value;
-			}
-		}
+	// 	for (const point of this.graphPoints) {
+	// 		if (point.value > largest) {
+	// 			largest = point.value;
+	// 		}
+	// 	}
 
-		if (this.endPoint.value > largest) {
-			largest = this.endPoint.value;
-		}
+	// 	if (this.endPoint.value > largest) {
+	// 		largest = this.endPoint.value;
+	// 	}
 
-		return largest;
-	}
+	// 	return largest;
+	// }
 }

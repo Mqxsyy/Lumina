@@ -39,6 +39,7 @@ function CreateParticlePlane(): PlaneParticle {
 
 	const surfaceGui = new Instance("SurfaceGui");
 	surfaceGui.Parent = particlePlane;
+	surfaceGui.CanvasSize = new Vector2(1000, 1000);
 	surfaceGui.LightInfluence = 0;
 	surfaceGui.Brightness = DEFAULT_EMISSION;
 
@@ -80,11 +81,7 @@ export class ParticlePlane extends RenderNode {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
 		particle.SurfaceGui.ImageLabel.ImageTransparency = 0;
 		particle.Position = Vector3.zero;
-
-		const orientation = this.nodeFields.orientation.GetValue();
-		if (orientation === Orientation.FacingCamera) {
-			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
-		}
+		particle.Rotation = Vector3.zero;
 
 		const id = GetNextParticleId();
 		CreateParticleData(id, particle);
@@ -97,11 +94,9 @@ export class ParticlePlane extends RenderNode {
 			node.Update(id);
 		});
 
+		const orientation = this.nodeFields.orientation.GetOrientation();
 		if (orientation === Orientation.FacingCamera) {
-			const z = math.rad(particle.Rotation.Z);
-			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position).mul(
-				CFrame.Angles(0, 0, z),
-			);
+			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
 		}
 
 		let aliveTime = 0;
@@ -123,10 +118,7 @@ export class ParticlePlane extends RenderNode {
 			}
 
 			if (orientation === Orientation.FacingCamera) {
-				const z = math.rad(particle.Rotation.Z);
-				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position).mul(
-					CFrame.Angles(0, 0, z),
-				);
+				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
 			}
 
 			aliveTime += dt;
