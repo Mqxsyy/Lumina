@@ -4,6 +4,8 @@ import { ControlButton } from "./ControlButton";
 import { GetNodeSystems } from "Services/NodeSystemService";
 import ExportAPI from "API/ExportAPI";
 import ExportAsScript from "API/VFXScriptCreator";
+import { SaveToFile } from "Services/SaveService";
+import { LoadFromFile } from "Services/LoadService";
 
 const CANVAS_PADDING = 5;
 const BUTTONS_PADDING = 5;
@@ -30,6 +32,14 @@ export function Controls() {
 		ExportAsScript();
 	};
 
+	const Save = () => {
+		SaveToFile();
+	};
+
+	const Load = () => {
+		LoadFromFile();
+	};
+
 	return (
 		<Div
 			AnchorPoint={new Vector2(1, 0)}
@@ -53,6 +63,18 @@ export function Controls() {
 				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
 				Text="Export"
 				MouseButton1Down={Export}
+			/>
+			<ControlButton
+				Position={UDim2.fromOffset(0, (BUTTON_HEIGHT + BUTTONS_PADDING) * 3)}
+				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
+				Text="Save"
+				MouseButton1Down={Save}
+			/>
+			<ControlButton
+				Position={UDim2.fromOffset(0, (BUTTON_HEIGHT + BUTTONS_PADDING) * 4)}
+				Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT)}
+				Text="Load"
+				MouseButton1Down={Load}
 			/>
 		</Div>
 	);
