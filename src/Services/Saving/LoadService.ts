@@ -4,10 +4,13 @@ import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { NodeList } from "Lists/NodesList";
 import { SaveData } from "./SaveData";
 import { NodeData } from "Services/NodesService";
+import { API_VERSION } from "API/ExportAPI";
 
 // TODO: load connections 💀💀💀
 
 const Selection = game.GetService("Selection");
+let mismatchLoadTime = 0;
+const MISMATCH_LOAD_TIMEFRAME = 10;
 
 export function LoadFromFile() {
 	const selection = Selection.Get();
@@ -29,6 +32,17 @@ export function LoadFromFile() {
 	}
 
 	const data = HttpService.JSONDecode((selectedInstance as ModuleScript).Source) as SaveData;
+
+	if (data.version !== API_VERSION && os.clock() - mismatchLoadTime > MISMATCH_LOAD_TIMEFRAME) {
+		warn(
+			"The file you are trying to load was created with an older version of the plugin. The vfx may not load correctly. Press the load button again to attempt to load the vfx.",
+		);
+
+		mismatchLoadTime = os.clock();
+		return;
+	}
+
+	mismatchLoadTime = 0;
 
 	for (const system of data.systems) {
 		const anchorPoint = new Vector2(system.anchorPoint.x, system.anchorPoint.y);

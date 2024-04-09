@@ -11,9 +11,13 @@ if (VFXExportFolder === undefined) {
 }
 
 export default function ExportAsScript() {
+	const convertedFiles: ModuleScript[] = [];
+
 	GetNodeSystems().forEach((nodeSystem) => {
-		CreateScript(tostring(nodeSystem.data.id), nodeSystem.data.system);
+		convertedFiles.push(CreateScript(tostring(nodeSystem.data.id), nodeSystem.data.system));
 	});
+
+	return convertedFiles;
 }
 
 function CreateScript(name: string, nodeSystem: NodeSystem) {
@@ -69,4 +73,5 @@ end
 return VFXScript`;
 
 	newScript.Source = src;
+	return newScript;
 }

@@ -29,7 +29,11 @@ export function Controls() {
 
 	const Export = () => {
 		ExportAPI();
-		ExportAsScript();
+		const conversionFiles = ExportAsScript();
+		conversionFiles.forEach((conversionFile) => {
+			const saveData = SaveToFile();
+			saveData.Parent = conversionFile;
+		});
 	};
 
 	const Save = () => {

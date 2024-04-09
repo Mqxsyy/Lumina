@@ -9,6 +9,8 @@ const savesFolder = GetSavesFolder();
 
 export function SaveToFile() {
 	const container = new Instance("ModuleScript");
+	container.Name = "VFXSaveData";
+
 	const data: SaveData = {
 		version: API_VERSION,
 		systems: [],
@@ -54,6 +56,8 @@ export function SaveToFile() {
 
 	container.Source = HttpService.JSONEncode(data);
 	container.Parent = savesFolder;
+
+	return container;
 }
 
 function SerializeNode(node: Node): SerializedNode {
