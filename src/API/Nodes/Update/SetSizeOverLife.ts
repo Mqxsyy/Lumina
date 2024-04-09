@@ -4,6 +4,8 @@ import { UpdateParticleData } from "API/ParticleService";
 import { UpdateNode } from "./UpdateNode";
 import { AutoGenSetSizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetSizeOverLife";
 
+export const SetSizeOverLifeName = "SetSizeOverLife";
+
 export class SetSizeOverLife extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeFields = {
@@ -25,6 +27,10 @@ export class SetSizeOverLife extends UpdateNode {
 
 			return data;
 		});
+	}
+
+	GetNodeName(): string {
+		return SetSizeOverLifeName;
 	}
 
 	GetAutoGenerationCode() {

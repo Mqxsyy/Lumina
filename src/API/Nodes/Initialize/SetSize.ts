@@ -4,6 +4,8 @@ import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetSize } from "../AutoGeneration/InitializeNodes/AutoGenSetSize";
 
+export const SetSizeName = "SetSize";
+
 export class SetSize extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -28,6 +30,10 @@ export class SetSize extends InitializeNode {
 
 			return data;
 		});
+	}
+
+	GetNodeName(): string {
+		return SetSizeName;
 	}
 
 	GetAutoGenerationCode() {

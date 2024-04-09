@@ -13,6 +13,6 @@ export type NodeFields =
 	| Vector2Field
 	| Vector3Field
 	| OrientationField
-	| LineGraphField
 	| ColorField
+	| LineGraphField
 	| ColorRampField;

@@ -4,6 +4,8 @@ import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetPosition } from "../AutoGeneration/InitializeNodes/AutoGenSetPosition";
 import { GetParticleData } from "API/ParticleService";
 
+export const SetPositionName = "SetPosition";
+
 export class SetPosition extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -20,6 +22,10 @@ export class SetPosition extends InitializeNode {
 
 	Initialize(id: number) {
 		GetParticleData(id).particle.Position = this.nodeFields.position.GetVector3();
+	}
+
+	GetNodeName(): string {
+		return SetPositionName;
 	}
 
 	GetAutoGenerationCode() {

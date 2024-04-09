@@ -8,7 +8,7 @@ import { Event } from "API/Bindables/Event";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 export function CreateRandomNumber() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),

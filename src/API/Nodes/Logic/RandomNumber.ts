@@ -5,6 +5,8 @@ import { BooleanField } from "API/Fields/BooleanField";
 import { Rand } from "API/Lib";
 import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
 
+export const RandomNumberName = "RandomNumber";
+
 export class RandomNumber extends LogicNode<number> {
 	nodeGroup: NodeGroups = NodeGroups.Logic;
 	nodeFields: {
@@ -33,6 +35,10 @@ export class RandomNumber extends LogicNode<number> {
 
 		return value;
 	};
+
+	GetNodeName(): string {
+		return RandomNumberName;
+	}
 
 	GetAutoGenerationCode(wrapper: string) {
 		return AutoGenRandomNumber(this, wrapper);

@@ -9,6 +9,7 @@ import { RenderNode } from "./Nodes/Render/RenderNode";
 
 // OPTIMIZE: make less laggy
 // OPTIMIZE?: look into an alt version for array.find
+// IMPROVE: split groups and make them connectable
 
 export class NodeSystem {
 	ParticleIdPool = new IdPool();

@@ -1,5 +1,5 @@
 import { IdPool } from "API/IdPool";
-import { ColorField } from "./ColorField";
+import { ColorField, SerializedColorField } from "./ColorField";
 import { NodeField } from "./NodeField";
 
 // BUG: last frame sometimes diff color (white?)
@@ -8,6 +8,17 @@ export interface ColorPoint {
 	id: number;
 	time: number;
 	color: ColorField;
+}
+
+interface SerializedPoint {
+	time: number;
+	color: SerializedColorField;
+}
+
+interface SerializedData {
+	startPoint: SerializedPoint;
+	endPoint: SerializedPoint;
+	colorPoints: SerializedPoint[];
 }
 
 export class ColorRampField extends NodeField {
@@ -67,5 +78,37 @@ export class ColorRampField extends NodeField {
 
 	RemovePoint(id: number) {
 		delete this.colorPoints[this.colorPoints.findIndex((point) => point.id === id)];
+	}
+
+	SerializeData() {
+		return {
+			startPoint: {
+				time: this.startPoint.time,
+				color: this.startPoint.color.SerializeData(),
+			},
+			endPoint: {
+				time: this.endPoint.time,
+				color: this.endPoint.color.SerializeData(),
+			},
+			colorPoints: this.colorPoints.map((point) => ({
+				time: point.time,
+				color: point.color.SerializeData(),
+			})),
+		};
+	}
+
+	ReadSerializedData(data: {}) {
+		const serializedData = data as SerializedData;
+
+		this.startPoint.time = serializedData.startPoint.time;
+		this.startPoint.color.ReadSerializedData(serializedData.startPoint.color);
+
+		this.endPoint.time = serializedData.endPoint.time;
+		this.endPoint.color.ReadSerializedData(serializedData.endPoint.color);
+		this.FieldChanged.Fire();
+
+		serializedData.colorPoints.forEach((point) => {
+			this.AddPoint(point.time, new Vector3(point.color.hue, point.color.saturation, point.color.value));
+		});
 	}
 }

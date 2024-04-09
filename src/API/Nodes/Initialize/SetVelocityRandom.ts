@@ -5,6 +5,8 @@ import { Vector2Field } from "API/Fields/Vector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import { AutoGenSetVelocityRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocityRandom";
 
+export const SetVelocityRandomName = "SetVelocityRandom";
+
 export class SetVelocityRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -37,6 +39,10 @@ export class SetVelocityRandom extends InitializeNode {
 			data.velocity = new Vector3(x, y, z);
 			return data;
 		});
+	}
+
+	GetNodeName(): string {
+		return SetVelocityRandomName;
 	}
 
 	GetAutoGenerationCode() {

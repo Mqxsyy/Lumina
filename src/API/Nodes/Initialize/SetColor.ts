@@ -4,6 +4,8 @@ import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetColor } from "../AutoGeneration/InitializeNodes/AutoGenSetColor";
 
+export const SetColorName = "SetColor";
+
 export class SetColor extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -20,6 +22,10 @@ export class SetColor extends InitializeNode {
 
 	Initialize(id: number) {
 		GetParticleData(id).particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.color.GetColor();
+	}
+
+	GetNodeName(): string {
+		return SetColorName;
 	}
 
 	GetAutoGenerationCode() {

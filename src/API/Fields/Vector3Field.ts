@@ -1,6 +1,12 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
+interface SerializedData {
+	x: number;
+	y: number;
+	z: number;
+}
+
 export class Vector3Field extends NodeField {
 	x: number;
 	boundNodeX: undefined | LogicNode;
@@ -115,4 +121,17 @@ export class Vector3Field extends NodeField {
 		this.boundNodeZ = boundNode;
 		this.FieldChanged.Fire();
 	};
+
+	SerializeData() {
+		return {
+			x: this.x,
+			y: this.y,
+			z: this.z,
+		};
+	}
+
+	ReadSerializedData(data: {}) {
+		const serializedData = data as SerializedData;
+		this.SetVector3(serializedData.x, serializedData.y, serializedData.z);
+	}
 }

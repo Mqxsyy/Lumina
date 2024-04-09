@@ -5,6 +5,8 @@ import { FrameRateMultiplier, Rand, RoundDecimal } from "API/Lib";
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { AutoGenAddRotationZRandom } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZRandom";
 
+export const AddRotationZRandomName = "AddRotationZRandom";
+
 export class AddRotationZRandom extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeFields: {
@@ -30,6 +32,10 @@ export class AddRotationZRandom extends UpdateNode {
 		}
 
 		GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation += zAddition;
+	}
+
+	GetNodeName(): string {
+		return AddRotationZRandomName;
 	}
 
 	GetAutoGenerationCode() {

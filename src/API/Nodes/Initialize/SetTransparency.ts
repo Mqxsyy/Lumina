@@ -4,6 +4,8 @@ import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetTransparency } from "../AutoGeneration/InitializeNodes/AutoGenSetTransparency";
 import { InitializeNode } from "./InitializeNode";
 
+export const SetTransparencyName = "SetTransparency";
+
 export class SetTransparency extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -20,6 +22,10 @@ export class SetTransparency extends InitializeNode {
 
 	Initialize(id: number) {
 		GetParticleData(id).particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetNumber();
+	}
+
+	GetNodeName(): string {
+		return SetTransparencyName;
 	}
 
 	GetAutoGenerationCode() {

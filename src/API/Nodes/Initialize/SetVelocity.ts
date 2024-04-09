@@ -4,6 +4,8 @@ import { InitializeNode } from "./InitializeNode";
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { AutoGenSetVelocity } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocity";
 
+export const SetVelocityName = "SetVelocity";
+
 export class SetVelocity extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -23,6 +25,10 @@ export class SetVelocity extends InitializeNode {
 			data.velocity = this.nodeFields.velocity.GetVector3();
 			return data;
 		});
+	}
+
+	GetNodeName(): string {
+		return SetVelocityName;
 	}
 
 	GetAutoGenerationCode() {

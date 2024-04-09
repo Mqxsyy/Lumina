@@ -5,6 +5,8 @@ import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetSizeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetSizeRandom";
 
+export const SetSizeRandomName = "SetSizeRandom";
+
 export class SetSizeRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -30,6 +32,10 @@ export class SetSizeRandom extends InitializeNode {
 
 			return data;
 		});
+	}
+
+	GetNodeName(): string {
+		return SetSizeRandomName;
 	}
 
 	GetAutoGenerationCode() {

@@ -31,4 +31,6 @@ export function CreateBasicSystem() {
 			systemData.addToNodeGroup[NodeGroups.Render]!(particlePlaneNode.id);
 		});
 	});
+
+	return systemData;
 }

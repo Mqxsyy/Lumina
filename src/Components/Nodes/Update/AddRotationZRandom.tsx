@@ -7,7 +7,7 @@ import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { Node } from "../Node";
 
 export function CreateAddRotationZRandom() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),

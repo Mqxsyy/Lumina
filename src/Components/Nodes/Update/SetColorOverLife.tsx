@@ -7,7 +7,7 @@ import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { ColorRampField } from "Components/NodeFields/ColorRampField";
 
 export function CreateSetColorOverLife() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),

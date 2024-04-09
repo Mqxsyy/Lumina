@@ -1,6 +1,10 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
+interface SerializedData {
+	number: number;
+}
+
 export class NumberField extends NodeField {
 	number: number;
 	boundNode: undefined | LogicNode;
@@ -31,4 +35,14 @@ export class NumberField extends NodeField {
 		this.boundNode = boundNode;
 		this.FieldChanged.Fire();
 	};
+
+	SerializeData() {
+		return {
+			number: this.number,
+		};
+	}
+
+	ReadSerializedData(data: {}) {
+		this.SetNumber((data as SerializedData).number);
+	}
 }

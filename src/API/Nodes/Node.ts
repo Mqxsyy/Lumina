@@ -17,5 +17,6 @@ export abstract class Node {
 		this.id = NodeIdPool.GetNextId();
 	}
 
+	abstract GetNodeName(): string;
 	abstract GetAutoGenerationCode(wrapper?: string): string;
 }

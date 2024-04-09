@@ -5,6 +5,8 @@ import { UpdateParticleData } from "API/ParticleService";
 import { FrameRateMultiplier, LerpNumber } from "API/Lib";
 import { AutoGenDrag } from "../AutoGeneration/UpdateNodes/AutoGenDrag";
 
+export const DragName = "Drag";
+
 export class Drag extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeFields: {
@@ -32,6 +34,10 @@ export class Drag extends UpdateNode {
 			data.velocity = new Vector3(x, y, z);
 			return data;
 		});
+	}
+
+	GetNodeName(): string {
+		return DragName;
 	}
 
 	GetAutoGenerationCode() {

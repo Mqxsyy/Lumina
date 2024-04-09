@@ -5,6 +5,8 @@ import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetRotationZRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZRandom";
 
+export const SetRotationZRandomName = "SetRotationZRandom";
+
 export class SetRotationZRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -23,6 +25,10 @@ export class SetRotationZRandom extends InitializeNode {
 		const range = this.nodeFields.range.GetVector2();
 		const zRotation = RoundDecimal(Rand.NextNumber(range.X, range.Y), 0.01);
 		GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation = zRotation;
+	}
+
+	GetNodeName(): string {
+		return SetRotationZRandomName;
 	}
 
 	GetAutoGenerationCode() {

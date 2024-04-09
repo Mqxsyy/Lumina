@@ -1,10 +1,11 @@
 import { NodeGroups } from "API/NodeGroup";
-import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import * as Barrel from "./NodesListNodeBarrel";
+import { ConstantSpawnName } from "API/Nodes/Spawn/ConstantSpawn";
+import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 
 export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } } = {
 	[NodeGroups.Spawn]: {
-		ConstantSpawn: {
+		[ConstantSpawnName]: {
 			name: "Constant Spawn",
 			create: () => Barrel.CreateConstantSpawn(),
 		},

@@ -4,6 +4,8 @@ import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetLifetime } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetime";
 import { InitializeNode } from "./InitializeNode";
 
+export const SetLifetimeName = "SetLifetime";
+
 export class SetLifetime extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -23,6 +25,10 @@ export class SetLifetime extends InitializeNode {
 			data.lifetime = this.nodeFields.time.GetNumber();
 			return data;
 		});
+	}
+
+	GetNodeName(): string {
+		return SetLifetimeName;
 	}
 
 	GetAutoGenerationCode() {

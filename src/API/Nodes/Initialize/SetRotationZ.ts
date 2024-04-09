@@ -4,6 +4,8 @@ import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetRotationZ } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZ";
 
+export const SetRotationZName = "SetRotationZ";
+
 export class SetRotationZ extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -20,6 +22,10 @@ export class SetRotationZ extends InitializeNode {
 
 	Initialize(id: number) {
 		GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation = this.nodeFields.rotation.GetNumber();
+	}
+
+	GetNodeName(): string {
+		return SetRotationZName;
 	}
 
 	GetAutoGenerationCode() {

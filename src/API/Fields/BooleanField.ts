@@ -2,6 +2,10 @@ import { Event } from "API/Bindables/Event";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
+interface SerializedData {
+	boolean: boolean;
+}
+
 export class BooleanField extends NodeField {
 	boolean: boolean;
 	boundNode: undefined | LogicNode;
@@ -34,4 +38,14 @@ export class BooleanField extends NodeField {
 		this.boundNode = boundNode;
 		this.FieldChanged.Fire();
 	};
+
+	SerializeData() {
+		return {
+			boolean: this.boolean,
+		};
+	}
+
+	ReadSerializedData(data: {}) {
+		this.SetBoolean((data as SerializedData).boolean);
+	}
 }

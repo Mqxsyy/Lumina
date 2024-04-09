@@ -9,7 +9,7 @@ import { Node } from "../Node";
 import Div from "Components/Div";
 
 export function CreateAddRotationZ() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),

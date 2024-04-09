@@ -4,6 +4,8 @@ import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetEmission } from "../AutoGeneration/InitializeNodes/AutoGenSetEmission";
 
+export const SetEmissionName = "SetEmission";
+
 export class SetEmission extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
 	nodeFields: {
@@ -20,6 +22,10 @@ export class SetEmission extends InitializeNode {
 
 	Initialize(id: number) {
 		GetParticleData(id).particle.SurfaceGui.Brightness = this.nodeFields.emission.GetNumber();
+	}
+
+	GetNodeName(): string {
+		return SetEmissionName;
 	}
 
 	GetAutoGenerationCode() {

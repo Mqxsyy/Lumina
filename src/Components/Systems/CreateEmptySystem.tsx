@@ -6,17 +6,18 @@ import { AddNodeSystem, GetNextNodeSystemId } from "Services/NodeSystemService";
 import NodeSystem from "./NodeSystem";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
-export function CreateEmptySystem() {
+export function CreateEmptySystem(position?: Vector2) {
 	return AddNodeSystem({
 		data: {
 			id: GetNextNodeSystemId(),
-			anchorPoint: GetMousePositionOnCanvas(),
+			anchorPoint: position || GetMousePositionOnCanvas(),
 			system: new NodeSystemAPI(),
 			addToNodeGroup: {
 				[NodeGroups.Spawn]: undefined,
 				[NodeGroups.Initialize]: undefined,
 				[NodeGroups.Update]: undefined,
 				[NodeGroups.Render]: undefined,
+				[NodeGroups.Logic]: undefined as never,
 			},
 			finishedBindingGroups: new Event(),
 		},

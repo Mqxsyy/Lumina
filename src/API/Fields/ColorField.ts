@@ -1,13 +1,19 @@
-import { Event } from "API/Bindables/Event";
+import { NodeField } from "./NodeField";
 
-export class ColorField {
+export interface SerializedColorField {
+	hue: number;
+	saturation: number;
+	value: number;
+}
+
+export class ColorField extends NodeField {
 	hue: number;
 	saturation: number;
 	value: number;
 
-	FieldChanged = new Event();
-
 	constructor(hue: number, saturation: number, value: number) {
+		super();
+
 		this.hue = hue;
 		this.saturation = saturation;
 		this.value = value;
@@ -38,4 +44,17 @@ export class ColorField {
 		this.value = value;
 		this.FieldChanged.Fire();
 	};
+
+	SerializeData() {
+		return {
+			hue: this.hue,
+			saturation: this.saturation,
+			value: this.value,
+		};
+	}
+
+	ReadSerializedData(data: {}) {
+		const serializedData = data as SerializedColorField;
+		this.SetColor(serializedData.hue, serializedData.saturation, serializedData.value);
+	}
 }

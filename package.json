@@ -17,6 +17,7 @@
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
+		"@rbxts/object-utils": "^1.0.4",
 		"@rbxts/roact": "npm:@rbxts/react-ts@^1.0.1",
 		"@rbxts/services": "^1.5.1"
 	}

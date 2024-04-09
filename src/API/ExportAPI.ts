@@ -1,6 +1,6 @@
 import { ReplicatedStorage } from "@rbxts/services";
 
-const API_VERSION = 50;
+export const API_VERSION = 50;
 
 let APIFolder = ReplicatedStorage.FindFirstChild("CrescentVFX_API");
 

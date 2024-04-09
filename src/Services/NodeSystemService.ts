@@ -18,6 +18,7 @@ export interface NodeSystemData {
 		[NodeGroups.Initialize]: undefined | ((id: number) => void);
 		[NodeGroups.Update]: undefined | ((id: number) => void);
 		[NodeGroups.Render]: undefined | ((id: number) => void);
+		[NodeGroups.Logic]: never;
 	};
 	finishedBindingGroups: Event;
 }

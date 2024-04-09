@@ -4,6 +4,8 @@ import { GetParticleData } from "API/ParticleService";
 import { AutoGenTransparencyOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetTransparencyOverLife";
 import { LineGraphField } from "API/Fields/LineGraphField";
 
+export const SetTransparencyOverLifeName = "SetTransparencyOverLife";
+
 export class SetTransparencyOverLife extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeFields = {
@@ -18,6 +20,10 @@ export class SetTransparencyOverLife extends UpdateNode {
 		const particleData = GetParticleData(id);
 		const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
 		particleData.particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.graph.GetNumber(lifetime);
+	}
+
+	GetNodeName(): string {
+		return SetTransparencyOverLifeName;
 	}
 
 	GetAutoGenerationCode() {

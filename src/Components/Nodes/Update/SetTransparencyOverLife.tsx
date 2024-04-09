@@ -7,7 +7,7 @@ import { LineGraphField } from "Components/NodeFields/LineGraphField";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 export function CreateSetTransparencyOverLife() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),

@@ -8,6 +8,17 @@ export interface GraphPoint {
 	value: number;
 }
 
+interface SerializedPoint {
+	time: number;
+	value: number;
+}
+
+interface SerializedData {
+	startPoint: SerializedPoint;
+	endPoint: SerializedPoint;
+	graphPoints: SerializedPoint[];
+}
+
 export class LineGraphField extends NodeField {
 	idPool = new IdPool();
 
@@ -68,6 +79,38 @@ export class LineGraphField extends NodeField {
 
 	RemovePoint(id: number) {
 		delete this.graphPoints[this.graphPoints.findIndex((point) => point.id === id)];
+	}
+
+	SerializeData() {
+		return {
+			startPoint: {
+				time: this.startPoint.time,
+				value: this.startPoint.value,
+			},
+			endPoint: {
+				time: this.endPoint.time,
+				value: this.endPoint.value,
+			},
+			graphPoints: this.graphPoints.map((point) => ({
+				time: point.time,
+				value: point.value,
+			})),
+		};
+	}
+
+	ReadSerializedData(data: {}) {
+		const serializedData = data as SerializedData;
+
+		this.startPoint.time = serializedData.startPoint.time;
+		this.startPoint.value = serializedData.startPoint.value;
+
+		this.endPoint.time = serializedData.endPoint.time;
+		this.endPoint.value = serializedData.endPoint.value;
+		this.FieldChanged.Fire();
+
+		serializedData.graphPoints.forEach((point) => {
+			this.AddPoint(point.time, point.value);
+		});
 	}
 
 	// GetLargestValue() {

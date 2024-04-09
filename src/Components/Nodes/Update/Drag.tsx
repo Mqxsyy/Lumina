@@ -9,7 +9,7 @@ import { Node } from "../Node";
 import Div from "Components/Div";
 
 export function CreateDrag() {
-	AddNode({
+	return AddNode({
 		data: {
 			id: GetNextNodeId(),
 			anchorPoint: GetMousePositionOnCanvas(),

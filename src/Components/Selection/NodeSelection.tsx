@@ -6,8 +6,8 @@ import { NodeCategorySelectionButton } from "./NodeCategorySelectionButton";
 import { NodeList } from "Lists/NodesList";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystems } from "Lists/SystemsList";
-import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { NodeSelectionButton } from "./NodeSelectionButton";
+import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 
 // TODO: make button connect to selection; add tracker which selection is open / make selection display less scuffed
 // TODO: display only currently usable nodes, ex. when update group is selected show only ones valid in update

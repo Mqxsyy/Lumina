@@ -5,6 +5,8 @@ import { GetParticleData } from "API/ParticleService";
 import { FrameRateMultiplier } from "API/Lib";
 import { AutoGenAddRotationZ } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZ";
 
+export const AddRotationZName = "AddRotationZ";
+
 export class AddRotationZ extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeFields: {
@@ -22,6 +24,10 @@ export class AddRotationZ extends UpdateNode {
 	Update(id: number) {
 		const zAddition = this.nodeFields.rotation.GetNumber() * FrameRateMultiplier;
 		GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation += zAddition;
+	}
+
+	GetNodeName(): string {
+		return AddRotationZName;
 	}
 
 	GetAutoGenerationCode() {

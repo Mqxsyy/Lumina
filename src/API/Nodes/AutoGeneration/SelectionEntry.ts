@@ -1,4 +1,7 @@
+import { NodeSystemData } from "Services/NodeSystemService";
+import { NodeData } from "Services/NodesService";
+
 export interface SelectionEntry {
 	name: string;
-	create?: () => void;
+	create?: () => NodeData | NodeSystemData;
 }

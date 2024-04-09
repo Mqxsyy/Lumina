@@ -4,6 +4,8 @@ import { GetParticleData } from "API/ParticleService";
 import { LineGraphField } from "API/Fields/LineGraphField";
 import { AutoGenMultiplySizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenMultiplySizeOverLife";
 
+export const MultiplySizeOverLifeName = "MultiplySizeOverLife";
+
 export class MultiplySizeOverLife extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;
 	nodeFields = {
@@ -23,6 +25,10 @@ export class MultiplySizeOverLife extends UpdateNode {
 		const y = particleData.size.Y * muliplier;
 
 		particleData.particle.Size = new Vector3(x, y, 0.001);
+	}
+
+	GetNodeName(): string {
+		return MultiplySizeOverLifeName;
 	}
 
 	GetAutoGenerationCode() {
