@@ -9,9 +9,13 @@ import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from ".
 import Div from "../Div";
 import NodeGroup from "./NodeGroup";
 import { GetMousePosition } from "Windows/MainWindow";
-
-const BORDER_THICKNESS = 3;
-const SYSTEM_WIDTH = 300;
+import {
+	SYSTEM_BORDER_THICKNESS,
+	SYSTEM_HEADER_HEIGHT,
+	SYSTEM_LIST_PADDING,
+	SYSTEM_PADDING,
+	SYSTEM_WIDTH,
+} from "../SizeConfig";
 
 interface Props {
 	data: NodeSystemData;
@@ -28,9 +32,11 @@ export default function NodeSystem({ data }: Props) {
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const canvas = useRef(GetCanvas.Invoke() as Frame);
 
-	const systemRef = useRef(undefined as undefined | TextButton);
+	const systemFrameRef = useRef(undefined as undefined | TextButton);
 
-	const [forceRender, setForceRender] = useState(false);
+	const groupMoveBinds = useRef<((id: number) => void)[]>([]);
+
+	const groupFramesRef = useRef<Frame[]>([]);
 
 	const getMouseOffset = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
@@ -40,7 +46,7 @@ export default function NodeSystem({ data }: Props) {
 	const bindDrag = () => {
 		RunService.BindToRenderStep("MoveSystem", Enum.RenderPriority.Input.Value, () => {
 			UpdateNodeSystemAnchorPoint(data.id, mouseOffsetRef.current);
-			setForceRender((prev) => !prev);
+			groupMoveBinds.current.forEach((fn) => fn(data.id));
 		});
 	};
 
@@ -56,6 +62,10 @@ export default function NodeSystem({ data }: Props) {
 
 	const onMouseButton2Down = () => {
 		RemoveNodeSystem(data.id);
+	};
+
+	const AddGroupMoveBind = (fn: (id: number) => void) => {
+		groupMoveBinds.current.push(fn);
 	};
 
 	useEffect(() => {
@@ -83,13 +93,12 @@ export default function NodeSystem({ data }: Props) {
 		const canvasPosition = new Vector2(canvas.current.AbsolutePosition.X, canvas.current.AbsolutePosition.Y);
 		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);
 
-		const systemHeight = systemRef.current === undefined ? 0 : systemRef.current.AbsoluteSize.Y;
+		const systemHeight = systemFrameRef.current === undefined ? 0 : systemFrameRef.current.AbsoluteSize.Y;
 		const nodeCenter = new Vector2(SYSTEM_WIDTH * 0.5 * zoomScale, systemHeight * 0.5);
 
 		const position = canvasPosition.add(canvasCenter).add(nodeCenter).add(offsetFromCenter.mul(zoomScale));
-
 		setPosition(position);
-	}, [canvas.current.AbsoluteSize, systemRef.current?.AbsoluteSize, offsetFromCenter, zoomScale, forceRender]);
+	}, [canvas.current.AbsoluteSize, systemFrameRef.current?.AbsoluteSize, offsetFromCenter, zoomScale]);
 
 	return (
 		<textbutton
@@ -100,7 +109,7 @@ export default function NodeSystem({ data }: Props) {
 			BackgroundTransparency={1}
 			Text={""}
 			Active={true}
-			ref={systemRef}
+			ref={systemFrameRef}
 			Event={{
 				InputBegan: (element, inputObject) => {
 					if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
@@ -118,15 +127,15 @@ export default function NodeSystem({ data }: Props) {
 		>
 			<Div>
 				<uipadding
-					PaddingLeft={new UDim(0, BORDER_THICKNESS * zoomScale)}
-					PaddingRight={new UDim(0, BORDER_THICKNESS * zoomScale)}
-					PaddingTop={new UDim(0, BORDER_THICKNESS * zoomScale)}
-					PaddingBottom={new UDim(0, BORDER_THICKNESS * zoomScale)}
+					PaddingLeft={new UDim(0, SYSTEM_BORDER_THICKNESS * zoomScale)}
+					PaddingRight={new UDim(0, SYSTEM_BORDER_THICKNESS * zoomScale)}
+					PaddingTop={new UDim(0, SYSTEM_BORDER_THICKNESS * zoomScale)}
+					PaddingBottom={new UDim(0, SYSTEM_BORDER_THICKNESS * zoomScale)}
 				/>
 				<Div>
 					<uistroke
 						Color={StyleColors.FullWhite}
-						Thickness={BORDER_THICKNESS * zoomScale}
+						Thickness={SYSTEM_BORDER_THICKNESS * zoomScale}
 						Transparency={0.75}
 					>
 						<uigradient
@@ -141,46 +150,60 @@ export default function NodeSystem({ data }: Props) {
 					</uistroke>
 					<uicorner CornerRadius={new UDim(0, 5 * zoomScale)} />
 					<uipadding
-						PaddingBottom={new UDim(0, 10 * zoomScale)}
-						PaddingLeft={new UDim(0, 10 * zoomScale)}
-						PaddingRight={new UDim(0, 10 * zoomScale)}
-						PaddingTop={new UDim(0, 10 * zoomScale)}
+						PaddingBottom={new UDim(0, SYSTEM_PADDING * zoomScale)}
+						PaddingLeft={new UDim(0, SYSTEM_PADDING * zoomScale)}
+						PaddingRight={new UDim(0, SYSTEM_PADDING * zoomScale)}
+						PaddingTop={new UDim(0, SYSTEM_PADDING * zoomScale)}
 					/>
-					<uilistlayout Padding={new UDim(0, 10 * zoomScale)} HorizontalAlignment={"Center"} />
+					<uilistlayout
+						Padding={new UDim(0, SYSTEM_LIST_PADDING * zoomScale)}
+						HorizontalAlignment={"Center"}
+					/>
 
-					<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={`VFX System (${data.id})`} />
+					<BasicTextLabel
+						Size={new UDim2(1, 0, 0, SYSTEM_HEADER_HEIGHT * zoomScale)}
+						Text={`VFX System (${data.id})`}
+					/>
 
 					<NodeGroup
 						SystemId={data.id}
 						NodeGroup={NodeGroups.Spawn}
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
-						NodeSystem={data.system}
-						NodeSystemPosition={systemRef.current?.AbsolutePosition}
+						NodeSystem={data}
+						SystemNodeGroups={groupFramesRef.current}
+						BindSystemMove={AddGroupMoveBind}
+						BindSystemFrame={(frame: Frame) => (groupFramesRef.current[0] = frame)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
 						NodeGroup={NodeGroups.Initialize}
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
-						NodeSystem={data.system}
-						NodeSystemPosition={systemRef.current?.AbsolutePosition}
+						NodeSystem={data}
+						SystemNodeGroups={groupFramesRef.current}
+						BindSystemMove={AddGroupMoveBind}
+						BindSystemFrame={(frame: Frame) => (groupFramesRef.current[1] = frame)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
 						NodeGroup={NodeGroups.Update}
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
-						NodeSystem={data.system}
-						NodeSystemPosition={systemRef.current?.AbsolutePosition}
+						NodeSystem={data}
+						SystemNodeGroups={groupFramesRef.current}
+						BindSystemMove={AddGroupMoveBind}
+						BindSystemFrame={(frame: Frame) => (groupFramesRef.current[2] = frame)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
 						NodeGroup={NodeGroups.Render}
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
-						NodeSystem={data.system}
-						NodeSystemPosition={systemRef.current?.AbsolutePosition}
+						NodeSystem={data}
+						SystemNodeGroups={groupFramesRef.current}
+						BindSystemMove={AddGroupMoveBind}
+						BindSystemFrame={(frame: Frame) => (groupFramesRef.current[3] = frame)}
 					/>
 
 					{/* need instant trigger child update */}

@@ -1,7 +1,9 @@
 import { Event } from "API/Bindables/Event";
 
-let zoomScale = 1;
-let lastZoomScale = 1;
+// TODO: reimplement zoom
+
+const zoomScale = 1;
+const lastZoomScale = 1;
 
 export const ZoomScaleChanged = new Event<[number]>();
 
@@ -19,15 +21,13 @@ export function GetLastZoomScale(): number {
 }
 
 export function UpdateZoomScale(value: number) {
-	let newZoomScale = GetZoomScale() + value;
-
-	if (newZoomScale > ZoomScaleConstraint.max) {
-		newZoomScale = ZoomScaleConstraint.max;
-	} else if (newZoomScale < ZoomScaleConstraint.min) {
-		newZoomScale = ZoomScaleConstraint.min;
-	}
-
-	lastZoomScale = zoomScale;
-	zoomScale = newZoomScale;
-	ZoomScaleChanged.Fire(zoomScale);
+	// let newZoomScale = GetZoomScale() + value;
+	// if (newZoomScale > ZoomScaleConstraint.max) {
+	// 	newZoomScale = ZoomScaleConstraint.max;
+	// } else if (newZoomScale < ZoomScaleConstraint.min) {
+	// 	newZoomScale = ZoomScaleConstraint.min;
+	// }
+	// lastZoomScale = zoomScale;
+	// zoomScale = newZoomScale;
+	// ZoomScaleChanged.Fire(zoomScale);
 }

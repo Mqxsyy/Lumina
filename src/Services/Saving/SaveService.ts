@@ -1,9 +1,12 @@
 import { HttpService } from "@rbxts/services";
 import { GetSavesFolder } from "API/FolderLocations";
-import { SaveData, SerializedField, SerializedNode, SerializedSystem } from "./SaveData";
+import { SaveData, SerializedField, SerializedLogicNode, SerializedNode, SerializedSystem } from "./SaveData";
 import { API_VERSION } from "API/ExportAPI";
 import { GetNodeSystems } from "Services/NodeSystemService";
 import { Node } from "API/Nodes/Node";
+import { GetAllNodes } from "Services/NodesService";
+import { NodeGroups } from "API/NodeGroup";
+import { NodeFields } from "API/Fields/NodeFields";
 
 const savesFolder = GetSavesFolder();
 
@@ -13,6 +16,7 @@ export function SaveToFile() {
 
 	const data: SaveData = {
 		version: API_VERSION,
+		logicNodes: [],
 		systems: [],
 	};
 
@@ -27,7 +31,6 @@ export function SaveToFile() {
 				initialize: [],
 				update: [],
 				render: [],
-				logic: [],
 			},
 		};
 
@@ -54,6 +57,21 @@ export function SaveToFile() {
 		data.systems.push(serializedSystem);
 	});
 
+	const logicNodes = GetAllNodes();
+	logicNodes.filter((collectionEnrty) => collectionEnrty.data.node.nodeGroup === NodeGroups.Logic);
+	logicNodes.forEach((collectionEntry) => {
+		const node = collectionEntry.data.node;
+		const anchorPoint = collectionEntry.data.anchorPoint;
+
+		const serializedNode: SerializedLogicNode = {
+			nodeName: node.GetNodeName(),
+			fields: SerializeFields(node.nodeFields),
+			anchorPoint: { x: anchorPoint.X, y: anchorPoint.Y },
+		};
+
+		data.logicNodes.push(serializedNode);
+	});
+
 	container.Source = HttpService.JSONEncode(data);
 	container.Parent = savesFolder;
 
@@ -63,17 +81,23 @@ export function SaveToFile() {
 function SerializeNode(node: Node): SerializedNode {
 	const serializedSpawnNode: SerializedNode = {
 		nodeName: node.GetNodeName(),
-		fields: [],
+		fields: SerializeFields(node.nodeFields),
 	};
 
-	for (const [key, value] of pairs(node.nodeFields)) {
+	return serializedSpawnNode;
+}
+
+function SerializeFields(fields: { [key: string]: NodeFields }): SerializedField[] {
+	const serializedFields: SerializedField[] = [];
+
+	for (const [key, value] of pairs(fields)) {
 		const serializedField: SerializedField = {
 			name: key as string,
 			data: value.SerializeData(),
 		};
 
-		serializedSpawnNode.fields.push(serializedField);
+		serializedFields.push(serializedField);
 	}
 
-	return serializedSpawnNode;
+	return serializedFields;
 }

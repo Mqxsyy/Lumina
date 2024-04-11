@@ -2,7 +2,7 @@ import { HttpService } from "@rbxts/services";
 import { NodeGroups } from "API/NodeGroup";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { NodeList } from "Lists/NodesList";
-import { SaveData } from "./SaveData";
+import { SaveData, SerializedField } from "./SaveData";
 import { NodeData } from "Services/NodesService";
 import { API_VERSION } from "API/ExportAPI";
 
@@ -58,24 +58,34 @@ export function LoadFromFile() {
 					nodeGroup = NodeGroups.Update;
 				} else if (group === "render") {
 					nodeGroup = NodeGroups.Render;
-				} else if (group === "logic") {
-					nodeGroup = NodeGroups.Logic;
 				}
 
 				for (const node of nodes) {
-					const nodeData = NodeList[nodeGroup][node.nodeName].create!() as NodeData;
+					const nodeData = CreateNode(nodeGroup, node.nodeName, node.fields);
 
-					for (const field of node.fields) {
-						nodeData.node.nodeFields[field.name].ReadSerializedData(field.data);
-					}
-
-					if (nodeGroup !== NodeGroups.Logic) {
-						nodeData.elementLoaded.Connect(() => {
-							systemData.addToNodeGroup[nodeGroup]!(nodeData.id);
-						});
-					}
+					nodeData.elementLoaded.Connect(() => {
+						systemData.addToNodeGroup[nodeGroup]!(nodeData.id);
+					});
 				}
 			}
 		});
 	}
+
+	for (const node of data.logicNodes) {
+		const nodeData = CreateNode(NodeGroups.Logic, node.nodeName, node.fields);
+
+		nodeData.elementLoaded.Connect(() => {
+			nodeData.anchorPoint = new Vector2(node.anchorPoint.x, node.anchorPoint.y);
+		});
+	}
+}
+
+function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeData {
+	const nodeData = NodeList[group][nodeName].create!() as NodeData;
+
+	for (const field of fields) {
+		nodeData.node.nodeFields[field.name].ReadSerializedData(field.data);
+	}
+
+	return nodeData;
 }

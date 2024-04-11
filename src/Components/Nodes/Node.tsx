@@ -4,14 +4,13 @@ import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
 import Div from "Components/Div";
+import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvas } from "Events";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-
-const NODE_WIDTH = 250;
 
 interface Props {
 	Name: string;

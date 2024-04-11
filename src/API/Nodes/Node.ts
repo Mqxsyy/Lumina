@@ -12,9 +12,18 @@ export abstract class Node {
 
 	abstract nodeGroup: NodeGroups;
 	abstract nodeFields: { [key: string]: NodeFields };
+	connectedSystemId?: number;
 
 	constructor() {
 		this.id = NodeIdPool.GetNextId();
+	}
+
+	ConnectToSystem(systemId: number) {
+		this.connectedSystemId = systemId;
+	}
+
+	RemoveSystemConnection() {
+		this.connectedSystemId = undefined;
 	}
 
 	abstract GetNodeName(): string;
