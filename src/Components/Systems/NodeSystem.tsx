@@ -36,7 +36,7 @@ export default function NodeSystem({ data }: Props) {
 
 	const groupMoveBinds = useRef<((id: number) => void)[]>([]);
 
-	const groupFramesRef = useRef<Frame[]>([]);
+	const groupHeightsRef = useRef<number[]>([]);
 
 	const getMouseOffset = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
@@ -171,9 +171,9 @@ export default function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
 						NodeSystem={data}
-						SystemNodeGroups={groupFramesRef.current}
+						SystemNodeGroupHeights={groupHeightsRef.current}
 						BindSystemMove={AddGroupMoveBind}
-						BindSystemFrame={(frame: Frame) => (groupFramesRef.current[0] = frame)}
+						UpdateGroupSize={(number: number) => (groupHeightsRef.current[0] = number)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
@@ -181,9 +181,9 @@ export default function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
 						NodeSystem={data}
-						SystemNodeGroups={groupFramesRef.current}
+						SystemNodeGroupHeights={groupHeightsRef.current}
 						BindSystemMove={AddGroupMoveBind}
-						BindSystemFrame={(frame: Frame) => (groupFramesRef.current[1] = frame)}
+						UpdateGroupSize={(number: number) => (groupHeightsRef.current[1] = number)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
@@ -191,9 +191,9 @@ export default function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
 						NodeSystem={data}
-						SystemNodeGroups={groupFramesRef.current}
+						SystemNodeGroupHeights={groupHeightsRef.current}
 						BindSystemMove={AddGroupMoveBind}
-						BindSystemFrame={(frame: Frame) => (groupFramesRef.current[2] = frame)}
+						UpdateGroupSize={(number: number) => (groupHeightsRef.current[2] = number)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
@@ -201,9 +201,9 @@ export default function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
 						NodeSystem={data}
-						SystemNodeGroups={groupFramesRef.current}
+						SystemNodeGroupHeights={groupHeightsRef.current}
 						BindSystemMove={AddGroupMoveBind}
-						BindSystemFrame={(frame: Frame) => (groupFramesRef.current[3] = frame)}
+						UpdateGroupSize={(number: number) => (groupHeightsRef.current[3] = number)}
 					/>
 
 					{/* need instant trigger child update */}

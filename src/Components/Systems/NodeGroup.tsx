@@ -2,9 +2,8 @@ import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { GetCanvas } from "Events";
 import { GetDraggingNodeId, NodeDraggingEnded } from "Services/DraggingService";
-import { BindNodeGroupFunction, NodeSystemData } from "Services/NodeSystemService";
+import { BindNodeGroupFunction, NodeSystemData, NodeSystemsChanged } from "Services/NodeSystemService";
 import { GetNodeById, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { StyleColors } from "Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
@@ -23,6 +22,7 @@ import {
 } from "../SizeConfig";
 
 // TODO: rework adding and removing, allow for reordering
+// BUG: moving canvas breaks positioning until system is moved again, which fixes it
 
 interface Props {
 	SystemId: number;
@@ -30,9 +30,9 @@ interface Props {
 	GradientStart: Color3;
 	GradientEnd: Color3;
 	NodeSystem: NodeSystemData;
-	SystemNodeGroups: Frame[];
+	SystemNodeGroupHeights: number[];
 	BindSystemMove: (fn: (id: number) => void) => void;
-	BindSystemFrame: (frame: Frame) => void;
+	UpdateGroupSize: (number: number) => void;
 }
 
 export default function NodeGroup({
@@ -41,17 +41,15 @@ export default function NodeGroup({
 	GradientStart,
 	GradientEnd,
 	NodeSystem,
-	SystemNodeGroups,
+	SystemNodeGroupHeights,
 	BindSystemMove,
-	BindSystemFrame,
+	UpdateGroupSize,
 }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 	const [childContainerSize, setChildContainerSize] = useState(new UDim2(1, 0, 0, 0));
 
 	const childNodesIdRef = useRef([] as number[]);
 	const isHovering = useRef(false);
-
-	const groupFrameRef = useRef<Frame>();
 
 	const onHover = () => {
 		isHovering.current = true;
@@ -64,20 +62,20 @@ export default function NodeGroup({
 
 		if (draggingNodeData.data.node.nodeGroup !== NodeGroup) return;
 
+		updateChildNodes(draggingNodeData.data.element!.AbsoluteSize.Y + 5, true);
 		RunService.BindToRenderStep(`OverrideDraggingNodePosition${NodeGroup}`, 120, () => {
-			updateChildNodes();
+			const xOffset = (SYSTEM_WIDTH - NODE_WIDTH) * 0.5;
+			let yOffset = getNodeOffsetY();
 
-			const containerSize = getContainerSize(draggingNodeId);
-			setChildContainerSize(new UDim2(1, 0, 0, containerSize + draggingNodeData.data.element!.AbsoluteSize.Y));
+			const anchor = NodeSystem.anchorPoint;
 
-			const xOffset = (groupFrameRef.current!.AbsoluteSize.X - 250) * 0.5;
-			const yOffset = 20 + 10 + containerSize;
-
-			const canvasFrame = GetCanvas.Invoke() as Frame;
-			const canvasPos = new Vector2(canvasFrame.AbsolutePosition.X, canvasFrame.AbsolutePosition.Y);
+			for (const id of childNodesIdRef.current) {
+				const node = GetNodeById(id)!;
+				yOffset += node.data.element!.AbsoluteSize.Y + GROUP_LIST_PADDING;
+			}
 
 			const offset = new Vector2(xOffset, yOffset);
-			UpdateNodeAnchorPoint(draggingNodeId, groupFrameRef.current!.AbsolutePosition.add(offset).sub(canvasPos));
+			UpdateNodeAnchorPoint(draggingNodeId, anchor.add(offset));
 		});
 	};
 
@@ -87,22 +85,13 @@ export default function NodeGroup({
 		RunService.UnbindFromRenderStep(`OverrideDraggingNodePosition${NodeGroup}`);
 
 		const draggingNodeId = GetDraggingNodeId();
-
 		if (draggingNodeId !== undefined) {
 			const draggingNodeIndex = childNodesIdRef.current.findIndex((nodeId) => nodeId === draggingNodeId);
 			if (draggingNodeIndex !== -1) {
-				childNodesIdRef.current.remove(draggingNodeIndex);
-				NodeSystem.system.RemoveNode(GetNodeById(draggingNodeId)!.data.node);
+				removeChildNode(draggingNodeId);
 			}
 		}
 
-		let containerSizeY = 0;
-		childNodesIdRef.current.forEach((id) => {
-			const node = GetNodeById(id)!;
-			containerSizeY += node.data.element!.AbsoluteSize.Y + 5;
-		});
-
-		setChildContainerSize(new UDim2(1, 0, 0, containerSizeY === 0 ? 0 : containerSizeY - GROUP_LIST_PADDING));
 		updateChildNodes();
 	};
 
@@ -125,25 +114,20 @@ export default function NodeGroup({
 		const node = GetNodeById(id)!;
 		NodeSystem.system.AddNode(node.data.node);
 
-		let containerSizeY = 0;
-		childNodesIdRef.current.forEach((childId) => {
-			const node = GetNodeById(childId)!;
-			containerSizeY += node.data.element!.AbsoluteSize.Y + 5;
-		});
+		updateChildNodes();
+	};
 
-		setChildContainerSize(new UDim2(1, 0, 0, containerSizeY === 0 ? 0 : containerSizeY - 5));
-		task.wait();
+	const removeChildNode = (id: number) => {
+		const draggingNodeIndex = childNodesIdRef.current.findIndex((nodeId) => nodeId === id);
+		childNodesIdRef.current.remove(draggingNodeIndex);
+
+		const node = GetNodeById(id)!;
+		NodeSystem.system.RemoveNode(node.data.node);
 
 		updateChildNodes();
 	};
 
-	const removeChildNode = () => {};
-
-	const updateChildNodes = () => {
-		if (SystemNodeGroups.size() !== 4) return;
-
-		const xOffset = (SYSTEM_WIDTH - NODE_WIDTH) * 0.5;
-
+	const getNodeOffsetY = () => {
 		// absolute size addition, ew
 		// but can't figure out a better way without update delays
 		let yOffset =
@@ -157,8 +141,42 @@ export default function NodeGroup({
 			GROUP_LIST_PADDING;
 
 		for (let i = 0; i < NodeGroup; i++) {
-			yOffset += SystemNodeGroups[i].AbsoluteSize.Y + SYSTEM_LIST_PADDING;
+			yOffset +=
+				SystemNodeGroupHeights[i] +
+				GROUP_PADDING * 2 +
+				GROUP_BORDER_THICKNESS * 2 +
+				SYSTEM_LIST_PADDING +
+				GROUP_HEADER_HEIGHT;
+
+			let extra = 0;
+			if (SystemNodeGroupHeights[i] === 0) {
+				extra = GROUP_LIST_PADDING;
+
+				if (NodeGroup === i) {
+					if (childNodesIdRef.current.size() !== 0) {
+						extra = 0;
+					}
+				}
+			}
+
+			yOffset += extra;
 		}
+
+		return yOffset;
+	};
+
+	const updateChildNodes = (add: number = 0, updateGroup: boolean = true) => {
+		if (SystemNodeGroupHeights.size() !== 4) return;
+
+		if (updateGroup) {
+			const containerSizeY = getContainerSize() + add;
+
+			UpdateGroupSize(containerSizeY);
+			setChildContainerSize(new UDim2(1, 0, 0, containerSizeY === 0 ? 0 : containerSizeY - GROUP_LIST_PADDING));
+		}
+
+		const xOffset = (SYSTEM_WIDTH - NODE_WIDTH) * 0.5;
+		let yOffset = getNodeOffsetY();
 
 		const anchor = NodeSystem.anchorPoint;
 
@@ -172,13 +190,8 @@ export default function NodeGroup({
 	};
 
 	useEffect(() => {
-		if (groupFrameRef.current === undefined) return;
-		BindSystemFrame(groupFrameRef.current);
-	}, [groupFrameRef.current]);
-
-	useEffect(() => {
-		updateChildNodes();
-	}, [SystemNodeGroups]);
+		updateChildNodes(0, false);
+	}, [SystemNodeGroupHeights[0], SystemNodeGroupHeights[1], SystemNodeGroupHeights[2], SystemNodeGroupHeights[3]]);
 
 	useEffect(() => {
 		const dragConnection = NodeDraggingEnded.Connect((id) => {
@@ -191,10 +204,8 @@ export default function NodeGroup({
 
 				if (draggingNodeData.data.node.nodeGroup !== NodeGroup) return;
 
-				childNodesIdRef.current.push(id);
-				updateChildNodes();
-
-				NodeSystem.system.AddNode(draggingNodeData.data.node);
+				RunService.UnbindFromRenderStep(`OverrideDraggingNodePosition${NodeGroup}`);
+				addChildNode(id);
 			}
 		});
 
@@ -208,6 +219,8 @@ export default function NodeGroup({
 			updateChildNodes();
 		});
 
+		UpdateGroupSize(getContainerSize());
+
 		return () => {
 			dragConnection.Disconnect();
 			zoomConnection.Disconnect();
@@ -215,13 +228,7 @@ export default function NodeGroup({
 	}, []);
 
 	return (
-		<Div
-			Size={UDim2.fromScale(1, 0)}
-			AutomaticSize={"Y"}
-			onHover={onHover}
-			onUnhover={onUnhover}
-			getFrame={(frame: Frame) => (groupFrameRef.current = frame)}
-		>
+		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize={"Y"} onHover={onHover} onUnhover={onUnhover}>
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize={"Y"}>
 				<uipadding
 					PaddingLeft={new UDim(0, GROUP_BORDER_THICKNESS * zoomScale)}
