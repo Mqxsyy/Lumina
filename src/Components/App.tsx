@@ -1,6 +1,5 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
-import { GetCanvas } from "Events";
 import { ConnectionsChanged, GetAllConnections, UnbindConnectionMoving } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
 import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
@@ -10,23 +9,22 @@ import { Controls } from "./Controls/Controls";
 import { NodeSelection } from "./Selection/NodeSelection";
 import { GetMousePosition, WidgetSizeChanged } from "Windows/MainWindow";
 import { GetWindow, Windows } from "Windows/WindowSevice";
+import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 
 // TODO: make zoom go to mouse
 
 export function App() {
 	const canvasRef = useRef(undefined as Frame | undefined);
-	GetCanvas.OnInvoke = () => canvasRef.current;
 
 	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.CrescentVFX)!.AbsoluteSize);
-
-	const [canvasPosition, setCanvasPosition] = useState(UDim2.fromOffset(0, 0));
-	const [canvasSize, setCanvasSize] = useState(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
 
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
 	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
 
 	const [_, setForceRender] = useState(0);
+
+	const canvasDataRef = useRef(GetCanvasData());
 
 	const StartMoveCanvas = (frame: Frame) => {
 		const mousePositionVec2 = GetMousePosition();
@@ -46,7 +44,19 @@ export function App() {
 		const mousePositionVec2 = GetMousePosition();
 		const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
 		const newPosition = mousePosition.sub(mouseOffset);
-		setCanvasPosition(newPosition);
+
+		UpdateCanvasData((canvasData) => {
+			canvasData.Position = UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5).add(newPosition);
+			return canvasData;
+		});
+
+		UpdateCanvasData((canvasData) => {
+			canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
+				UDim2.fromOffset(math.abs(newPosition.X.Offset) * 2, math.abs(newPosition.Y.Offset) * 2),
+			);
+
+			return canvasData;
+		});
 	};
 
 	const UpdateZoom = (inputObject: InputObject) => {
@@ -60,17 +70,31 @@ export function App() {
 	useEffect(() => {
 		WidgetSizeChanged.Connect((newSize) => {
 			setWidgetSize(newSize as Vector2);
+
+			UpdateCanvasData((canvasData) => {
+				canvasData.Position = UDim2.fromOffset(newSize.X * 0.5, newSize.Y * 0.5);
+				return canvasData;
+			});
+
+			UpdateCanvasData((canvasData) => {
+				canvasData.Size = UDim2.fromOffset(newSize.X, newSize.Y);
+				return canvasData;
+			});
 		});
 
 		ZoomScaleChanged.Connect((zoom) => {
 			setZoomScale(zoom as number);
 		});
 
-		NodesChanged.Connect(() => {
+		CanvasDataChanged.Connect(() => {
 			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
 
 		NodeSystemsChanged.Connect(() => {
+			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+		});
+
+		NodesChanged.Connect(() => {
 			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
 
@@ -79,20 +103,12 @@ export function App() {
 		});
 	}, []);
 
-	useEffect(() => {
-		const size = UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
-			UDim2.fromOffset(math.abs(canvasPosition.X.Offset * 2), math.abs(canvasPosition.Y.Offset * 2)),
-		);
-
-		setCanvasSize(size);
-	}, [widgetSize, canvasPosition]);
-
 	return (
 		<>
 			<frame
 				AnchorPoint={new Vector2(0.5, 0.5)}
-				Position={UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5).add(canvasPosition)}
-				Size={canvasSize}
+				Position={canvasDataRef.current.Position}
+				Size={canvasDataRef.current.Size}
 				BackgroundColor3={StyleColors.Background}
 				Event={{
 					InputBegan: (_, input: InputObject) => {
@@ -112,7 +128,10 @@ export function App() {
 				{/* Top Left */}
 				<imagelabel
 					Position={UDim2.fromOffset(0, 0)}
-					Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
+					Size={UDim2.fromOffset(
+						canvasDataRef.current.Size.X.Offset * 0.5,
+						canvasDataRef.current.Size.Y.Offset * 0.5,
+					)}
 					Rotation={180}
 					BackgroundTransparency={1}
 					// BackgroundTransparency={0.95}
@@ -124,8 +143,14 @@ export function App() {
 				/>
 				{/* Bottom Right */}
 				<imagelabel
-					Position={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
-					Size={UDim2.fromOffset(canvasSize.X.Offset * 0.5, canvasSize.Y.Offset * 0.5)}
+					Position={UDim2.fromOffset(
+						canvasDataRef.current.Size.X.Offset * 0.5,
+						canvasDataRef.current.Size.Y.Offset * 0.5,
+					)}
+					Size={UDim2.fromOffset(
+						canvasDataRef.current.Size.X.Offset * 0.5,
+						canvasDataRef.current.Size.Y.Offset * 0.5,
+					)}
 					BackgroundTransparency={1}
 					// BackgroundTransparency={0.95}
 					// BackgroundColor3={Color3.fromRGB(0, 255, 0)}
@@ -139,12 +164,15 @@ export function App() {
 					Position={
 						new UDim2(
 							0.5,
-							canvasSize.X.Offset * 0.25 - canvasSize.Y.Offset * 0.25,
+							canvasDataRef.current.Size.X.Offset * 0.25 - canvasDataRef.current.Size.Y.Offset * 0.25,
 							0,
-							canvasSize.Y.Offset * 0.25 - canvasSize.X.Offset * 0.25,
+							canvasDataRef.current.Size.Y.Offset * 0.25 - canvasDataRef.current.Size.X.Offset * 0.25,
 						)
 					}
-					Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
+					Size={UDim2.fromOffset(
+						canvasDataRef.current.Size.Y.Offset * 0.5,
+						canvasDataRef.current.Size.X.Offset * 0.5,
+					)}
 					Rotation={270}
 					BackgroundTransparency={1}
 					// BackgroundTransparency={0.95}
@@ -159,12 +187,15 @@ export function App() {
 					Position={
 						new UDim2(
 							0,
-							canvasSize.X.Offset * 0.25 - canvasSize.Y.Offset * 0.25,
+							canvasDataRef.current.Size.X.Offset * 0.25 - canvasDataRef.current.Size.Y.Offset * 0.25,
 							0.5,
-							canvasSize.Y.Offset * 0.25 - canvasSize.X.Offset * 0.25,
+							canvasDataRef.current.Size.Y.Offset * 0.25 - canvasDataRef.current.Size.X.Offset * 0.25,
 						)
 					}
-					Size={UDim2.fromOffset(canvasSize.Y.Offset * 0.5, canvasSize.X.Offset * 0.5)}
+					Size={UDim2.fromOffset(
+						canvasDataRef.current.Size.Y.Offset * 0.5,
+						canvasDataRef.current.Size.X.Offset * 0.5,
+					)}
 					Rotation={90}
 					BackgroundTransparency={1}
 					// BackgroundTransparency={0.95}

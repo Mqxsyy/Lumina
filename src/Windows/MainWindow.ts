@@ -1,6 +1,6 @@
 import { Event } from "API/Bindables/Event";
 import { GetWindow, OnWinowLoaded, Windows } from "./WindowSevice";
-import { GetCanvas } from "Events";
+import { GetCanvasData } from "Services/CanvasService";
 
 export const WidgetSizeChanged = new Event<[Vector2]>();
 
@@ -18,7 +18,7 @@ export function GetMousePosition(): Vector2 {
 }
 
 export function GetMousePositionOnCanvas(): Vector2 {
-	const canvasFrame = GetCanvas.Invoke() as Frame;
-	const pos = new Vector2(canvasFrame.AbsolutePosition.X, canvasFrame.AbsolutePosition.Y);
+	const canvasData = GetCanvasData();
+	const pos = new Vector2(canvasData.Position.X.Offset, canvasData.Position.Y.Offset);
 	return GetMousePosition().sub(pos);
 }

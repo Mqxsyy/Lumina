@@ -5,7 +5,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
 import Div from "Components/Div";
 import { NODE_WIDTH } from "Components/SizeConfig";
-import { GetCanvas } from "Events";
+import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
@@ -36,7 +36,7 @@ export function Node({
 	const [isDragging, setIsDragging] = useState(false);
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
-	const canvas = useRef(GetCanvas.Invoke() as Frame);
+	const canvasData = useRef(GetCanvasData());
 
 	const elementRef = useRef(undefined as undefined | TextButton);
 
@@ -50,8 +50,8 @@ export function Node({
 
 	const onMouseButton1Up = () => {
 		SetDraggingNodeId(undefined);
-		setIsDragging(false);
 
+		setIsDragging(false);
 		RunService.UnbindFromRenderStep("MoveNode");
 	};
 
@@ -84,20 +84,18 @@ export function Node({
 	}, [elementRef.current]);
 
 	useEffect(() => {
-		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);
-		const systemHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
-		const nodeCenter = AnchorPoint.add(new Vector2(NODE_WIDTH * 0.5 * zoomScale, systemHeight * 0.5));
+		const nodeHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
+		const nodeCenter = AnchorPoint.add(new Vector2(NODE_WIDTH * 0.5, nodeHeight * 0.5));
 
-		setOffsetFromCenter(nodeCenter.sub(canvasCenter).div(zoomScale));
+		setOffsetFromCenter(nodeCenter);
 	}, [AnchorPoint, elementRef.current?.AbsoluteSize]);
 
 	useEffect(() => {
-		const canvasPosition = new Vector2(canvas.current.AbsolutePosition.X, canvas.current.AbsolutePosition.Y);
-		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);
-		const position = canvasPosition.add(canvasCenter).add(offsetFromCenter.mul(zoomScale));
+		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
+		const position = canvasPosition.add(offsetFromCenter);
 
 		setPosition(position);
-	}, [canvas.current.AbsoluteSize, offsetFromCenter, zoomScale]);
+	}, [canvasData.current.Position, canvasData.current.Size, offsetFromCenter]);
 
 	return (
 		<textbutton

@@ -2,13 +2,11 @@ import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { GetCanvas } from "Events";
 import { StyleColors } from "Style";
+import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../../Services/NodeSystemService";
 import Div from "../Div";
-import NodeGroup from "./NodeGroup";
-import { GetMousePosition } from "Windows/MainWindow";
 import {
 	SYSTEM_BORDER_THICKNESS,
 	SYSTEM_HEADER_HEIGHT,
@@ -16,6 +14,8 @@ import {
 	SYSTEM_PADDING,
 	SYSTEM_WIDTH,
 } from "../SizeConfig";
+import NodeGroup from "./NodeGroup";
+import { GetCanvasData } from "Services/CanvasService";
 
 interface Props {
 	data: NodeSystemData;
@@ -30,7 +30,6 @@ export default function NodeSystem({ data }: Props) {
 	const [isDragging, setIsDragging] = useState(false);
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
-	const canvas = useRef(GetCanvas.Invoke() as Frame);
 
 	const systemFrameRef = useRef(undefined as undefined | TextButton);
 
@@ -38,20 +37,12 @@ export default function NodeSystem({ data }: Props) {
 
 	const groupHeightsRef = useRef<number[]>([]);
 
-	const getMouseOffset = (element: TextButton) => {
-		const mousePosition = GetMousePosition();
-		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
-	};
-
-	const bindDrag = () => {
-		RunService.BindToRenderStep("MoveSystem", Enum.RenderPriority.Input.Value, () => {
-			UpdateNodeSystemAnchorPoint(data.id, mouseOffsetRef.current);
-			groupMoveBinds.current.forEach((fn) => fn(data.id));
-		});
-	};
+	const canvasData = useRef(GetCanvasData());
 
 	const onMouseButton1Down = (element: TextButton) => {
-		getMouseOffset(element);
+		const mousePosition = GetMousePosition();
+		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
+
 		setIsDragging(true);
 	};
 
@@ -70,7 +61,12 @@ export default function NodeSystem({ data }: Props) {
 
 	useEffect(() => {
 		if (isDragging) {
-			bindDrag();
+			RunService.BindToRenderStep("MoveSystem", Enum.RenderPriority.Input.Value, () => {
+				const mousePosition = GetMousePositionOnCanvas();
+				UpdateNodeSystemAnchorPoint(data.id, mousePosition.add(mouseOffsetRef.current));
+
+				groupMoveBinds.current.forEach((fn) => fn(data.id));
+			});
 		}
 
 		return () => {
@@ -85,26 +81,22 @@ export default function NodeSystem({ data }: Props) {
 	}, []);
 
 	useEffect(() => {
-		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);
-		setOffsetFromCenter(data.anchorPoint.sub(canvasCenter).div(zoomScale));
+		const nodeCenter = data.anchorPoint.add(new Vector2(SYSTEM_WIDTH * 0.5, 0));
+		setOffsetFromCenter(nodeCenter);
 	}, [data.anchorPoint]);
 
 	useEffect(() => {
-		const canvasPosition = new Vector2(canvas.current.AbsolutePosition.X, canvas.current.AbsolutePosition.Y);
-		const canvasCenter = new Vector2(canvas.current.AbsoluteSize.X * 0.5, canvas.current.AbsoluteSize.Y * 0.5);
+		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
+		const position = canvasPosition.add(offsetFromCenter);
 
-		const systemHeight = systemFrameRef.current === undefined ? 0 : systemFrameRef.current.AbsoluteSize.Y;
-		const nodeCenter = new Vector2(SYSTEM_WIDTH * 0.5 * zoomScale, systemHeight * 0.5);
-
-		const position = canvasPosition.add(canvasCenter).add(nodeCenter).add(offsetFromCenter.mul(zoomScale));
 		setPosition(position);
-	}, [canvas.current.AbsoluteSize, systemFrameRef.current?.AbsoluteSize, offsetFromCenter, zoomScale]);
+	}, [canvasData.current.Position, canvasData.current.Size, offsetFromCenter]);
 
 	return (
 		<textbutton
 			Size={UDim2.fromOffset(SYSTEM_WIDTH * zoomScale, 0)}
 			AutomaticSize={"Y"}
-			AnchorPoint={new Vector2(0.5, 0.5)}
+			AnchorPoint={new Vector2(0.5, 0)}
 			Position={UDim2.fromOffset(position.X, position.Y)}
 			BackgroundTransparency={1}
 			Text={""}

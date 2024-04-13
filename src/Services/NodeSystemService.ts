@@ -37,14 +37,18 @@ export function GetNextNodeSystemId(): number {
 	return idPool.GetNextId();
 }
 
-export function UpdateNodeSystemAnchorPoint(id: number, offset: Vector2) {
+export function UpdateNodeSystemAnchorPoint(id: number, anchorPoint: Vector2) {
 	const nodeSystem = NodeSystemCollection.find((system) => system.data.id === id);
 	if (nodeSystem) {
-		nodeSystem.data.anchorPoint = GetMousePositionOnCanvas().add(offset);
+		nodeSystem.data.anchorPoint = anchorPoint;
 		NodeSystemsChanged.Fire();
 	} else {
 		warn(`NodeSystem with id ${id} not found`);
 	}
+}
+
+export function GetNodeSystemById(id: number) {
+	return NodeSystemCollection.find((system) => system.data.id === id);
 }
 
 export function GetNodeSystems(): NodeSystemCollectioEntry[] {

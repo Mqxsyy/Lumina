@@ -3,7 +3,7 @@ import { RunService } from "@rbxts/services";
 import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetDraggingNodeId, NodeDraggingEnded } from "Services/DraggingService";
-import { BindNodeGroupFunction, NodeSystemData, NodeSystemsChanged } from "Services/NodeSystemService";
+import { BindNodeGroupFunction, NodeSystemData } from "Services/NodeSystemService";
 import { GetNodeById, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { StyleColors } from "Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
@@ -21,8 +21,8 @@ import {
 	SYSTEM_WIDTH,
 } from "../SizeConfig";
 
-// TODO: rework adding and removing, allow for reordering
-// BUG: moving canvas breaks positioning until system is moved again, which fixes it
+// TODO: add node reordering
+// BUG: starting dagging when already hovering allows for free move not snappy inside that same group
 
 interface Props {
 	SystemId: number;
