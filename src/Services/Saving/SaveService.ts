@@ -57,9 +57,12 @@ export function SaveToFile() {
 		data.systems.push(serializedSystem);
 	});
 
-	const logicNodes = GetAllNodes();
-	logicNodes.filter((collectionEnrty) => collectionEnrty.data.node.nodeGroup === NodeGroups.Logic);
-	logicNodes.forEach((collectionEntry) => {
+	const allNodes = GetAllNodes();
+	const floatingNodes = allNodes.filter(
+		(collectionEnrty) => collectionEnrty.data.node.connectedSystemId === undefined,
+	);
+
+	floatingNodes.forEach((collectionEntry) => {
 		const node = collectionEntry.data.node;
 		const anchorPoint = collectionEntry.data.anchorPoint;
 
