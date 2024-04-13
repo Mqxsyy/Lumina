@@ -1,7 +1,7 @@
 export interface SaveData {
 	version: number;
 	systems: SerializedSystem[];
-	logicNodes: SerializedLogicNode[];
+	floatingNodes: SerializedFloatingNode[];
 }
 
 export interface SerializedSystem {
@@ -19,7 +19,8 @@ export interface SerializedNode {
 	fields: SerializedField[];
 }
 
-export interface SerializedLogicNode extends SerializedNode {
+export interface SerializedFloatingNode extends SerializedNode {
+	nodeGroup: number;
 	anchorPoint: { x: number; y: number };
 }
 

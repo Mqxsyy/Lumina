@@ -1,6 +1,6 @@
 import { HttpService } from "@rbxts/services";
 import { GetSavesFolder } from "API/FolderLocations";
-import { SaveData, SerializedField, SerializedLogicNode, SerializedNode, SerializedSystem } from "./SaveData";
+import { SaveData, SerializedField, SerializedFloatingNode, SerializedNode, SerializedSystem } from "./SaveData";
 import { API_VERSION } from "API/ExportAPI";
 import { GetNodeSystems } from "Services/NodeSystemService";
 import { Node } from "API/Nodes/Node";
@@ -16,7 +16,7 @@ export function SaveToFile() {
 
 	const data: SaveData = {
 		version: API_VERSION,
-		logicNodes: [],
+		floatingNodes: [],
 		systems: [],
 	};
 
@@ -63,13 +63,14 @@ export function SaveToFile() {
 		const node = collectionEntry.data.node;
 		const anchorPoint = collectionEntry.data.anchorPoint;
 
-		const serializedNode: SerializedLogicNode = {
+		const serializedNode: SerializedFloatingNode = {
 			nodeName: node.GetNodeName(),
 			fields: SerializeFields(node.nodeFields),
+			nodeGroup: node.nodeGroup,
 			anchorPoint: { x: anchorPoint.X, y: anchorPoint.Y },
 		};
 
-		data.logicNodes.push(serializedNode);
+		data.floatingNodes.push(serializedNode);
 	});
 
 	container.Source = HttpService.JSONEncode(data);

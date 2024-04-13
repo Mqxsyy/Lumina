@@ -112,6 +112,7 @@ export default function NodeGroup({
 		childNodesIdRef.current.push(id);
 
 		const node = GetNodeById(id)!;
+		node.data.node.ConnectToSystem(SystemId);
 		NodeSystem.system.AddNode(node.data.node);
 
 		updateChildNodes();
@@ -122,6 +123,7 @@ export default function NodeGroup({
 		childNodesIdRef.current.remove(draggingNodeIndex);
 
 		const node = GetNodeById(id)!;
+		node.data.node.RemoveSystemConnection();
 		NodeSystem.system.RemoveNode(node.data.node);
 
 		updateChildNodes();

@@ -3,7 +3,7 @@ import { NodeGroups } from "API/NodeGroup";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { NodeList } from "Lists/NodesList";
 import { SaveData, SerializedField } from "./SaveData";
-import { NodeData } from "Services/NodesService";
+import { NodeData, UpdateNodeAnchorPoint } from "Services/NodesService";
 import { API_VERSION } from "API/ExportAPI";
 
 // TODO: load connections 💀💀💀
@@ -71,12 +71,9 @@ export function LoadFromFile() {
 		});
 	}
 
-	for (const node of data.logicNodes) {
-		const nodeData = CreateNode(NodeGroups.Logic, node.nodeName, node.fields);
-
-		nodeData.elementLoaded.Connect(() => {
-			nodeData.anchorPoint = new Vector2(node.anchorPoint.x, node.anchorPoint.y);
-		});
+	for (const node of data.floatingNodes) {
+		const nodeData = CreateNode(node.nodeGroup, node.nodeName, node.fields);
+		UpdateNodeAnchorPoint(nodeData.id, new Vector2(node.anchorPoint.x, node.anchorPoint.y));
 	}
 }
 
