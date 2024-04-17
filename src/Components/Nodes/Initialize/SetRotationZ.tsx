@@ -1,11 +1,8 @@
 import Roact, { useRef } from "@rbxts/roact";
 import { SetRotationZ as SetRotationZAPI, SetRotationZFieldNames } from "API/Nodes/Initialize/SetRotationZ";
-import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
-import Div from "Components/Div";
-import { NumberField } from "Components/NodeFields/NumberField";
+import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
-import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
 
 export function CreateSetRotationZ() {
 	return AddNode(new SetRotationZAPI(), (data: NodeData) => {

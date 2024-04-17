@@ -141,7 +141,6 @@ export function Node({
 						Size={UDim2.fromOffset(20, 20)}
 						NodeId={Id}
 						BindFunction={ConnectionFunction}
-						NodeAbsolutePosition={elementRef.current?.AbsolutePosition}
 					/>
 				)}
 			</Div>

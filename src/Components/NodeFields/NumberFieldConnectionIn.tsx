@@ -18,7 +18,6 @@ interface Props {
 export default function NumberFieldConnectionIn({
 	NodeId,
 	NodeFieldName,
-	NodeAbsolutePosition,
 	DefaultText,
 	TextToInputRatio = 0.25,
 	InputDisabled,
@@ -34,7 +33,6 @@ export default function NumberFieldConnectionIn({
 				Size={UDim2.fromOffset(20, 20)}
 				NodeId={NodeId}
 				NodeFieldName={NodeFieldName}
-				NodeAbsolutePosition={NodeAbsolutePosition}
 				BindFunction={BindFunction}
 				UnbindFunction={UnbindFunction}
 			/>

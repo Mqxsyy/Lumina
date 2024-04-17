@@ -41,7 +41,6 @@ export function Vector3Field({
 						Size={UDim2.fromOffset(20, 20)}
 						NodeId={NodeId}
 						NodeFieldName={NodeFieldName}
-						NodeAbsolutePosition={NodeAnchorPoint}
 						BindFunction={NodeField.BindX}
 						UnbindFunction={NodeField.UnbindX}
 					/>
@@ -62,7 +61,6 @@ export function Vector3Field({
 						Size={UDim2.fromOffset(20, 20)}
 						NodeId={NodeId}
 						NodeFieldName={NodeFieldName}
-						NodeAbsolutePosition={NodeAnchorPoint}
 						BindFunction={NodeField.BindY}
 						UnbindFunction={NodeField.UnbindY}
 					/>
@@ -83,7 +81,6 @@ export function Vector3Field({
 						Size={UDim2.fromOffset(20, 20)}
 						NodeId={NodeId}
 						NodeFieldName={NodeFieldName}
-						NodeAbsolutePosition={NodeAnchorPoint}
 						BindFunction={NodeField.BindY}
 						UnbindFunction={NodeField.UnbindY}
 					/>

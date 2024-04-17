@@ -1,4 +1,4 @@
-import Roact, { useState } from "@rbxts/roact";
+import Roact, { useRef, useState } from "@rbxts/roact";
 import {
 	CreateConnection,
 	DestroyConnection,
@@ -13,7 +13,6 @@ interface Props {
 	Position?: UDim2;
 	Size?: UDim2;
 	NodeId: number;
-	NodeAbsolutePosition?: Vector2;
 	BindFunction: () => number;
 }
 
@@ -22,16 +21,16 @@ export default function ConnectionPointOut({
 	AnchorPoint = new Vector2(0, 0),
 	Position = UDim2.fromScale(0, 0),
 	Size = UDim2.fromScale(1, 1),
-	NodeAbsolutePosition,
 	BindFunction,
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
+	const nodeDataRef = useRef(GetNodeById(NodeId)!.data);
 
 	const MouseButton1Down = (element: TextButton) => {
 		if (connectionId === -1) {
-			if (NodeAbsolutePosition === undefined) return;
-
-			const offset = element.AbsolutePosition.sub(NodeAbsolutePosition).add(element.AbsoluteSize.mul(0.5));
+			const offset = element.AbsolutePosition.sub(nodeDataRef.current.element!.AbsolutePosition).add(
+				element.AbsoluteSize.mul(0.5),
+			);
 
 			const node = GetNodeById(NodeId)!.data;
 			const connectionData = CreateConnection(node, offset, BindFunction);

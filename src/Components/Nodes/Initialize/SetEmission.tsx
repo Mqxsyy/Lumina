@@ -1,11 +1,8 @@
 import Roact, { useRef } from "@rbxts/roact";
 import { SetEmission as SetEmissionAPI, SetEmissionFieldNames } from "API/Nodes/Initialize/SetEmission";
-import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
-import Div from "Components/Div";
-import { NumberField } from "Components/NodeFields/NumberField";
+import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
-import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
 
 export function CreateSetEmission() {
 	return AddNode(new SetEmissionAPI(), (data: NodeData) => {

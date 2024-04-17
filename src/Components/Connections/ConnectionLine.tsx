@@ -35,6 +35,9 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
 		const startSegmentPosition1 = canvasPosition.add(startPoint1);
 		const startSegmentPosition2 = canvasPosition.add(startPoint2);
 
+		const endSegmentPosition1 = canvasPosition.add(endPoint1);
+		const endSegmentPosition2 = canvasPosition.add(endPoint2);
+
 		const startSegment = {
 			position: startSegmentPosition1,
 			length: startSegmentPosition2.sub(startSegmentPosition1).Magnitude,
@@ -46,18 +49,15 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
 		const rotationRad = math.atan2(vectorDiff.Y, vectorDiff.X);
 
 		const middleSegement = {
-			position: startPoint2.add(endPoint2.sub(startPoint2).mul(0.5)),
+			position: startSegmentPosition2.add(endSegmentPosition2.sub(startSegmentPosition2).mul(0.5)),
 			length: vectorDiff.Magnitude,
 			rotation: math.round(math.deg(rotationRad)),
 		} as LineSegment;
 		setMiddleSegment(middleSegement);
 
-		const endSegmentPosition1 = canvasPosition.add(endPoint1);
-		const endSegmentPosition2 = canvasPosition.add(endPoint2);
-
 		const endSegment = {
 			position: endSegmentPosition1,
-			length: endSegmentPosition1.sub(endSegmentPosition2).Magnitude,
+			length: endSegmentPosition2.sub(endSegmentPosition1).Magnitude,
 			rotation: 0,
 		} as LineSegment;
 		setEndSegment(endSegment);
