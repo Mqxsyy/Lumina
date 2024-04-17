@@ -15,8 +15,6 @@ function SetPosition({ data }: { data: NodeData }) {
 
 	return (
 		<Node Name="Set Position" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<uipadding PaddingLeft={new UDim(0, 10)} />
-
 			<Vector3Field
 				NodeId={data.id}
 				NodeAnchorPoint={data.anchorPoint}

@@ -17,8 +17,6 @@ function SetVelocityRandom({ data }: { data: NodeData }) {
 
 	return (
 		<Node Name="Set Velocity Random" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<uipadding PaddingLeft={new UDim(0, 10)} />
-
 			<Vector2Field
 				Label={"X"}
 				ValueLabels={["Min", "Max"]}

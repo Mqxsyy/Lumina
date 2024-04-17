@@ -15,8 +15,6 @@ function AddRotationZRandom({ data }: { data: NodeData }) {
 
 	return (
 		<Node Name="Add Rotation Z Random" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<uipadding PaddingLeft={new UDim(0, 10)} />
-
 			<Vector2Field
 				Label={"Range"}
 				ValueLabels={["Min", "Max"]}

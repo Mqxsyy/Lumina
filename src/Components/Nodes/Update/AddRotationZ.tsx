@@ -1,8 +1,6 @@
 import Roact, { useRef } from "@rbxts/roact";
 import { AddRotationZ as AddRotationZAPI, AddRotationZFieldNames } from "API/Nodes/Update/AddRotationZ";
-import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
-import Div from "Components/Div";
-import { NumberField } from "Components/NodeFields/NumberField";
+import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
@@ -17,27 +15,16 @@ function AddRotationZ({ data }: { data: NodeData }) {
 
 	return (
 		<Node Name="Add Rotation Z" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<uipadding PaddingLeft={new UDim(0, 10)} />
-
-			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
-
-				<ConnectionPointIn
-					Size={UDim2.fromOffset(20, 20)}
-					NodeId={data.id}
-					NodeFieldName={AddRotationZFieldNames.rotation}
-					NodeAbsolutePosition={data.anchorPoint}
-					BindFunction={rotationFieldRef.current.BindNumber}
-					UnbindFunction={rotationFieldRef.current.UnbindNumber}
-				/>
-				<NumberField
-					Size={new UDim2(1, -25, 0, 0)}
-					Label={"Rotation"}
-					DefaultText={tostring(rotationFieldRef.current.GetNumber())}
-					NumberChanged={rotationFieldRef.current.SetNumber}
-					Disabled={rotationFieldRef.current.boundNode !== undefined}
-				/>
-			</Div>
+			<NumberFieldConnectionIn
+				NodeId={data.id}
+				NodeFieldName={AddRotationZFieldNames.rotation}
+				NodeAbsolutePosition={data.anchorPoint}
+				DefaultText={tostring(rotationFieldRef.current.GetNumber())}
+				InputDisabled={rotationFieldRef.current.boundNode !== undefined}
+				NumberChanged={rotationFieldRef.current.SetNumber}
+				BindFunction={rotationFieldRef.current.BindNumber}
+				UnbindFunction={rotationFieldRef.current.UnbindNumber}
+			/>
 		</Node>
 	);
 }

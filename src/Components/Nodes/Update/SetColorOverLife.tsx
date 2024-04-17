@@ -13,7 +13,6 @@ export function CreateSetColorOverLife() {
 function SetColorOverLife({ data }: { data: NodeData }) {
 	return (
 		<Node Name="Set Color Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<uipadding PaddingLeft={new UDim(0, 10)} />
 			<ColorRampField Label={"Ramp"} Ramp={(data.node as ColorOverLifeAPI).nodeFields.ramp} />
 		</Node>
 	);

@@ -22,7 +22,6 @@ function RandomNumber({ data }: { data: NodeData }) {
 			ConnectionFunction={(data.node as LogicNode<number>).Calculate}
 			ConnectioNode={data.node as LogicNode}
 		>
-			<uipadding PaddingLeft={new UDim(0, 10)} />
 			<Vector2Field
 				Label={"Vector3"}
 				ValueLabels={["Min", "Max"]}

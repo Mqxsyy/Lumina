@@ -23,7 +23,6 @@ function ConstantSpawn({ data }: { data: NodeData }) {
 
 	return (
 		<Node Name="Constant Spawn" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<uipadding PaddingLeft={new UDim(0, 10)} />
 			<NumberField
 				Label="Rate"
 				DefaultText={tostring(rateFieldRef.current.GetNumber())}

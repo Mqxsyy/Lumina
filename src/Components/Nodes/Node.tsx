@@ -146,7 +146,9 @@ export function Node({
 				)}
 			</Div>
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-				<uilistlayout Padding={new UDim(0, 5 * zoomScale)} HorizontalAlignment={"Center"} />
+				<uilistlayout Padding={new UDim(0, 10 * zoomScale)} />
+				<uipadding PaddingLeft={new UDim(0, 10)} />
+
 				{children}
 			</Div>
 		</textbutton>

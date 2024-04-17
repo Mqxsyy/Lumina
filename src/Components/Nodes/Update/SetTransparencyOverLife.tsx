@@ -15,7 +15,6 @@ function SetTransparencyOverLife({ data }: { data: NodeData }) {
 
 	return (
 		<Node Name="Set Transparency Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
-			<uipadding PaddingLeft={new UDim(0, 10)} />
 			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} />
 		</Node>
 	);
