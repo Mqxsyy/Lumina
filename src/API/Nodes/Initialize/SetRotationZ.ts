@@ -1,10 +1,13 @@
 import { NumberField } from "API/Fields/NumberField";
 import { GetParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
-import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetRotationZ } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZ";
+import { InitializeNode } from "./InitializeNode";
 
 export const SetRotationZName = "SetRotationZ";
+export const SetRotationZFieldNames = {
+	rotation: "rotation",
+};
 
 export class SetRotationZ extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

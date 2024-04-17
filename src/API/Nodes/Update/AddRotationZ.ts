@@ -1,11 +1,14 @@
-import { NodeGroups } from "API/NodeGroup";
-import { UpdateNode } from "./UpdateNode";
 import { NumberField } from "API/Fields/NumberField";
-import { GetParticleData } from "API/ParticleService";
 import { FrameRateMultiplier } from "API/Lib";
+import { NodeGroups } from "API/NodeGroup";
+import { GetParticleData } from "API/ParticleService";
 import { AutoGenAddRotationZ } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZ";
+import { UpdateNode } from "./UpdateNode";
 
 export const AddRotationZName = "AddRotationZ";
+export const AddRotationZFieldNames = {
+	rotation: "rotation",
+};
 
 export class AddRotationZ extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;

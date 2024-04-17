@@ -95,7 +95,7 @@ export function Node({
 		const position = canvasPosition.add(offsetFromCenter);
 
 		setPosition(position);
-	}, [canvasData.current.Position, canvasData.current.Size, offsetFromCenter]);
+	}, [canvasData.current.Position, offsetFromCenter]);
 
 	return (
 		<textbutton
@@ -139,8 +139,9 @@ export function Node({
 						AnchorPoint={new Vector2(1, 0)}
 						Position={UDim2.fromScale(1, 0)}
 						Size={UDim2.fromOffset(20, 20)}
-						Fn={ConnectionFunction}
-						ConnectionNode={ConnectioNode}
+						NodeId={Id}
+						BindFunction={ConnectionFunction}
+						NodeAbsolutePosition={elementRef.current?.AbsolutePosition}
 					/>
 				)}
 			</Div>

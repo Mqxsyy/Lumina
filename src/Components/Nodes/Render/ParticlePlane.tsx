@@ -1,22 +1,12 @@
 import Roact from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
 import { ParticlePlane as ParticlePlaneAPI } from "API/Nodes/Render/ParticlePlane";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateParticlePlane() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new ParticlePlaneAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <ParticlePlane key={data.id} data={data} />;
-		},
+	return AddNode(new ParticlePlaneAPI(), (data: NodeData) => {
+		return <ParticlePlane data={data} />;
 	});
 }
 

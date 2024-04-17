@@ -1,10 +1,13 @@
 import { Vector3Field } from "API/Fields/Vector3Field";
-import { NodeGroups } from "../../NodeGroup";
-import { InitializeNode } from "./InitializeNode";
-import { AutoGenSetPosition } from "../AutoGeneration/InitializeNodes/AutoGenSetPosition";
 import { GetParticleData } from "API/ParticleService";
+import { NodeGroups } from "../../NodeGroup";
+import { AutoGenSetPosition } from "../AutoGeneration/InitializeNodes/AutoGenSetPosition";
+import { InitializeNode } from "./InitializeNode";
 
 export const SetPositionName = "SetPosition";
+export const SetPositionFieldNames = {
+	position: "position",
+};
 
 export class SetPosition extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

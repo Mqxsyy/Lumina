@@ -1,6 +1,6 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
-import { ConnectionsChanged, GetAllConnections, UnbindConnectionMoving } from "Services/ConnectionsService";
+import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
 import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { GetNodeSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
@@ -116,7 +116,7 @@ export function App() {
 							const mousePositionVec2 = GetMousePosition();
 							setDisplayNodeSelection(UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y));
 						} else if (input.UserInputType === Enum.UserInputType.MouseButton1) {
-							UnbindConnectionMoving(true);
+							UnbindMovingConnection(true);
 							setDisplayNodeSelection(undefined);
 						} else if (input.UserInputType === Enum.UserInputType.MouseButton3) {
 							setDisplayNodeSelection(undefined);

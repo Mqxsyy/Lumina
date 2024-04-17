@@ -6,7 +6,10 @@ import Div from "Components/Div";
 import { NumberField } from "./NumberField";
 
 interface Props {
+	NodeId: number;
+	NodeAnchorPoint: Vector2;
 	NodeField: Vector3FieldAPI;
+	NodeFieldName: string;
 	Label: string;
 	DefaultValue: Vector3;
 	PlaceholderValues?: [string, string, string];
@@ -14,7 +17,15 @@ interface Props {
 
 // maybe don't receive nodeField but instead just receive functions like all other fields
 
-export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues = ["...", "...", "..."] }: Props) {
+export function Vector3Field({
+	NodeId,
+	NodeAnchorPoint,
+	NodeField,
+	NodeFieldName,
+	Label,
+	DefaultValue,
+	PlaceholderValues = ["...", "...", "..."],
+}: Props) {
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 			<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5)} />
@@ -26,7 +37,14 @@ export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindX} />
+					<ConnectionPointIn
+						Size={UDim2.fromOffset(20, 20)}
+						NodeId={NodeId}
+						NodeFieldName={NodeFieldName}
+						NodeAbsolutePosition={NodeAnchorPoint}
+						BindFunction={NodeField.BindX}
+						UnbindFunction={NodeField.UnbindX}
+					/>
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"X"}
@@ -40,7 +58,14 @@ export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindY} />
+					<ConnectionPointIn
+						Size={UDim2.fromOffset(20, 20)}
+						NodeId={NodeId}
+						NodeFieldName={NodeFieldName}
+						NodeAbsolutePosition={NodeAnchorPoint}
+						BindFunction={NodeField.BindY}
+						UnbindFunction={NodeField.UnbindY}
+					/>
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"Y"}
@@ -54,7 +79,14 @@ export function Vector3Field({ NodeField, Label, DefaultValue, PlaceholderValues
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={NodeField.BindZ} />
+					<ConnectionPointIn
+						Size={UDim2.fromOffset(20, 20)}
+						NodeId={NodeId}
+						NodeFieldName={NodeFieldName}
+						NodeAbsolutePosition={NodeAnchorPoint}
+						BindFunction={NodeField.BindY}
+						UnbindFunction={NodeField.UnbindY}
+					/>
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"Z"}

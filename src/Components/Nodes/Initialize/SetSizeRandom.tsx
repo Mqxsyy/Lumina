@@ -1,23 +1,13 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
 import { SetSizeRandom as SetSizeRandomAPI } from "API/Nodes/Initialize/SetSizeRandom";
 import Div from "Components/Div";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateSetSizeRandom() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetSizeRandomAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetSizeRandom key={data.id} data={data} />;
-		},
+	return AddNode(new SetSizeRandomAPI(), (data: NodeData) => {
+		return <SetSizeRandom key={data.id} data={data} />;
 	});
 }
 

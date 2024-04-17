@@ -1,10 +1,13 @@
 import { LineGraphField } from "API/Fields/LineGraphField";
 import { NodeGroups } from "API/NodeGroup";
 import { UpdateParticleData } from "API/ParticleService";
-import { UpdateNode } from "./UpdateNode";
 import { AutoGenSetSizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetSizeOverLife";
+import { UpdateNode } from "./UpdateNode";
 
 export const SetSizeOverLifeName = "SetSizeOverLife";
+export const SetSizeOverLifeFieldNames = {
+	graph: "graph",
+};
 
 export class SetSizeOverLife extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;

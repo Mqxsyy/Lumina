@@ -1,22 +1,12 @@
 import Roact, { useRef } from "@rbxts/roact";
 import { ConstantSpawn as ConstantSpawnAPI } from "API/Nodes/Spawn/ConstantSpawn";
 import { NumberField } from "Components/NodeFields/NumberField";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
-import { Event } from "API/Bindables/Event";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 export function CreateConstantSpawn() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new ConstantSpawnAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <ConstantSpawn key={data.id} data={data} />;
-		},
+	return AddNode(new ConstantSpawnAPI(), (data: NodeData) => {
+		return <ConstantSpawn data={data} />;
 	});
 }
 

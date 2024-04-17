@@ -5,6 +5,9 @@ import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetColor } from "../AutoGeneration/InitializeNodes/AutoGenSetColor";
 
 export const SetColorName = "SetColor";
+export const SetColorFieldNames = {
+	color: "color",
+};
 
 export class SetColor extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

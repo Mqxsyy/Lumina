@@ -1,24 +1,14 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
-import { SetTransparency as SetTransparencyAPI } from "API/Nodes/Initialize/SetTransparency";
+import { SetTransparency as SetTransparencyAPI, SetTransparencyFieldNames } from "API/Nodes/Initialize/SetTransparency";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
 import { NumberField } from "Components/NodeFields/NumberField";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateSetTransparency() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetTransparencyAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetTransparency key={data.id} data={data} />;
-		},
+	return AddNode(new SetTransparencyAPI(), (data: NodeData) => {
+		return <SetTransparency data={data} />;
 	});
 }
 
@@ -34,7 +24,11 @@ function SetTransparency({ data }: { data: NodeData }) {
 
 				<ConnectionPointIn
 					Size={UDim2.fromOffset(20, 20)}
+					NodeId={data.id}
+					NodeFieldName={SetTransparencyFieldNames.transparency}
+					NodeAbsolutePosition={data.anchorPoint}
 					BindFunction={transparencyFieldRef.current.BindNumber}
+					UnbindFunction={transparencyFieldRef.current.UnbindNumber}
 				/>
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}

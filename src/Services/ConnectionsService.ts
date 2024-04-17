@@ -2,13 +2,18 @@ import Roact from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { NodeData } from "./NodesService";
 
 export interface ConnectionData {
 	id: number;
-	startPoint: Vector2;
-	endPoint: Vector2;
+	startNode: NodeData;
+	startOffset: Vector2;
+	endPos?: Vector2;
+	endNode?: NodeData;
+	endOffset?: Vector2;
+	fn: () => number;
 	onDestroy: Event;
 }
 
@@ -17,8 +22,6 @@ interface ConnectionCollectionEntry {
 	create: (props: ConnectionData) => Roact.Element;
 }
 
-let movingConnectionFn = undefined as (() => number) | undefined;
-let movingConnectioNode = undefined as LogicNode | undefined;
 let movingConnectionId = -1;
 
 const idPool = new IdPool();
@@ -30,26 +33,6 @@ export function GetNextConnectionId(): number {
 	return idPool.GetNextId();
 }
 
-export function UpdateConnectionStart(id: number, startPoint: Vector2) {
-	const connection = ConnectionCollection.find((connection) => connection.data.id === id);
-	if (connection) {
-		connection.data.startPoint = startPoint;
-		ConnectionsChanged.Fire();
-	} else {
-		warn(`Connection with id ${id} not found`);
-	}
-}
-
-export function UpdateConnectionEnd(id: number, endPoint: Vector2) {
-	const connection = ConnectionCollection.find((connection) => connection.data.id === id);
-	if (connection) {
-		connection.data.endPoint = endPoint;
-		ConnectionsChanged.Fire();
-	} else {
-		warn(`Connection with id ${id} not found`);
-	}
-}
-
 export function GetAllConnections(): ConnectionCollectionEntry[] {
 	return ConnectionCollection;
 }
@@ -58,13 +41,36 @@ export function GetConnectionById(id: number) {
 	return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
-export function AddConnection(connection: ConnectionCollectionEntry) {
+export function CreateConnection(startNode: NodeData, startOffset: Vector2, fn: () => number) {
+	const connection: ConnectionCollectionEntry = {
+		data: {
+			id: idPool.GetNextId(),
+			startNode,
+			startOffset,
+			fn,
+			onDestroy: new Event(),
+		},
+		create: CreateConnectionLine,
+	};
+
 	ConnectionCollection.push(connection);
 	ConnectionsChanged.Fire();
+
 	return connection.data;
 }
 
-export function RemoveConnection(id: number) {
+export function UpdateConnectionData(id: number, fn: (data: ConnectionData) => ConnectionData) {
+	const connection = GetConnectionById(id);
+	if (connection === undefined) {
+		warn(`Failed to update connection data. Id not found`);
+		return;
+	}
+
+	connection.data = fn(connection.data);
+	ConnectionsChanged.Fire();
+}
+
+export function DestroyConnection(id: number) {
 	const index = ConnectionCollection.findIndex((connection) => connection.data.id === id);
 	if (index !== -1) {
 		idPool.ReleaseId(id);
@@ -78,30 +84,36 @@ export function RemoveConnection(id: number) {
 	warn(`Failed to delete connection. Id not found`);
 }
 
-export function BindConnectionMoving(id: number, fn: () => number, node: LogicNode) {
+export function StartMovingConnection(id: number) {
 	movingConnectionId = id;
-	movingConnectionFn = fn;
-	movingConnectioNode = node;
 
 	RunService.BindToRenderStep("MoveConnection", 200, () => {
-		UpdateConnectionEnd(id, GetMousePositionOnCanvas());
+		const mousePosition = GetMousePositionOnCanvas();
+
+		UpdateConnectionData(movingConnectionId, (data) => {
+			data.endPos = mousePosition;
+			return data;
+		});
 	});
 }
 
-export function UnbindConnectionMoving(destroyConnection = false) {
+export function UnbindMovingConnection(destroyConnection = false) {
 	if (movingConnectionId === -1) return;
 
 	RunService.UnbindFromRenderStep("MoveConnection");
 
 	if (destroyConnection) {
-		RemoveConnection(movingConnectionId);
+		DestroyConnection(movingConnectionId);
 	}
 
+	UpdateConnectionData(movingConnectionId, (data) => {
+		data.endPos = undefined;
+		return data;
+	});
+
 	movingConnectionId = -1;
-	movingConnectionFn = undefined;
-	movingConnectioNode = undefined;
 }
 
-export function GetMovingConnection() {
-	return { id: movingConnectionId, fn: movingConnectionFn, node: movingConnectioNode };
+export function GetMovingConnectionId() {
+	return movingConnectionId;
 }

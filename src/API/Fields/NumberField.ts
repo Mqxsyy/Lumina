@@ -1,5 +1,6 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
+import { GetNodeById } from "Services/NodesService";
 
 interface SerializedData {
 	number: number;
@@ -30,9 +31,15 @@ export class NumberField extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindNumber = (boundFunction: (() => number) | undefined, boundNode: LogicNode | undefined) => {
+	BindNumber = (boundFunction: () => number, boundNodeId: number) => {
 		this.boundFunction = boundFunction;
-		this.boundNode = boundNode;
+		this.boundNode = GetNodeById(boundNodeId)!.data.node as LogicNode;
+		this.FieldChanged.Fire();
+	};
+
+	UnbindNumber = () => {
+		this.boundFunction = undefined;
+		this.boundNode = undefined;
 		this.FieldChanged.Fire();
 	};
 

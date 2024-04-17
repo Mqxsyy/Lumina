@@ -1,23 +1,13 @@
 import Roact from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
 import { SetColor as SetColorAPI } from "API/Nodes/Initialize/SetColor";
 import Div from "Components/Div";
 import { ColorPickerField } from "Components/NodeFields/ColorPickerField";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateSetColor() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetColorAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetColor key={data.id} data={data} />;
-		},
+	return AddNode(new SetColorAPI(), (data: NodeData) => {
+		return <SetColor key={data.id} data={data} />;
 	});
 }
 

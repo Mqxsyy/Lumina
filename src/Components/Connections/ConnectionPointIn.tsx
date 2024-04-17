@@ -1,57 +1,84 @@
-import Roact, { useRef, useState } from "@rbxts/roact";
+import Roact, { useState } from "@rbxts/roact";
 import {
+	ConnectionData,
 	GetConnectionById,
-	GetMovingConnection,
-	UnbindConnectionMoving,
-	UpdateConnectionEnd,
+	GetMovingConnectionId,
+	UnbindMovingConnection,
+	UpdateConnectionData,
 } from "Services/ConnectionsService";
+import { GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
 import ConnectionPoint from "./ConnectionPoint";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+
+// TODO: make number field that incorporates the connection
 
 interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
-	BindFunction: (newValue: undefined | (() => number), boundNode: LogicNode | undefined) => void;
+	NodeId: number;
+	NodeFieldName: string;
+	NodeAbsolutePosition: Vector2;
+	BindFunction: (newValue: () => number, boundNodeId: number) => void;
+	UnbindFunction: () => void;
 }
 
 export default function ConnectionPointIn({
+	NodeId,
+	NodeFieldName,
 	AnchorPoint = new Vector2(0, 0),
 	Position = UDim2.fromScale(0, 0),
 	Size = UDim2.fromScale(1, 1),
+	NodeAbsolutePosition,
 	BindFunction,
+	UnbindFunction,
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
-	const destroyRef = useRef(undefined as undefined | RBXScriptConnection);
 
-	const MouseButton1Up = (element: TextButton) => {
-		const movingConnection = GetMovingConnection();
-		if (movingConnection.id === -1) return;
+	const mouseButton1Up = (element: TextButton) => {
+		const movingConnectionId = GetMovingConnectionId();
+		if (movingConnectionId === -1) return;
 
-		const pos = element.AbsolutePosition;
-		const size = element.AbsoluteSize;
+		const offset = element.AbsolutePosition.sub(NodeAbsolutePosition).add(element.AbsoluteSize.mul(0.5));
 
-		setConnectionId(movingConnection.id);
-		UpdateConnectionEnd(movingConnection.id, pos.add(size.mul(0.5)));
-		UnbindConnectionMoving();
+		setConnectionId(movingConnectionId);
 
-		const connection = GetConnectionById(movingConnection.id);
-		destroyRef.current = connection!.data.onDestroy.Connect(() => {
-			setConnectionId(-1);
-			BindFunction(undefined, undefined);
-			destroyRef.current!.Disconnect();
+		UpdateConnectionData(movingConnectionId, (data: ConnectionData) => {
+			data.endNode = GetNodeById(NodeId)!.data;
+			data.endOffset = offset;
+			return data;
 		});
 
-		BindFunction(movingConnection.fn!, movingConnection.node!);
-	};
+		UnbindMovingConnection();
 
-	const UpdateConnection = (element: TextButton) => {
-		if (connectionId === -1) return;
+		const connectionData = GetConnectionById(movingConnectionId)!.data;
 
-		const pos = element.AbsolutePosition;
-		const size = element.AbsoluteSize;
+		UpdateNodeData(NodeId, (data) => {
+			const connection: NodeConnectionIn = {
+				id: movingConnectionId,
+				fieldName: NodeFieldName,
+			};
 
-		UpdateConnectionEnd(connectionId, pos.add(size.mul(0.5)));
+			data.connectionsIn.push(connection);
+			return data;
+		});
+
+		const onDestroy = connectionData.onDestroy.Connect(() => {
+			onDestroy.Disconnect();
+
+			setConnectionId(-1);
+			UnbindFunction();
+
+			UpdateNodeData(NodeId, (data) => {
+				const index = data.connectionsIn.findIndex((connection) => connection.id === connectionData.id);
+				if (index !== -1) {
+					data.connectionsIn.remove(index);
+				}
+
+				return data;
+			});
+		});
+
+		BindFunction(connectionData.fn, connectionData.id);
 	};
 
 	return (
@@ -60,8 +87,7 @@ export default function ConnectionPointIn({
 			Position={Position}
 			Size={Size}
 			ConnectionId={connectionId === -1 ? undefined : connectionId}
-			MouseButton1Up={MouseButton1Up}
-			UpdateConnecton={UpdateConnection}
+			MouseButton1Up={mouseButton1Up}
 		/>
 	);
 }

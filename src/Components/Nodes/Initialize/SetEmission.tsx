@@ -1,24 +1,14 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
-import { SetEmission as SetEmissionAPI } from "API/Nodes/Initialize/SetEmission";
+import { SetEmission as SetEmissionAPI, SetEmissionFieldNames } from "API/Nodes/Initialize/SetEmission";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
 import { NumberField } from "Components/NodeFields/NumberField";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateSetEmission() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetEmissionAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetEmission key={data.id} data={data} />;
-		},
+	return AddNode(new SetEmissionAPI(), (data: NodeData) => {
+		return <SetEmission key={data.id} data={data} />;
 	});
 }
 
@@ -32,7 +22,14 @@ function SetEmission({ data }: { data: NodeData }) {
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={emissionFieldRef.current.BindNumber} />
+				<ConnectionPointIn
+					Size={UDim2.fromOffset(20, 20)}
+					NodeId={data.id}
+					NodeFieldName={SetEmissionFieldNames.emission}
+					NodeAbsolutePosition={data.anchorPoint}
+					BindFunction={emissionFieldRef.current.BindNumber}
+					UnbindFunction={emissionFieldRef.current.UnbindNumber}
+				/>
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Emission"}

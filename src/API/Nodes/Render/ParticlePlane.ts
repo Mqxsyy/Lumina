@@ -17,6 +17,9 @@ const DEFAULT_COLOR = new Color3(1, 1, 1);
 const DEFAULT_EMISSION = 1;
 
 export const ParticlePlaneName = "ParticlePlane";
+export const ParticlePlaneFieldNames = {
+	orientation: "orientation",
+};
 
 export interface PlaneParticle extends Part {
 	SurfaceGui: SurfaceGui & {

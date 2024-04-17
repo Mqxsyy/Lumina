@@ -1,24 +1,14 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
-import { Drag as DragAPI } from "API/Nodes/Update/Drag";
+import { Drag as DragAPI, DragFieldNames } from "API/Nodes/Update/Drag";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
-import { NumberField } from "Components/NodeFields/NumberField";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
-import { Node } from "../Node";
 import Div from "Components/Div";
+import { NumberField } from "Components/NodeFields/NumberField";
+import { AddNode, NodeData } from "Services/NodesService";
+import { Node } from "../Node";
 
 export function CreateDrag() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new DragAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <Drag key={data.id} data={data} />;
-		},
+	return AddNode(new DragAPI(), (data: NodeData) => {
+		return <Drag data={data} />;
 	});
 }
 
@@ -32,7 +22,14 @@ function Drag({ data }: { data: NodeData }) {
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
 
-				<ConnectionPointIn Size={UDim2.fromOffset(20, 20)} BindFunction={dragFieldRef.current.BindNumber} />
+				<ConnectionPointIn
+					Size={UDim2.fromOffset(20, 20)}
+					NodeId={data.id}
+					NodeFieldName={DragFieldNames.drag}
+					NodeAbsolutePosition={data.anchorPoint}
+					BindFunction={dragFieldRef.current.BindNumber}
+					UnbindFunction={dragFieldRef.current.UnbindNumber}
+				/>
 				<NumberField
 					Size={new UDim2(1, -25, 0, 0)}
 					Label={"Value"}

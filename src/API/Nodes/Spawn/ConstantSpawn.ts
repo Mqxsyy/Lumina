@@ -1,9 +1,12 @@
 import { NumberField } from "API/Fields/NumberField";
 import { NodeGroups } from "API/NodeGroup";
-import { SpawnNode } from "./SpawnNode";
 import { AutoGenConstantSpawn } from "../AutoGeneration/SpawnNodes/AutoGenConstantSpawn";
+import { SpawnNode } from "./SpawnNode";
 
 export const ConstantSpawnName = "ConstantSpawn";
+export const ConstantSpawnFieldNames = {
+	rate: "rate",
+};
 
 export class ConstantSpawn extends SpawnNode {
 	nodeGroup: NodeGroups = NodeGroups.Spawn;

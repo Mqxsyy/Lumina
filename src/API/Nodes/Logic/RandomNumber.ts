@@ -1,11 +1,16 @@
-import { Vector2Field } from "API/Fields/Vector2Field";
-import { NodeGroups } from "API/NodeGroup";
-import { LogicNode } from "./LogicNode";
 import { BooleanField } from "API/Fields/BooleanField";
+import { Vector2Field } from "API/Fields/Vector2Field";
 import { Rand } from "API/Lib";
+import { NodeGroups } from "API/NodeGroup";
 import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
+import { LogicNode } from "./LogicNode";
 
 export const RandomNumberName = "RandomNumber";
+export const RandomNumberFieldNames = {
+	range: "range",
+	isInt: "isInt",
+	randomizeOnce: "randomizeOnce",
+};
 
 export class RandomNumber extends LogicNode<number> {
 	nodeGroup: NodeGroups = NodeGroups.Logic;

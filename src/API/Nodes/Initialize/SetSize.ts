@@ -1,10 +1,13 @@
 import { NumberField } from "API/Fields/NumberField";
 import { UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
-import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetSize } from "../AutoGeneration/InitializeNodes/AutoGenSetSize";
+import { InitializeNode } from "./InitializeNode";
 
 export const SetSizeName = "SetSize";
+export const SetSizeFieldNames = {
+	size: "size",
+};
 
 export class SetSize extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

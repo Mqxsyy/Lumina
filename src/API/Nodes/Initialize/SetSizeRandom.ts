@@ -2,10 +2,13 @@ import { Vector2Field } from "API/Fields/Vector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import { UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
-import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetSizeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetSizeRandom";
+import { InitializeNode } from "./InitializeNode";
 
 export const SetSizeRandomName = "SetSizeRandom";
+export const SetSizeRandomFieldNames = {
+	range: "range",
+};
 
 export class SetSizeRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

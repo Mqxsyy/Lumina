@@ -1,22 +1,12 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Node } from "../Node";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { MultiplySizeOverLife as MultiplySizeOverLifeAPI } from "API/Nodes/Update/MultiplySizeOverLife";
-import { Event } from "API/Bindables/Event";
 import { LineGraphField } from "Components/NodeFields/LineGraphField";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
+import { Node } from "../Node";
 
 export function CreateMultiplySizeOverLife() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new MultiplySizeOverLifeAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <MultiplySizeOverLife key={data.id} data={data} />;
-		},
+	return AddNode(new MultiplySizeOverLifeAPI(), (data: NodeData) => {
+		return <MultiplySizeOverLife data={data} />;
 	});
 }
 

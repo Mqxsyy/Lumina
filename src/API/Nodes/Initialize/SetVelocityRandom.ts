@@ -1,11 +1,16 @@
-import { UpdateParticleData } from "API/ParticleService";
-import { NodeGroups } from "../../NodeGroup";
-import { InitializeNode } from "./InitializeNode";
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
+import { UpdateParticleData } from "API/ParticleService";
+import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetVelocityRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocityRandom";
+import { InitializeNode } from "./InitializeNode";
 
 export const SetVelocityRandomName = "SetVelocityRandom";
+export const SetVelocityRandomFieldNames = {
+	rangeX: "rangeX",
+	rangeY: "rangeY",
+	rangeZ: "rangeZ",
+};
 
 export class SetVelocityRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

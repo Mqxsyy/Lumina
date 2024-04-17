@@ -1,21 +1,11 @@
-import Roact, { useEffect, useState } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
-import { AddConnection, ConnectionData, GetNextConnectionId } from "Services/ConnectionsService";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import { GetCanvasData } from "Services/CanvasService";
+import { ConnectionData } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
 
-export function CreateConnection(startPoint: Vector2, endPoint: Vector2) {
-	return AddConnection({
-		data: {
-			id: GetNextConnectionId(),
-			startPoint: startPoint,
-			endPoint: endPoint,
-			onDestroy: new Event(),
-		},
-		create: (data: ConnectionData) => {
-			return <ConnectionLine key={data.id} data={data} />;
-		},
-	});
-}
+export const CreateConnectionLine = (data: ConnectionData) => {
+	return <ConnectionLine key={data.id} data={data} />;
+};
 
 interface LineSegment {
 	length: number;
@@ -28,36 +18,50 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
 	const [middleSegment, setMiddleSegment] = useState({ position: Vector2.zero, length: 0, rotation: 0 });
 	const [endSegment, setEndSegment] = useState({ position: Vector2.zero, length: 0, rotation: 0 });
 
-	useEffect(() => {
-		const xDistance = data.endPoint.X - data.startPoint.X;
+	const canvasData = useRef(GetCanvasData());
 
-		const startPos2 = data.startPoint.add(new Vector2(xDistance * 0.2, 0));
-		const endPos2 = data.endPoint.sub(new Vector2(xDistance * 0.2, 0));
+	useEffect(() => {
+		const startPoint1 = data.startNode.anchorPoint.add(data.startOffset);
+		const endPoint1 = data.endNode === undefined ? data.endPos! : data.endNode.anchorPoint.add(data.endOffset!);
+
+		const xDistance = endPoint1.X - startPoint1.X;
+
+		const startPoint2 = startPoint1.add(new Vector2(xDistance * 0.2, 0));
+		const endPoint2 = endPoint1.sub(new Vector2(xDistance * 0.2, 0));
+
+		const canvasPositionUDim2 = canvasData.current.Position;
+		const canvasPosition = new Vector2(canvasPositionUDim2.X.Offset, canvasPositionUDim2.Y.Offset);
+
+		const startSegmentPosition1 = canvasPosition.add(startPoint1);
+		const startSegmentPosition2 = canvasPosition.add(startPoint2);
 
 		const startSegment = {
-			position: data.startPoint,
-			length: startPos2.sub(data.startPoint).Magnitude,
+			position: startSegmentPosition1,
+			length: startSegmentPosition2.sub(startSegmentPosition1).Magnitude,
 			rotation: 0,
 		} as LineSegment;
 		setStartSegment(startSegment);
 
-		const vectorDiff = endPos2.sub(startPos2);
+		const vectorDiff = endPoint2.sub(startPoint2);
 		const rotationRad = math.atan2(vectorDiff.Y, vectorDiff.X);
 
 		const middleSegement = {
-			position: startPos2.add(endPos2.sub(startPos2).mul(0.5)),
+			position: startPoint2.add(endPoint2.sub(startPoint2).mul(0.5)),
 			length: vectorDiff.Magnitude,
 			rotation: math.round(math.deg(rotationRad)),
 		} as LineSegment;
 		setMiddleSegment(middleSegement);
 
+		const endSegmentPosition1 = canvasPosition.add(endPoint1);
+		const endSegmentPosition2 = canvasPosition.add(endPoint2);
+
 		const endSegment = {
-			position: data.endPoint,
-			length: data.endPoint.sub(endPos2).Magnitude,
+			position: endSegmentPosition1,
+			length: endSegmentPosition1.sub(endSegmentPosition2).Magnitude,
 			rotation: 0,
 		} as LineSegment;
 		setEndSegment(endSegment);
-	}, [data.startPoint, data.endPoint]);
+	}, [data.startNode.anchorPoint, data.endPos, data.endNode?.anchorPoint, canvasData.current.Position]);
 
 	return (
 		<>

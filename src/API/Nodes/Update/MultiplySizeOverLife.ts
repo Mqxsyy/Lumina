@@ -1,10 +1,13 @@
-import { NodeGroups } from "API/NodeGroup";
-import { UpdateNode } from "./UpdateNode";
-import { GetParticleData } from "API/ParticleService";
 import { LineGraphField } from "API/Fields/LineGraphField";
+import { NodeGroups } from "API/NodeGroup";
+import { GetParticleData } from "API/ParticleService";
 import { AutoGenMultiplySizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenMultiplySizeOverLife";
+import { UpdateNode } from "./UpdateNode";
 
 export const MultiplySizeOverLifeName = "MultiplySizeOverLife";
+export const MultiplySizeOverLifeFieldNames = {
+	graph: "graph",
+};
 
 export class MultiplySizeOverLife extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;

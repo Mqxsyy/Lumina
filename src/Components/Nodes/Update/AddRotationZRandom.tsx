@@ -1,22 +1,12 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
 import { AddRotationZRandom as AddRotationZRandomAPI } from "API/Nodes/Update/AddRotationZRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateAddRotationZRandom() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new AddRotationZRandomAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <AddRotationZRandom key={data.id} data={data} />;
-		},
+	return AddNode(new AddRotationZRandomAPI(), (data: NodeData) => {
+		return <AddRotationZRandom data={data} />;
 	});
 }
 

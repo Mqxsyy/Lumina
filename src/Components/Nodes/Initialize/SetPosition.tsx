@@ -1,22 +1,12 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
-import { SetPosition as SetPositionAPI } from "API/Nodes/Initialize/SetPosition";
+import { SetPosition as SetPositionAPI, SetPositionFieldNames } from "API/Nodes/Initialize/SetPosition";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateSetPosition() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetPositionAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetPosition key={data.id} data={data} />;
-		},
+	return AddNode(new SetPositionAPI(), (data: NodeData) => {
+		return <SetPosition data={data} />;
 	});
 }
 
@@ -28,7 +18,10 @@ function SetPosition({ data }: { data: NodeData }) {
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
 			<Vector3Field
+				NodeId={data.id}
+				NodeAnchorPoint={data.anchorPoint}
 				NodeField={positionFieldRef.current}
+				NodeFieldName={SetPositionFieldNames.position}
 				Label={"Position"}
 				DefaultValue={positionFieldRef.current.GetVector3()}
 			/>

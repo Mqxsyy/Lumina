@@ -1,22 +1,12 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
-import { SetVelocity as SetVelocityAPI } from "API/Nodes/Initialize/SetVelocity";
+import { SetVelocity as SetVelocityAPI, SetVelocityFieldNames } from "API/Nodes/Initialize/SetVelocity";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateSetVelocity() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetVelocityAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetVelocity key={data.id} data={data} />;
-		},
+	return AddNode(new SetVelocityAPI(), (data: NodeData) => {
+		return <SetVelocity key={data.id} data={data} />;
 	});
 }
 
@@ -28,7 +18,10 @@ function SetVelocity({ data }: { data: NodeData }) {
 			<uipadding PaddingLeft={new UDim(0, 10)} />
 
 			<Vector3Field
+				NodeId={data.id}
+				NodeAnchorPoint={data.anchorPoint}
 				NodeField={velocityFieldRef.current}
+				NodeFieldName={SetVelocityFieldNames.velocity}
 				Label={"Velocity"}
 				DefaultValue={velocityFieldRef.current.GetVector3()}
 			/>

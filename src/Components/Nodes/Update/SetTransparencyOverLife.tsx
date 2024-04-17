@@ -1,22 +1,12 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Node } from "../Node";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { SetTransparencyOverLife as TransparencyOverLifeAPI } from "API/Nodes/Update/SetTransparencyOverLife";
-import { Event } from "API/Bindables/Event";
 import { LineGraphField } from "Components/NodeFields/LineGraphField";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
+import { Node } from "../Node";
 
 export function CreateSetTransparencyOverLife() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new TransparencyOverLifeAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetTransparencyOverLife key={data.id} data={data} />;
-		},
+	return AddNode(new TransparencyOverLifeAPI(), (data: NodeData) => {
+		return <SetTransparencyOverLife data={data} />;
 	});
 }
 

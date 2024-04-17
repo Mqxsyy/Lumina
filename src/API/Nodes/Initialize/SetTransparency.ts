@@ -5,6 +5,9 @@ import { AutoGenSetTransparency } from "../AutoGeneration/InitializeNodes/AutoGe
 import { InitializeNode } from "./InitializeNode";
 
 export const SetTransparencyName = "SetTransparency";
+export const SetTransparencyFieldNames = {
+	transparency: "transparency",
+};
 
 export class SetTransparency extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

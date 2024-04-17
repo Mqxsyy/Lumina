@@ -1,22 +1,12 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
 import { SetVelocityRandom as SetVelocityRandomAPI } from "API/Nodes/Initialize/SetVelocityRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateSetVelocityRandom() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetVelocityRandomAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetVelocityRandom key={data.id} data={data} />;
-		},
+	return AddNode(new SetVelocityRandomAPI(), (data: NodeData) => {
+		return <SetVelocityRandom data={data} />;
 	});
 }
 

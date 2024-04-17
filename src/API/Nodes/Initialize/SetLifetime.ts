@@ -5,6 +5,9 @@ import { AutoGenSetLifetime } from "../AutoGeneration/InitializeNodes/AutoGenSet
 import { InitializeNode } from "./InitializeNode";
 
 export const SetLifetimeName = "SetLifetime";
+export const SetLifetimeFieldNames = {
+	time: "time",
+};
 
 export class SetLifetime extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

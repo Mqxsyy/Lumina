@@ -1,10 +1,13 @@
+import { Vector3Field } from "API/Fields/Vector3Field";
 import { UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
-import { InitializeNode } from "./InitializeNode";
-import { Vector3Field } from "API/Fields/Vector3Field";
 import { AutoGenSetVelocity } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocity";
+import { InitializeNode } from "./InitializeNode";
 
 export const SetVelocityName = "SetVelocity";
+export const SetVelocityFieldNames = {
+	velocity: "velocity",
+};
 
 export class SetVelocity extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

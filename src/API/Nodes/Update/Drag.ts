@@ -1,11 +1,14 @@
-import { NodeGroups } from "API/NodeGroup";
-import { UpdateNode } from "./UpdateNode";
 import { NumberField } from "API/Fields/NumberField";
-import { UpdateParticleData } from "API/ParticleService";
 import { FrameRateMultiplier, LerpNumber } from "API/Lib";
+import { NodeGroups } from "API/NodeGroup";
+import { UpdateParticleData } from "API/ParticleService";
 import { AutoGenDrag } from "../AutoGeneration/UpdateNodes/AutoGenDrag";
+import { UpdateNode } from "./UpdateNode";
 
 export const DragName = "Drag";
+export const DragFieldNames = {
+	drag: "drag",
+};
 
 export class Drag extends UpdateNode {
 	nodeGroup: NodeGroups = NodeGroups.Update;

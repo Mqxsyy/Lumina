@@ -5,6 +5,9 @@ import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetEmission } from "../AutoGeneration/InitializeNodes/AutoGenSetEmission";
 
 export const SetEmissionName = "SetEmission";
+export const SetEmissionFieldNames = {
+	emission: "emission",
+};
 
 export class SetEmission extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

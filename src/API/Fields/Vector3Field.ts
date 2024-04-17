@@ -1,5 +1,6 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
+import { GetNodeById } from "Services/NodesService";
 
 interface SerializedData {
 	x: number;
@@ -98,27 +99,51 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindVector3 = (boundFunction: (() => Vector3) | undefined, boundNode: LogicNode | undefined) => {
+	BindVector3 = (boundFunction: () => Vector3, boundNodeId: number) => {
 		this.boundFunction = boundFunction;
-		this.boundNode = boundNode;
+		this.boundNode = GetNodeById(boundNodeId)!.data.node as LogicNode;
 		this.FieldChanged.Fire();
 	};
 
-	BindX = (boundFunction: undefined | (() => number), boundNode: LogicNode | undefined) => {
+	UnbindVector3 = () => {
+		this.boundFunction = undefined;
+		this.boundNode = undefined;
+		this.FieldChanged.Fire();
+	};
+
+	BindX = (boundFunction: () => number, boundNodeId: number) => {
 		this.boundFunctionX = boundFunction;
-		this.boundNodeX = boundNode;
+		this.boundNodeX = GetNodeById(boundNodeId)!.data.node as LogicNode;
 		this.FieldChanged.Fire();
 	};
 
-	BindY = (boundFunction: undefined | (() => number), boundNode: LogicNode | undefined) => {
+	UnbindX = () => {
+		this.boundFunctionX = undefined;
+		this.boundNodeX = undefined;
+		this.FieldChanged.Fire();
+	};
+
+	BindY = (boundFunction: () => number, boundNodeId: number) => {
 		this.boundFunctionY = boundFunction;
-		this.boundNodeY = boundNode;
+		this.boundNodeY = GetNodeById(boundNodeId)!.data.node as LogicNode;
 		this.FieldChanged.Fire();
 	};
 
-	BindZ = (boundFunction: undefined | (() => number), boundNode: LogicNode | undefined) => {
+	UnbindY = () => {
+		this.boundFunctionY = undefined;
+		this.boundNodeY = undefined;
+		this.FieldChanged.Fire();
+	};
+
+	BindZ = (boundFunction: () => number, boundNodeId: number) => {
 		this.boundFunctionZ = boundFunction;
-		this.boundNodeZ = boundNode;
+		this.boundNodeZ = GetNodeById(boundNodeId)!.data.node as LogicNode;
+		this.FieldChanged.Fire();
+	};
+
+	UnbindZ = () => {
+		this.boundFunctionZ = undefined;
+		this.boundNodeZ = undefined;
 		this.FieldChanged.Fire();
 	};
 

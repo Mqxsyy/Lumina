@@ -1,22 +1,12 @@
 import Roact from "@rbxts/roact";
-import { Node } from "../Node";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
 import { SetColorOverLife as ColorOverLifeAPI } from "API/Nodes/Update/SetColorOverLife";
-import { Event } from "API/Bindables/Event";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { ColorRampField } from "Components/NodeFields/ColorRampField";
+import { AddNode, NodeData } from "Services/NodesService";
+import { Node } from "../Node";
 
 export function CreateSetColorOverLife() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new ColorOverLifeAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetColorOverLife key={data.id} data={data} />;
-		},
+	return AddNode(new ColorOverLifeAPI(), (data: NodeData) => {
+		return <SetColorOverLife data={data} />;
 	});
 }
 

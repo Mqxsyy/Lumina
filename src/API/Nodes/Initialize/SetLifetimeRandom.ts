@@ -6,6 +6,9 @@ import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetLifetimeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetimeRandom";
 
 export const SetLifetimeRandomName = "SetLifetimeRandom";
+export const SetLifetimeRandomFieldNames = {
+	range: "range",
+};
 
 export class SetLifetimeRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;

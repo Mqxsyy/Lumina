@@ -1,23 +1,13 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { Event } from "API/Bindables/Event";
 import { SetLifetimeRandom as SetLifetimeRandomAPI } from "API/Nodes/Initialize/SetLifetimeRandom";
 import Div from "Components/Div";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
-import { AddNode, GetNextNodeId, NodeData } from "Services/NodesService";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateSetLifetimeRandom() {
-	return AddNode({
-		data: {
-			id: GetNextNodeId(),
-			anchorPoint: GetMousePositionOnCanvas(),
-			node: new SetLifetimeRandomAPI(),
-			elementLoaded: new Event(),
-		},
-		create: (data: NodeData) => {
-			return <SetLifetimeRandom key={data.id} data={data} />;
-		},
+	return AddNode(new SetLifetimeRandomAPI(), (data: NodeData) => {
+		return <SetLifetimeRandom key={data.id} data={data} />;
 	});
 }
 

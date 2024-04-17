@@ -2,10 +2,13 @@ import { Vector2Field } from "API/Fields/Vector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import { GetParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
-import { InitializeNode } from "./InitializeNode";
 import { AutoGenSetRotationZRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZRandom";
+import { InitializeNode } from "./InitializeNode";
 
 export const SetRotationZRandomName = "SetRotationZRandom";
+export const SetRotationZRandomFieldNames = {
+	range: "range",
+};
 
 export class SetRotationZRandom extends InitializeNode {
 	nodeGroup: NodeGroups = NodeGroups.Initialize;
