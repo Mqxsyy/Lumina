@@ -20,6 +20,7 @@ export function CreateEmptySystem(position?: Vector2) {
 				[NodeGroups.Logic]: undefined as never,
 			},
 			finishedBindingGroups: new Event(),
+			onDestroy: new Event(),
 		},
 		create: (systemData) => <NodeSystem key={`system_${systemData.id}`} data={systemData} />,
 	});

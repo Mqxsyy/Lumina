@@ -68,7 +68,7 @@ export class NodeSystem {
 			return;
 		}
 
-		if (this.spawnNode) {
+		if (this.spawnNode && this.renderNode) {
 			let rate = this.spawnNode!.GetValue() as number;
 			let cd = 1 / rate;
 			let amount = 1; // TODO: make amount more accurate, every 2nd frame spawns 2, every 3rd frame spawns 2, etc

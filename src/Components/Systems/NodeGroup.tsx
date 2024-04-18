@@ -4,7 +4,7 @@ import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetDraggingNodeId, NodeDraggingEnded } from "Services/DraggingService";
 import { BindNodeGroupFunction, NodeSystemData } from "Services/NodeSystemService";
-import { GetNodeById, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, RemoveNode, UpdateNodeData } from "Services/NodesService";
 import { StyleColors } from "Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
@@ -50,7 +50,9 @@ export default function NodeGroup({
 	const [childContainerSize, setChildContainerSize] = useState(new UDim2(1, 0, 0, 0));
 
 	const childNodesIdRef = useRef([] as number[]);
+	const nodeDestroyConnectionsRef = useRef<{ [key: number]: RBXScriptConnection }>({});
 	const isHovering = useRef(false);
+	const isDestroyingRef = useRef(false);
 
 	const onHover = () => {
 		isHovering.current = true;
@@ -118,6 +120,18 @@ export default function NodeGroup({
 		node.data.node.ConnectToSystem(SystemId);
 		NodeSystem.system.AddNode(node.data.node);
 
+		nodeDestroyConnectionsRef.current[id] = node.data.onDestroy.Connect((nodeData) => {
+			nodeDestroyConnectionsRef.current[id].Disconnect();
+			delete nodeDestroyConnectionsRef.current[id];
+
+			const destroyingNodeIndex = childNodesIdRef.current.findIndex((nodeId) => nodeId === id);
+			NodeSystem.system.RemoveNode(nodeData.node);
+			childNodesIdRef.current.remove(destroyingNodeIndex);
+
+			if (isDestroyingRef.current) return;
+			updateChildNodes();
+		});
+
 		updateChildNodes();
 	};
 
@@ -128,6 +142,11 @@ export default function NodeGroup({
 		const node = GetNodeById(id)!;
 		node.data.node.RemoveSystemConnection();
 		NodeSystem.system.RemoveNode(node.data.node);
+
+		if (nodeDestroyConnectionsRef.current[id] !== undefined) {
+			nodeDestroyConnectionsRef.current[id].Disconnect();
+			delete nodeDestroyConnectionsRef.current[id];
+		}
 
 		updateChildNodes();
 	};
@@ -220,6 +239,14 @@ export default function NodeGroup({
 			setZoomScale(zoomScale as number);
 		});
 
+		const destroyConnection = NodeSystem.onDestroy.Connect(() => {
+			destroyConnection.Disconnect();
+			isDestroyingRef.current = true;
+			childNodesIdRef.current.forEach((id) => {
+				RemoveNode(id);
+			});
+		});
+
 		BindNodeGroupFunction(SystemId, NodeGroup, addChildNode);
 
 		BindSystemMove(() => {
@@ -231,6 +258,7 @@ export default function NodeGroup({
 		return () => {
 			dragConnection.Disconnect();
 			zoomConnection.Disconnect();
+			destroyConnection.Disconnect();
 		};
 	}, []);
 

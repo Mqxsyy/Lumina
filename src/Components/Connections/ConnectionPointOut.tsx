@@ -44,6 +44,8 @@ export default function ConnectionPointOut({
 			onDestroy.Disconnect();
 			setConnectionId(-1);
 
+			if (GetNodeById(NodeId) === undefined) return;
+
 			UpdateNodeData(NodeId, (data) => {
 				const index = data.connectionsOut.findIndex((connection) => connection.id === connectionData.id);
 				if (index !== -1) {
@@ -77,6 +79,20 @@ export default function ConnectionPointOut({
 		UnbindMovingConnection();
 		DestroyConnection(connectionId);
 	};
+
+	useEffect(() => {
+		const destroyConnection = nodeDataRef.current.onDestroy.Connect(() => {
+			destroyConnection.Disconnect();
+			if (connectionId !== -1) {
+				UnbindMovingConnection();
+				DestroyConnection(connectionId);
+			}
+		});
+
+		return () => {
+			destroyConnection.Disconnect();
+		};
+	}, [nodeDataRef.current.onDestroy, connectionId]);
 
 	useEffect(() => {
 		if (elementRef.current === undefined) return;

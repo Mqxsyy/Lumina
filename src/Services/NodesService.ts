@@ -23,6 +23,7 @@ export interface NodeData {
 	element?: TextButton;
 	elementLoaded: Event;
 	node: Node;
+	onDestroy: Event<[NodeData]>;
 }
 
 interface NodeCollectionEntry {
@@ -50,6 +51,7 @@ export function AddNode(api: Node, create: (data: NodeData) => Roact.Element) {
 			connectionsIn: [],
 			elementLoaded: new Event(),
 			node: api,
+			onDestroy: new Event<[NodeData]>(),
 		},
 		create: create,
 	};
@@ -89,8 +91,12 @@ export function SetNodeElement(id: number, element: TextButton) {
 export function RemoveNode(id: number) {
 	const index = NodeCollection.findIndex((collection) => collection.data.node.id === id);
 	if (index !== -1) {
+		const node = NodeCollection[index];
+		node.data.onDestroy.Fire(node.data);
+
 		NodeCollection.remove(index);
 		NodesChanged.Fire();
+
 		return;
 	}
 

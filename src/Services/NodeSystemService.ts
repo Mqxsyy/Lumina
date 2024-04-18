@@ -3,7 +3,6 @@ import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem } from "API/NodeSystem";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 // TODO: Add render order changing
 
@@ -21,6 +20,7 @@ export interface NodeSystemData {
 		[NodeGroups.Logic]: never;
 	};
 	finishedBindingGroups: Event;
+	onDestroy: Event<[NodeSystemData]>;
 }
 
 interface NodeSystemCollectioEntry {
@@ -99,7 +99,8 @@ export function BindNodeGroupFunction(id: number, group: NodeGroups, fn: (id: nu
 export function RemoveNodeSystem(id: number) {
 	const index = NodeSystemCollection.findIndex((system) => system.data.id === id);
 	if (index !== -1) {
-		idPool.ReleaseId(id);
+		const nodeSystem = NodeSystemCollection[index];
+		nodeSystem.data.onDestroy.Fire(nodeSystem.data);
 
 		NodeSystemCollection.remove(index);
 		NodeSystemsChanged.Fire();

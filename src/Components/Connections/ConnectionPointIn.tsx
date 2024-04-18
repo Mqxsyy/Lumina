@@ -1,6 +1,7 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import {
 	ConnectionData,
+	DestroyConnection,
 	GetAllConnections,
 	GetConnectionById,
 	GetMovingConnectionId,
@@ -32,6 +33,7 @@ export default function ConnectionPointIn({
 	UnbindFunction,
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
+
 	const nodeDataRef = useRef(GetNodeById(NodeId)!.data);
 	const elementRef = useRef<TextButton>();
 
@@ -63,11 +65,13 @@ export default function ConnectionPointIn({
 			return data;
 		});
 
-		const onDestroy = connectionData.onDestroy.Connect(() => {
-			onDestroy.Disconnect();
+		const destroyConnection = connectionData.onDestroy.Connect(() => {
+			destroyConnection.Disconnect();
 
 			setConnectionId(-1);
 			UnbindFunction();
+
+			if (GetNodeById(NodeId) === undefined) return;
 
 			UpdateNodeData(NodeId, (data) => {
 				const index = data.connectionsIn.findIndex((connection) => connection.id === connectionData.id);
@@ -89,6 +93,19 @@ export default function ConnectionPointIn({
 		UnbindMovingConnection();
 		finishConnection(movingConnectionId);
 	};
+
+	useEffect(() => {
+		const destroyConnection = nodeDataRef.current.onDestroy.Connect(() => {
+			destroyConnection.Disconnect();
+			if (connectionId !== -1) {
+				DestroyConnection(connectionId);
+			}
+		});
+
+		return () => {
+			destroyConnection.Disconnect();
+		};
+	}, [nodeDataRef.current.onDestroy, connectionId]);
 
 	useEffect(() => {
 		if (elementRef.current === undefined) return;

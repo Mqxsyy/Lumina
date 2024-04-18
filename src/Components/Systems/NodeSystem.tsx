@@ -24,19 +24,13 @@ interface Props {
 export default function NodeSystem({ data }: Props) {
 	const [position, setPosition] = useState(new Vector2(0, 0));
 	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
-
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
 	const [isDragging, setIsDragging] = useState(false);
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
-
 	const systemFrameRef = useRef(undefined as undefined | TextButton);
-
 	const groupMoveBinds = useRef<((id: number) => void)[]>([]);
-
 	const groupHeightsRef = useRef<number[]>([]);
-
 	const canvasData = useRef(GetCanvasData());
 
 	const onMouseButton1Down = (element: TextButton) => {
