@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetLifetime() {
 	return AddNode(new SetLifetimeAPI(), (data: NodeData) => {
-		return <SetLifetime key={data.id} data={data} />;
+		return <SetLifetime key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,9 +14,9 @@ function SetLifetime({ data }: { data: NodeData }) {
 	const timeFieldRef = useRef((data.node as SetLifetimeAPI).nodeFields.time);
 
 	return (
-		<Node Name="Set Lifetime" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Lifetime" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<NumberFieldConnectionIn
-				NodeId={data.id}
+				NodeId={data.node.id}
 				NodeFieldName={SetLifetimeFieldNames.time}
 				NodeAbsolutePosition={data.anchorPoint}
 				DefaultText={tostring(timeFieldRef.current.GetNumber())}

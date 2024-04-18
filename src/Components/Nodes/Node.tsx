@@ -7,7 +7,7 @@ import Div from "Components/Div";
 import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
-import { RemoveNode, SetNodeElement, UpdateNodeAnchorPoint } from "Services/NodesService";
+import { RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
@@ -62,8 +62,10 @@ export function Node({
 	useEffect(() => {
 		if (isDragging) {
 			RunService.BindToRenderStep("MoveNode", 110, () => {
-				const mousePosition = GetMousePositionOnCanvas();
-				UpdateNodeAnchorPoint(Id, mousePosition.add(mouseOffsetRef.current));
+				UpdateNodeData(Id, (data) => {
+					data.anchorPoint = GetMousePositionOnCanvas().add(mouseOffsetRef.current);
+					return data;
+				});
 			});
 		}
 

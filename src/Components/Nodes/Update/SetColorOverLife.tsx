@@ -6,13 +6,13 @@ import { Node } from "../Node";
 
 export function CreateSetColorOverLife() {
 	return AddNode(new ColorOverLifeAPI(), (data: NodeData) => {
-		return <SetColorOverLife data={data} />;
+		return <SetColorOverLife key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
 function SetColorOverLife({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Color Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Color Over Life" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<ColorRampField Label={"Ramp"} Ramp={(data.node as ColorOverLifeAPI).nodeFields.ramp} />
 		</Node>
 	);

@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetEmission() {
 	return AddNode(new SetEmissionAPI(), (data: NodeData) => {
-		return <SetEmission key={data.id} data={data} />;
+		return <SetEmission key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,9 +14,9 @@ function SetEmission({ data }: { data: NodeData }) {
 	const emissionFieldRef = useRef((data.node as SetEmissionAPI).nodeFields.emission);
 
 	return (
-		<Node Name="Set Emission" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Emission" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<NumberFieldConnectionIn
-				NodeId={data.id}
+				NodeId={data.node.id}
 				NodeFieldName={SetEmissionFieldNames.emission}
 				NodeAbsolutePosition={data.anchorPoint}
 				DefaultText={tostring(emissionFieldRef.current.GetNumber())}

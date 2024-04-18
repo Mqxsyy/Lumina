@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateAddRotationZRandom() {
 	return AddNode(new AddRotationZRandomAPI(), (data: NodeData) => {
-		return <AddRotationZRandom data={data} />;
+		return <AddRotationZRandom key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,7 +14,7 @@ function AddRotationZRandom({ data }: { data: NodeData }) {
 	const rangeFieldRef = useRef((data.node as AddRotationZRandomAPI).nodeFields.range);
 
 	return (
-		<Node Name="Add Rotation Z Random" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Add Rotation Z Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector2Field
 				Label={"Range"}
 				ValueLabels={["Min", "Max"]}

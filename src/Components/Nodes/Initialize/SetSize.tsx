@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetSize() {
 	return AddNode(new SetSizeAPI(), (data: NodeData) => {
-		return <SetSize data={data} />;
+		return <SetSize key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,9 +14,9 @@ function SetSize({ data }: { data: NodeData }) {
 	const sizeFieldRef = useRef((data.node as SetSizeAPI).nodeFields.size);
 
 	return (
-		<Node Name="Set Size" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Size" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<NumberFieldConnectionIn
-				NodeId={data.id}
+				NodeId={data.node.id}
 				NodeFieldName={SetSizeFieldNames.size}
 				NodeAbsolutePosition={data.anchorPoint}
 				DefaultText={tostring(sizeFieldRef.current.GetNumber())}

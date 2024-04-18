@@ -3,8 +3,8 @@ import { GetCanvasData } from "Services/CanvasService";
 import { ConnectionData } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
 
-export const CreateConnectionLine = (data: ConnectionData) => {
-	return <ConnectionLine key={data.id} data={data} />;
+export const CreateConnectionLine = (connectionData: ConnectionData) => {
+	return <ConnectionLine key={`connection_${connectionData.id}`} data={connectionData} />;
 };
 
 interface LineSegment {
@@ -75,6 +75,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
 				BackgroundColor3={StyleColors.Highlight}
 				BackgroundTransparency={0}
 				BorderSizePixel={0}
+				key={`connection_start_${data.id}`}
 			>
 				<uicorner CornerRadius={new UDim(1, 10)} />
 			</frame>
@@ -86,6 +87,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
 				BackgroundColor3={StyleColors.Highlight}
 				BackgroundTransparency={0}
 				BorderSizePixel={0}
+				key={`connection_middle_${data.id}`}
 			>
 				<uicorner CornerRadius={new UDim(1, 10)} />
 			</frame>
@@ -99,6 +101,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
 				BackgroundColor3={StyleColors.Highlight}
 				BackgroundTransparency={0}
 				BorderSizePixel={0}
+				key={`connection_end_${data.id}`}
 			>
 				<uicorner CornerRadius={new UDim(1, 10)} />
 			</frame>

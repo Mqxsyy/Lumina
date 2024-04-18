@@ -8,6 +8,7 @@ import { NodeData } from "./NodesService";
 
 export interface ConnectionData {
 	id: number;
+	loadedId?: number;
 	startNode: NodeData;
 	startOffset: Vector2;
 	endPos?: Vector2;
@@ -41,10 +42,11 @@ export function GetConnectionById(id: number) {
 	return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
-export function CreateConnection(startNode: NodeData, startOffset: Vector2, fn: () => number) {
+export function CreateConnection(startNode: NodeData, startOffset: Vector2, fn: () => number, loadedId?: number) {
 	const connection: ConnectionCollectionEntry = {
 		data: {
 			id: idPool.GetNextId(),
+			loadedId,
 			startNode,
 			startOffset,
 			fn,

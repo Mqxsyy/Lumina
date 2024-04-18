@@ -1,12 +1,13 @@
-import Roact, { useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import {
 	ConnectionData,
+	GetAllConnections,
 	GetConnectionById,
 	GetMovingConnectionId,
 	UnbindMovingConnection,
 	UpdateConnectionData,
 } from "Services/ConnectionsService";
-import { GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
+import { GetAllNodes, GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
 import ConnectionPoint from "./ConnectionPoint";
 
 // TODO: make number field that incorporates the connection
@@ -32,30 +33,29 @@ export default function ConnectionPointIn({
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
 	const nodeDataRef = useRef(GetNodeById(NodeId)!.data);
+	const elementRef = useRef<TextButton>();
 
-	const mouseButton1Up = (element: TextButton) => {
-		const movingConnectionId = GetMovingConnectionId();
-		if (movingConnectionId === -1) return;
+	const finishConnection = (id: number) => {
+		if (elementRef.current === undefined) return;
+		if (nodeDataRef.current.element === undefined) return;
 
-		const offset = element.AbsolutePosition.sub(nodeDataRef.current.element!.AbsolutePosition).add(
-			element.AbsoluteSize.mul(0.5),
+		const offset = elementRef.current.AbsolutePosition.sub(nodeDataRef.current.element!.AbsolutePosition).add(
+			elementRef.current.AbsoluteSize.mul(0.5),
 		);
 
-		setConnectionId(movingConnectionId);
+		setConnectionId(id);
 
-		UpdateConnectionData(movingConnectionId, (data: ConnectionData) => {
+		UpdateConnectionData(id, (data: ConnectionData) => {
 			data.endNode = GetNodeById(NodeId)!.data;
 			data.endOffset = offset;
 			return data;
 		});
 
-		UnbindMovingConnection();
-
-		const connectionData = GetConnectionById(movingConnectionId)!.data;
+		const connectionData = GetConnectionById(id)!.data;
 
 		UpdateNodeData(NodeId, (data) => {
 			const connection: NodeConnectionIn = {
-				id: movingConnectionId,
+				id: id,
 				fieldName: NodeFieldName,
 			};
 
@@ -79,8 +79,53 @@ export default function ConnectionPointIn({
 			});
 		});
 
-		BindFunction(connectionData.fn, connectionData.id);
+		BindFunction(connectionData.fn, connectionData.startNode.node.id);
 	};
+
+	const mouseButton1Up = () => {
+		const movingConnectionId = GetMovingConnectionId();
+		if (movingConnectionId === -1) return;
+
+		UnbindMovingConnection();
+		finishConnection(movingConnectionId);
+	};
+
+	useEffect(() => {
+		if (elementRef.current === undefined) return;
+		if (nodeDataRef.current.element === undefined) return;
+
+		task.spawn(() => {
+			if (nodeDataRef.current.loadedConnectionsIn === undefined) return;
+			if (nodeDataRef.current.loadedConnectionsIn.size() === 0) return;
+
+			const maxAttempts = 10;
+			let attempts = 0;
+
+			while (attempts < maxAttempts) {
+				for (let i = nodeDataRef.current.loadedConnectionsIn.size() - 1; i >= 0; i--) {
+					const loadedConnection = nodeDataRef.current.loadedConnectionsIn[i];
+
+					for (const connection of GetAllConnections()) {
+						if (connection.data.loadedId === loadedConnection.id) {
+							finishConnection(connection.data.id);
+							nodeDataRef.current.loadedConnectionsIn.remove(i);
+							break;
+						}
+					}
+				}
+
+				if (nodeDataRef.current.loadedConnectionsIn.size() === 0) break;
+				attempts++;
+				task.wait(0.1);
+			}
+
+			if (attempts >= maxAttempts) {
+				warn("Failed to load connection for node: " + nodeDataRef.current.node.GetNodeName());
+			}
+
+			nodeDataRef.current.loadedConnectionsIn = undefined;
+		});
+	}, [elementRef.current, nodeDataRef.current.element]);
 
 	return (
 		<ConnectionPoint
@@ -88,6 +133,9 @@ export default function ConnectionPointIn({
 			Position={Position}
 			Size={Size}
 			ConnectionId={connectionId === -1 ? undefined : connectionId}
+			GetElementRef={(element) => {
+				elementRef.current = element;
+			}}
 			MouseButton1Up={mouseButton1Up}
 		/>
 	);

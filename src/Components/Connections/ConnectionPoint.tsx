@@ -7,8 +7,9 @@ interface Props {
 	Position?: UDim2;
 	Size?: UDim2;
 	ConnectionId?: number;
-	MouseButton1Down?: (element: TextButton) => void;
-	MouseButton1Up?: (element: TextButton) => void;
+	GetElementRef?: (element: TextButton) => void;
+	MouseButton1Down?: () => void;
+	MouseButton1Up?: () => void;
 	UpdateConnecton?: (element: TextButton) => void;
 }
 
@@ -17,11 +18,19 @@ export default function ConnectionPoint({
 	Position = UDim2.fromScale(0, 0),
 	Size = UDim2.fromScale(1, 1),
 	ConnectionId = undefined,
+	GetElementRef = undefined,
 	MouseButton1Down = undefined,
 	MouseButton1Up = undefined,
 	UpdateConnecton = undefined,
 }: Props) {
-	const connectionPointRef = useRef(undefined as undefined | TextButton);
+	const connectionPointRef = useRef<TextButton>();
+
+	useEffect(() => {
+		if (GetElementRef === undefined) return;
+		if (connectionPointRef.current === undefined) return;
+
+		GetElementRef(connectionPointRef.current);
+	}, [connectionPointRef.current]);
 
 	useEffect(() => {
 		if (ConnectionId === undefined) return;
@@ -42,18 +51,18 @@ export default function ConnectionPoint({
 			Active={true}
 			ref={connectionPointRef}
 			Event={{
-				InputBegan: (element, input) => {
+				InputBegan: (_, input) => {
 					if (input.UserInputType !== Enum.UserInputType.MouseButton1) return;
 					if (MouseButton1Down === undefined) return;
 
-					MouseButton1Down(element);
+					MouseButton1Down();
 				},
 
-				InputEnded: (element, input) => {
+				InputEnded: (_, input) => {
 					if (input.UserInputType !== Enum.UserInputType.MouseButton1) return;
 					if (MouseButton1Up === undefined) return;
 
-					MouseButton1Up(element);
+					MouseButton1Up();
 				},
 			}}
 		>

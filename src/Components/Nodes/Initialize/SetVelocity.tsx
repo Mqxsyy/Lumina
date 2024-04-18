@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetVelocity() {
 	return AddNode(new SetVelocityAPI(), (data: NodeData) => {
-		return <SetVelocity key={data.id} data={data} />;
+		return <SetVelocity key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,9 +14,9 @@ function SetVelocity({ data }: { data: NodeData }) {
 	const velocityFieldRef = useRef((data.node as SetVelocityAPI).nodeFields.velocity);
 
 	return (
-		<Node Name="Set Velocity" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Velocity" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector3Field
-				NodeId={data.id}
+				NodeId={data.node.id}
 				NodeAnchorPoint={data.anchorPoint}
 				NodeField={velocityFieldRef.current}
 				NodeFieldName={SetVelocityFieldNames.velocity}

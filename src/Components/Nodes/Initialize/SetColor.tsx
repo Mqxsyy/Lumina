@@ -6,13 +6,13 @@ import { Node } from "../Node";
 
 export function CreateSetColor() {
 	return AddNode(new SetColorAPI(), (data: NodeData) => {
-		return <SetColor key={data.id} data={data} />;
+		return <SetColor key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
 function SetColor({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Color" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Color" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<ColorPickerField Label="Color" ColorPicker={(data.node as SetColorAPI).nodeFields.color} />
 		</Node>
 	);

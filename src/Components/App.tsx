@@ -123,6 +123,7 @@ export function App() {
 						}
 					},
 				}}
+				key={"Background"}
 				ref={canvasRef}
 			>
 				{/* Top Left */}
@@ -233,8 +234,10 @@ export function App() {
 			{GetAllConnections().map((connection) => {
 				return connection.create(connection.data);
 			})}
-			{displayNodeSelection !== undefined && <NodeSelection Position={displayNodeSelection} />}
-			<Controls />
+			{displayNodeSelection !== undefined && (
+				<NodeSelection key="NodeSelection" Position={displayNodeSelection} />
+			)}
+			<Controls key={"Controls"} />
 		</>
 	);
 }

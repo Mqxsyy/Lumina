@@ -1,12 +1,12 @@
 import { HttpService } from "@rbxts/services";
+import { API_VERSION } from "API/ExportAPI";
 import { NodeGroups } from "API/NodeGroup";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { NodeList } from "Lists/NodesList";
-import { SaveData, SerializedField } from "./SaveData";
-import { NodeData, UpdateNodeAnchorPoint } from "Services/NodesService";
-import { API_VERSION } from "API/ExportAPI";
+import { NodeConnectionIn, NodeConnectionOut, NodeData, UpdateNodeData } from "Services/NodesService";
+import { SaveData, SerializedField, SerializedNode } from "./SaveData";
 
-// TODO: load connections 💀💀💀
+// bug: loading connections twice breaks something
 
 const Selection = game.GetService("Selection");
 let mismatchLoadTime = 0;
@@ -43,37 +43,102 @@ export function LoadFromFile() {
 	}
 
 	mismatchLoadTime = 0;
+	const cachedNodes: { SerializedNode: SerializedNode; NodeData: NodeData }[] = [];
 
+	// systems & system nodes
 	for (const system of data.systems) {
 		const anchorPoint = new Vector2(system.anchorPoint.x, system.anchorPoint.y);
 		const systemData = CreateEmptySystem(anchorPoint);
 
-		systemData.finishedBindingGroups.Connect(() => {
-			for (const [group, nodes] of pairs(system.groups)) {
-				let nodeGroup = NodeGroups.Spawn;
+		for (const [group, nodes] of pairs(system.groups)) {
+			let nodeGroup = NodeGroups.Spawn;
 
-				if (group === "initialize") {
-					nodeGroup = NodeGroups.Initialize;
-				} else if (group === "update") {
-					nodeGroup = NodeGroups.Update;
-				} else if (group === "render") {
-					nodeGroup = NodeGroups.Render;
-				}
+			if (group === "initialize") {
+				nodeGroup = NodeGroups.Initialize;
+			} else if (group === "update") {
+				nodeGroup = NodeGroups.Update;
+			} else if (group === "render") {
+				nodeGroup = NodeGroups.Render;
+			}
 
-				for (const node of nodes) {
-					const nodeData = CreateNode(nodeGroup, node.nodeName, node.fields);
+			for (const node of nodes) {
+				const nodeData = CreateNode(nodeGroup, node.nodeName, node.fields);
+				cachedNodes.push({ SerializedNode: node, NodeData: nodeData });
 
-					nodeData.elementLoaded.Connect(() => {
-						systemData.addToNodeGroup[nodeGroup]!(nodeData.id);
+				// OPTIMIZE: janky
+				if (systemData.addToNodeGroup[nodeGroup] === undefined) {
+					systemData.finishedBindingGroups.Connect(() => {
+						if (nodeData.element === undefined) {
+							nodeData.elementLoaded.Connect(() => {
+								systemData.addToNodeGroup[nodeGroup]!(nodeData.node.id);
+							});
+						} else {
+							systemData.addToNodeGroup[nodeGroup]!(nodeData.node.id);
+						}
 					});
+				} else {
+					if (nodeData.element === undefined) {
+						nodeData.elementLoaded.Connect(() => {
+							systemData.addToNodeGroup[nodeGroup]!(nodeData.node.id);
+						});
+					} else {
+						systemData.addToNodeGroup[nodeGroup]!(nodeData.node.id);
+					}
 				}
 			}
+		}
+	}
+
+	// floating nodes
+	for (const node of data.floatingNodes) {
+		const nodeData = CreateNode(node.nodeGroup, node.nodeName, node.fields);
+		cachedNodes.push({ SerializedNode: node, NodeData: nodeData });
+
+		UpdateNodeData(nodeData.node.id, (data) => {
+			data.anchorPoint = new Vector2(node.anchorPoint.x, node.anchorPoint.y);
+			return data;
 		});
 	}
 
-	for (const node of data.floatingNodes) {
-		const nodeData = CreateNode(node.nodeGroup, node.nodeName, node.fields);
-		UpdateNodeAnchorPoint(nodeData.id, new Vector2(node.anchorPoint.x, node.anchorPoint.y));
+	// connections
+	for (const cachedNode of cachedNodes) {
+		if (cachedNode.SerializedNode.connectionIds === undefined) continue;
+		if (cachedNode.SerializedNode.connectionIds.size() === 0) continue;
+
+		for (const connectionId of cachedNode.SerializedNode.connectionIds) {
+			for (const cachedNode2 of cachedNodes) {
+				for (const field of cachedNode2.SerializedNode.fields) {
+					if (field.connectionId !== connectionId) continue;
+
+					UpdateNodeData(cachedNode.NodeData.node.id, (data) => {
+						const connection: NodeConnectionOut = {
+							id: connectionId,
+						};
+
+						if (data.loadedConnectionsOut === undefined) {
+							data.loadedConnectionsOut = [];
+						}
+
+						data.loadedConnectionsOut.push(connection);
+						return data;
+					});
+
+					UpdateNodeData(cachedNode2.NodeData.node.id, (data) => {
+						const connection: NodeConnectionIn = {
+							id: connectionId,
+							fieldName: field.name,
+						};
+
+						if (data.loadedConnectionsIn === undefined) {
+							data.loadedConnectionsIn = [];
+						}
+
+						data.loadedConnectionsIn.push(connection);
+						return data;
+					});
+				}
+			}
+		}
 	}
 }
 

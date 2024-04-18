@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateDrag() {
 	return AddNode(new DragAPI(), (data: NodeData) => {
-		return <Drag data={data} />;
+		return <Drag key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,9 +14,9 @@ function Drag({ data }: { data: NodeData }) {
 	const dragFieldRef = useRef((data.node as DragAPI).nodeFields.drag);
 
 	return (
-		<Node Name="Drag" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Drag" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<NumberFieldConnectionIn
-				NodeId={data.id}
+				NodeId={data.node.id}
 				NodeFieldName={DragFieldNames.drag}
 				NodeAbsolutePosition={data.anchorPoint}
 				DefaultText={tostring(dragFieldRef.current.GetNumber())}

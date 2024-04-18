@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetSizeOverLife() {
 	return AddNode(new SizeOverLifeAPI(), (data: NodeData) => {
-		return <SetSizeOverLife data={data} />;
+		return <SetSizeOverLife key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,7 +14,7 @@ function SetSizeOverLife({ data }: { data: NodeData }) {
 	const graphFieldRef = useRef((data.node as SizeOverLifeAPI).nodeFields.graph);
 
 	return (
-		<Node Name="Set Size Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Size Over Life" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} MaxValue={10} />
 		</Node>
 	);

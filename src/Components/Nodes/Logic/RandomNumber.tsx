@@ -7,7 +7,7 @@ import { Node } from "../Node";
 
 export function CreateRandomNumber() {
 	return AddNode(new RandomNumberAPI(), (data: NodeData) => {
-		return <RandomNumber key={data.id} data={data} />;
+		return <RandomNumber key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -17,7 +17,7 @@ function RandomNumber({ data }: { data: NodeData }) {
 	return (
 		<Node
 			Name="Random Number"
-			Id={data.id}
+			Id={data.node.id}
 			AnchorPoint={data.anchorPoint}
 			ConnectionFunction={(data.node as LogicNode<number>).Calculate}
 			ConnectioNode={data.node as LogicNode}

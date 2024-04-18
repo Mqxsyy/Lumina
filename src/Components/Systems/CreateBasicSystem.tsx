@@ -12,23 +12,23 @@ export function CreateBasicSystem() {
 	systemData.finishedBindingGroups.Connect(() => {
 		const constantSpawnNode = CreateConstantSpawn();
 		constantSpawnNode.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawnNode.id);
+			systemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawnNode.node.id);
 		});
 
 		const lifetimeNode = CreateSetLifetime();
 		lifetimeNode.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Initialize]!(lifetimeNode.id);
+			systemData.addToNodeGroup[NodeGroups.Initialize]!(lifetimeNode.node.id);
 		});
 
 		const positionNode = CreateSetPosition();
 		(positionNode.node as SetPosition).nodeFields.position.SetY(5);
 		positionNode.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Initialize]!(positionNode.id);
+			systemData.addToNodeGroup[NodeGroups.Initialize]!(positionNode.node.id);
 		});
 
 		const particlePlaneNode = CreateParticlePlane();
 		particlePlaneNode.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Render]!(particlePlaneNode.id);
+			systemData.addToNodeGroup[NodeGroups.Render]!(particlePlaneNode.node.id);
 		});
 	});
 

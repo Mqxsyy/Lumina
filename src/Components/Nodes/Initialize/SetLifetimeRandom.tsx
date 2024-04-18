@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetLifetimeRandom() {
 	return AddNode(new SetLifetimeRandomAPI(), (data: NodeData) => {
-		return <SetLifetimeRandom key={data.id} data={data} />;
+		return <SetLifetimeRandom key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,7 +14,7 @@ function SetLifetimeRandom({ data }: { data: NodeData }) {
 	const rangeFieldRef = useRef((data.node as SetLifetimeRandomAPI).nodeFields.range);
 
 	return (
-		<Node Name="Set Lifetime Random" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Lifetime Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector2Field
 				Label={"Range"}
 				ValueLabels={["Min", "Max"]}

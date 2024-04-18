@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetVelocityRandom() {
 	return AddNode(new SetVelocityRandomAPI(), (data: NodeData) => {
-		return <SetVelocityRandom data={data} />;
+		return <SetVelocityRandom key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -16,7 +16,7 @@ function SetVelocityRandom({ data }: { data: NodeData }) {
 	const rangeZRef = useRef((data.node as SetVelocityRandomAPI).nodeFields.rangeZ);
 
 	return (
-		<Node Name="Set Velocity Random" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Velocity Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector2Field
 				Label={"X"}
 				ValueLabels={["Min", "Max"]}

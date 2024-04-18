@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetTransparencyOverLife() {
 	return AddNode(new TransparencyOverLifeAPI(), (data: NodeData) => {
-		return <SetTransparencyOverLife data={data} />;
+		return <SetTransparencyOverLife key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,7 +14,7 @@ function SetTransparencyOverLife({ data }: { data: NodeData }) {
 	const graphFieldRef = useRef((data.node as TransparencyOverLifeAPI).nodeFields.graph);
 
 	return (
-		<Node Name="Set Transparency Over Life" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Transparency Over Life" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} />
 		</Node>
 	);

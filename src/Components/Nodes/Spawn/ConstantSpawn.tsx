@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateConstantSpawn() {
 	return AddNode(new ConstantSpawnAPI(), (data: NodeData) => {
-		return <ConstantSpawn data={data} />;
+		return <ConstantSpawn key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -22,7 +22,7 @@ function ConstantSpawn({ data }: { data: NodeData }) {
 	};
 
 	return (
-		<Node Name="Constant Spawn" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Constant Spawn" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<NumberField
 				Label="Rate"
 				DefaultText={tostring(rateFieldRef.current.GetNumber())}

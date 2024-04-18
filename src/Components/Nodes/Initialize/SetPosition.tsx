@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetPosition() {
 	return AddNode(new SetPositionAPI(), (data: NodeData) => {
-		return <SetPosition data={data} />;
+		return <SetPosition key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,9 +14,9 @@ function SetPosition({ data }: { data: NodeData }) {
 	const positionFieldRef = useRef((data.node as SetPositionAPI).nodeFields.position);
 
 	return (
-		<Node Name="Set Position" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Position" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector3Field
-				NodeId={data.id}
+				NodeId={data.node.id}
 				NodeAnchorPoint={data.anchorPoint}
 				NodeField={positionFieldRef.current}
 				NodeFieldName={SetPositionFieldNames.position}

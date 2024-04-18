@@ -1,10 +1,10 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
-import { RunService } from "@rbxts/services";
+import Roact, { PureComponent, useEffect, useRef, useState } from "@rbxts/roact";
+import { ProximityPromptService, RunService } from "@rbxts/services";
 import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetDraggingNodeId, NodeDraggingEnded } from "Services/DraggingService";
 import { BindNodeGroupFunction, NodeSystemData } from "Services/NodeSystemService";
-import { GetNodeById, UpdateNodeAnchorPoint } from "Services/NodesService";
+import { GetNodeById, UpdateNodeData } from "Services/NodesService";
 import { StyleColors } from "Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
@@ -20,6 +20,7 @@ import {
 	SYSTEM_PADDING,
 	SYSTEM_WIDTH,
 } from "../SizeConfig";
+import PickerCursor from "Components/Windows/Pickers.tsx/PickerCursor";
 
 // TODO: add node reordering
 // BUG: starting dagging when already hovering allows for free move not snappy inside that same group
@@ -74,8 +75,10 @@ export default function NodeGroup({
 				yOffset += node.data.element!.AbsoluteSize.Y + GROUP_LIST_PADDING;
 			}
 
-			const offset = new Vector2(xOffset, yOffset);
-			UpdateNodeAnchorPoint(draggingNodeId, anchor.add(offset));
+			UpdateNodeData(draggingNodeId, (data) => {
+				data.anchorPoint = anchor.add(new Vector2(xOffset, yOffset));
+				return data;
+			});
 		});
 	};
 
@@ -183,8 +186,10 @@ export default function NodeGroup({
 		const anchor = NodeSystem.anchorPoint;
 
 		for (const id of childNodesIdRef.current) {
-			const offset = new Vector2(xOffset, yOffset);
-			UpdateNodeAnchorPoint(id, anchor.add(offset));
+			UpdateNodeData(id, (data) => {
+				data.anchorPoint = anchor.add(new Vector2(xOffset, yOffset));
+				return data;
+			});
 
 			const node = GetNodeById(id)!;
 			yOffset += node.data.element!.AbsoluteSize.Y + GROUP_LIST_PADDING;

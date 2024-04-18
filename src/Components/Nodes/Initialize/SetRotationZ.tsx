@@ -6,7 +6,7 @@ import { Node } from "../Node";
 
 export function CreateSetRotationZ() {
 	return AddNode(new SetRotationZAPI(), (data: NodeData) => {
-		return <SetRotationZ key={data.id} data={data} />;
+		return <SetRotationZ key={`node_${data.node.id}`} data={data} />;
 	});
 }
 
@@ -14,9 +14,9 @@ function SetRotationZ({ data }: { data: NodeData }) {
 	const rotationFieldRef = useRef((data.node as SetRotationZAPI).nodeFields.rotation);
 
 	return (
-		<Node Name="Set Rotation Z" Id={data.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Rotation Z" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<NumberFieldConnectionIn
-				NodeId={data.id}
+				NodeId={data.node.id}
 				NodeFieldName={SetRotationZFieldNames.rotation}
 				NodeAbsolutePosition={data.anchorPoint}
 				DefaultText={tostring(rotationFieldRef.current.GetNumber())}

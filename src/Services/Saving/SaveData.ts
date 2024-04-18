@@ -15,6 +15,7 @@ export interface SerializedSystem {
 }
 
 export interface SerializedNode {
+	connectionIds?: number[];
 	nodeName: string;
 	fields: SerializedField[];
 }
@@ -25,6 +26,7 @@ export interface SerializedFloatingNode extends SerializedNode {
 }
 
 export interface SerializedField {
+	connectionId?: number;
 	name: string;
 	data: {};
 }
