@@ -11,7 +11,7 @@ interface Props {
 	TextSize?: number;
 	TextColor?: Color3;
 	TextXAlignment?: Enum.TextXAlignment;
-	PlaceholderText: string;
+	PlaceholderText?: string;
 	Text?: string;
 
 	ClearTextOnFocus?: boolean;
@@ -20,6 +20,7 @@ interface Props {
 
 	Disabled?: boolean;
 	TextChanged?: (text: string) => string | void;
+	LostFocus?: (text: string) => string | void;
 	GetRef?: (textBox: TextBox) => void;
 }
 
@@ -31,30 +32,35 @@ export function TextInput({
 	FontWeight = StyleText.FontWeight,
 	TextColor = StyleColors.TextDark,
 	TextXAlignment = Enum.TextXAlignment.Left,
-	PlaceholderText,
+	PlaceholderText = "",
 	Text = "",
 	ClearTextOnFocus = true,
 	AutoFocus = false,
 	IsAffectedByZoom = true,
 	Disabled = false,
 	TextChanged = undefined,
+	LostFocus = undefined,
 	GetRef = undefined,
 }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
 	const textBoxRef = useRef<TextBox | undefined>();
-	const lastText = useRef<string>(""); // not sure if i need to check anymore
 
 	const textChanged = () => {
-		if (textBoxRef.current!.Text === lastText.current) return;
-		lastText.current = textBoxRef.current!.Text;
+		if (TextChanged === undefined) return;
 
-		if (TextChanged !== undefined) {
-			const newText = TextChanged(textBoxRef.current!.Text);
+		const newText = TextChanged(textBoxRef.current!.Text);
+		if (newText !== undefined && newText !== textBoxRef.current!.Text) {
+			textBoxRef.current!.Text = newText;
+		}
+	};
 
-			if (newText !== undefined && newText !== textBoxRef.current!.Text) {
-				textBoxRef.current!.Text = newText;
-			}
+	const focusLost = () => {
+		if (LostFocus === undefined) return;
+
+		const newText = LostFocus(textBoxRef.current!.Text);
+		if (newText !== undefined && newText !== textBoxRef.current!.Text) {
+			textBoxRef.current!.Text = newText;
 		}
 	};
 
@@ -68,14 +74,17 @@ export function TextInput({
 
 	useEffect(() => {
 		if (textBoxRef.current === undefined) return;
-		let connection: undefined | RBXScriptConnection;
+
+		let textChangedConnection: RBXScriptConnection;
+		let focusLostConnection: RBXScriptConnection;
 
 		if (GetRef !== undefined) {
 			GetRef(textBoxRef.current);
 		}
 
 		if (!Disabled) {
-			connection = textBoxRef.current.GetPropertyChangedSignal("Text").Connect(textChanged);
+			textChangedConnection = textBoxRef.current.GetPropertyChangedSignal("Text").Connect(textChanged);
+			focusLostConnection = textBoxRef.current.FocusLost.Connect(focusLost);
 		}
 
 		if (AutoFocus && !Disabled) {
@@ -83,8 +92,13 @@ export function TextInput({
 		}
 
 		return () => {
-			if (connection === undefined) return;
-			connection.Disconnect();
+			if (textChangedConnection !== undefined) {
+				textChangedConnection.Disconnect();
+			}
+
+			if (focusLostConnection !== undefined) {
+				focusLostConnection.Disconnect();
+			}
 		};
 	}, [textBoxRef.current, Disabled]);
 

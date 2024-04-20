@@ -38,7 +38,7 @@ export class ColorField extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	SetColor = (hue: number, saturation: number, value: number) => {
+	SetHSV = (hue: number, saturation: number, value: number) => {
 		this.hue = hue;
 		this.saturation = saturation;
 		this.value = value;
@@ -55,6 +55,6 @@ export class ColorField extends NodeField {
 
 	ReadSerializedData(data: {}) {
 		const serializedData = data as SerializedColorField;
-		this.SetColor(serializedData.hue, serializedData.saturation, serializedData.value);
+		this.SetHSV(serializedData.hue, serializedData.saturation, serializedData.value);
 	}
 }

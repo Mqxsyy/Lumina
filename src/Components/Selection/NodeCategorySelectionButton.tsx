@@ -1,4 +1,4 @@
-import Roact, { useEffect, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import Div from "../Div";
 import { StyleColors, StyleProperties } from "Style";
 import { NodeSelectionButton } from "./NodeSelectionButton";
@@ -8,35 +8,39 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 interface Props {
 	Text: string;
 	NodeCategory: { [key: string]: SelectionEntry };
+	CategoryUnhoverFunctions: (() => void)[];
+	ExposeUnhover: (fn: () => void) => void;
 }
 
-export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
+export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhoverFunctions, ExposeUnhover }: Props) {
 	const [hovering, setHovering] = useState(false);
-	const [hoveringButton, setHoveringButton] = useState(false);
-	const [hoveringSelection, setHoveringSelection] = useState(false);
-
 	const [nodes, setNodes] = useState([] as SelectionEntry[]);
 
+	const isHoveringButtonRef = useRef(false);
+	const isHoveringSelectionRef = useRef(false);
+
 	const onHoverButton = () => {
-		setHoveringButton(true);
+		CategoryUnhoverFunctions.forEach((fn) => fn()); // OPTIMIZE: may not be required anymore
+
+		isHoveringButtonRef.current = true;
 		setHovering(true);
 	};
 
 	const onUnhoverButton = () => {
-		setHoveringButton(false);
-		if (!hoveringSelection) {
+		isHoveringButtonRef.current = false;
+		if (!isHoveringSelectionRef.current) {
 			setHovering(false);
 		}
 	};
 
 	const onHoverSelection = () => {
-		setHoveringSelection(true);
+		isHoveringSelectionRef.current = true;
 		setHovering(true);
 	};
 
 	const onUnhoverSelection = () => {
-		setHoveringSelection(false);
-		if (!hoveringButton) {
+		isHoveringSelectionRef.current = false;
+		if (!isHoveringButtonRef.current) {
 			setHovering(false);
 		}
 	};
@@ -49,23 +53,28 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 			nodes.push(v);
 		}
 
+		ExposeUnhover(() => {
+			onUnhoverButton();
+			onUnhoverSelection();
+		});
+
 		// Nodes are rendered in alphabetical order
 		setNodes(nodes);
 	}, []);
 
 	return (
-		<Div Size={new UDim2(1, 10, 0, 25)} onHover={onHoverButton} onUnhover={onUnhoverButton}>
+		<Div Size={new UDim2(1, 8, 0, 25)} onHover={onHoverButton} onUnhover={onUnhoverButton}>
 			{hovering && (
 				<frame
 					AnchorPoint={new Vector2(0.5, 0.5)}
-					Position={UDim2.fromScale(0.5, 0.5)}
-					Size={new UDim2(0.95, -10, 0.9, 0)}
+					Position={new UDim2(0.5, -4, 0.5, 0)}
+					Size={new UDim2(0.95, -8, 0.9, 0)}
 					BackgroundColor3={StyleColors.Highlight}
 				>
 					<uicorner CornerRadius={StyleProperties.CornerRadius} />
 				</frame>
 			)}
-			<Div Size={new UDim2(1, -10, 1, 0)}>
+			<Div Size={new UDim2(1, -8, 1, 0)}>
 				<uipadding PaddingLeft={new UDim(0, 15)} PaddingRight={new UDim(0, 15)} />
 
 				<BasicTextLabel Text={Text} TextXAlignment={Enum.TextXAlignment.Center} IsAffectedByZoom={false} />
@@ -73,7 +82,7 @@ export function NodeCategorySelectionButton({ Text, NodeCategory }: Props) {
 			</Div>
 			{hovering && (
 				<Div
-					Position={new UDim2(1, 5, 0, -3)}
+					Position={new UDim2(1, -3, 0, -3)}
 					Size={UDim2.fromOffset(200, nodes.size() < 8 ? nodes.size() * 30 + 1 : 8 * 30 + 1)}
 					BackgroundColor={StyleColors.Primary}
 				>

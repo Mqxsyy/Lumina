@@ -1,9 +1,7 @@
 import Roact from "@rbxts/roact";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { NumberInput } from "Components/Basic/NumeberInput";
+import { NumberInput } from "Components/Basic/NumberInput";
 import Div from "Components/Div";
-
-// TODO: make display old value instead of "..."
 
 interface Props {
 	Size?: UDim2;
@@ -24,7 +22,7 @@ export function NumberField({
 	Size = UDim2.fromScale(1, 0),
 	Label,
 	DefaultText,
-	PlaceholderText = "...",
+	PlaceholderText = "Insert number...",
 	TextToInputRatio = 0.5,
 	AllowNegative = false,
 	Disabled = false,

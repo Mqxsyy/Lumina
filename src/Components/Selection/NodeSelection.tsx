@@ -1,16 +1,15 @@
 import Roact, { useRef, useState } from "@rbxts/roact";
+import { NodeGroups } from "API/NodeGroup";
+import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
+import { NodeList } from "Lists/NodesList";
+import { NodeSystems } from "Lists/SystemsList";
 import { StyleColors, StyleProperties } from "Style";
 import Div from "../Div";
-import { NodeSearchInput } from "./NodeSearchInput";
 import { NodeCategorySelectionButton } from "./NodeCategorySelectionButton";
-import { NodeList } from "Lists/NodesList";
-import { NodeGroups } from "API/NodeGroup";
-import { NodeSystems } from "Lists/SystemsList";
+import { NodeSearchInput } from "./NodeSearchInput";
 import { NodeSelectionButton } from "./NodeSelectionButton";
-import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 
-// TODO: make button connect to selection; add tracker which selection is open / make selection display less scuffed
-// TODO: display only currently usable nodes, ex. when update group is selected show only ones valid in update
+// TODO: display only currently usable nodes, ex. when update group is selected show only ones valid in update -> requires selecting to be a thing
 // TODO: add arrow navigation support
 
 const DIVIDER_SIZE_Y = 2;
@@ -23,8 +22,9 @@ interface Props {
 export function NodeSelection({ Position }: Props) {
 	const [searchedSelection, setSearchedSelection] = useState<SelectionEntry[]>([]);
 	const [displayDefaultCategories, setDisplayDefaultCategories] = useState(true);
+	const categoryUnhoverFunctionsRef = useRef<(() => void)[]>([]);
 
-	const TextChanged = (text: string) => {
+	const textChanged = (text: string) => {
 		if (text === "") {
 			setDisplayDefaultCategories(true);
 			setSearchedSelection([]);
@@ -51,6 +51,10 @@ export function NodeSelection({ Position }: Props) {
 		setSearchedSelection(selectionEntries);
 	};
 
+	const getCategoryUnhover = (fn: () => void) => {
+		categoryUnhoverFunctionsRef.current.push(fn);
+	};
+
 	return (
 		<Div Position={Position} Size={UDim2.fromOffset(SELECTION_WIDTH, 0)} AutomaticSize="Y">
 			<frame Size={UDim2.fromScale(1, 1)} BackgroundColor3={StyleColors.Primary}>
@@ -60,7 +64,7 @@ export function NodeSelection({ Position }: Props) {
 				<Div>
 					<uilistlayout FillDirection={"Vertical"} HorizontalAlignment={"Center"} Padding={new UDim(0, 5)} />
 
-					<NodeSearchInput TextChanged={TextChanged} />
+					<NodeSearchInput TextChanged={textChanged} />
 
 					<frame
 						Size={new UDim2(0.9, 0, 0, DIVIDER_SIZE_Y)}
@@ -113,19 +117,46 @@ export function NodeSelection({ Position }: Props) {
 						<Div Size={new UDim2(1, 0, 0, 6 * 30 - 5)}>
 							<uilistlayout
 								FillDirection={"Vertical"}
-								HorizontalAlignment={"Center"}
+								HorizontalAlignment={"Left"}
 								Padding={new UDim(0, 5)}
 							/>
 
-							<NodeCategorySelectionButton Text="Systems" NodeCategory={NodeSystems} />
-							<NodeCategorySelectionButton Text="Spawner" NodeCategory={NodeList[NodeGroups.Spawn]} />
+							<NodeCategorySelectionButton
+								Text="Systems"
+								NodeCategory={NodeSystems}
+								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ExposeUnhover={getCategoryUnhover}
+							/>
+							<NodeCategorySelectionButton
+								Text="Spawner"
+								NodeCategory={NodeList[NodeGroups.Spawn]}
+								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ExposeUnhover={getCategoryUnhover}
+							/>
 							<NodeCategorySelectionButton
 								Text="Initialize"
 								NodeCategory={NodeList[NodeGroups.Initialize]}
+								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ExposeUnhover={getCategoryUnhover}
 							/>
-							<NodeCategorySelectionButton Text="Update" NodeCategory={NodeList[NodeGroups.Update]} />
-							<NodeCategorySelectionButton Text="Render" NodeCategory={NodeList[NodeGroups.Render]} />
-							<NodeCategorySelectionButton Text="Logic" NodeCategory={NodeList[NodeGroups.Logic]} />
+							<NodeCategorySelectionButton
+								Text="Update"
+								NodeCategory={NodeList[NodeGroups.Update]}
+								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ExposeUnhover={getCategoryUnhover}
+							/>
+							<NodeCategorySelectionButton
+								Text="Render"
+								NodeCategory={NodeList[NodeGroups.Render]}
+								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ExposeUnhover={getCategoryUnhover}
+							/>
+							<NodeCategorySelectionButton
+								Text="Logic"
+								NodeCategory={NodeList[NodeGroups.Logic]}
+								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ExposeUnhover={getCategoryUnhover}
+							/>
 						</Div>
 					)}
 				</Div>

@@ -1,10 +1,10 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import { Event } from "API/Bindables/Event";
+import { ColorRampField } from "API/Fields/ColorRampField";
 import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import ColorRampPoint from "./ColorRampPoint";
-import { ColorPoint, ColorRampField } from "API/Fields/ColorRampField";
-import { Event } from "API/Bindables/Event";
 
 // TODO: add number field values
 
@@ -14,41 +14,30 @@ export function InitializeColorRamp() {
 	Roact.mount(<ColorRamp />, GetWindow(Windows.ColorRamp)!, "LineGraph");
 }
 
-const points: ColorPoint[] = [];
-const pointsChanged = new Event();
-let rampAPI: ColorRampField;
+let loadedRampAPI: ColorRampField;
+const setRampApiEvent = new Event();
 
-let gradient = new ColorSequence([
-	new ColorSequenceKeypoint(0, Color3.fromRGB(255, 255, 255)),
-	new ColorSequenceKeypoint(1, Color3.fromRGB(0, 0, 0)),
+const placeholderGradient = new ColorSequence([
+	new ColorSequenceKeypoint(0, Color3.fromRGB(0, 0, 0)),
+	new ColorSequenceKeypoint(1, Color3.fromRGB(255, 255, 255)),
 ]);
 
 export function LoadColorRampAPI(ramp: ColorRampField) {
-	points.clear();
-
-	rampAPI = ramp;
-	points.push(ramp.startPoint);
-	ramp.colorPoints.forEach((point) => {
-		points.push(point);
-	});
-	points.push(ramp.endPoint);
-
-	UpdateGradient();
-	pointsChanged.Fire();
-}
-
-function UpdateGradient() {
-	const keypoints = points.map((point) => new ColorSequenceKeypoint(point.time, point.color.GetColor()));
-	gradient = new ColorSequence(keypoints);
+	loadedRampAPI = ramp;
+	setRampApiEvent.Fire();
 }
 
 function ColorRamp() {
-	const [_, setForceRender] = useState(0);
+	const [forceRender, setForceRender] = useState(0);
+	const [rampAPI, setRampAPI] = useState<ColorRampField>();
+
 	const lastClickTime = useRef(0);
 
 	const onClick = () => {
+		if (rampAPI === undefined) return;
+
 		if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
-			if (points.size() >= 20) {
+			if (rampAPI.CountPoints() >= 20) {
 				warn("Max amount of color gradient points reached");
 				return;
 			}
@@ -58,8 +47,8 @@ function ColorRamp() {
 
 			const percentX = (mousePosition.X - window.AbsoluteSize.X * 0.1) / (window.AbsoluteSize.X * 0.8);
 			rampAPI.AddPoint(percentX, new Vector3(0, 0, 1));
-			LoadColorRampAPI(rampAPI);
 
+			setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 			return;
 		}
 
@@ -67,51 +56,63 @@ function ColorRamp() {
 	};
 
 	const updatePointTime = (id: number, time: number) => {
+		if (rampAPI === undefined) return;
+
+		const points = rampAPI.GetAllPoints();
 		const index = points.findIndex((point) => point.id === id);
 		if (index === -1) return;
 
 		rampAPI.UpdatePointTime(id, time);
 
-		const apiPoints = rampAPI!.GetPoints();
-		for (let i = 0; i < points.size() - 2; i++) {
-			if (points[i + 1].id !== apiPoints[i].id) {
-				LoadColorRampAPI(rampAPI!);
-				return;
-			}
-		}
-
 		points[index].time = time;
-		UpdateGradient();
-		pointsChanged.Fire();
+		setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 	};
 
 	const removePoint = (id: number) => {
+		if (rampAPI === undefined) return;
+
 		rampAPI.RemovePoint(id);
-		LoadColorRampAPI(rampAPI);
+		setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 	};
 
 	useEffect(() => {
+		const connection = setRampApiEvent.Connect(() => {
+			if (loadedRampAPI !== undefined) {
+				setRampAPI(loadedRampAPI);
+				setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+			}
+		});
+
+		return () => connection.Disconnect();
+	}, []);
+
+	useEffect(() => {
 		const connections: RBXScriptConnection[] = [];
+		let changedConnection: RBXScriptConnection;
 
-		const changedConnection = pointsChanged.Connect(() => {
-			connections.forEach((connection) => connection.Disconnect());
-			setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+		if (rampAPI !== undefined) {
+			changedConnection = rampAPI.FieldChanged.Connect(() => {
+				connections.forEach((connection) => connection.Disconnect());
+				setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+			});
 
-			points.forEach((point) => {
+			rampAPI.GetAllPoints().forEach((point) => {
 				const connection = point.color.FieldChanged.Connect(() => {
-					UpdateGradient();
 					setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 				});
 
 				connections.push(connection);
 			});
-		});
+		}
 
 		return () => {
-			changedConnection.Disconnect();
 			connections.forEach((connection) => connection.Disconnect());
+
+			if (changedConnection !== undefined) {
+				changedConnection.Disconnect();
+			}
 		};
-	}, []);
+	}, [rampAPI, forceRender]);
 
 	return (
 		<Div BackgroundColor={StyleColors.Background}>
@@ -122,16 +123,19 @@ function ColorRamp() {
 				BackgroundColor={StyleColors.FullWhite}
 				onMouseButton1Down={onClick}
 			>
-				<uigradient Color={gradient} />
+				<uigradient Color={rampAPI === undefined ? placeholderGradient : rampAPI.GetGradient()} />
 
-				{points.map((point, index) => {
+				{rampAPI?.GetAllPoints().map((point, index) => {
 					return (
 						<ColorRampPoint
 							Id={point.id}
+							key={point.id}
 							Position={UDim2.fromScale(point.time, 1)}
 							Color={point.color}
-							UpdateTime={index === 0 || index === points.size() - 1 ? undefined : updatePointTime}
-							RemovePoint={index === 0 || index === points.size() - 1 ? undefined : removePoint}
+							UpdateTime={
+								index === 0 || index === rampAPI.CountPoints() - 1 ? undefined : updatePointTime
+							}
+							RemovePoint={index === 0 || index === rampAPI.CountPoints() - 1 ? undefined : removePoint}
 						/>
 					);
 				})}

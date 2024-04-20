@@ -3,7 +3,7 @@ import { Event } from "API/Bindables/Event";
 import { GraphPoint, LineGraphField } from "API/Fields/LineGraphField";
 import { FixFloatingPointError, RemapValue, RoundDecimal } from "API/Lib";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { NumberInput } from "Components/Basic/NumeberInput";
+import { NumberInput } from "Components/Basic/NumberInput";
 import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
@@ -326,7 +326,6 @@ function LineGraph() {
 					<NumberInput
 						Size={new UDim2(0.75, 0, 0, 20)}
 						Text={selectedPointRef.current === undefined ? "" : tostring(selectedPointRef.current.time)}
-						PlaceholderText={"..."}
 						NumberChanged={OnTimeInputChanged}
 						Disabled={selectedPointRef.current === undefined || selectedPointTimeLockedRef.current}
 					/>
@@ -348,7 +347,6 @@ function LineGraph() {
 					<NumberInput
 						Size={new UDim2(0.75, 0, 0, 20)}
 						Text={selectedPointRef.current === undefined ? "" : tostring(selectedPointRef.current.value)}
-						PlaceholderText={"..."}
 						NumberChanged={OnValueInputChanged}
 						Disabled={(selectedPointRef.current === undefined) === undefined}
 					/>

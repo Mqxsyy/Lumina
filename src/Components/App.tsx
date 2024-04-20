@@ -12,18 +12,15 @@ import { GetWindow, Windows } from "Windows/WindowSevice";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 
 // TODO: make zoom go to mouse
+// OPTIMIZE: becomes quite laggy with more nodes
 
 export function App() {
-	const canvasRef = useRef(undefined as Frame | undefined);
-
 	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.CrescentVFX)!.AbsoluteSize);
-
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
 	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
-
 	const [_, setForceRender] = useState(0);
 
+	const canvasRef = useRef(undefined as Frame | undefined);
 	const canvasDataRef = useRef(GetCanvasData());
 
 	const StartMoveCanvas = (frame: Frame) => {

@@ -8,10 +8,8 @@ import {
 	UnbindMovingConnection,
 	UpdateConnectionData,
 } from "Services/ConnectionsService";
-import { GetAllNodes, GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
 import ConnectionPoint from "./ConnectionPoint";
-
-// TODO: make number field that incorporates the connection
 
 interface Props {
 	AnchorPoint?: Vector2;

@@ -4,8 +4,6 @@ import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem } from "API/NodeSystem";
 
-// TODO: Add render order changing
-
 type AllowedNodeGroups = NodeGroups.Spawn | NodeGroups.Initialize | NodeGroups.Update | NodeGroups.Render;
 
 export interface NodeSystemData {

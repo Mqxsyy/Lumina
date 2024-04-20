@@ -1,6 +1,6 @@
 import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
-import Roact from "@rbxts/roact";
+import Roact, { PureComponent } from "@rbxts/roact";
 
 interface Props {
 	AnchorPoint?: Vector2;
@@ -11,7 +11,7 @@ interface Props {
 	FontWeight?: Enum.FontWeight;
 	TextColor?: Color3;
 	TextXAlignment?: Enum.TextXAlignment;
-	PlaceholderText: string;
+	PlaceholderText?: string;
 	Text?: string;
 
 	IsAffectedByZoom?: boolean;
@@ -19,7 +19,7 @@ interface Props {
 
 	Disabled?: boolean;
 
-	NumberChanged?: (number: number) => void;
+	NumberChanged?: (number: number) => void | number;
 }
 
 export function NumberInput({
@@ -30,14 +30,14 @@ export function NumberInput({
 	FontWeight = StyleText.FontWeight,
 	TextColor = StyleColors.TextDark,
 	TextXAlignment = Enum.TextXAlignment.Left,
-	PlaceholderText,
+	PlaceholderText = "",
 	Text = "",
 	IsAffectedByZoom = true,
 	AllowNegative = false,
 	Disabled = false,
 	NumberChanged = undefined,
 }: Props) {
-	const onTextChanged = (text: string) => {
+	const validateNumber = (text: string) => {
 		const number = tonumber(text);
 
 		if (number === undefined) {
@@ -45,13 +45,29 @@ export function NumberInput({
 				if (text === "-") return text;
 			}
 
-			return "";
+			return undefined;
 		}
 
-		if (NumberChanged === undefined) return text;
-
-		NumberChanged(number);
 		return text;
+	};
+
+	const textChanged = (text: string) => {
+		let number = validateNumber(text);
+		if (number === undefined) return "";
+
+		if (NumberChanged !== undefined) {
+			const adjustedNumber = NumberChanged(tonumber(number) as number);
+			if (adjustedNumber !== undefined) {
+				number = tostring(adjustedNumber);
+			}
+		}
+
+		return number;
+	};
+
+	const lostFocus = (text: string) => {
+		const number = validateNumber(text);
+		if (number === undefined) return Text;
 	};
 
 	return (
@@ -67,7 +83,8 @@ export function NumberInput({
 			Text={Text}
 			IsAffectedByZoom={IsAffectedByZoom}
 			Disabled={Disabled}
-			TextChanged={onTextChanged}
+			TextChanged={textChanged}
+			LostFocus={lostFocus}
 		/>
 	);
 }

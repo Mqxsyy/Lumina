@@ -38,8 +38,24 @@ export class ColorRampField extends NodeField {
 
 	colorPoints: ColorPoint[] = [];
 
+	GetAllPoints() {
+		const points = [];
+
+		points.push(this.startPoint);
+		this.colorPoints.forEach((point) => {
+			points.push(point);
+		});
+		points.push(this.endPoint);
+
+		return points;
+	}
+
 	GetPoints() {
 		return this.colorPoints;
+	}
+
+	CountPoints() {
+		return this.colorPoints.size() + 2;
 	}
 
 	GetColor(t: number) {
@@ -61,10 +77,24 @@ export class ColorRampField extends NodeField {
 		return lastPoint.color.GetColor().Lerp(this.endPoint.color.GetColor(), alpha);
 	}
 
+	GetGradient() {
+		const points = [];
+
+		points.push(this.startPoint);
+		this.colorPoints.forEach((point) => {
+			points.push(point);
+		});
+		points.push(this.endPoint);
+
+		const keypoints = points.map((point) => new ColorSequenceKeypoint(point.time, point.color.GetColor()));
+		return new ColorSequence(keypoints);
+	}
+
 	AddPoint(time: number, color: Vector3) {
 		const data = { id: this.idPool.GetNextId(), time, color: new ColorField(color.X, color.Y, color.Z) };
 		this.colorPoints.push(data);
 		this.colorPoints.sort((a, b) => a.time < b.time);
+		this.FieldChanged.Fire();
 		return data;
 	}
 
@@ -74,10 +104,12 @@ export class ColorRampField extends NodeField {
 			this.colorPoints[index].time = time;
 		}
 		this.colorPoints.sort((a, b) => a.time < b.time);
+		this.FieldChanged.Fire();
 	}
 
 	RemovePoint(id: number) {
 		delete this.colorPoints[this.colorPoints.findIndex((point) => point.id === id)];
+		this.FieldChanged.Fire();
 	}
 
 	SerializeData() {

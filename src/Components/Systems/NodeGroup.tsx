@@ -1,8 +1,8 @@
-import Roact, { PureComponent, useEffect, useRef, useState } from "@rbxts/roact";
-import { ProximityPromptService, RunService } from "@rbxts/services";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import { RunService } from "@rbxts/services";
 import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { GetDraggingNodeId, NodeDraggingEnded } from "Services/DraggingService";
+import { GetDraggingNodeId, NodeDraggingEnded, NodeDraggingStarted } from "Services/DraggingService";
 import { BindNodeGroupFunction, NodeSystemData } from "Services/NodeSystemService";
 import { GetNodeById, RemoveNode, UpdateNodeData } from "Services/NodesService";
 import { StyleColors } from "Style";
@@ -20,10 +20,8 @@ import {
 	SYSTEM_PADDING,
 	SYSTEM_WIDTH,
 } from "../SizeConfig";
-import PickerCursor from "Components/Windows/Pickers.tsx/PickerCursor";
 
 // TODO: add node reordering
-// BUG: starting dagging when already hovering allows for free move not snappy inside that same group
 
 interface Props {
 	SystemId: number;
@@ -53,12 +51,45 @@ export default function NodeGroup({
 	const nodeDestroyConnectionsRef = useRef<{ [key: number]: RBXScriptConnection }>({});
 	const isHovering = useRef(false);
 	const isDestroyingRef = useRef(false);
+	const nodeDragStartedConnectionRef = useRef<RBXScriptConnection>();
+	const nodeDragEndedConnectionRef = useRef<RBXScriptConnection>();
+
+	const overrideNodePosition = (id: number) => {
+		const xOffset = (SYSTEM_WIDTH - NODE_WIDTH) * 0.5;
+		let yOffset = getNodeOffsetY();
+
+		const anchor = NodeSystem.anchorPoint;
+
+		for (const childId of childNodesIdRef.current) {
+			if (id === childId) break;
+
+			const node = GetNodeById(childId)!;
+			yOffset += node.data.element!.AbsoluteSize.Y + GROUP_LIST_PADDING;
+		}
+
+		UpdateNodeData(id, (data) => {
+			data.anchorPoint = anchor.add(new Vector2(xOffset, yOffset));
+			return data;
+		});
+	};
 
 	const onHover = () => {
 		isHovering.current = true;
 
 		const draggingNodeId = GetDraggingNodeId();
-		if (draggingNodeId === undefined) return;
+		if (draggingNodeId === undefined) {
+			nodeDragStartedConnectionRef.current = NodeDraggingStarted.Connect((id) => {
+				RunService.BindToRenderStep(`OverrideDraggingNodePosition${NodeGroup}`, 120, () => {
+					overrideNodePosition(id);
+				});
+			});
+
+			nodeDragEndedConnectionRef.current = NodeDraggingEnded.Connect(() => {
+				RunService.UnbindFromRenderStep(`OverrideDraggingNodePosition${NodeGroup}`);
+			});
+
+			return;
+		}
 
 		const draggingNodeData = GetNodeById(draggingNodeId);
 		if (draggingNodeData === undefined) return;
@@ -67,26 +98,15 @@ export default function NodeGroup({
 
 		updateChildNodes(draggingNodeData.data.element!.AbsoluteSize.Y + 5, true);
 		RunService.BindToRenderStep(`OverrideDraggingNodePosition${NodeGroup}`, 120, () => {
-			const xOffset = (SYSTEM_WIDTH - NODE_WIDTH) * 0.5;
-			let yOffset = getNodeOffsetY();
-
-			const anchor = NodeSystem.anchorPoint;
-
-			for (const id of childNodesIdRef.current) {
-				const node = GetNodeById(id)!;
-				yOffset += node.data.element!.AbsoluteSize.Y + GROUP_LIST_PADDING;
-			}
-
-			UpdateNodeData(draggingNodeId, (data) => {
-				data.anchorPoint = anchor.add(new Vector2(xOffset, yOffset));
-				return data;
-			});
+			overrideNodePosition(draggingNodeId);
 		});
 	};
 
 	const onUnhover = () => {
 		isHovering.current = false;
 
+		nodeDragStartedConnectionRef.current?.Disconnect();
+		nodeDragEndedConnectionRef.current?.Disconnect();
 		RunService.UnbindFromRenderStep(`OverrideDraggingNodePosition${NodeGroup}`);
 
 		const draggingNodeId = GetDraggingNodeId();
