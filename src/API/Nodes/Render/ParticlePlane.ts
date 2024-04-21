@@ -132,38 +132,38 @@ export class ParticlePlane extends RenderNode {
 							this.updateLoop!.Disconnect();
 							this.updateLoop = undefined;
 						}
+					} else {
+						task.spawn(() => {
+							for (const updateNode of particle.updateNodes) {
+								updateNode.Update(particle.id);
+							}
 
-						return;
+							let position;
+							if (particleData.velocity !== Vector3.zero) {
+								position = particle.basePart.Position.add(particleData.velocity.mul(dt));
+							}
+
+							let cframe;
+							if (particle.orientation === Orientation.FacingCamera) {
+								if (position !== undefined) {
+									cframe = CFrame.lookAt(position, game.Workspace.CurrentCamera!.CFrame.Position);
+								} else {
+									cframe = CFrame.lookAt(
+										particle.basePart.Position,
+										game.Workspace.CurrentCamera!.CFrame.Position,
+									);
+								}
+							}
+
+							if (cframe !== undefined) {
+								particle.basePart.CFrame = cframe;
+							} else if (position !== undefined) {
+								particle.basePart.Position = position;
+							}
+						});
+
+						particle.aliveTime += dt;
 					}
-
-					for (const updateNode of particle.updateNodes) {
-						updateNode.Update(particle.id);
-					}
-
-					let position;
-					if (particleData.velocity !== Vector3.zero) {
-						position = particle.basePart.Position.add(particleData.velocity.mul(dt));
-					}
-
-					let cframe;
-					if (particle.orientation === Orientation.FacingCamera) {
-						if (position !== undefined) {
-							cframe = CFrame.lookAt(position, game.Workspace.CurrentCamera!.CFrame.Position);
-						} else {
-							cframe = CFrame.lookAt(
-								particle.basePart.Position,
-								game.Workspace.CurrentCamera!.CFrame.Position,
-							);
-						}
-					}
-
-					if (cframe !== undefined) {
-						particle.basePart.CFrame = cframe;
-					} else if (position !== undefined) {
-						particle.basePart.Position = position;
-					}
-
-					particle.aliveTime += dt;
 				}
 			});
 		}

@@ -1,26 +1,36 @@
-// import { NumberField } from "../../Fields/NumberField";
-// import { NodeGroups } from "../../NodeGroup";
-// import { SpawnNode } from "./SpawnNode";
+import { NumberField } from "API/Fields/NumberField";
+import { NodeGroups } from "API/NodeGroup";
+import { AutoGenBurstSpawn } from "../AutoGeneration/SpawnNodes/AutoGenBurstSpawn";
+import { SpawnNode } from "./SpawnNode";
 
-// export class BurstSpawn extends SpawnNode {
-// 	nodeGroup: NodeGroups = NodeGroups.Spawn;
-// 	nodeFields: {
-// 		amount: NumberField;
-// 	};
+export const BurstSpawnName = "BurstSpawn";
+export const BurstSpawnFieldNames = {
+	amount: "amount",
+};
 
-// 	constructor() {
-// 		super();
+export class BurstSpawn extends SpawnNode {
+	nodeGroup: NodeGroups = NodeGroups.Spawn;
+	nodeFields: {
+		amount: NumberField;
+	};
 
-// 		this.nodeFields = {
-// 			amount: new NumberField(10),
-// 		};
-// 	}
+	constructor() {
+		super();
 
-// 	GetValue = (): number => {
-// 		return this.nodeFields.amount.GetValue() as number;
-// 	};
+		this.nodeFields = {
+			amount: new NumberField(20),
+		};
+	}
 
-// 	GetAutoGenerationCode(): string {
-// 		return ``;
-// 	}
-// }
+	GetNodeName() {
+		return BurstSpawnName;
+	}
+
+	GetValue = (): number => {
+		return this.nodeFields.amount.GetNumber();
+	};
+
+	GetAutoGenerationCode() {
+		return AutoGenBurstSpawn(this);
+	}
+}

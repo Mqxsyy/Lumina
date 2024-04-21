@@ -1,5 +1,6 @@
 import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { CreateBasicSystem } from "Components/Systems/CreateBasicSystem";
+import { CreateBurstSystem } from "Components/Systems/CreateBurstSystem";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 
 export const NodeSystems: { [key: string]: SelectionEntry } = {
@@ -10,5 +11,9 @@ export const NodeSystems: { [key: string]: SelectionEntry } = {
 	Basic: {
 		name: "Create Basic",
 		create: () => CreateBasicSystem(),
+	},
+	Burst: {
+		name: "Create Burst",
+		create: () => CreateBurstSystem(),
 	},
 };

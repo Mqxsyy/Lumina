@@ -27,7 +27,7 @@ export class ConstantSpawn extends SpawnNode {
 	}
 
 	GetValue = (): number => {
-		return this.nodeFields.rate.GetNumber() as number;
+		return this.nodeFields.rate.GetNumber();
 	};
 
 	GetAutoGenerationCode() {

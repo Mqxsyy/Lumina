@@ -6,10 +6,13 @@ import { Node } from "./Nodes/Node";
 import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 import { UpdateNode } from "./Nodes/Update/UpdateNode";
 import { RenderNode } from "./Nodes/Render/RenderNode";
+import { ConstantSpawnName } from "./Nodes/Spawn/ConstantSpawn";
+import { BurstSpawnName } from "./Nodes/Spawn/BurstSpawn";
 
-// OPTIMIZE: make less laggy
-// OPTIMIZE?: look into an alt version for array.find
-// IMPROVE: split groups and make them connectable
+// TODO: split groups and make them connectable
+// OPTIMIZE: with burst spawn 50 already creates a decent lag spike
+// easily lags in studio, doesn't lag too much in game... yay...
+// most likely probs something to do with having a UI connected idk, maybe sends more data or smthing
 
 if (!RunService.IsStudio()) {
 	print(
@@ -22,6 +25,7 @@ export class NodeSystem {
 
 	NodeGroups: { [key in NodeGroups]: NodeGroup<Node> };
 	SpawnConnection: RBXScriptConnection | undefined;
+	SpawnRateChangedConnection: RBXScriptConnection | undefined;
 
 	spawnNode: SpawnNode | undefined;
 	initializeNodes: InitializeNode[] = [];
@@ -75,31 +79,24 @@ export class NodeSystem {
 		}
 
 		if (this.spawnNode && this.renderNode) {
-			let rate = this.spawnNode!.GetValue() as number;
-			let cd = 1 / rate;
-			let amount = 1; // TODO: make amount more accurate, every 2nd frame spawns 2, every 3rd frame spawns 2, etc
+			if (this.spawnNode.GetNodeName() === ConstantSpawnName) {
+				let passedTime = 0;
 
-			// OPTIMIZE: can bind multiple times to same node
-			this.spawnNode!.nodeFields.rate.FieldChanged.Connect(() => {
-				const newRate = this.spawnNode!.GetValue() as number;
-				if (newRate !== rate) {
-					rate = newRate;
-					cd = 1 / rate;
-					amount = math.ceil(rate / 60);
-				}
-			});
+				this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
+					passedTime += dt;
 
-			let passedTime = 0;
-			this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
-				passedTime += dt;
-				if (passedTime < cd) return;
-
-				passedTime = 0;
-
+					const interval = 1 / this.spawnNode!.GetValue();
+					while (passedTime >= interval) {
+						this.SpawnParticle();
+						passedTime -= interval;
+					}
+				});
+			} else if (this.spawnNode.GetNodeName() === BurstSpawnName) {
+				const amount = this.spawnNode.GetValue();
 				for (let i = 0; i < amount; i++) {
 					this.SpawnParticle();
 				}
-			});
+			}
 		}
 	}
 
