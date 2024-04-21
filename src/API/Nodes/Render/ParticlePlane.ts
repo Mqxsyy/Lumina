@@ -1,6 +1,6 @@
 import { RunService } from "@rbxts/services";
 import { Orientation, OrientationField } from "API/Fields/OrientationField";
-import { GetLiveParticlesFolder } from "API/FolderLocations";
+import { GetPlaneParticlesFolder } from "API/FolderLocations";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, GetParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
@@ -25,6 +25,14 @@ export interface PlaneParticle extends Part {
 	SurfaceGui: SurfaceGui & {
 		ImageLabel: ImageLabel;
 	};
+}
+
+interface AliveParticle {
+	id: number;
+	aliveTime: number;
+	orientation: Orientation;
+	basePart: BasePart;
+	updateNodes: UpdateNode[];
 }
 
 function CreateParticlePlane(): PlaneParticle {
@@ -64,22 +72,17 @@ export class ParticlePlane extends RenderNode {
 		orientation: new OrientationField(Orientation.FacingCamera),
 	};
 
-	objectPool: ObjectPool;
 	displayFolder: Folder;
+	aliveParticles: AliveParticle[];
+	objectPool: ObjectPool;
+	updateLoop: RBXScriptConnection | undefined;
 
 	constructor() {
 		super();
 
-		const liveParticlesFolder = GetLiveParticlesFolder();
-		let displayPlaneParticlesFolder = liveParticlesFolder.FindFirstChild("PlaneParticles");
-		if (displayPlaneParticlesFolder === undefined) {
-			displayPlaneParticlesFolder = new Instance("Folder");
-			displayPlaneParticlesFolder.Name = "PlaneParticles";
-			displayPlaneParticlesFolder.Parent = liveParticlesFolder;
-		}
-
-		this.objectPool = new ObjectPool(CreateParticlePlane(), liveParticlesFolder as Folder);
-		this.displayFolder = displayPlaneParticlesFolder as Folder;
+		this.displayFolder = GetPlaneParticlesFolder() as Folder;
+		this.aliveParticles = [];
+		this.objectPool = new ObjectPool(CreateParticlePlane(), this.displayFolder);
 	}
 
 	Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
@@ -104,33 +107,66 @@ export class ParticlePlane extends RenderNode {
 			particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
 		}
 
-		let aliveTime = 0;
-		const lifetime = GetParticleData(id).lifetime;
-		const connection = RunService.RenderStepped.Connect((dt) => {
-			if (aliveTime >= lifetime) {
-				connection.Disconnect();
-				this.objectPool.RemoveItem(particle);
-				return;
-			}
+		const aliveParticle: AliveParticle = {
+			id: id,
+			aliveTime: 0,
+			orientation: orientation,
+			basePart: particle,
+			updateNodes: updateNodes,
+		};
 
-			updateNodes.forEach((node) => {
-				node.Update(id);
-			});
-
-			const particleData = GetParticleData(id);
-			if (particleData.velocity !== Vector3.zero) {
-				particle.Position = particle.Position.add(particleData.velocity.mul(dt));
-			}
-
-			if (orientation === Orientation.FacingCamera) {
-				particle.CFrame = CFrame.lookAt(particle.Position, game.Workspace.CurrentCamera!.CFrame.Position);
-			}
-
-			aliveTime += dt;
-		});
-
+		this.aliveParticles.push(aliveParticle);
 		particle.Parent = this.displayFolder;
-		return;
+
+		if (this.updateLoop === undefined) {
+			this.updateLoop = RunService.RenderStepped.Connect((dt) => {
+				for (let i = this.aliveParticles.size() - 1; i >= 0; i--) {
+					const particle = this.aliveParticles[i];
+					const particleData = GetParticleData(particle.id);
+
+					if (particle.aliveTime >= particleData.lifetime) {
+						this.aliveParticles.remove(i);
+						this.objectPool.RemoveItem(particle.basePart);
+
+						if (this.aliveParticles.size() === 0) {
+							this.updateLoop!.Disconnect();
+							this.updateLoop = undefined;
+						}
+
+						return;
+					}
+
+					for (const updateNode of particle.updateNodes) {
+						updateNode.Update(particle.id);
+					}
+
+					let position;
+					if (particleData.velocity !== Vector3.zero) {
+						position = particle.basePart.Position.add(particleData.velocity.mul(dt));
+					}
+
+					let cframe;
+					if (particle.orientation === Orientation.FacingCamera) {
+						if (position !== undefined) {
+							cframe = CFrame.lookAt(position, game.Workspace.CurrentCamera!.CFrame.Position);
+						} else {
+							cframe = CFrame.lookAt(
+								particle.basePart.Position,
+								game.Workspace.CurrentCamera!.CFrame.Position,
+							);
+						}
+					}
+
+					if (cframe !== undefined) {
+						particle.basePart.CFrame = cframe;
+					} else if (position !== undefined) {
+						particle.basePart.Position = position;
+					}
+
+					particle.aliveTime += dt;
+				}
+			});
+		}
 	};
 
 	GetNodeName(): string {
@@ -142,6 +178,14 @@ export class ParticlePlane extends RenderNode {
 	}
 
 	Destroy() {
+		if (this.updateLoop !== undefined) {
+			this.updateLoop.Disconnect();
+		}
+
+		this.aliveParticles.forEach((particle) => {
+			this.objectPool.RemoveItem(particle.basePart);
+		});
+
 		this.objectPool.ClearStandby();
 	}
 }

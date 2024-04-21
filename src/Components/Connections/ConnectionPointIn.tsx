@@ -10,6 +10,7 @@ import {
 } from "Services/ConnectionsService";
 import { GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
 import ConnectionPoint from "./ConnectionPoint";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 interface Props {
 	AnchorPoint?: Vector2;
@@ -17,7 +18,7 @@ interface Props {
 	Size?: UDim2;
 	NodeId: number;
 	NodeFieldName: string;
-	BindFunction: (newValue: () => number, boundNodeId: number) => void;
+	BindFunction: (newValue: () => number, boundNode: LogicNode) => void;
 	UnbindFunction: () => void;
 }
 
@@ -81,7 +82,7 @@ export default function ConnectionPointIn({
 			});
 		});
 
-		BindFunction(connectionData.fn, connectionData.startNode.node.id);
+		BindFunction(connectionData.fn, connectionData.startNode.node as LogicNode);
 	};
 
 	const mouseButton1Up = () => {

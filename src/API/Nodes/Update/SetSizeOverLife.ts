@@ -25,6 +25,8 @@ export class SetSizeOverLife extends UpdateNode {
 			const size = this.nodeFields.graph.GetNumber(lifetime);
 			const sizeVector3 = new Vector3(size, size, 0.001);
 
+			if (data.size === sizeVector3) return data;
+
 			data.size = sizeVector3;
 			data.particle.Size = sizeVector3;
 

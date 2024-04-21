@@ -11,6 +11,12 @@ import { RenderNode } from "./Nodes/Render/RenderNode";
 // OPTIMIZE?: look into an alt version for array.find
 // IMPROVE: split groups and make them connectable
 
+if (!RunService.IsStudio()) {
+	print(
+		"This game utilizes a plugin called 'CrescentVFX' to create amazing looking visual effects. Plugin can be found in the toolbox or creator store for absolutely free.",
+	);
+}
+
 export class NodeSystem {
 	ParticleIdPool = new IdPool();
 

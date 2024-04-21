@@ -1,6 +1,7 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
-import { GetNodeById } from "Services/NodesService";
+
+// TODO: add check for floating point error
 
 interface SerializedData {
 	number: number;
@@ -31,9 +32,9 @@ export class NumberField extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindNumber = (boundFunction: () => number, boundNodeId: number) => {
+	BindNumber = (boundFunction: () => number, boundNode: LogicNode) => {
 		this.boundFunction = boundFunction;
-		this.boundNode = GetNodeById(boundNodeId)!.data.node as LogicNode;
+		this.boundNode = boundNode;
 		this.FieldChanged.Fire();
 	};
 

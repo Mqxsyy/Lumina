@@ -2,6 +2,7 @@ import Roact from "@rbxts/roact";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import { NumberField } from "./NumberField";
 import Div from "Components/Div";
+import { LogicNode } from "API/Nodes/Logic/LogicNode";
 
 interface Props {
 	NodeId: number;
@@ -11,7 +12,7 @@ interface Props {
 	TextToInputRatio?: number;
 	InputDisabled: boolean;
 	NumberChanged: (newValue: number) => void;
-	BindFunction: (newValue: () => number, boundNodeId: number) => void;
+	BindFunction: (newValue: () => number, boundNode: LogicNode) => void;
 	UnbindFunction: () => void;
 }
 

@@ -8,9 +8,9 @@ export function AutoGenSetColorOverLife(node: SetColorOverLife) {
 	src += `local ${varName} = ${className}.new() \n`;
 
 	const startPoint = node.nodeFields.ramp.startPoint.color;
-	src += `${varName}.nodeFields.ramp.startPoint.color.SetColor(${startPoint.hue}, ${startPoint.saturation}, ${startPoint.value}) \n`;
+	src += `${varName}.nodeFields.ramp.startPoint.color.SetHSV(${startPoint.hue}, ${startPoint.saturation}, ${startPoint.value}) \n`;
 	const endPoint = node.nodeFields.ramp.endPoint.color;
-	src += `${varName}.nodeFields.ramp.endPoint.color.SetColor(${endPoint.hue}, ${endPoint.saturation}, ${endPoint.value}) \n`;
+	src += `${varName}.nodeFields.ramp.endPoint.color.SetHSV(${endPoint.hue}, ${endPoint.saturation}, ${endPoint.value}) \n`;
 
 	const rampPoints = node.nodeFields.ramp.GetPoints();
 	for (const point of rampPoints) {

@@ -99,9 +99,9 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindVector3 = (boundFunction: () => Vector3, boundNodeId: number) => {
+	BindVector3 = (boundFunction: () => Vector3, boundNode: LogicNode) => {
 		this.boundFunction = boundFunction;
-		this.boundNode = GetNodeById(boundNodeId)!.data.node as LogicNode;
+		this.boundNode = boundNode;
 		this.FieldChanged.Fire();
 	};
 
@@ -111,9 +111,9 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindX = (boundFunction: () => number, boundNodeId: number) => {
+	BindX = (boundFunction: () => number, boundNode: LogicNode) => {
 		this.boundFunctionX = boundFunction;
-		this.boundNodeX = GetNodeById(boundNodeId)!.data.node as LogicNode;
+		this.boundNodeX = boundNode;
 		this.FieldChanged.Fire();
 	};
 
@@ -123,9 +123,9 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindY = (boundFunction: () => number, boundNodeId: number) => {
+	BindY = (boundFunction: () => number, boundNode: LogicNode) => {
 		this.boundFunctionY = boundFunction;
-		this.boundNodeY = GetNodeById(boundNodeId)!.data.node as LogicNode;
+		this.boundNodeY = boundNode;
 		this.FieldChanged.Fire();
 	};
 
@@ -135,9 +135,9 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindZ = (boundFunction: () => number, boundNodeId: number) => {
+	BindZ = (boundFunction: () => number, boundNode: LogicNode) => {
 		this.boundFunctionZ = boundFunction;
-		this.boundNodeZ = GetNodeById(boundNodeId)!.data.node as LogicNode;
+		this.boundNodeZ = boundNode;
 		this.FieldChanged.Fire();
 	};
 

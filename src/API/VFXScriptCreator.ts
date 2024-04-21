@@ -1,14 +1,6 @@
-import { Workspace } from "@rbxts/services";
-import { NodeSystem } from "./NodeSystem";
 import { GetNodeSystems } from "Services/NodeSystemService";
-
-let VFXExportFolder = Workspace.FindFirstChild("VFXExportFolder");
-
-if (VFXExportFolder === undefined) {
-	VFXExportFolder = new Instance("Folder");
-	VFXExportFolder.Name = "VFXExportFolder";
-	VFXExportFolder.Parent = game.Workspace;
-}
+import { GetExportsFolder } from "./FolderLocations";
+import { NodeSystem } from "./NodeSystem";
 
 export default function ExportAsScript() {
 	const convertedFiles: ModuleScript[] = [];
@@ -21,11 +13,13 @@ export default function ExportAsScript() {
 }
 
 function CreateScript(name: string, nodeSystem: NodeSystem) {
-	const oldVFXScript = VFXExportFolder!.FindFirstChild(name);
+	const exportFolder = GetExportsFolder();
+
+	const oldVFXScript = exportFolder.FindFirstChild(name);
 	if (oldVFXScript !== undefined) oldVFXScript.Destroy();
 
 	const newScript = new Instance("ModuleScript");
-	newScript.Parent = VFXExportFolder;
+	newScript.Parent = exportFolder;
 	newScript.Name = name;
 
 	let src = `

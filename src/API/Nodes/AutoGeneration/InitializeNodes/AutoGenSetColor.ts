@@ -7,7 +7,7 @@ export function AutoGenSetColor(node: SetColor) {
 	let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetColor").SetColor \n`;
 
 	src += `local ${varName} = ${className}.new() \n`;
-	src += `${varName}.nodeFields.color.SetColor(${node.nodeFields.color.hue}, ${node.nodeFields.color.saturation}, ${node.nodeFields.color.value}) \n`;
+	src += `${varName}.nodeFields.color.SetHSV(${node.nodeFields.color.hue}, ${node.nodeFields.color.saturation}, ${node.nodeFields.color.value}) \n`;
 	src += `nodeSystem:AddNode(${varName})`;
 
 	return src;
