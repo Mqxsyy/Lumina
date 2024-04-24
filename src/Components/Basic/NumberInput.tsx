@@ -1,6 +1,6 @@
+import Roact from "@rbxts/roact";
 import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
-import Roact, { PureComponent } from "@rbxts/roact";
 
 interface Props {
 	AnchorPoint?: Vector2;

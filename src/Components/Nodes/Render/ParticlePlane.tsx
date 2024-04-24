@@ -5,7 +5,7 @@ import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
 export function CreateParticlePlane() {
-	return AddNode(new ParticlePlaneAPI(), (data: NodeData) => {
+	return AddNode(new ParticlePlaneAPI(1000), (data: NodeData) => {
 		return <ParticlePlane key={`node_${data.node.id}`} data={data} />;
 	});
 }

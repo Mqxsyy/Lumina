@@ -1,31 +1,35 @@
 export class ObjectPool {
-	item: BasePart;
-	folder: Folder;
+	create: () => Instance;
 
-	activeItems: BasePart[];
-	standbyItems: BasePart[];
+	activeItems: Instance[];
+	standbyItems: Instance[];
 
-	constructor(item: BasePart, activeFolder: Folder) {
-		this.item = item;
-		this.folder = activeFolder;
+	constructor(create: () => Instance) {
+		this.create = create;
 
 		this.activeItems = [];
 		this.standbyItems = [];
+	}
+
+	Pregenerate(amount: number) {
+		for (let i = 0; i < amount; i++) {
+			const item = this.create();
+			this.standbyItems.push(item);
+		}
 	}
 
 	GetItem() {
 		let item = this.standbyItems.pop();
 
 		if (item === undefined) {
-			item = this.item.Clone();
+			item = this.create();
 		}
 
-		item.Parent = this.folder;
 		this.activeItems.push(item);
 		return item;
 	}
 
-	RemoveItem(targetItem: BasePart) {
+	RemoveItem(targetItem: Instance) {
 		const index = this.activeItems.findIndex((item) => item === targetItem);
 
 		if (index === -1) {
@@ -33,7 +37,6 @@ export class ObjectPool {
 		}
 
 		const item = this.activeItems.remove(index);
-		item!.Parent = undefined;
 		this.standbyItems.push(item!);
 	}
 

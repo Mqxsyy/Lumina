@@ -18,7 +18,7 @@ export function GetNextParticleId() {
 
 export function CreateParticleData(id: number, particle: PlaneParticle) {
 	return (particleData[id] = {
-		particle: particle,
+		particle,
 		lifetime: 0,
 		spawnTime: os.clock(),
 		size: new Vector3(1, 1, 1),

@@ -6,6 +6,8 @@ interface SerializedData {
 	y: number;
 }
 
+// TODO: make not actually return a vector2 but rather an object that imitates a vector2
+
 export class Vector2Field extends NodeField {
 	x: number;
 	boundNodeX: undefined | LogicNode;
@@ -44,6 +46,7 @@ export class Vector2Field extends NodeField {
 			y = this.y;
 		}
 
+		// creating a vector2 causes floating point error, yay
 		return new Vector2(x, y);
 	}
 

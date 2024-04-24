@@ -11,12 +11,13 @@ import { BurstSpawnName } from "./Nodes/Spawn/BurstSpawn";
 
 // TODO: split groups and make them connectable
 // OPTIMIZE: with burst spawn 50 already creates a decent lag spike
+// OPTIMIZE: add culling?
 // easily lags in studio, doesn't lag too much in game... yay...
 // most likely probs something to do with having a UI connected idk, maybe sends more data or smthing
 
 if (!RunService.IsStudio()) {
 	print(
-		"This game utilizes a plugin called 'CrescentVFX' to create amazing looking visual effects. Plugin can be found in the toolbox or creator store for absolutely free.",
+		"This game utilizes a free custom particle system and plugin called 'CrescentVFX' to easily create great looking visual effects. Plugin can be found in the toolbox or creator store for absolutely FREE.",
 	);
 }
 
@@ -100,17 +101,10 @@ export class NodeSystem {
 		}
 	}
 
-	Stop(clearCache: boolean = false) {
+	Stop() {
 		if (this.SpawnConnection !== undefined) {
 			this.SpawnConnection.Disconnect();
 			this.SpawnConnection = undefined;
-		}
-
-		if (clearCache) {
-			const renderNodes = this.NodeGroups[NodeGroups.Render].GetNodes() as RenderNode[];
-			if (renderNodes[0] !== undefined) {
-				renderNodes[0].Destroy();
-			}
 		}
 	}
 
