@@ -26,7 +26,7 @@ export class SetRotationZRandom extends InitializeNode {
 
 	Initialize(id: number) {
 		const range = this.nodeFields.range.GetVector2();
-		const zRotation = RoundDecimal(Rand.NextNumber(range.X, range.Y), 0.01);
+		const zRotation = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
 		GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation = zRotation;
 	}
 

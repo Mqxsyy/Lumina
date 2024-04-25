@@ -27,7 +27,7 @@ export class SetSizeRandom extends InitializeNode {
 	Initialize(id: number) {
 		UpdateParticleData(id, (data) => {
 			const range = this.nodeFields.range.GetVector2();
-			const size = RoundDecimal(Rand.NextNumber(range.X, range.Y), 0.01);
+			const size = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
 			const sizeVector3 = new Vector3(size, size, 0.001);
 
 			data.size = sizeVector3;

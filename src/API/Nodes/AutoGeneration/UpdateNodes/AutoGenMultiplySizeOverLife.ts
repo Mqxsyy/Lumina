@@ -12,7 +12,7 @@ export function AutoGenMultiplySizeOverLife(node: MultiplySizeOverLife) {
 
 	const graphPoints = node.nodeFields.graph.GetPoints();
 	for (const point of graphPoints) {
-		src += `${varName}.nodeFields.graph.AddPoint(${point.time}, ${point.value}) \n`;
+		src += `${varName}.nodeFields.graph:AddPoint(${point.time}, ${point.value}) \n`;
 	}
 
 	src += `nodeSystem:AddNode(${varName})`;

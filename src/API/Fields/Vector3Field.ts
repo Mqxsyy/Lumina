@@ -1,8 +1,13 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
-import { GetNodeById } from "Services/NodesService";
 
 interface SerializedData {
+	x: number;
+	y: number;
+	z: number;
+}
+
+export interface SimpleVector3 {
 	x: number;
 	y: number;
 	z: number;
@@ -22,7 +27,7 @@ export class Vector3Field extends NodeField {
 	private boundFunctionZ: undefined | (() => number);
 
 	boundNode: undefined | LogicNode;
-	private boundFunction: undefined | (() => Vector3);
+	private boundFunction: undefined | (() => SimpleVector3);
 
 	constructor(x: number, y: number, z: number) {
 		super();
@@ -32,7 +37,7 @@ export class Vector3Field extends NodeField {
 		this.z = z;
 	}
 
-	GetVector3() {
+	GetVector3(): SimpleVector3 {
 		if (this.boundFunction !== undefined) {
 			return this.boundFunction();
 		}
@@ -58,7 +63,7 @@ export class Vector3Field extends NodeField {
 			z = this.z;
 		}
 
-		return new Vector3(x, y, z);
+		return { x, y, z };
 	}
 
 	SetVector3 = (x: number, y: number, z: number) => {
@@ -99,7 +104,7 @@ export class Vector3Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindVector3 = (boundFunction: () => Vector3, boundNode: LogicNode) => {
+	BindVector3 = (boundFunction: () => SimpleVector3, boundNode: LogicNode) => {
 		this.boundFunction = boundFunction;
 		this.boundNode = boundNode;
 		this.FieldChanged.Fire();

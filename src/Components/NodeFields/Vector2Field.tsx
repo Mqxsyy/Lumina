@@ -2,6 +2,7 @@ import Roact, { useRef } from "@rbxts/roact";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { NumberField } from "./NumberField";
+import { SimpleVector2 } from "API/Fields/Vector2Field";
 
 // TODO: add inputs (can't simply add cause API isn't individual binds);
 
@@ -9,7 +10,7 @@ interface Props {
 	Label: string;
 	ValueLabels?: [string, string];
 
-	DefaultValues: { X: number; Y: number };
+	DefaultValues: SimpleVector2;
 	TextToInputRatios?: [number, number];
 
 	Vector2Changed: (x: number, y: number) => void;
@@ -22,8 +23,8 @@ export function Vector2Field({
 	TextToInputRatios = [0.15, 0.15],
 	Vector2Changed,
 }: Props) {
-	const xRef = useRef(DefaultValues.X);
-	const yRef = useRef(DefaultValues.Y);
+	const xRef = useRef(DefaultValues.x);
+	const yRef = useRef(DefaultValues.y);
 
 	const xChanged = (number: number) => {
 		xRef.current = number;
@@ -46,14 +47,14 @@ export function Vector2Field({
 
 				<NumberField
 					Label={ValueLabels[0]}
-					DefaultText={tostring(DefaultValues.X)}
+					DefaultText={tostring(DefaultValues.x)}
 					AllowNegative={true}
 					TextToInputRatio={TextToInputRatios[0]}
 					NumberChanged={xChanged}
 				/>
 				<NumberField
 					Label={ValueLabels[1]}
-					DefaultText={tostring(DefaultValues.Y)}
+					DefaultText={tostring(DefaultValues.y)}
 					AllowNegative={true}
 					TextToInputRatio={TextToInputRatios[0]}
 					NumberChanged={yChanged}

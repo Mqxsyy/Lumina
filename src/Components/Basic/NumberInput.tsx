@@ -2,6 +2,8 @@ import Roact from "@rbxts/roact";
 import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
 
+// BUG: has some weird bug where values glitch
+
 interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;

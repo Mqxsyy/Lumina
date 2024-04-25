@@ -1,6 +1,8 @@
 import Roact from "@rbxts/roact";
 import { Event } from "API/Bindables/Event";
+import { NodeGroups } from "API/NodeGroup";
 import { Node } from "API/Nodes/Node";
+import { RenderNode } from "API/Nodes/Render/RenderNode";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 // TODO: Add render order changing
@@ -92,6 +94,10 @@ export function RemoveNode(id: number) {
 	const index = NodeCollection.findIndex((collection) => collection.data.node.id === id);
 	if (index !== -1) {
 		const node = NodeCollection[index];
+		if (node.data.node.nodeGroup === NodeGroups.Render) {
+			(node.data.node as RenderNode).Destroy();
+		}
+
 		node.data.onDestroy.Fire(node.data);
 
 		NodeCollection.remove(index);

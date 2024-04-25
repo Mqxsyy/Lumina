@@ -6,7 +6,10 @@ interface SerializedData {
 	y: number;
 }
 
-// TODO: make not actually return a vector2 but rather an object that imitates a vector2
+export interface SimpleVector2 {
+	x: number;
+	y: number;
+}
 
 export class Vector2Field extends NodeField {
 	x: number;
@@ -18,7 +21,7 @@ export class Vector2Field extends NodeField {
 	private boundFunctionY: undefined | (() => number);
 
 	boundNode: undefined | LogicNode;
-	private boundFunction: undefined | (() => Vector2);
+	private boundFunction: undefined | (() => SimpleVector2);
 
 	constructor(x: number, y: number) {
 		super();
@@ -27,7 +30,7 @@ export class Vector2Field extends NodeField {
 		this.y = y;
 	}
 
-	GetVector2() {
+	GetVector2(): SimpleVector2 {
 		if (this.boundFunction !== undefined) {
 			return this.boundFunction();
 		}
@@ -47,7 +50,23 @@ export class Vector2Field extends NodeField {
 		}
 
 		// creating a vector2 causes floating point error, yay
-		return new Vector2(x, y);
+		return { x, y };
+	}
+
+	GetX() {
+		if (this.boundFunctionX !== undefined) {
+			return this.boundFunctionX();
+		}
+
+		return this.x;
+	}
+
+	GetY() {
+		if (this.boundFunctionY !== undefined) {
+			return this.boundFunctionY();
+		}
+
+		return this.y;
 	}
 
 	SetVector2 = (x: number, y: number) => {
@@ -78,7 +97,7 @@ export class Vector2Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindVector2 = (boundFunction: (() => Vector2) | undefined, boundNode: LogicNode | undefined) => {
+	BindVector2 = (boundFunction: (() => SimpleVector2) | undefined, boundNode: LogicNode | undefined) => {
 		this.boundFunction = boundFunction;
 		this.boundNode = boundNode;
 		this.FieldChanged.Fire();

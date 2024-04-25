@@ -32,13 +32,13 @@ export class SetVelocityRandom extends InitializeNode {
 
 	Initialize(id: number) {
 		const xRange = this.nodeFields.rangeX.GetVector2();
-		const x = RoundDecimal(Rand.NextNumber(xRange.X, xRange.Y), 0.01);
+		const x = RoundDecimal(Rand.NextNumber(xRange.x, xRange.y), 0.01);
 
 		const yRange = this.nodeFields.rangeY.GetVector2();
-		const y = RoundDecimal(Rand.NextNumber(yRange.X, yRange.Y), 0.01);
+		const y = RoundDecimal(Rand.NextNumber(yRange.x, yRange.y), 0.01);
 
 		const zRange = this.nodeFields.rangeZ.GetVector2();
-		const z = RoundDecimal(Rand.NextNumber(zRange.X, zRange.Y), 0.01);
+		const z = RoundDecimal(Rand.NextNumber(zRange.x, zRange.y), 0.01);
 
 		UpdateParticleData(id, (data) => {
 			data.velocity = new Vector3(x, y, z);

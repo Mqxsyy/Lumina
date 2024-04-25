@@ -30,7 +30,7 @@ export class AddRotationZRandom extends UpdateNode {
 		let zAddition = this.storedValues.get(id);
 		if (zAddition === undefined) {
 			const range = this.nodeFields.range.GetVector2();
-			zAddition = RoundDecimal(Rand.NextNumber(range.X, range.Y) * FrameRateMultiplier, 0.01);
+			zAddition = RoundDecimal(Rand.NextNumber(range.x, range.y) * FrameRateMultiplier, 0.01);
 			this.storedValues.set(id, zAddition);
 		}
 

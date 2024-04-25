@@ -17,7 +17,6 @@ function SetVelocity({ data }: { data: NodeData }) {
 		<Node Name="Set Velocity" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector3Field
 				NodeId={data.node.id}
-				NodeAnchorPoint={data.anchorPoint}
 				NodeField={velocityFieldRef.current}
 				NodeFieldName={SetVelocityFieldNames.velocity}
 				Label={"Velocity"}

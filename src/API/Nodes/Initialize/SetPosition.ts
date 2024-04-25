@@ -24,7 +24,8 @@ export class SetPosition extends InitializeNode {
 	}
 
 	Initialize(id: number) {
-		GetParticleData(id).particle.Position = this.nodeFields.position.GetVector3();
+		const vector3 = this.nodeFields.position.GetVector3();
+		GetParticleData(id).particle.Position = new Vector3(vector3.x, vector3.y, vector3.z);
 	}
 
 	GetNodeName(): string {

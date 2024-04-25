@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { Vector3Field as Vector3FieldAPI } from "API/Fields/Vector3Field";
+import { SimpleVector3, Vector3Field as Vector3FieldAPI } from "API/Fields/Vector3Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
@@ -7,11 +7,10 @@ import { NumberField } from "./NumberField";
 
 interface Props {
 	NodeId: number;
-	NodeAnchorPoint: Vector2;
 	NodeField: Vector3FieldAPI;
 	NodeFieldName: string;
 	Label: string;
-	DefaultValue: Vector3;
+	DefaultValue: SimpleVector3;
 	PlaceholderValues?: [string, string, string];
 }
 
@@ -19,7 +18,6 @@ interface Props {
 
 export function Vector3Field({
 	NodeId,
-	NodeAnchorPoint,
 	NodeField,
 	NodeFieldName,
 	Label,
@@ -47,7 +45,7 @@ export function Vector3Field({
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"X"}
-						DefaultText={tostring(DefaultValue.X)}
+						DefaultText={tostring(DefaultValue.x)}
 						PlaceholderText={PlaceholderValues[0]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}
@@ -67,7 +65,7 @@ export function Vector3Field({
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"Y"}
-						DefaultText={tostring(DefaultValue.Y)}
+						DefaultText={tostring(DefaultValue.y)}
 						PlaceholderText={PlaceholderValues[1]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}
@@ -87,7 +85,7 @@ export function Vector3Field({
 					<NumberField
 						Size={new UDim2(1, -25, 0, 0)}
 						Label={"Z"}
-						DefaultText={tostring(DefaultValue.Z)}
+						DefaultText={tostring(DefaultValue.z)}
 						PlaceholderText={PlaceholderValues[2]}
 						AllowNegative={true}
 						TextToInputRatio={0.25}

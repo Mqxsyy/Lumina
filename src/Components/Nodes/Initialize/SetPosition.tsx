@@ -17,7 +17,6 @@ function SetPosition({ data }: { data: NodeData }) {
 		<Node Name="Set Position" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector3Field
 				NodeId={data.node.id}
-				NodeAnchorPoint={data.anchorPoint}
 				NodeField={positionFieldRef.current}
 				NodeFieldName={SetPositionFieldNames.position}
 				Label={"Position"}

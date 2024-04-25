@@ -26,7 +26,7 @@ export class SetLifetimeRandom extends InitializeNode {
 
 	Initialize(id: number) {
 		const range = this.nodeFields.range.GetVector2();
-		const lifetime = RoundDecimal(Rand.NextNumber(range.X, range.Y), 0.01);
+		const lifetime = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
 
 		UpdateParticleData(id, (data) => {
 			data.lifetime = lifetime;

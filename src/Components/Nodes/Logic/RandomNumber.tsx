@@ -25,7 +25,7 @@ function RandomNumber({ data }: { data: NodeData }) {
 			<Vector2Field
 				Label={"Vector3"}
 				ValueLabels={["Min", "Max"]}
-				DefaultValues={new Vector2(0, 10)}
+				DefaultValues={{ x: 0, y: 10 }}
 				Vector2Changed={vector2FieldRef.current.SetVector2}
 			/>
 		</Node>

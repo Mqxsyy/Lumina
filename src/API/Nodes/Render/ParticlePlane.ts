@@ -8,9 +8,12 @@ import { AutogenParticlePlane } from "../AutoGeneration/RenderNodes/AutoGenParti
 import { InitializeNode } from "../Initialize/InitializeNode";
 import { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
+import { Vector2Field } from "API/Fields/Vector2Field";
+import { NumberField } from "API/Fields/NumberField";
 
 // TODO: make double sided, required reversed image if not symmetrical
 
+// flame sprite sheet: 15996621949
 const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 const DEFAULT_TEXTURE = "rbxassetid://7848741169";
 const DEFAULT_COLOR = new Color3(1, 1, 1);
@@ -26,6 +29,11 @@ const CFrameZero = new CFrame();
 export const ParticlePlaneName = "ParticlePlane";
 export const ParticlePlaneFieldNames = {
 	orientation: "orientation",
+	assetId: "assetId",
+	imageSize: "imageSize",
+	spriteSheetRows: "spriteSheetRows",
+	spriteSheetColumns: "spriteSheetColumns",
+	spriteSheetFrameCount: "spriteSheetFrameCount",
 };
 
 export interface PlaneParticle extends Part {
@@ -82,6 +90,11 @@ export class ParticlePlane extends RenderNode {
 	nodeGroup: NodeGroups = NodeGroups.Render;
 	nodeFields = {
 		orientation: new OrientationField(Orientation.FacingCamera),
+		assetId: new NumberField(7848741169),
+		imageSize: new Vector2Field(1024, 1024),
+		spriteSheetRows: new NumberField(1),
+		spriteSheetColumns: new NumberField(1),
+		spriteSheetFrameCount: new NumberField(1),
 	};
 
 	aliveParticles: AliveParticle[];
@@ -114,6 +127,7 @@ export class ParticlePlane extends RenderNode {
 	Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
 		const particle = this.objectPool.GetItem() as PlaneParticle;
 		particle.SurfaceGui.ImageLabel.ImageTransparency = 0;
+		particle.SurfaceGui.ImageLabel.Image = `rbxassetid://${this.nodeFields.assetId.GetNumber()}`;
 		particle.CFrame = CFrameZero;
 
 		const id = GetNextParticleId();
@@ -130,6 +144,16 @@ export class ParticlePlane extends RenderNode {
 		const orientation = this.nodeFields.orientation.GetOrientation();
 		if (orientation === Orientation.FacingCamera) {
 			particle.CFrame = CFrame.lookAt(particle.CFrame.Position, game.Workspace.CurrentCamera!.CFrame.Position);
+		}
+
+		if (this.nodeFields.spriteSheetFrameCount.GetNumber() >= 1) {
+			const size = this.nodeFields.imageSize.GetVector2();
+
+			const rows = this.nodeFields.spriteSheetRows.GetNumber();
+			const columns = this.nodeFields.spriteSheetColumns.GetNumber();
+
+			particle.SurfaceGui.ImageLabel.ImageRectSize = new Vector2(size.x / columns, size.y / rows);
+			particle.SurfaceGui.ImageLabel.ImageRectOffset = Vector2.zero;
 		}
 
 		const aliveParticle: AliveParticle = {
@@ -167,8 +191,34 @@ export class ParticlePlane extends RenderNode {
 							this.updateLoop = undefined;
 						}
 					} else {
+						particleData.aliveTimePercent = particle.aliveTime / particleData.lifetime;
+
 						for (const updateNode of particle.updateNodes) {
 							updateNode.Update(particle.id);
+						}
+
+						if (this.nodeFields.spriteSheetFrameCount.GetNumber() >= 1) {
+							const currentFrame = math.floor(
+								this.nodeFields.spriteSheetFrameCount.GetNumber() * particleData.aliveTimePercent,
+							);
+
+							if (particleData.spriteSheetFrame !== currentFrame) {
+								particleData.spriteSheetFrame = currentFrame;
+
+								const row = math.floor(currentFrame / this.nodeFields.spriteSheetColumns.GetNumber());
+								const column = currentFrame % this.nodeFields.spriteSheetColumns.GetNumber();
+
+								const size = this.nodeFields.imageSize.GetVector2();
+								const uvOffset = new Vector2(
+									column / this.nodeFields.spriteSheetColumns.GetNumber(),
+									row / this.nodeFields.spriteSheetRows.GetNumber(),
+								);
+
+								particleData.particle.SurfaceGui.ImageLabel.ImageRectOffset = new Vector2(
+									uvOffset.X * size.x,
+									uvOffset.Y * size.y,
+								);
+							}
 						}
 
 						let position;
@@ -215,8 +265,6 @@ export class ParticlePlane extends RenderNode {
 	}
 
 	Destroy() {
-		print("Destroying ParticlePlane");
-
 		if (this.updateLoop !== undefined) {
 			this.updateLoop.Disconnect();
 		}

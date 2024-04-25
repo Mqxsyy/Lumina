@@ -13,6 +13,7 @@ import { NumberInput } from "Components/Basic/NumberInput";
 // TODO: add color saving & loading, palette creator
 // TODO?: add support for HSV
 // OPTIMIZE: refactor code
+// BUG: when changing properties from controls, selected one is wrong
 
 // colors are bloody awful to work with due to their loss of accuracy on conversion
 // also long ass file

@@ -32,7 +32,7 @@ export class RandomNumber extends LogicNode<number> {
 
 	Calculate = () => {
 		const range = this.nodeFields.range.GetVector2();
-		let value = range.X + Rand.NextNumber() * (range.Y - range.X);
+		let value = range.x + Rand.NextNumber() * (range.y - range.x);
 
 		if (this.nodeFields.isInt.GetBoolean()) {
 			value = math.round(value);

@@ -3,8 +3,10 @@ import { PlaneParticle } from "./Nodes/Render/ParticlePlane";
 
 interface ParticleData {
 	particle: PlaneParticle;
-	lifetime: number;
 	spawnTime: number;
+	lifetime: number;
+	aliveTimePercent: number;
+	spriteSheetFrame: number;
 	size: Vector3;
 	velocity: Vector3;
 }
@@ -19,8 +21,10 @@ export function GetNextParticleId() {
 export function CreateParticleData(id: number, particle: PlaneParticle) {
 	return (particleData[id] = {
 		particle,
-		lifetime: 0,
 		spawnTime: os.clock(),
+		lifetime: 0,
+		aliveTimePercent: 0,
+		spriteSheetFrame: 0,
 		size: new Vector3(1, 1, 1),
 		velocity: Vector3.zero,
 	});
