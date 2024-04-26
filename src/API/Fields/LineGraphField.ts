@@ -4,6 +4,7 @@ import { NodeField } from "./NodeField";
 
 export interface GraphPoint {
 	id: number;
+	canEditTime: boolean;
 	time: number;
 	value: number;
 }
@@ -24,17 +25,31 @@ export class LineGraphField extends NodeField {
 
 	startPoint: GraphPoint = {
 		id: this.idPool.GetNextId(),
+		canEditTime: false,
 		time: 0,
 		value: 0,
 	};
 
 	endPoint: GraphPoint = {
 		id: this.idPool.GetNextId(),
+		canEditTime: false,
 		time: 1,
 		value: 1,
 	};
 
 	graphPoints: GraphPoint[] = [];
+
+	GetAllPoints() {
+		const points = [];
+
+		points.push(this.startPoint);
+		this.graphPoints.forEach((point) => {
+			points.push(point);
+		});
+		points.push(this.endPoint);
+
+		return points;
+	}
 
 	GetPoints() {
 		return this.graphPoints;
@@ -62,23 +77,39 @@ export class LineGraphField extends NodeField {
 	}
 
 	AddPoint(time: number, value: number) {
-		const data = { id: this.idPool.GetNextId(), time, value };
+		const data: GraphPoint = {
+			id: this.idPool.GetNextId(),
+			canEditTime: true,
+			time,
+			value,
+		};
+
 		this.graphPoints.push(data);
 		this.graphPoints.sort((a, b) => a.time < b.time);
+		this.FieldChanged.Fire();
+
 		return data;
 	}
 
 	UpdatePoint(id: number, time: number, value: number) {
-		const index = this.graphPoints.findIndex((point) => point.id === id);
-		if (index !== -1) {
-			this.graphPoints[index].time = time;
-			this.graphPoints[index].value = value;
+		if (id === this.startPoint.id) {
+			this.UpdatePointValues(this.startPoint, time, value);
+		} else if (id === this.endPoint.id) {
+			this.UpdatePointValues(this.endPoint, time, value);
+		} else {
+			const index = this.graphPoints.findIndex((point) => point.id === id);
+			if (index !== -1) {
+				this.UpdatePointValues(this.graphPoints[index], time, value);
+			}
 		}
+
 		this.graphPoints.sort((a, b) => a.time < b.time);
+		this.FieldChanged.Fire();
 	}
 
 	RemovePoint(id: number) {
 		delete this.graphPoints[this.graphPoints.findIndex((point) => point.id === id)];
+		this.FieldChanged.Fire();
 	}
 
 	SerializeData() {
@@ -113,19 +144,11 @@ export class LineGraphField extends NodeField {
 		});
 	}
 
-	// GetLargestValue() {
-	// 	let largest = this.startPoint.value;
+	private UpdatePointValues(point: GraphPoint, time: number, value: number) {
+		if (point.canEditTime) {
+			point.time = time;
+		}
 
-	// 	for (const point of this.graphPoints) {
-	// 		if (point.value > largest) {
-	// 			largest = point.value;
-	// 		}
-	// 	}
-
-	// 	if (this.endPoint.value > largest) {
-	// 		largest = this.endPoint.value;
-	// 	}
-
-	// 	return largest;
-	// }
+		point.value = value;
+	}
 }

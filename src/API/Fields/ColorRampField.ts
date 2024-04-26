@@ -100,9 +100,11 @@ export class ColorRampField extends NodeField {
 			time,
 			color: new ColorField(color.X, color.Y, color.Z),
 		};
+
 		this.colorPoints.push(data);
 		this.colorPoints.sort((a, b) => a.time < b.time);
 		this.FieldChanged.Fire();
+
 		return data;
 	}
 

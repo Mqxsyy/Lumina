@@ -7,8 +7,8 @@ interface Props {
 	Id: number;
 	Position: UDim2;
 	TimeLock?: number;
-	OnSelect: (id: number, isTimeLocked: boolean) => void;
-	UpdatePoint: (id: number, horizontalLock: number) => void;
+	OnSelect: (id: number) => void;
+	UpdatePoint: (id: number) => void;
 	RemovePoint?: (id: number) => void;
 }
 
@@ -21,10 +21,10 @@ export default function LineGraphPoint({
 	RemovePoint = undefined,
 }: Props) {
 	const onMouseButton1Down = () => {
-		OnSelect(Id, TimeLock !== -1);
+		OnSelect(Id);
 
 		RunService.BindToRenderStep("MoveGraphPoint", Enum.RenderPriority.Input.Value, () => {
-			UpdatePoint(Id, TimeLock);
+			UpdatePoint(Id);
 		});
 	};
 

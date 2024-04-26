@@ -144,7 +144,7 @@ export function TextInput({
 				TextColor3={Disabled ? StyleColors.TextLight : TextColor}
 				TextXAlignment={TextXAlignment}
 				TextWrapped={true}
-				Text={Text}
+				Text={Disabled ? "-" : Text}
 				TextTruncate={Enum.TextTruncate.AtEnd}
 				ref={textLabelRef}
 			></textlabel>

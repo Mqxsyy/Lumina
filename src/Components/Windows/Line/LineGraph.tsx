@@ -20,52 +20,27 @@ export function InitializeLineGraph() {
 	Roact.mount(<LineGraph />, GetWindow(Windows.ValueGraph)!, "LineGraph");
 }
 
-const points: GraphPoint[] = [];
-const pointsChanged = new Event();
+let loadedGraphAPI: LineGraphField;
 let maxValue = 1;
-let graphAPI: LineGraphField;
+const graphAPILoaded = new Event();
 
 export function LoadGraph(graph: LineGraphField, max?: number) {
-	if (max !== undefined) {
-		maxValue = max;
-	} else {
-		maxValue = 1;
-	}
-
-	points.clear();
-
-	graphAPI = graph;
-	points.push(graph.startPoint);
-	graph.graphPoints.forEach((point) => {
-		points.push(point);
-	});
-	points.push(graph.endPoint);
-
-	pointsChanged.Fire();
+	loadedGraphAPI = graph;
+	maxValue = max === undefined ? 1 : max;
+	graphAPILoaded.Fire();
 }
 
 function LineGraph() {
-	const [windowSize, setWindowSize] = useState(new Vector2(0, 0));
-	const [_, setForceRender] = useState(0);
+	const [forceRender, setForceRender] = useState(0);
+	const [graphAPI, setGraphAPI] = useState<LineGraphField>();
+	const [windowSize, setWindowSize] = useState(Vector2.zero);
+
 	const lastClickTime = useRef(0);
 
 	// need ref cuz state won't update properly inside a function
 	const selectedPointRef = useRef(undefined as GraphPoint | undefined);
-	const selectedPointTimeLockedRef = useRef(false);
 
-	const ComparePoints = () => {
-		const apiPoints = graphAPI!.GetPoints();
-		for (let i = 0; i < points.size() - 2; i++) {
-			if (points[i + 1].id !== apiPoints[i].id) {
-				LoadGraph(graphAPI!, maxValue);
-				return true;
-			}
-		}
-
-		return false;
-	};
-
-	const GetPointPositionPercent = () => {
+	const getPointPositionPercent = () => {
 		const window = GetWindow(Windows.ValueGraph)!;
 		const mousePosition = window.GetRelativeMousePosition();
 
@@ -78,96 +53,95 @@ function LineGraph() {
 		return [x, y];
 	};
 
-	const UpdatePoint = (id: number, timeLock: number) => {
-		const [time, valuePercent] = GetPointPositionPercent();
+	const updatePoint = (id: number) => {
+		if (graphAPI === undefined) return;
+
+		const [time, valuePercent] = getPointPositionPercent();
 		const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
-		if (timeLock !== -1) {
-			graphAPI!.UpdatePoint(id, timeLock, value);
-		} else {
-			graphAPI!.UpdatePoint(id, time, value);
-		}
-
-		if (ComparePoints()) return;
-
-		const index = points.findIndex((point) => point.id === id);
-
-		if (timeLock !== -1) {
-			points[index].time = timeLock;
-		} else {
-			points[index].time = time;
-		}
-
-		points[index].value = value;
-		pointsChanged.Fire();
+		graphAPI.UpdatePoint(id, time, value);
 	};
 
-	const RemovePoint = (id: number) => {
+	const removePoint = (id: number) => {
 		graphAPI!.RemovePoint(id);
-		LoadGraph(graphAPI!, maxValue);
 	};
 
-	const OnBackgroundClick = () => {
+	const onBackgroundClick = () => {
 		if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
-			const [time, valuePercent] = GetPointPositionPercent();
+			const [time, valuePercent] = getPointPositionPercent();
 			const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
 			const newPoint = graphAPI!.AddPoint(time, value);
-			LoadGraph(graphAPI!, maxValue);
-
-			SelectPoint(newPoint.id, false);
+			selectPoint(newPoint.id);
 			return;
 		}
 
 		lastClickTime.current = os.clock();
 	};
 
-	const SelectPoint = (id: number, isTimeLocked: boolean) => {
-		const point = points.find((point) => point.id === id);
-		selectedPointRef.current = point;
-		selectedPointTimeLockedRef.current = isTimeLocked;
-		pointsChanged.Fire();
+	const selectPoint = (id: number) => {
+		if (graphAPI === undefined) return;
+
+		selectedPointRef.current = graphAPI.GetAllPoints().find((point) => point.id === id);
+		setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 	};
 
-	const OnTimeInputChanged = (time: number) => {
-		if (selectedPointTimeLockedRef.current === true) return;
+	const controlsTimeChanged = (time: number) => {
+		if (graphAPI === undefined) return;
 
 		const clampedTime = math.clamp(time, 0, maxValue);
 		graphAPI.UpdatePoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
-
-		if (ComparePoints()) return;
-
-		selectedPointRef.current!.time = clampedTime;
-		pointsChanged.Fire();
 	};
 
-	const OnValueInputChanged = (value: number) => {
+	const controlsValueChanged = (value: number) => {
+		if (graphAPI === undefined) return;
+
 		const clampedValue = math.clamp(value, 0, maxValue);
 		graphAPI.UpdatePoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
-
-		if (ComparePoints()) return;
-
-		selectedPointRef.current!.value = clampedValue;
-		pointsChanged.Fire();
 	};
 
 	useEffect(() => {
-		pointsChanged.Connect(() => {
+		const loadedConnection = graphAPILoaded.Connect(() => {
+			if (loadedGraphAPI !== undefined) {
+				setGraphAPI(loadedGraphAPI);
+				selectedPointRef.current = undefined;
+				setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+			}
+		});
+
+		const window = GetWindow(Windows.ValueGraph);
+		let resizeConnection: RBXScriptConnection;
+
+		if (window !== undefined) {
+			setWindowSize(window.AbsoluteSize);
+			resizeConnection = window.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+				setWindowSize(window.AbsoluteSize);
+			});
+		}
+
+		return () => {
+			loadedConnection.Disconnect();
+
+			if (resizeConnection !== undefined) {
+				resizeConnection.Disconnect();
+			}
+		};
+	}, []);
+
+	useEffect(() => {
+		if (graphAPI === undefined) return;
+
+		const valuesChangedConnection = graphAPI.FieldChanged.Connect(() => {
 			setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 		});
 
-		const window = GetWindow(Windows.ValueGraph)!;
-		setWindowSize(window.AbsoluteSize);
-
-		window.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
-			setWindowSize(window.AbsoluteSize);
-		});
-	}, []);
+		return () => valuesChangedConnection.Disconnect();
+	}, [graphAPI, forceRender]);
 
 	return (
 		<>
 			{/* Background */}
-			<Div BackgroundColor={StyleColors.Background} onMouseButton1Down={OnBackgroundClick}>
+			<Div BackgroundColor={StyleColors.Background} onMouseButton1Down={onBackgroundClick}>
 				{/* Horizontal */}
 				<frame
 					AnchorPoint={new Vector2(0, 0.5)}
@@ -228,7 +202,7 @@ function LineGraph() {
 				/>
 			</Div>
 			{/* Points */}
-			{points.map((point, index) => {
+			{graphAPI?.GetAllPoints().map((point, index) => {
 				const positionPercent = new Vector2(
 					RemapValue(point.time, 0, 1, 0.1, 0.9),
 					RemapValue(maxValue - point.value, 0, maxValue, 0.1, 0.9),
@@ -240,36 +214,38 @@ function LineGraph() {
 						RemapValue(maxValue - point.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
 				);
 
-				if (index === 0 || index === points.size() - 1) {
+				if (index === 0 || index === graphAPI?.GetAllPoints().size() - 1) {
 					return (
 						<LineGraphPoint
-							key={point.id}
+							key={"endpoint_" + point.id}
 							Id={point.id}
 							Position={position}
 							TimeLock={index === 0 ? 0 : 1}
-							OnSelect={SelectPoint}
-							UpdatePoint={UpdatePoint}
+							OnSelect={selectPoint}
+							UpdatePoint={updatePoint}
 						/>
 					);
 				}
 
 				return (
 					<LineGraphPoint
-						key={point.id}
+						key={"point_" + point.id}
 						Id={point.id}
 						Position={position}
-						OnSelect={SelectPoint}
-						UpdatePoint={UpdatePoint}
-						RemovePoint={RemovePoint}
+						OnSelect={selectPoint}
+						UpdatePoint={updatePoint}
+						RemovePoint={removePoint}
 					/>
 				);
 			})}
 			{/* Lines */}
-			{points.map((_, index) => {
-				if (index === points.size() - 1) return;
+			{graphAPI?.GetAllPoints().map((_, index) => {
+				const allPoints = graphAPI!.GetAllPoints();
 
-				const p1 = points[index];
-				const p2 = points[index + 1];
+				if (index === allPoints.size() - 1) return;
+
+				const p1 = allPoints[index];
+				const p2 = allPoints[index + 1];
 
 				const startTimePercent = RemapValue(p1.time, 0, 1, 0.1, 0.9);
 				const startValuePercent = RemapValue(maxValue - p1.value, 0, maxValue, 0.1, 0.9);
@@ -295,6 +271,7 @@ function LineGraph() {
 
 				return (
 					<Div
+						key={"Line_" + index}
 						AnchorPoint={new Vector2(0.5, 0.5)}
 						Position={UDim2.fromOffset(position.X, position.Y)}
 						Size={UDim2.fromOffset(length, 2)}
@@ -324,9 +301,11 @@ function LineGraph() {
 					<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Time" />
 					<NumberInput
 						Size={new UDim2(0.75, 0, 0, 20)}
-						Text={selectedPointRef.current === undefined ? "" : tostring(selectedPointRef.current.time)}
-						NumberChanged={OnTimeInputChanged}
-						Disabled={selectedPointRef.current === undefined || selectedPointTimeLockedRef.current}
+						Text={
+							selectedPointRef.current === undefined ? "" : () => tostring(selectedPointRef.current!.time)
+						}
+						NumberChanged={controlsTimeChanged}
+						Disabled={selectedPointRef.current === undefined || !selectedPointRef.current.canEditTime}
 					/>
 				</Div>
 				<Div Size={UDim2.fromScale(0.5, 1)}>
@@ -341,8 +320,12 @@ function LineGraph() {
 					<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Value" />
 					<NumberInput
 						Size={new UDim2(0.75, 0, 0, 20)}
-						Text={selectedPointRef.current === undefined ? "" : tostring(selectedPointRef.current.value)}
-						NumberChanged={OnValueInputChanged}
+						Text={
+							selectedPointRef.current === undefined
+								? ""
+								: () => tostring(selectedPointRef.current!.value)
+						}
+						NumberChanged={controlsValueChanged}
 						Disabled={(selectedPointRef.current === undefined) === undefined}
 					/>
 				</Div>
