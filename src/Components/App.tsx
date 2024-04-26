@@ -11,7 +11,6 @@ import { GetMousePosition, WidgetSizeChanged } from "Windows/MainWindow";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 
-// TODO: make zoom go to mouse
 // OPTIMIZE: becomes quite laggy with more nodes
 
 export function App() {

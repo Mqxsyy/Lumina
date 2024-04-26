@@ -1,4 +1,5 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
 import { SetPosition as SetPositionAPI, SetPositionFieldNames } from "API/Nodes/Initialize/SetPosition";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, NodeData } from "Services/NodesService";
@@ -11,16 +12,13 @@ export function CreateSetPosition() {
 }
 
 function SetPosition({ data }: { data: NodeData }) {
-	const positionFieldRef = useRef((data.node as SetPositionAPI).nodeFields.position);
-
 	return (
 		<Node Name="Set Position" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector3Field
 				NodeId={data.node.id}
-				NodeField={positionFieldRef.current}
+				NodeField={(data.node as SetPositionAPI).nodeFields.position}
 				NodeFieldName={SetPositionFieldNames.position}
-				Label={"Position"}
-				DefaultValue={positionFieldRef.current.GetVector3()}
+				Label={CapitalizeFirstLetter(SetPositionFieldNames.position)}
 			/>
 		</Node>
 	);

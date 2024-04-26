@@ -1,8 +1,12 @@
-import Roact, { useRef } from "@rbxts/roact";
-import { SetRotationZRandom as SetRotationZRandomAPI } from "API/Nodes/Initialize/SetRotationZRandom";
+import Roact from "@rbxts/roact";
+import {
+	SetRotationZRandom as SetRotationZRandomAPI,
+	SetRotationZRandomFieldNames,
+} from "API/Nodes/Initialize/SetRotationZRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
+import { CapitalizeFirstLetter } from "API/Lib";
 
 export function CreateRotationZRandom() {
 	return AddNode(new SetRotationZRandomAPI(), (data: NodeData) => {
@@ -11,15 +15,14 @@ export function CreateRotationZRandom() {
 }
 
 function SetRotationZRandom({ data }: { data: NodeData }) {
-	const rangeFieldRef = useRef((data.node as SetRotationZRandomAPI).nodeFields.range);
-
 	return (
 		<Node Name="Set Rotation Z Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector2Field
-				Label={"Range"}
+				NodeId={data.node.id}
+				NodeField={(data.node as SetRotationZRandomAPI).nodeFields.range}
+				NodeFieldName={SetRotationZRandomFieldNames.range}
+				Label={CapitalizeFirstLetter(SetRotationZRandomFieldNames.range)}
 				ValueLabels={["Min", "Max"]}
-				DefaultValues={rangeFieldRef.current.GetVector2()}
-				Vector2Changed={rangeFieldRef.current.SetVector2}
 			/>
 		</Node>
 	);

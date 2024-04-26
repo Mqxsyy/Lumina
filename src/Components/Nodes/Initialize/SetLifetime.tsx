@@ -1,6 +1,7 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
 import { SetLifetime as SetLifetimeAPI, SetLifetimeFieldNames } from "API/Nodes/Initialize/SetLifetime";
-import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
+import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
@@ -11,19 +12,13 @@ export function CreateSetLifetime() {
 }
 
 function SetLifetime({ data }: { data: NodeData }) {
-	const timeFieldRef = useRef((data.node as SetLifetimeAPI).nodeFields.time);
-
 	return (
 		<Node Name="Set Lifetime" Id={data.node.id} AnchorPoint={data.anchorPoint}>
-			<NumberFieldConnectionIn
+			<NumberField
 				NodeId={data.node.id}
+				NodeField={(data.node as SetLifetimeAPI).nodeFields.time}
 				NodeFieldName={SetLifetimeFieldNames.time}
-				NodeAbsolutePosition={data.anchorPoint}
-				DefaultText={tostring(timeFieldRef.current.GetNumber())}
-				InputDisabled={timeFieldRef.current.boundNode !== undefined}
-				NumberChanged={timeFieldRef.current.SetNumber}
-				BindFunction={timeFieldRef.current.BindNumber}
-				UnbindFunction={timeFieldRef.current.UnbindNumber}
+				Label={CapitalizeFirstLetter(SetLifetimeFieldNames.time)}
 			/>
 		</Node>
 	);

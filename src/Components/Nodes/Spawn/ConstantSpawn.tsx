@@ -1,8 +1,9 @@
 import Roact, { useRef } from "@rbxts/roact";
-import { ConstantSpawn as ConstantSpawnAPI } from "API/Nodes/Spawn/ConstantSpawn";
-import { NumberField } from "Components/NodeFields/NumberField";
+import { ConstantSpawn as ConstantSpawnAPI, ConstantSpawnFieldNames } from "API/Nodes/Spawn/ConstantSpawn";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
+import NumberField from "Components/NodeFields/NumberField";
+import { CapitalizeFirstLetter } from "API/Lib";
 
 export function CreateConstantSpawn() {
 	return AddNode(new ConstantSpawnAPI(), (data: NodeData) => {
@@ -24,9 +25,12 @@ function ConstantSpawn({ data }: { data: NodeData }) {
 	return (
 		<Node Name="Constant Spawn" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<NumberField
-				Label="Rate"
-				DefaultText={tostring(rateFieldRef.current.GetNumber())}
-				NumberChanged={rateChanged}
+				NodeId={data.node.id}
+				NodeField={(data.node as ConstantSpawnAPI).nodeFields.rate}
+				NodeFieldName={ConstantSpawnFieldNames.rate}
+				Label={CapitalizeFirstLetter(ConstantSpawnFieldNames.rate)}
+				AllowConnection={false}
+				OverrideSetNumber={rateChanged}
 			/>
 		</Node>
 	);

@@ -1,6 +1,7 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
 import { AddRotationZ as AddRotationZAPI, AddRotationZFieldNames } from "API/Nodes/Update/AddRotationZ";
-import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
+import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
@@ -11,19 +12,13 @@ export function CreateAddRotationZ() {
 }
 
 function AddRotationZ({ data }: { data: NodeData }) {
-	const rotationFieldRef = useRef((data.node as AddRotationZAPI).nodeFields.rotation);
-
 	return (
 		<Node Name="Add Rotation Z" Id={data.node.id} AnchorPoint={data.anchorPoint}>
-			<NumberFieldConnectionIn
+			<NumberField
 				NodeId={data.node.id}
+				NodeField={(data.node as AddRotationZAPI).nodeFields.rotation}
 				NodeFieldName={AddRotationZFieldNames.rotation}
-				NodeAbsolutePosition={data.anchorPoint}
-				DefaultText={tostring(rotationFieldRef.current.GetNumber())}
-				InputDisabled={rotationFieldRef.current.boundNode !== undefined}
-				NumberChanged={rotationFieldRef.current.SetNumber}
-				BindFunction={rotationFieldRef.current.BindNumber}
-				UnbindFunction={rotationFieldRef.current.UnbindNumber}
+				Label={CapitalizeFirstLetter(AddRotationZFieldNames.rotation)}
 			/>
 		</Node>
 	);

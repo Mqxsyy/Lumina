@@ -67,25 +67,21 @@ export default function ConnectionPoint({
 			}}
 		>
 			<uipadding
-				PaddingBottom={new UDim(0, 5)}
-				PaddingLeft={new UDim(0, 5)}
-				PaddingRight={new UDim(0, 5)}
-				PaddingTop={new UDim(0, 5)}
+				PaddingBottom={new UDim(0, 2)}
+				PaddingLeft={new UDim(0, 2)}
+				PaddingRight={new UDim(0, 2)}
+				PaddingTop={new UDim(0, 2)}
 			/>
 
-			<Div Size={UDim2.fromOffset(Size.X.Offset - 10, Size.Y.Offset - 10)} SizeConstaint="RelativeYY">
+			<Div>
 				<uicorner CornerRadius={new UDim(2, 0)} />
 				<uistroke Color={StyleColors.Highlight} Thickness={2} />
-				<uipadding
-					PaddingBottom={new UDim(0, 2)}
-					PaddingLeft={new UDim(0, 2)}
-					PaddingRight={new UDim(0, 2)}
-					PaddingTop={new UDim(0, 2)}
-				/>
 
 				{ConnectionId !== undefined && (
 					<frame
-						Size={UDim2.fromOffset(Size.X.Offset - 14, Size.Y.Offset - 14)}
+						AnchorPoint={new Vector2(0.5, 0.5)}
+						Position={UDim2.fromScale(0.5, 0.5)}
+						Size={UDim2.fromOffset(Size.X.Offset - 8, Size.Y.Offset - 8)}
 						BackgroundColor3={StyleColors.Highlight}
 					>
 						<uicorner CornerRadius={new UDim(2, 0)} />

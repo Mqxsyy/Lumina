@@ -1,6 +1,7 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
 import { SetSize as SetSizeAPI, SetSizeFieldNames } from "API/Nodes/Initialize/SetSize";
-import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
+import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
@@ -11,19 +12,13 @@ export function CreateSetSize() {
 }
 
 function SetSize({ data }: { data: NodeData }) {
-	const sizeFieldRef = useRef((data.node as SetSizeAPI).nodeFields.size);
-
 	return (
 		<Node Name="Set Size" Id={data.node.id} AnchorPoint={data.anchorPoint}>
-			<NumberFieldConnectionIn
+			<NumberField
 				NodeId={data.node.id}
+				NodeField={(data.node as SetSizeAPI).nodeFields.size}
 				NodeFieldName={SetSizeFieldNames.size}
-				NodeAbsolutePosition={data.anchorPoint}
-				DefaultText={tostring(sizeFieldRef.current.GetNumber())}
-				InputDisabled={sizeFieldRef.current.boundNode !== undefined}
-				NumberChanged={sizeFieldRef.current.SetNumber}
-				BindFunction={sizeFieldRef.current.BindNumber}
-				UnbindFunction={sizeFieldRef.current.UnbindNumber}
+				Label={CapitalizeFirstLetter(SetSizeFieldNames.size)}
 			/>
 		</Node>
 	);

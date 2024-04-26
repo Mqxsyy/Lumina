@@ -38,7 +38,7 @@ export function ControlButton({
 				Text={Text}
 				TextSize={20}
 				FontWeight={Enum.FontWeight.Bold}
-				TextXAlignment={Enum.TextXAlignment.Center}
+				TextXAlignment={"Center"}
 				IsAffectedByZoom={false}
 			/>
 		</frame>

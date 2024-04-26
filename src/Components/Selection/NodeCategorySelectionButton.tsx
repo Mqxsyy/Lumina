@@ -77,8 +77,8 @@ export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhove
 			<Div Size={new UDim2(1, -8, 1, 0)}>
 				<uipadding PaddingLeft={new UDim(0, 15)} PaddingRight={new UDim(0, 15)} />
 
-				<BasicTextLabel Text={Text} TextXAlignment={Enum.TextXAlignment.Center} IsAffectedByZoom={false} />
-				<BasicTextLabel Text=">" TextXAlignment={Enum.TextXAlignment.Right} IsAffectedByZoom={false} />
+				<BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} />
+				<BasicTextLabel Text=">" TextXAlignment={"Right"} IsAffectedByZoom={false} />
 			</Div>
 			{hovering && (
 				<Div

@@ -1,28 +1,30 @@
 import Roact from "@rbxts/roact";
-import { SimpleVector3, Vector3Field as Vector3FieldAPI } from "API/Fields/Vector3Field";
+import { Vector3Field as Vector3FieldAPI } from "API/Fields/Vector3Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
-import { NumberField } from "./NumberField";
 
 interface Props {
 	NodeId: number;
 	NodeField: Vector3FieldAPI;
 	NodeFieldName: string;
-	Label: string;
-	DefaultValue: SimpleVector3;
-	PlaceholderValues?: [string, string, string];
-}
 
-// maybe don't receive nodeField but instead just receive functions like all other fields
+	Label: string;
+	ValueLabels?: [string, string, string];
+	TextToInputRatios?: [number, number, number];
+
+	AllowConnections?: [boolean, boolean, boolean];
+}
 
 export function Vector3Field({
 	NodeId,
 	NodeField,
 	NodeFieldName,
 	Label,
-	DefaultValue,
-	PlaceholderValues = ["...", "...", "..."],
+	ValueLabels = ["X", "Y", "Z"],
+	TextToInputRatios = [0.15, 0.15, 0.15],
+	AllowConnections = [true, true, true],
 }: Props) {
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
@@ -31,66 +33,88 @@ export function Vector3Field({
 			<BasicTextLabel Size={new UDim2(0.5, 0, 0, 20)} Text={Label} />
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5)} />
+				<uipadding PaddingLeft={new UDim(0, 10)} />
 
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
+					<uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn
-						Size={UDim2.fromOffset(20, 20)}
-						NodeId={NodeId}
-						NodeFieldName={NodeFieldName}
-						BindFunction={NodeField.BindX}
-						UnbindFunction={NodeField.UnbindX}
-					/>
-					<NumberField
-						Size={new UDim2(1, -25, 0, 0)}
-						Label={"X"}
-						DefaultText={tostring(DefaultValue.x)}
-						PlaceholderText={PlaceholderValues[0]}
-						AllowNegative={true}
-						TextToInputRatio={0.25}
-						NumberChanged={NodeField.SetX}
-					/>
+					{AllowConnections[0] && (
+						<ConnectionPointIn
+							NodeId={NodeId}
+							NodeFieldName={NodeFieldName}
+							BindFunction={NodeField.BindX}
+							UnbindFunction={NodeField.UnbindX}
+						/>
+					)}
+					<Div Size={new UDim2(1, AllowConnections[0] ? -19 : 0, 0, 0)} AutomaticSize="Y">
+						<BasicTextLabel
+							Size={new UDim2(TextToInputRatios[0], 0, 0, 20)}
+							Text={ValueLabels[0]}
+							TextYAlignment="Bottom"
+						/>
+						<NumberInput
+							AnchorPoint={new Vector2(1, 0)}
+							Position={UDim2.fromScale(1, 0)}
+							Size={new UDim2(1 - TextToInputRatios[0], 0, 0, 20)}
+							Text={() => tostring(NodeField.GetX())}
+							AllowNegative={true}
+							NumberChanged={NodeField.SetX}
+						/>
+					</Div>
 				</Div>
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
+					<uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn
-						Size={UDim2.fromOffset(20, 20)}
-						NodeId={NodeId}
-						NodeFieldName={NodeFieldName}
-						BindFunction={NodeField.BindY}
-						UnbindFunction={NodeField.UnbindY}
-					/>
-					<NumberField
-						Size={new UDim2(1, -25, 0, 0)}
-						Label={"Y"}
-						DefaultText={tostring(DefaultValue.y)}
-						PlaceholderText={PlaceholderValues[1]}
-						AllowNegative={true}
-						TextToInputRatio={0.25}
-						NumberChanged={NodeField.SetY}
-					/>
+					{AllowConnections[1] && (
+						<ConnectionPointIn
+							NodeId={NodeId}
+							NodeFieldName={NodeFieldName}
+							BindFunction={NodeField.BindY}
+							UnbindFunction={NodeField.UnbindY}
+						/>
+					)}
+					<Div Size={new UDim2(1, AllowConnections[1] ? -19 : 0, 0, 0)} AutomaticSize="Y">
+						<BasicTextLabel
+							Size={new UDim2(TextToInputRatios[1], 0, 0, 20)}
+							Text={ValueLabels[1]}
+							TextYAlignment="Bottom"
+						/>
+						<NumberInput
+							AnchorPoint={new Vector2(1, 0)}
+							Position={UDim2.fromScale(1, 0)}
+							Size={new UDim2(1 - TextToInputRatios[1], 0, 0, 20)}
+							Text={() => tostring(NodeField.GetY())}
+							AllowNegative={true}
+							NumberChanged={NodeField.SetY}
+						/>
+					</Div>
 				</Div>
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-					<uilistlayout FillDirection="Horizontal" Padding={new UDim(0, 5)} />
+					<uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 5)} />
 
-					<ConnectionPointIn
-						Size={UDim2.fromOffset(20, 20)}
-						NodeId={NodeId}
-						NodeFieldName={NodeFieldName}
-						BindFunction={NodeField.BindY}
-						UnbindFunction={NodeField.UnbindY}
-					/>
-					<NumberField
-						Size={new UDim2(1, -25, 0, 0)}
-						Label={"Z"}
-						DefaultText={tostring(DefaultValue.z)}
-						PlaceholderText={PlaceholderValues[2]}
-						AllowNegative={true}
-						TextToInputRatio={0.25}
-						NumberChanged={NodeField.SetZ}
-					/>
+					{AllowConnections[2] && (
+						<ConnectionPointIn
+							NodeId={NodeId}
+							NodeFieldName={NodeFieldName}
+							BindFunction={NodeField.BindZ}
+							UnbindFunction={NodeField.UnbindZ}
+						/>
+					)}
+					<Div Size={new UDim2(1, AllowConnections[2] ? -19 : 0, 0, 0)} AutomaticSize="Y">
+						<BasicTextLabel
+							Size={new UDim2(TextToInputRatios[2], 0, 0, 20)}
+							Text={ValueLabels[2]}
+							TextYAlignment="Bottom"
+						/>
+						<NumberInput
+							AnchorPoint={new Vector2(1, 0)}
+							Position={UDim2.fromScale(1, 0)}
+							Size={new UDim2(1 - TextToInputRatios[2], 0, 0, 20)}
+							Text={() => tostring(NodeField.GetZ())}
+							AllowNegative={true}
+							NumberChanged={NodeField.SetZ}
+						/>
+					</Div>
 				</Div>
 			</Div>
 		</Div>

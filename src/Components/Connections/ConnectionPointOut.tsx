@@ -1,4 +1,4 @@
-import Roact, { PureComponent, useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import {
 	CreateConnection,
 	DestroyConnection,
@@ -20,7 +20,7 @@ export default function ConnectionPointOut({
 	NodeId,
 	AnchorPoint = new Vector2(0, 0),
 	Position = UDim2.fromScale(0, 0),
-	Size = UDim2.fromScale(1, 1),
+	Size = UDim2.fromOffset(14, 14),
 	BindFunction,
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);

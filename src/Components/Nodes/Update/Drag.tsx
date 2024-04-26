@@ -1,6 +1,7 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
 import { Drag as DragAPI, DragFieldNames } from "API/Nodes/Update/Drag";
-import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
+import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
@@ -11,19 +12,13 @@ export function CreateDrag() {
 }
 
 function Drag({ data }: { data: NodeData }) {
-	const dragFieldRef = useRef((data.node as DragAPI).nodeFields.drag);
-
 	return (
 		<Node Name="Drag" Id={data.node.id} AnchorPoint={data.anchorPoint}>
-			<NumberFieldConnectionIn
+			<NumberField
 				NodeId={data.node.id}
+				NodeField={(data.node as DragAPI).nodeFields.drag}
 				NodeFieldName={DragFieldNames.drag}
-				NodeAbsolutePosition={data.anchorPoint}
-				DefaultText={tostring(dragFieldRef.current.GetNumber())}
-				InputDisabled={dragFieldRef.current.boundNode !== undefined}
-				NumberChanged={dragFieldRef.current.SetNumber}
-				BindFunction={dragFieldRef.current.BindNumber}
-				UnbindFunction={dragFieldRef.current.UnbindNumber}
+				Label={CapitalizeFirstLetter(DragFieldNames.drag)}
 			/>
 		</Node>
 	);

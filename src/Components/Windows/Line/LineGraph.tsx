@@ -10,7 +10,8 @@ import { GetWindow, Windows } from "Windows/WindowSevice";
 import LineGraphPoint from "./LineGraphPoint";
 
 // TODO: Add min value
-// TODO: make new points automatically be selected
+// TODO: Make points not click-through
+// TODO: add a small delay before point actually starts moving, prevents accidental movement when attempting to select
 
 const DOUBLE_CLICK_TIME = 0.25;
 const BOTTOM_SIZE = 50;
@@ -111,9 +112,10 @@ function LineGraph() {
 			const [time, valuePercent] = GetPointPositionPercent();
 			const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
-			graphAPI!.AddPoint(time, value);
+			const newPoint = graphAPI!.AddPoint(time, value);
 			LoadGraph(graphAPI!, maxValue);
 
+			SelectPoint(newPoint.id, false);
 			return;
 		}
 
@@ -206,7 +208,7 @@ function LineGraph() {
 					Position={new UDim2(0.1, -4, 0.1, 0)}
 					Size={new UDim2(0.1, 0, 0, 20)}
 					Text={tostring(maxValue)}
-					TextXAlignment={Enum.TextXAlignment.Right}
+					TextXAlignment={"Right"}
 				/>
 				{/* Bottom Left Text */}
 				<BasicTextLabel
@@ -214,7 +216,7 @@ function LineGraph() {
 					Position={new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE)}
 					Size={new UDim2(0.1, 0, 0, 20)}
 					Text={"0"}
-					TextXAlignment={Enum.TextXAlignment.Right}
+					TextXAlignment={"Right"}
 				/>
 				{/* Bottom Right Text */}
 				<BasicTextLabel
@@ -222,7 +224,7 @@ function LineGraph() {
 					Position={new UDim2(0.9, -4, 0.9, -BOTTOM_SIZE)}
 					Size={new UDim2(0.1, 0, 0, 20)}
 					Text={"1"}
-					TextXAlignment={Enum.TextXAlignment.Right}
+					TextXAlignment={"Right"}
 				/>
 			</Div>
 			{/* Points */}
@@ -319,11 +321,7 @@ function LineGraph() {
 						Padding={new UDim(0, 10)}
 					/>
 
-					<BasicTextLabel
-						Size={new UDim2(0.25, 0, 0, 20)}
-						TextXAlignment={Enum.TextXAlignment.Right}
-						Text="Time"
-					/>
+					<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Time" />
 					<NumberInput
 						Size={new UDim2(0.75, 0, 0, 20)}
 						Text={selectedPointRef.current === undefined ? "" : tostring(selectedPointRef.current.time)}
@@ -340,11 +338,7 @@ function LineGraph() {
 						Padding={new UDim(0, 10)}
 					/>
 
-					<BasicTextLabel
-						Size={new UDim2(0.25, 0, 0, 20)}
-						TextXAlignment={Enum.TextXAlignment.Right}
-						Text="Value"
-					/>
+					<BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Value" />
 					<NumberInput
 						Size={new UDim2(0.75, 0, 0, 20)}
 						Text={selectedPointRef.current === undefined ? "" : tostring(selectedPointRef.current.value)}

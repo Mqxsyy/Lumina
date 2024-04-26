@@ -1,4 +1,4 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
 import { SetVelocity as SetVelocityAPI, SetVelocityFieldNames } from "API/Nodes/Initialize/SetVelocity";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, NodeData } from "Services/NodesService";
@@ -11,16 +11,13 @@ export function CreateSetVelocity() {
 }
 
 function SetVelocity({ data }: { data: NodeData }) {
-	const velocityFieldRef = useRef((data.node as SetVelocityAPI).nodeFields.velocity);
-
 	return (
 		<Node Name="Set Velocity" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector3Field
 				NodeId={data.node.id}
-				NodeField={velocityFieldRef.current}
+				NodeField={(data.node as SetVelocityAPI).nodeFields.velocity}
 				NodeFieldName={SetVelocityFieldNames.velocity}
 				Label={"Velocity"}
-				DefaultValue={velocityFieldRef.current.GetVector3()}
 			/>
 		</Node>
 	);

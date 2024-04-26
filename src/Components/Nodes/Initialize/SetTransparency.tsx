@@ -1,6 +1,7 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
 import { SetTransparency as SetTransparencyAPI, SetTransparencyFieldNames } from "API/Nodes/Initialize/SetTransparency";
-import NumberFieldConnectionIn from "Components/NodeFields/NumberFieldConnectionIn";
+import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
@@ -11,19 +12,13 @@ export function CreateSetTransparency() {
 }
 
 function SetTransparency({ data }: { data: NodeData }) {
-	const transparencyFieldRef = useRef((data.node as SetTransparencyAPI).nodeFields.transparency);
-
 	return (
 		<Node Name="Set Transparency" Id={data.node.id} AnchorPoint={data.anchorPoint}>
-			<NumberFieldConnectionIn
+			<NumberField
 				NodeId={data.node.id}
+				NodeField={(data.node as SetTransparencyAPI).nodeFields.transparency}
 				NodeFieldName={SetTransparencyFieldNames.transparency}
-				NodeAbsolutePosition={data.anchorPoint}
-				DefaultText={tostring(transparencyFieldRef.current.GetNumber())}
-				InputDisabled={transparencyFieldRef.current.boundNode !== undefined}
-				NumberChanged={transparencyFieldRef.current.SetNumber}
-				BindFunction={transparencyFieldRef.current.BindNumber}
-				UnbindFunction={transparencyFieldRef.current.UnbindNumber}
+				Label={CapitalizeFirstLetter(SetTransparencyFieldNames.transparency)}
 			/>
 		</Node>
 	);

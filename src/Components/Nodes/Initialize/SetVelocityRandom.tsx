@@ -1,8 +1,12 @@
-import Roact, { useRef } from "@rbxts/roact";
-import { SetVelocityRandom as SetVelocityRandomAPI } from "API/Nodes/Initialize/SetVelocityRandom";
+import Roact from "@rbxts/roact";
+import {
+	SetVelocityRandom as SetVelocityRandomAPI,
+	SetVelocityRandomFieldNames,
+} from "API/Nodes/Initialize/SetVelocityRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
+import { CapitalizeFirstLetter } from "API/Lib";
 
 export function CreateSetVelocityRandom() {
 	return AddNode(new SetVelocityRandomAPI(), (data: NodeData) => {
@@ -11,29 +15,28 @@ export function CreateSetVelocityRandom() {
 }
 
 function SetVelocityRandom({ data }: { data: NodeData }) {
-	const rangeXRef = useRef((data.node as SetVelocityRandomAPI).nodeFields.rangeX);
-	const rangeYRef = useRef((data.node as SetVelocityRandomAPI).nodeFields.rangeY);
-	const rangeZRef = useRef((data.node as SetVelocityRandomAPI).nodeFields.rangeZ);
-
 	return (
 		<Node Name="Set Velocity Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector2Field
-				Label={"X"}
+				NodeId={data.node.id}
+				NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeX}
+				NodeFieldName={SetVelocityRandomFieldNames.rangeX}
+				Label={CapitalizeFirstLetter(SetVelocityRandomFieldNames.rangeX)}
 				ValueLabels={["Min", "Max"]}
-				DefaultValues={rangeXRef.current.GetVector2()}
-				Vector2Changed={rangeXRef.current.SetVector2}
 			/>
 			<Vector2Field
-				Label={"Y"}
+				NodeId={data.node.id}
+				NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeY}
+				NodeFieldName={SetVelocityRandomFieldNames.rangeY}
+				Label={CapitalizeFirstLetter(SetVelocityRandomFieldNames.rangeY)}
 				ValueLabels={["Min", "Max"]}
-				DefaultValues={rangeYRef.current.GetVector2()}
-				Vector2Changed={rangeYRef.current.SetVector2}
 			/>
 			<Vector2Field
-				Label={"Z"}
+				NodeId={data.node.id}
+				NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeZ}
+				NodeFieldName={SetVelocityRandomFieldNames.rangeZ}
+				Label={CapitalizeFirstLetter(SetVelocityRandomFieldNames.rangeZ)}
 				ValueLabels={["Min", "Max"]}
-				DefaultValues={rangeZRef.current.GetVector2()}
-				Vector2Changed={rangeZRef.current.SetVector2}
 			/>
 		</Node>
 	);

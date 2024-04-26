@@ -1,5 +1,9 @@
-import Roact, { useRef } from "@rbxts/roact";
-import { SetLifetimeRandom as SetLifetimeRandomAPI } from "API/Nodes/Initialize/SetLifetimeRandom";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
+import {
+	SetLifetimeRandom as SetLifetimeRandomAPI,
+	SetLifetimeRandomFieldNames,
+} from "API/Nodes/Initialize/SetLifetimeRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
@@ -11,15 +15,14 @@ export function CreateSetLifetimeRandom() {
 }
 
 function SetLifetimeRandom({ data }: { data: NodeData }) {
-	const rangeFieldRef = useRef((data.node as SetLifetimeRandomAPI).nodeFields.range);
-
 	return (
 		<Node Name="Set Lifetime Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<Vector2Field
-				Label={"Range"}
+				NodeId={data.node.id}
+				NodeField={(data.node as SetLifetimeRandomAPI).nodeFields.range}
+				NodeFieldName={SetLifetimeRandomFieldNames.range}
+				Label={CapitalizeFirstLetter(SetLifetimeRandomFieldNames.range)}
 				ValueLabels={["Min", "Max"]}
-				DefaultValues={rangeFieldRef.current.GetVector2()}
-				Vector2Changed={rangeFieldRef.current.SetVector2}
 			/>
 		</Node>
 	);

@@ -24,7 +24,7 @@ const windows = {
 	},
 	[Windows.ColorRamp]: {
 		Widget: undefined as DockWidgetPluginGui | undefined,
-		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 150, 200, 100),
+		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 200, 200, 100),
 	},
 };
 

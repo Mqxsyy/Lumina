@@ -42,29 +42,36 @@ export class Vector3Field extends NodeField {
 			return this.boundFunction();
 		}
 
-		let x;
-		if (this.boundFunctionX !== undefined) {
-			x = this.boundFunctionX();
-		} else {
-			x = this.x;
-		}
-
-		let y;
-		if (this.boundFunctionY !== undefined) {
-			y = this.boundFunctionY();
-		} else {
-			y = this.y;
-		}
-
-		let z;
-		if (this.boundFunctionZ !== undefined) {
-			z = this.boundFunctionZ();
-		} else {
-			z = this.z;
-		}
+		const x = this.GetX();
+		const y = this.GetY();
+		const z = this.GetZ();
 
 		return { x, y, z };
 	}
+
+	GetX = () => {
+		if (this.boundFunctionX !== undefined) {
+			return this.boundFunctionX();
+		}
+
+		return this.x;
+	};
+
+	GetY = () => {
+		if (this.boundFunctionY !== undefined) {
+			return this.boundFunctionY();
+		}
+
+		return this.y;
+	};
+
+	GetZ = () => {
+		if (this.boundFunctionZ !== undefined) {
+			return this.boundFunctionZ();
+		}
+
+		return this.z;
+	};
 
 	SetVector3 = (x: number, y: number, z: number) => {
 		this.boundFunction = undefined;

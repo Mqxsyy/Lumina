@@ -32,7 +32,6 @@ export function TextInput({
 	FontWeight = StyleText.FontWeight,
 	TextColor = StyleColors.TextDark,
 	TextXAlignment = Enum.TextXAlignment.Left,
-	PlaceholderText = "",
 	Text = "",
 	ClearTextOnFocus = true,
 	AutoFocus = false,
@@ -44,25 +43,8 @@ export function TextInput({
 }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
-	const textBoxRef = useRef<TextBox | undefined>();
-
-	const textChanged = () => {
-		if (TextChanged === undefined) return;
-
-		const newText = TextChanged(textBoxRef.current!.Text);
-		if (newText !== undefined && newText !== textBoxRef.current!.Text) {
-			textBoxRef.current!.Text = newText;
-		}
-	};
-
-	const focusLost = () => {
-		if (LostFocus === undefined) return;
-
-		const newText = LostFocus(textBoxRef.current!.Text);
-		if (newText !== undefined && newText !== textBoxRef.current!.Text) {
-			textBoxRef.current!.Text = newText;
-		}
-	};
+	const textBoxRef = useRef<TextBox>();
+	const textLabelRef = useRef<TextLabel>();
 
 	useEffect(() => {
 		if (!IsAffectedByZoom) return;
@@ -83,8 +65,34 @@ export function TextInput({
 		}
 
 		if (!Disabled) {
-			textChangedConnection = textBoxRef.current.GetPropertyChangedSignal("Text").Connect(textChanged);
-			focusLostConnection = textBoxRef.current.FocusLost.Connect(focusLost);
+			textChangedConnection = textBoxRef.current.GetPropertyChangedSignal("Text").Connect(() => {
+				let text = textBoxRef.current!.Text;
+				if (text === " ") {
+					text = "";
+				}
+
+				if (text.sub(1, 1) === " ") {
+					text = text.sub(2);
+				}
+
+				textLabelRef.current!.Text = text;
+
+				if (TextChanged === undefined) return;
+
+				const newText = TextChanged(textLabelRef.current!.Text);
+				if (newText !== undefined && newText !== textLabelRef.current!.Text) {
+					textLabelRef.current!.Text = newText;
+				}
+			});
+
+			focusLostConnection = textBoxRef.current.FocusLost.Connect(() => {
+				if (LostFocus === undefined) return;
+
+				const newText = LostFocus(textBoxRef.current!.Text);
+				if (newText !== undefined && newText !== textBoxRef.current!.Text) {
+					textBoxRef.current!.Text = newText;
+				}
+			});
 		}
 
 		if (AutoFocus && !Disabled) {
@@ -100,8 +108,9 @@ export function TextInput({
 				focusLostConnection.Disconnect();
 			}
 		};
-	}, [textBoxRef.current, Disabled]);
+	}, [textBoxRef.current, textLabelRef.current, Disabled]);
 
+	// hacky scuffed annoying just to separate user input from code input; also removes cursor, yay
 	return (
 		<textbox
 			AnchorPoint={AnchorPoint}
@@ -113,21 +122,32 @@ export function TextInput({
 			}
 			BackgroundColor3={Disabled ? StyleColors.Disabled : StyleColors.Highlight}
 			BorderSizePixel={0}
-			TextSize={IsAffectedByZoom ? TextSize * zoomScale : TextSize}
-			FontFace={new Font(StyleText.FontId, FontWeight)}
-			TextColor3={Disabled ? StyleColors.TextLight : TextColor}
-			TextXAlignment={TextXAlignment}
-			PlaceholderText={PlaceholderText}
-			PlaceholderColor3={StyleColors.TextDarkPlaceholder}
-			TextWrapped={true}
-			TextTruncate={Enum.TextTruncate.AtEnd}
 			ClearTextOnFocus={Disabled ? false : ClearTextOnFocus}
 			TextEditable={!Disabled}
-			Text={Disabled ? "-" : Text}
+			TextSize={IsAffectedByZoom ? TextSize * zoomScale : TextSize}
+			TextColor3={Disabled ? StyleColors.TextLight : TextColor}
+			FontFace={new Font(StyleText.FontId, FontWeight)}
+			TextXAlignment={TextXAlignment}
+			TextWrapped={true}
+			TextTransparency={1}
+			TextTruncate={Enum.TextTruncate.AtEnd}
+			Text={" "}
 			ref={textBoxRef}
 		>
 			<uipadding PaddingLeft={new UDim(0, 5)} />
 			<uicorner CornerRadius={StyleProperties.CornerRadius} />
+			<textlabel
+				Size={UDim2.fromScale(1, 1)}
+				BackgroundTransparency={1}
+				TextSize={IsAffectedByZoom ? TextSize * zoomScale : TextSize}
+				FontFace={new Font(StyleText.FontId, FontWeight)}
+				TextColor3={Disabled ? StyleColors.TextLight : TextColor}
+				TextXAlignment={TextXAlignment}
+				TextWrapped={true}
+				Text={Text}
+				TextTruncate={Enum.TextTruncate.AtEnd}
+				ref={textLabelRef}
+			></textlabel>
 		</textbox>
 	);
 }

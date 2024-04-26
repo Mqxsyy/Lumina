@@ -28,3 +28,7 @@ export function FixFloatingPointError(value: number): number {
 	const shortened = string.format("%.3f", tostring(value));
 	return tonumber(shortened.gsub("%.?0+$", "")[0])!;
 }
+
+export function CapitalizeFirstLetter(text: string): string {
+	return text.gsub("^%l", string.upper)[0];
+}

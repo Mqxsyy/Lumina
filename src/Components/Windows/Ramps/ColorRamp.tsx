@@ -1,12 +1,13 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { Event } from "API/Bindables/Event";
-import { ColorRampField } from "API/Fields/ColorRampField";
+import { ColorPoint, ColorRampField } from "API/Fields/ColorRampField";
 import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import ColorRampPoint from "./ColorRampPoint";
-
-// TODO: add number field values
+import { NumberInput } from "Components/Basic/NumberInput";
+import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { RoundDecimal } from "API/Lib";
 
 const DOUBLE_CLICK_TIME = 0.25;
 
@@ -15,7 +16,7 @@ export function InitializeColorRamp() {
 }
 
 let loadedRampAPI: ColorRampField;
-const setRampApiEvent = new Event();
+const loadedRampChanged = new Event();
 
 const placeholderGradient = new ColorSequence([
 	new ColorSequenceKeypoint(0, Color3.fromRGB(0, 0, 0)),
@@ -24,12 +25,13 @@ const placeholderGradient = new ColorSequence([
 
 export function LoadColorRampAPI(ramp: ColorRampField) {
 	loadedRampAPI = ramp;
-	setRampApiEvent.Fire();
+	loadedRampChanged.Fire();
 }
 
 function ColorRamp() {
 	const [forceRender, setForceRender] = useState(0);
 	const [rampAPI, setRampAPI] = useState<ColorRampField>();
+	const [selectedPoint, setSelectedPoint] = useState<ColorPoint | undefined>();
 
 	const lastClickTime = useRef(0);
 
@@ -46,7 +48,8 @@ function ColorRamp() {
 			const mousePosition = window.GetRelativeMousePosition();
 
 			const percentX = (mousePosition.X - window.AbsoluteSize.X * 0.1) / (window.AbsoluteSize.X * 0.8);
-			rampAPI.AddPoint(percentX, new Vector3(0, 0, 1));
+			const newPoint = rampAPI.AddPoint(RoundDecimal(percentX, 0.01), new Vector3(0, 0, 1));
+			setSelectedPoint(newPoint);
 
 			setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 			return;
@@ -55,16 +58,14 @@ function ColorRamp() {
 		lastClickTime.current = os.clock();
 	};
 
+	const selectPoint = (point: ColorPoint) => {
+		setSelectedPoint(point);
+	};
+
 	const updatePointTime = (id: number, time: number) => {
 		if (rampAPI === undefined) return;
 
-		const points = rampAPI.GetAllPoints();
-		const index = points.findIndex((point) => point.id === id);
-		if (index === -1) return;
-
 		rampAPI.UpdatePointTime(id, time);
-
-		points[index].time = time;
 		setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 	};
 
@@ -76,9 +77,10 @@ function ColorRamp() {
 	};
 
 	useEffect(() => {
-		const connection = setRampApiEvent.Connect(() => {
+		const connection = loadedRampChanged.Connect(() => {
 			if (loadedRampAPI !== undefined) {
 				setRampAPI(loadedRampAPI);
+				setSelectedPoint(undefined);
 				setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 			}
 		});
@@ -117,28 +119,61 @@ function ColorRamp() {
 	return (
 		<Div BackgroundColor={StyleColors.Background}>
 			<Div
-				AnchorPoint={new Vector2(0.5, 0.5)}
-				Position={UDim2.fromScale(0.5, 0.4)}
-				Size={UDim2.fromScale(0.8, 0.5)}
+				AnchorPoint={new Vector2(0.5, 0)}
+				Position={UDim2.fromScale(0.5, 0.2)}
+				Size={UDim2.fromScale(0.8, 0.3)}
 				BackgroundColor={StyleColors.FullWhite}
 				onMouseButton1Down={onClick}
 			>
 				<uigradient Color={rampAPI === undefined ? placeholderGradient : rampAPI.GetGradient()} />
 
-				{rampAPI?.GetAllPoints().map((point, index) => {
+				{rampAPI?.GetAllPoints().map((point, _) => {
 					return (
 						<ColorRampPoint
-							Id={point.id}
 							key={point.id}
-							Position={UDim2.fromScale(point.time, 1)}
-							Color={point.color}
-							UpdateTime={
-								index === 0 || index === rampAPI.CountPoints() - 1 ? undefined : updatePointTime
-							}
-							RemovePoint={index === 0 || index === rampAPI.CountPoints() - 1 ? undefined : removePoint}
+							Point={point}
+							SetSelectedPoint={selectPoint}
+							UpdateTime={point.canEditTime ? updatePointTime : undefined}
+							RemovePoint={point.canEditTime ? removePoint : undefined}
 						/>
 					);
 				})}
+			</Div>
+			<Div
+				Position={UDim2.fromScale(0, 0.7)}
+				Size={UDim2.fromScale(1, 0.3)}
+				BackgroundColor={StyleColors.Primary}
+			>
+				<uilistlayout FillDirection={Enum.FillDirection.Horizontal} Padding={new UDim(0, 10)} />
+
+				<Div Size={UDim2.fromScale(0.5, 1)}>
+					<uilistlayout
+						FillDirection={Enum.FillDirection.Horizontal}
+						VerticalAlignment={"Center"}
+						HorizontalAlignment={"Center"}
+						Padding={new UDim(0, 10)}
+					/>
+
+					<BasicTextLabel Size={new UDim2(0.4, 0, 0, 20)} Text={"Time:"} TextXAlignment={"Right"} />
+					{selectedPoint !== undefined ? (
+						<NumberInput
+							Size={new UDim2(0.4, 0, 0, 20)}
+							Text={tostring(selectedPoint.time)}
+							Disabled={!selectedPoint.canEditTime}
+							NumberChanged={(number) => updatePointTime(selectedPoint.id, number)}
+						/>
+					) : (
+						<NumberInput Size={new UDim2(0.4, 0, 0, 20)} Disabled={true} />
+					)}
+				</Div>
+				<Div Size={UDim2.fromScale(0.5, 1)}>
+					<Div
+						AnchorPoint={new Vector2(0.5, 0.5)}
+						Position={UDim2.fromScale(0.5, 0.5)}
+						Size={UDim2.fromScale(0.8, 0.5)}
+						BackgroundColor={StyleColors.FullWhite}
+					/>
+				</Div>
 			</Div>
 		</Div>
 	);

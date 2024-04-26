@@ -1,64 +1,94 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
+import { Vector2Field as Vector2FieldAPI } from "API/Fields/Vector2Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { NumberInput } from "Components/Basic/NumberInput";
+import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
-import { NumberField } from "./NumberField";
-import { SimpleVector2 } from "API/Fields/Vector2Field";
-
-// TODO: add inputs (can't simply add cause API isn't individual binds);
 
 interface Props {
-	Label: string;
-	ValueLabels?: [string, string];
+	NodeId: number;
+	NodeField: Vector2FieldAPI;
+	NodeFieldName: string;
 
-	DefaultValues: SimpleVector2;
+	Label?: string;
+	ValueLabels?: [string, string];
 	TextToInputRatios?: [number, number];
 
-	Vector2Changed: (x: number, y: number) => void;
+	AllowConnections?: [boolean, boolean];
 }
 
 export function Vector2Field({
-	Label,
+	NodeField,
+	NodeId,
+	NodeFieldName,
+	Label = undefined,
 	ValueLabels = ["X", "Y"],
-	DefaultValues,
 	TextToInputRatios = [0.15, 0.15],
-	Vector2Changed,
+	AllowConnections = [true, true],
 }: Props) {
-	const xRef = useRef(DefaultValues.x);
-	const yRef = useRef(DefaultValues.y);
-
-	const xChanged = (number: number) => {
-		xRef.current = number;
-		Vector2Changed(xRef.current, yRef.current);
-	};
-
-	const yChanged = (number: number) => {
-		yRef.current = number;
-		Vector2Changed(xRef.current, yRef.current);
-	};
-
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-			<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5)} />
+			{Label !== undefined && <uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5)} />}
+			{Label !== undefined && <BasicTextLabel Size={new UDim2(0.5, 0, 0, 20)} Text={Label} />}
 
-			<BasicTextLabel Size={new UDim2(0.5, 0, 0, 20)} Text={Label} />
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5)} />
-				<uipadding PaddingLeft={new UDim(0, 10)} />
+				{Label !== undefined && <uipadding PaddingLeft={new UDim(0, 10)} />}
 
-				<NumberField
-					Label={ValueLabels[0]}
-					DefaultText={tostring(DefaultValues.x)}
-					AllowNegative={true}
-					TextToInputRatio={TextToInputRatios[0]}
-					NumberChanged={xChanged}
-				/>
-				<NumberField
-					Label={ValueLabels[1]}
-					DefaultText={tostring(DefaultValues.y)}
-					AllowNegative={true}
-					TextToInputRatio={TextToInputRatios[0]}
-					NumberChanged={yChanged}
-				/>
+				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+					<uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 5)} />
+
+					{AllowConnections[0] && (
+						<ConnectionPointIn
+							NodeId={NodeId}
+							NodeFieldName={NodeFieldName}
+							BindFunction={NodeField.BindX}
+							UnbindFunction={NodeField.UnbindX}
+						/>
+					)}
+					<Div Size={new UDim2(1, AllowConnections[0] ? -19 : 0, 0, 0)} AutomaticSize="Y">
+						<BasicTextLabel
+							Size={new UDim2(TextToInputRatios[0], 0, 0, 20)}
+							Text={ValueLabels[0]}
+							TextYAlignment="Bottom"
+						/>
+						<NumberInput
+							AnchorPoint={new Vector2(1, 0)}
+							Position={UDim2.fromScale(1, 0)}
+							Size={new UDim2(1 - TextToInputRatios[0], 0, 0, 20)}
+							Text={() => tostring(NodeField.GetX())}
+							AllowNegative={true}
+							NumberChanged={NodeField.SetX}
+						/>
+					</Div>
+				</Div>
+				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+					<uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 5)} />
+
+					{AllowConnections[1] && (
+						<ConnectionPointIn
+							NodeId={NodeId}
+							NodeFieldName={NodeFieldName}
+							BindFunction={NodeField.BindY}
+							UnbindFunction={NodeField.UnbindY}
+						/>
+					)}
+					<Div Size={new UDim2(1, AllowConnections[1] ? -19 : 0, 0, 0)} AutomaticSize="Y">
+						<BasicTextLabel
+							Size={new UDim2(TextToInputRatios[1], 0, 0, 20)}
+							Text={ValueLabels[1]}
+							TextYAlignment="Bottom"
+						/>
+						<NumberInput
+							AnchorPoint={new Vector2(1, 0)}
+							Position={UDim2.fromScale(1, 0)}
+							Size={new UDim2(1 - TextToInputRatios[1], 0, 0, 20)}
+							Text={() => tostring(NodeField.GetY())}
+							AllowNegative={true}
+							NumberChanged={NodeField.SetY}
+						/>
+					</Div>
+				</Div>
 			</Div>
 		</Div>
 	);

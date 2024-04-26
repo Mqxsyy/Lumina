@@ -1,6 +1,7 @@
-import Roact, { useRef } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
-import { RandomNumber as RandomNumberAPI } from "API/Nodes/Logic/RandomNumber";
+import { RandomNumber as RandomNumberAPI, RandomNumberFieldNames } from "API/Nodes/Logic/RandomNumber";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
@@ -12,8 +13,6 @@ export function CreateRandomNumber() {
 }
 
 function RandomNumber({ data }: { data: NodeData }) {
-	const vector2FieldRef = useRef((data.node as RandomNumberAPI).nodeFields.range);
-
 	return (
 		<Node
 			Name="Random Number"
@@ -23,10 +22,11 @@ function RandomNumber({ data }: { data: NodeData }) {
 			ConnectioNode={data.node as LogicNode}
 		>
 			<Vector2Field
-				Label={"Vector3"}
+				NodeId={data.node.id}
+				NodeField={(data.node as RandomNumberAPI).nodeFields.range}
+				NodeFieldName={RandomNumberFieldNames.range}
+				Label={CapitalizeFirstLetter(RandomNumberFieldNames.range)}
 				ValueLabels={["Min", "Max"]}
-				DefaultValues={{ x: 0, y: 10 }}
-				Vector2Changed={vector2FieldRef.current.SetVector2}
 			/>
 		</Node>
 	);

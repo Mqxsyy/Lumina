@@ -10,7 +10,8 @@ interface Props {
 	FontWeight?: Enum.FontWeight;
 	TextSize?: number;
 	TextColor?: Color3;
-	TextXAlignment?: Enum.TextXAlignment;
+	TextXAlignment?: "Left" | "Center" | "Right";
+	TextYAlignment?: "Top" | "Center" | "Bottom";
 	Text: string;
 
 	IsAffectedByZoom?: boolean;
@@ -23,7 +24,8 @@ export function BasicTextLabel({
 	TextSize = StyleText.FontSize,
 	FontWeight = StyleText.FontWeight,
 	TextColor = StyleColors.TextLight,
-	TextXAlignment = Enum.TextXAlignment.Left,
+	TextXAlignment = "Left",
+	TextYAlignment = "Center",
 	IsAffectedByZoom = true,
 	Text,
 }: Props) {
@@ -52,6 +54,7 @@ export function BasicTextLabel({
 			FontFace={new Font(StyleText.FontId, FontWeight)}
 			TextColor3={TextColor}
 			TextXAlignment={TextXAlignment}
+			TextYAlignment={TextYAlignment}
 			Text={Text}
 		/>
 	);

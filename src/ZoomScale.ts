@@ -1,6 +1,7 @@
 import { Event } from "API/Bindables/Event";
 
 // TODO: reimplement zoom
+// TODO: make zoom go to cursor
 
 const zoomScale = 1;
 const lastZoomScale = 1;

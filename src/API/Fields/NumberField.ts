@@ -1,8 +1,6 @@
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
-// TODO: add check for floating point error
-
 interface SerializedData {
 	number: number;
 }
@@ -17,13 +15,13 @@ export class NumberField extends NodeField {
 		this.number = number;
 	}
 
-	GetNumber() {
+	GetNumber = () => {
 		if (this.boundFunction !== undefined) {
 			return this.boundFunction();
 		}
 
 		return this.number;
-	}
+	};
 
 	SetNumber = (number: number) => {
 		this.number = number;

@@ -35,39 +35,27 @@ export class Vector2Field extends NodeField {
 			return this.boundFunction();
 		}
 
-		let x;
-		if (this.boundFunctionX !== undefined) {
-			x = this.boundFunctionX();
-		} else {
-			x = this.x;
-		}
+		const x = this.GetX();
+		const y = this.GetY();
 
-		let y;
-		if (this.boundFunctionY !== undefined) {
-			y = this.boundFunctionY();
-		} else {
-			y = this.y;
-		}
-
-		// creating a vector2 causes floating point error, yay
 		return { x, y };
 	}
 
-	GetX() {
+	GetX = () => {
 		if (this.boundFunctionX !== undefined) {
 			return this.boundFunctionX();
 		}
 
 		return this.x;
-	}
+	};
 
-	GetY() {
+	GetY = () => {
 		if (this.boundFunctionY !== undefined) {
 			return this.boundFunctionY();
 		}
 
 		return this.y;
-	}
+	};
 
 	SetVector2 = (x: number, y: number) => {
 		this.boundFunction = undefined;
@@ -103,15 +91,33 @@ export class Vector2Field extends NodeField {
 		this.FieldChanged.Fire();
 	};
 
-	BindX = (boundFunction: undefined | (() => number), boundNode: LogicNode | undefined) => {
+	UnbindVector2 = () => {
+		this.boundFunction = undefined;
+		this.boundNode = undefined;
+		this.FieldChanged.Fire();
+	};
+
+	BindX = (boundFunction: () => number, boundNode: LogicNode) => {
 		this.boundFunctionX = boundFunction;
 		this.boundNodeX = boundNode;
+		this.FieldChanged.Fire();
+	};
+
+	UnbindX = () => {
+		this.boundFunctionX = undefined;
+		this.boundNodeX = undefined;
 		this.FieldChanged.Fire();
 	};
 
 	BindY = (boundFunction: undefined | (() => number), boundNode: LogicNode | undefined) => {
 		this.boundFunctionY = boundFunction;
 		this.boundNodeY = boundNode;
+		this.FieldChanged.Fire();
+	};
+
+	UnbindY = () => {
+		this.boundFunctionY = undefined;
+		this.boundNodeY = undefined;
 		this.FieldChanged.Fire();
 	};
 

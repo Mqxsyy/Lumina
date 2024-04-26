@@ -6,6 +6,7 @@ import { NodeField } from "./NodeField";
 
 export interface ColorPoint {
 	id: number;
+	canEditTime: boolean;
 	time: number;
 	color: ColorField;
 }
@@ -26,12 +27,14 @@ export class ColorRampField extends NodeField {
 
 	startPoint: ColorPoint = {
 		id: this.idPool.GetNextId(),
+		canEditTime: false,
 		time: 0,
 		color: new ColorField(0, 0, 1),
 	};
 
 	endPoint: ColorPoint = {
 		id: this.idPool.GetNextId(),
+		canEditTime: false,
 		time: 1,
 		color: new ColorField(0, 0, 0),
 	};
@@ -91,7 +94,12 @@ export class ColorRampField extends NodeField {
 	}
 
 	AddPoint(time: number, color: Vector3) {
-		const data = { id: this.idPool.GetNextId(), time, color: new ColorField(color.X, color.Y, color.Z) };
+		const data: ColorPoint = {
+			id: this.idPool.GetNextId(),
+			canEditTime: true,
+			time,
+			color: new ColorField(color.X, color.Y, color.Z),
+		};
 		this.colorPoints.push(data);
 		this.colorPoints.sort((a, b) => a.time < b.time);
 		this.FieldChanged.Fire();

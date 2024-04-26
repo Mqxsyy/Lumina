@@ -45,7 +45,7 @@ export function NodeSelectionButton({ ElementName, Text, CreateFn }: Props) {
 				</frame>
 			)}
 
-			<BasicTextLabel Text={Text} TextXAlignment={Enum.TextXAlignment.Center} IsAffectedByZoom={false} />
+			<BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} />
 		</Div>
 	);
 }

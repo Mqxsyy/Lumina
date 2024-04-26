@@ -1,6 +1,7 @@
-import Roact, { useRef } from "@rbxts/roact";
-import { BurstSpawn as BurstSpawnAPI } from "API/Nodes/Spawn/BurstSpawn";
-import { NumberField } from "Components/NodeFields/NumberField";
+import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
+import { BurstSpawn as BurstSpawnAPI, BurstSpawnFieldNames } from "API/Nodes/Spawn/BurstSpawn";
+import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 
@@ -11,18 +12,14 @@ export function CreateBurstSpawn() {
 }
 
 function BurstSpawn({ data }: { data: NodeData }) {
-	const amountFieldRef = useRef((data.node as BurstSpawnAPI).nodeFields.amount);
-
-	const rateChanged = (number: number) => {
-		amountFieldRef.current.SetNumber(number);
-	};
-
 	return (
 		<Node Name="Burst Spawn" Id={data.node.id} AnchorPoint={data.anchorPoint}>
 			<NumberField
-				Label="Amount"
-				DefaultText={tostring(amountFieldRef.current.GetNumber())}
-				NumberChanged={rateChanged}
+				NodeId={data.node.id}
+				NodeField={(data.node as BurstSpawnAPI).nodeFields.amount}
+				NodeFieldName={BurstSpawnFieldNames.amount}
+				Label={CapitalizeFirstLetter(BurstSpawnFieldNames.amount)}
+				AllowConnection={false}
 			/>
 		</Node>
 	);

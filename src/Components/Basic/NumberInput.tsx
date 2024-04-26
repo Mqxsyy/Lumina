@@ -2,8 +2,6 @@ import Roact from "@rbxts/roact";
 import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
 
-// BUG: has some weird bug where values glitch
-
 interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
@@ -14,7 +12,7 @@ interface Props {
 	TextColor?: Color3;
 	TextXAlignment?: Enum.TextXAlignment;
 	PlaceholderText?: string;
-	Text?: string;
+	Text?: string | (() => string);
 
 	IsAffectedByZoom?: boolean;
 	AllowNegative?: boolean;
@@ -53,6 +51,14 @@ export function NumberInput({
 		return text;
 	};
 
+	const getDefaultText = () => {
+		if (typeIs(Text, "function")) {
+			return Text();
+		}
+
+		return Text;
+	};
+
 	const textChanged = (text: string) => {
 		let number = validateNumber(text);
 		if (number === undefined) return "";
@@ -69,7 +75,7 @@ export function NumberInput({
 
 	const lostFocus = (text: string) => {
 		const number = validateNumber(text);
-		if (number === undefined) return Text;
+		if (number === undefined) return getDefaultText();
 	};
 
 	return (
@@ -82,7 +88,7 @@ export function NumberInput({
 			TextColor={TextColor}
 			TextXAlignment={TextXAlignment}
 			PlaceholderText={PlaceholderText}
-			Text={Text}
+			Text={getDefaultText()}
 			IsAffectedByZoom={IsAffectedByZoom}
 			Disabled={Disabled}
 			TextChanged={textChanged}
