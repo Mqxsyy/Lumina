@@ -87,14 +87,14 @@ function LineGraph() {
 	};
 
 	const controlsTimeChanged = (time: number) => {
-		if (graphAPI === undefined) return;
+		if (graphAPI === undefined || selectedPointRef.current === undefined) return;
 
 		const clampedTime = math.clamp(time, 0, maxValue);
 		graphAPI.UpdatePoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
 	};
 
 	const controlsValueChanged = (value: number) => {
-		if (graphAPI === undefined) return;
+		if (graphAPI === undefined || selectedPointRef.current === undefined) return;
 
 		const clampedValue = math.clamp(value, 0, maxValue);
 		graphAPI.UpdatePoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
@@ -326,7 +326,7 @@ function LineGraph() {
 								: () => tostring(selectedPointRef.current!.value)
 						}
 						NumberChanged={controlsValueChanged}
-						Disabled={(selectedPointRef.current === undefined) === undefined}
+						Disabled={selectedPointRef.current === undefined}
 					/>
 				</Div>
 			</Div>
