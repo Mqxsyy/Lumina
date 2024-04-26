@@ -32,9 +32,9 @@ export function LoadGraph(graph: LineGraphField, max?: number) {
 
 function LineGraph() {
 	const [forceRender, setForceRender] = useState(0);
-	const [graphAPI, setGraphAPI] = useState<LineGraphField>();
 	const [windowSize, setWindowSize] = useState(Vector2.zero);
 
+	const graphAPIRef = useRef<LineGraphField>();
 	const lastClickTime = useRef(0);
 
 	// need ref cuz state won't update properly inside a function
@@ -54,16 +54,16 @@ function LineGraph() {
 	};
 
 	const updatePoint = (id: number) => {
-		if (graphAPI === undefined) return;
+		if (graphAPIRef.current === undefined) return;
 
 		const [time, valuePercent] = getPointPositionPercent();
 		const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
-		graphAPI.UpdatePoint(id, time, value);
+		graphAPIRef.current.UpdatePoint(id, time, value);
 	};
 
 	const removePoint = (id: number) => {
-		graphAPI!.RemovePoint(id);
+		graphAPIRef.current!.RemovePoint(id);
 	};
 
 	const onBackgroundClick = () => {
@@ -71,7 +71,7 @@ function LineGraph() {
 			const [time, valuePercent] = getPointPositionPercent();
 			const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
-			const newPoint = graphAPI!.AddPoint(time, value);
+			const newPoint = graphAPIRef.current!.AddPoint(time, value);
 			selectPoint(newPoint.id);
 			return;
 		}
@@ -80,30 +80,30 @@ function LineGraph() {
 	};
 
 	const selectPoint = (id: number) => {
-		if (graphAPI === undefined) return;
+		if (graphAPIRef.current === undefined) return;
 
-		selectedPointRef.current = graphAPI.GetAllPoints().find((point) => point.id === id);
+		selectedPointRef.current = graphAPIRef.current.GetAllPoints().find((point) => point.id === id);
 		setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 	};
 
 	const controlsTimeChanged = (time: number) => {
-		if (graphAPI === undefined || selectedPointRef.current === undefined) return;
+		if (graphAPIRef.current === undefined || selectedPointRef.current === undefined) return;
 
 		const clampedTime = math.clamp(time, 0, maxValue);
-		graphAPI.UpdatePoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
+		graphAPIRef.current.UpdatePoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
 	};
 
 	const controlsValueChanged = (value: number) => {
-		if (graphAPI === undefined || selectedPointRef.current === undefined) return;
+		if (graphAPIRef.current === undefined || selectedPointRef.current === undefined) return;
 
 		const clampedValue = math.clamp(value, 0, maxValue);
-		graphAPI.UpdatePoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
+		graphAPIRef.current.UpdatePoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
 	};
 
 	useEffect(() => {
 		const loadedConnection = graphAPILoaded.Connect(() => {
 			if (loadedGraphAPI !== undefined) {
-				setGraphAPI(loadedGraphAPI);
+				graphAPIRef.current = loadedGraphAPI;
 				selectedPointRef.current = undefined;
 				setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 			}
@@ -129,14 +129,14 @@ function LineGraph() {
 	}, []);
 
 	useEffect(() => {
-		if (graphAPI === undefined) return;
+		if (graphAPIRef.current === undefined) return;
 
-		const valuesChangedConnection = graphAPI.FieldChanged.Connect(() => {
+		const valuesChangedConnection = graphAPIRef.current.FieldChanged.Connect(() => {
 			setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 		});
 
 		return () => valuesChangedConnection.Disconnect();
-	}, [graphAPI, forceRender]);
+	}, [graphAPIRef.current, forceRender]);
 
 	return (
 		<>
@@ -202,7 +202,7 @@ function LineGraph() {
 				/>
 			</Div>
 			{/* Points */}
-			{graphAPI?.GetAllPoints().map((point, index) => {
+			{graphAPIRef.current?.GetAllPoints().map((point, index) => {
 				const positionPercent = new Vector2(
 					RemapValue(point.time, 0, 1, 0.1, 0.9),
 					RemapValue(maxValue - point.value, 0, maxValue, 0.1, 0.9),
@@ -214,7 +214,7 @@ function LineGraph() {
 						RemapValue(maxValue - point.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
 				);
 
-				if (index === 0 || index === graphAPI?.GetAllPoints().size() - 1) {
+				if (index === 0 || index === graphAPIRef.current!.GetAllPoints().size() - 1) {
 					return (
 						<LineGraphPoint
 							key={"endpoint_" + point.id}
@@ -239,8 +239,8 @@ function LineGraph() {
 				);
 			})}
 			{/* Lines */}
-			{graphAPI?.GetAllPoints().map((_, index) => {
-				const allPoints = graphAPI!.GetAllPoints();
+			{graphAPIRef.current?.GetAllPoints().map((_, index) => {
+				const allPoints = graphAPIRef.current!.GetAllPoints();
 
 				if (index === allPoints.size() - 1) return;
 

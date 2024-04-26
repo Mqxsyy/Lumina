@@ -1,19 +1,17 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import { RunService } from "@rbxts/services";
+import { Event } from "API/Bindables/Event";
+import { ColorField } from "API/Fields/ColorField";
+import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { NumberInput } from "Components/Basic/NumberInput";
+import { TextInput } from "Components/Basic/TextInput";
 import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import PickerCursor from "./PickerCursor";
-import { RunService } from "@rbxts/services";
-import { ColorField } from "API/Fields/ColorField";
-import { Event } from "API/Bindables/Event";
-import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { TextInput } from "Components/Basic/TextInput";
-import { NumberInput } from "Components/Basic/NumberInput";
 
 // TODO: add color saving & loading, palette creator
 // TODO?: add support for HSV
-// OPTIMIZE: refactor code
-// BUG: when changing properties from controls, sometimes changes color of some other point
 
 // colors are bloody awful to work with due to their loss of accuracy on conversion
 // also long ass file
@@ -49,24 +47,23 @@ export function LoadColorPickerAPI(colorPicker: ColorField) {
 
 function ColorPicker() {
 	const [forceRender, setForceRender] = useState(0);
-	const [pickerAPI, setPickerAPI] = useState<ColorField>();
 
 	const window = useRef<DockWidgetPluginGui>();
-
+	const pickerAPIRef = useRef<ColorField>();
 	const isDraggingCursor1Ref = useRef(false);
 	const isDraggingCursor2Ref = useRef(false);
 
 	const getRGB = () => {
-		if (pickerAPI === undefined) return { R: 0, G: 0, B: 0 };
+		if (pickerAPIRef.current === undefined) return { R: 0, G: 0, B: 0 };
 
-		const color = pickerAPI.GetColor();
+		const color = pickerAPIRef.current.GetColor();
 		return { R: math.round(color.R * 255), G: math.round(color.G * 255), B: math.round(color.B * 255) };
 	};
 
 	const getHex = () => {
-		if (pickerAPI === undefined) return "FFFFFF";
+		if (pickerAPIRef.current === undefined) return "FFFFFF";
 
-		const color = pickerAPI.GetColor();
+		const color = pickerAPIRef.current.GetColor();
 		const roundedColor = Color3.fromRGB(
 			math.round(color.R * 255),
 			math.round(color.G * 255),
@@ -77,16 +74,16 @@ function ColorPicker() {
 	};
 
 	const getCursor1Position = () => {
-		if (pickerAPI === undefined || window.current === undefined) return UDim2.fromOffset(0, 0);
+		if (pickerAPIRef.current === undefined || window.current === undefined) return UDim2.fromOffset(0, 0);
 		if (window.current.AbsoluteSize === Vector2.zero) return UDim2.fromOffset(0, 0);
 
 		const marginRight = 4;
 		const maxX = window.current.AbsoluteSize.X * 0.8 - marginRight;
-		const x = math.clamp(pickerAPI.saturation * maxX, 0, maxX);
+		const x = math.clamp(pickerAPIRef.current.saturation * maxX, 0, maxX);
 
 		const marginBottom = 4;
 		const maxY = window.current.AbsoluteSize.Y * 0.55 - marginBottom;
-		const y = math.clamp((1 - pickerAPI.value) * maxY, 0, maxY);
+		const y = math.clamp((1 - pickerAPIRef.current.value) * maxY, 0, maxY);
 
 		return UDim2.fromOffset(x - 4, y - 4);
 	};
@@ -95,7 +92,7 @@ function ColorPicker() {
 		isDraggingCursor1Ref.current = true;
 
 		RunService.BindToRenderStep("ColorPickerCursor1", Enum.RenderPriority.Input.Value, () => {
-			if (pickerAPI === undefined || window.current === undefined) return;
+			if (pickerAPIRef.current === undefined || window.current === undefined) return;
 
 			const mousePosition = window.current.GetRelativeMousePosition();
 
@@ -113,8 +110,8 @@ function ColorPicker() {
 			const maxY = window.current.AbsoluteSize.Y * 0.55 - marginBottom;
 			const y = math.clamp(mousePosition.Y - minY, 0, maxY);
 
-			pickerAPI.SetSaturation(math.clamp(x / maxX, 0, 1));
-			pickerAPI.SetValue(math.clamp(1 - y / maxY, 0, 1));
+			pickerAPIRef.current.SetSaturation(math.clamp(x / maxX, 0, 1));
+			pickerAPIRef.current.SetValue(math.clamp(1 - y / maxY, 0, 1));
 		});
 	};
 
@@ -124,12 +121,12 @@ function ColorPicker() {
 	};
 
 	const getCursor2Position = () => {
-		if (pickerAPI === undefined || window.current === undefined) return UDim2.fromOffset(0, 0);
+		if (pickerAPIRef.current === undefined || window.current === undefined) return UDim2.fromOffset(0, 0);
 		if (window.current.AbsoluteSize === Vector2.zero) return UDim2.fromOffset(0, 0);
 
 		const marginRight = 4;
 		const maxX = window.current.AbsoluteSize.X * 0.8 - marginRight;
-		const x = math.clamp(pickerAPI.hue * maxX, 0, maxX);
+		const x = math.clamp(pickerAPIRef.current.hue * maxX, 0, maxX);
 
 		return new UDim2(0, x - 4, 0.5, 0);
 	};
@@ -138,7 +135,7 @@ function ColorPicker() {
 		isDraggingCursor2Ref.current = true;
 
 		RunService.BindToRenderStep("ColorPickerCursor2", Enum.RenderPriority.Input.Value, () => {
-			if (pickerAPI === undefined || window.current === undefined) return;
+			if (pickerAPIRef.current === undefined || window.current === undefined) return;
 
 			const mousePosition = window.current!.GetRelativeMousePosition();
 
@@ -150,7 +147,7 @@ function ColorPicker() {
 			const x = math.clamp(mousePosition.X - minX, 0, maxX);
 
 			const hue = math.clamp(x / maxX, 0, 1);
-			pickerAPI.SetHue(hue);
+			pickerAPIRef.current.SetHue(hue);
 		});
 	};
 
@@ -160,7 +157,7 @@ function ColorPicker() {
 	};
 
 	const rChanged = (number: number) => {
-		if (isDraggingCursor1Ref.current || isDraggingCursor2Ref.current || pickerAPI === undefined) return;
+		if (isDraggingCursor1Ref.current || isDraggingCursor2Ref.current || pickerAPIRef.current === undefined) return;
 
 		let r = number;
 
@@ -168,16 +165,16 @@ function ColorPicker() {
 			r = 255;
 		}
 
-		const oldColor = pickerAPI.GetColor();
+		const oldColor = pickerAPIRef.current.GetColor();
 		const newColor = Color3.fromRGB(r, math.round(oldColor.G * 255), math.round(oldColor.B * 255));
 		const hsv = newColor.ToHSV();
 
-		pickerAPI.SetHSV(hsv[0], hsv[1], hsv[2]);
+		pickerAPIRef.current.SetHSV(hsv[0], hsv[1], hsv[2]);
 		return r;
 	};
 
 	const gChanged = (number: number) => {
-		if (isDraggingCursor1Ref.current || isDraggingCursor2Ref.current || pickerAPI === undefined) return;
+		if (isDraggingCursor1Ref.current || isDraggingCursor2Ref.current || pickerAPIRef.current === undefined) return;
 
 		let g = number;
 
@@ -185,16 +182,16 @@ function ColorPicker() {
 			g = 255;
 		}
 
-		const oldColor = pickerAPI.GetColor();
+		const oldColor = pickerAPIRef.current.GetColor();
 		const newColor = Color3.fromRGB(math.round(oldColor.R * 255), g, math.round(oldColor.B * 255));
 		const hsv = newColor.ToHSV();
 
-		pickerAPI.SetHSV(hsv[0], hsv[1], hsv[2]);
+		pickerAPIRef.current.SetHSV(hsv[0], hsv[1], hsv[2]);
 		return g;
 	};
 
 	const bChanged = (number: number) => {
-		if (isDraggingCursor1Ref.current || isDraggingCursor2Ref.current || pickerAPI === undefined) return;
+		if (isDraggingCursor1Ref.current || isDraggingCursor2Ref.current || pickerAPIRef.current === undefined) return;
 
 		let b = number;
 
@@ -202,16 +199,16 @@ function ColorPicker() {
 			b = 255;
 		}
 
-		const oldColor = pickerAPI.GetColor();
+		const oldColor = pickerAPIRef.current.GetColor();
 		const newColor = Color3.fromRGB(math.round(oldColor.R * 255), math.round(oldColor.G * 255), b);
 		const hsv = newColor.ToHSV();
 
-		pickerAPI.SetHSV(hsv[0], hsv[1], hsv[2]);
+		pickerAPIRef.current.SetHSV(hsv[0], hsv[1], hsv[2]);
 		return b;
 	};
 
 	const hexChanged = (text: string) => {
-		if (isDraggingCursor1Ref.current || isDraggingCursor2Ref.current || pickerAPI === undefined) return;
+		if (isDraggingCursor1Ref.current || isDraggingCursor2Ref.current || pickerAPIRef.current === undefined) return;
 
 		let hex = text;
 
@@ -238,7 +235,7 @@ function ColorPicker() {
 		const newColor = Color3.fromHex(validatedHex);
 		const hsv = newColor.ToHSV();
 
-		pickerAPI.SetHSV(hsv[0], hsv[1], hsv[2]);
+		pickerAPIRef.current.SetHSV(hsv[0], hsv[1], hsv[2]);
 
 		if (validatedHex.upper() !== getHex().upper()) {
 			warn("Hex Color Mistranslated");
@@ -247,10 +244,14 @@ function ColorPicker() {
 		return validatedHex.upper();
 	};
 
+	const hexLostFocus = () => {
+		return getHex().upper();
+	};
+
 	useEffect(() => {
 		const loadedConnection = colorPickerAPILoaded.Connect(() => {
 			if (loadedColorPickerAPI !== undefined) {
-				setPickerAPI(loadedColorPickerAPI);
+				pickerAPIRef.current = loadedColorPickerAPI;
 				setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 			}
 		});
@@ -267,14 +268,14 @@ function ColorPicker() {
 	}, []);
 
 	useEffect(() => {
-		if (pickerAPI === undefined) return;
+		if (pickerAPIRef.current === undefined) return;
 
-		const valuesChangedConnection = pickerAPI.FieldChanged.Connect(() => {
+		const valuesChangedConnection = pickerAPIRef.current.FieldChanged.Connect(() => {
 			setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 		});
 
 		return () => valuesChangedConnection.Disconnect();
-	}, [pickerAPI, forceRender]);
+	}, [pickerAPIRef.current, forceRender]);
 
 	return (
 		<Div BackgroundColor={StyleColors.Background}>
@@ -293,11 +294,11 @@ function ColorPicker() {
 					<uicorner CornerRadius={new UDim(0, 6)} />
 					<uigradient
 						Color={
-							pickerAPI === undefined
+							pickerAPIRef.current === undefined
 								? blackGradient
 								: new ColorSequence([
-										new ColorSequenceKeypoint(0, Color3.fromHSV(pickerAPI.hue, 1, 1)),
-										new ColorSequenceKeypoint(1, Color3.fromHSV(pickerAPI.hue, 1, 1)),
+										new ColorSequenceKeypoint(0, Color3.fromHSV(pickerAPIRef.current.hue, 1, 1)),
+										new ColorSequenceKeypoint(1, Color3.fromHSV(pickerAPIRef.current.hue, 1, 1)),
 									])
 						}
 						Transparency={transparency}
@@ -362,7 +363,7 @@ function ColorPicker() {
 							<NumberInput
 								Position={UDim2.fromScale(0.25, 0)}
 								Size={UDim2.fromScale(0.75, 1)}
-								Text={tostring(getRGB().R)}
+								Text={() => tostring(getRGB().R)}
 								NumberChanged={rChanged}
 							/>
 						</Div>
@@ -371,7 +372,7 @@ function ColorPicker() {
 							<NumberInput
 								Position={UDim2.fromScale(0.25, 0)}
 								Size={UDim2.fromScale(0.75, 1)}
-								Text={tostring(getRGB().G)}
+								Text={() => tostring(getRGB().G)}
 								NumberChanged={gChanged}
 							/>
 						</Div>
@@ -380,7 +381,7 @@ function ColorPicker() {
 							<NumberInput
 								Position={UDim2.fromScale(0.25, 0)}
 								Size={UDim2.fromScale(0.75, 1)}
-								Text={tostring(getRGB().B)}
+								Text={() => tostring(getRGB().B)}
 								NumberChanged={bChanged}
 							/>
 						</Div>
@@ -390,14 +391,17 @@ function ColorPicker() {
 						<TextInput
 							Position={UDim2.fromScale(0.25, 0)}
 							Size={UDim2.fromScale(0.75, 1)}
-							Text={getHex().upper()}
+							Text={() => getHex().upper()}
 							TextChanged={hexChanged}
+							LostFocus={hexLostFocus}
 						/>
 					</Div>
 				</Div>
 				<Div
 					Size={new UDim2(0.2, -10, 1, 0)}
-					BackgroundColor={pickerAPI === undefined ? StyleColors.FullWhite : pickerAPI.GetColor()}
+					BackgroundColor={
+						pickerAPIRef.current === undefined ? StyleColors.FullWhite : pickerAPIRef.current.GetColor()
+					}
 				/>
 			</Div>
 		</Div>

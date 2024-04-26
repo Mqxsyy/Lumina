@@ -55,7 +55,7 @@ export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, Re
 
 	useEffect(() => {
 		colorWindow.current = GetWindow(Windows.ColorPicker);
-	});
+	}, []);
 
 	return (
 		<Div

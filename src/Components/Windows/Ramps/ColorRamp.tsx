@@ -8,6 +8,7 @@ import ColorRampPoint from "./ColorRampPoint";
 import { NumberInput } from "Components/Basic/NumberInput";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { RoundDecimal } from "API/Lib";
+import { LoadColorPickerAPI } from "../Pickers.tsx/ColorPicker";
 
 const DOUBLE_CLICK_TIME = 0.25;
 
@@ -30,16 +31,17 @@ export function LoadColorRampAPI(ramp: ColorRampField) {
 
 function ColorRamp() {
 	const [forceRender, setForceRender] = useState(0);
-	const [rampAPI, setRampAPI] = useState<ColorRampField>();
-	const [selectedPoint, setSelectedPoint] = useState<ColorPoint | undefined>();
 
+	const rampAPIRef = useRef<ColorRampField>();
+	const colorPickerWindowRef = useRef<DockWidgetPluginGui>();
+	const selectedPointRef = useRef<ColorPoint | undefined>();
 	const lastClickTime = useRef(0);
 
 	const onClick = () => {
-		if (rampAPI === undefined) return;
+		if (rampAPIRef.current === undefined) return;
 
 		if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
-			if (rampAPI.CountPoints() >= 20) {
+			if (rampAPIRef.current.CountPoints() >= 20) {
 				warn("Max amount of color gradient points reached");
 				return;
 			}
@@ -48,8 +50,8 @@ function ColorRamp() {
 			const mousePosition = window.GetRelativeMousePosition();
 
 			const percentX = (mousePosition.X - window.AbsoluteSize.X * 0.1) / (window.AbsoluteSize.X * 0.8);
-			const newPoint = rampAPI.AddPoint(RoundDecimal(percentX, 0.01), new Vector3(0, 0, 1));
-			setSelectedPoint(newPoint);
+			const newPoint = rampAPIRef.current.AddPoint(RoundDecimal(percentX, 0.01), new Vector3(0, 0, 1));
+			selectedPointRef.current = newPoint;
 
 			setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 			return;
@@ -59,31 +61,41 @@ function ColorRamp() {
 	};
 
 	const selectPoint = (point: ColorPoint) => {
-		setSelectedPoint(point);
+		selectedPointRef.current = point;
+		setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 	};
 
 	const updatePointTime = (id: number, time: number) => {
-		if (rampAPI === undefined) return;
+		if (rampAPIRef.current === undefined) return;
 
-		rampAPI.UpdatePointTime(id, time);
+		rampAPIRef.current.UpdatePointTime(id, time);
 		setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 	};
 
 	const removePoint = (id: number) => {
-		if (rampAPI === undefined) return;
+		if (rampAPIRef.current === undefined) return;
 
-		rampAPI.RemovePoint(id);
+		rampAPIRef.current.RemovePoint(id);
 		setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+	};
+
+	const openColorPicker = () => {
+		if (selectedPointRef.current === undefined) return;
+
+		LoadColorPickerAPI(selectedPointRef.current.color);
+		colorPickerWindowRef.current!.Enabled = true;
 	};
 
 	useEffect(() => {
 		const connection = loadedRampChanged.Connect(() => {
 			if (loadedRampAPI !== undefined) {
-				setRampAPI(loadedRampAPI);
-				setSelectedPoint(undefined);
+				rampAPIRef.current = loadedRampAPI;
+				selectedPointRef.current = undefined;
 				setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 			}
 		});
+
+		colorPickerWindowRef.current = GetWindow(Windows.ColorPicker);
 
 		return () => connection.Disconnect();
 	}, []);
@@ -92,13 +104,13 @@ function ColorRamp() {
 		const connections: RBXScriptConnection[] = [];
 		let changedConnection: RBXScriptConnection;
 
-		if (rampAPI !== undefined) {
-			changedConnection = rampAPI.FieldChanged.Connect(() => {
+		if (rampAPIRef.current !== undefined) {
+			changedConnection = rampAPIRef.current.FieldChanged.Connect(() => {
 				connections.forEach((connection) => connection.Disconnect());
 				setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 			});
 
-			rampAPI.GetAllPoints().forEach((point) => {
+			rampAPIRef.current.GetAllPoints().forEach((point) => {
 				const connection = point.color.FieldChanged.Connect(() => {
 					setForceRender((prev) => (prev > 10 ? 0 : ++prev));
 				});
@@ -114,7 +126,7 @@ function ColorRamp() {
 				changedConnection.Disconnect();
 			}
 		};
-	}, [rampAPI, forceRender]);
+	}, [rampAPIRef.current, forceRender]);
 
 	return (
 		<Div BackgroundColor={StyleColors.Background}>
@@ -125,12 +137,14 @@ function ColorRamp() {
 				BackgroundColor={StyleColors.FullWhite}
 				onMouseButton1Down={onClick}
 			>
-				<uigradient Color={rampAPI === undefined ? placeholderGradient : rampAPI.GetGradient()} />
+				<uigradient
+					Color={rampAPIRef.current === undefined ? placeholderGradient : rampAPIRef.current.GetGradient()}
+				/>
 
-				{rampAPI?.GetAllPoints().map((point, _) => {
+				{rampAPIRef.current?.GetAllPoints().map((point, _) => {
 					return (
 						<ColorRampPoint
-							key={point.id}
+							key={"point_" + point.id}
 							Point={point}
 							SetSelectedPoint={selectPoint}
 							UpdateTime={point.canEditTime ? updatePointTime : undefined}
@@ -155,24 +169,27 @@ function ColorRamp() {
 					/>
 
 					<BasicTextLabel Size={new UDim2(0.4, 0, 0, 20)} Text={"Time:"} TextXAlignment={"Right"} />
-					{selectedPoint !== undefined ? (
+					{selectedPointRef.current !== undefined ? (
 						<NumberInput
 							Size={new UDim2(0.4, 0, 0, 20)}
-							Text={tostring(selectedPoint.time)}
-							Disabled={!selectedPoint.canEditTime}
-							NumberChanged={(number) => updatePointTime(selectedPoint.id, number)}
+							Text={tostring(selectedPointRef.current.time)}
+							Disabled={!selectedPointRef.current.canEditTime}
+							NumberChanged={(number) => updatePointTime(selectedPointRef.current!.id, number)}
 						/>
 					) : (
 						<NumberInput Size={new UDim2(0.4, 0, 0, 20)} Disabled={true} />
 					)}
 				</Div>
 				<Div Size={UDim2.fromScale(0.5, 1)}>
-					<Div
-						AnchorPoint={new Vector2(0.5, 0.5)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						Size={UDim2.fromScale(0.8, 0.5)}
-						BackgroundColor={StyleColors.FullWhite}
-					/>
+					{selectedPointRef.current && (
+						<Div
+							AnchorPoint={new Vector2(0.5, 0.5)}
+							Position={UDim2.fromScale(0.5, 0.5)}
+							Size={UDim2.fromScale(0.8, 0.5)}
+							BackgroundColor={selectedPointRef.current!.color.GetColor()}
+							onMouseButton1Down={openColorPicker}
+						/>
+					)}
 				</Div>
 			</Div>
 		</Div>

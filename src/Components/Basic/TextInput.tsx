@@ -12,7 +12,7 @@ interface Props {
 	TextColor?: Color3;
 	TextXAlignment?: Enum.TextXAlignment;
 	PlaceholderText?: string;
-	Text?: string;
+	Text?: string | (() => string);
 
 	ClearTextOnFocus?: boolean;
 	AutoFocus?: boolean;
@@ -45,6 +45,14 @@ export function TextInput({
 
 	const textBoxRef = useRef<TextBox>();
 	const textLabelRef = useRef<TextLabel>();
+
+	const getText = () => {
+		if (typeIs(Text, "function")) {
+			return Text();
+		}
+
+		return Text;
+	};
 
 	useEffect(() => {
 		if (!IsAffectedByZoom) return;
@@ -144,7 +152,7 @@ export function TextInput({
 				TextColor3={Disabled ? StyleColors.TextLight : TextColor}
 				TextXAlignment={TextXAlignment}
 				TextWrapped={true}
-				Text={Disabled ? "-" : Text}
+				Text={Disabled ? "-" : getText()}
 				TextTruncate={Enum.TextTruncate.AtEnd}
 				ref={textLabelRef}
 			></textlabel>
