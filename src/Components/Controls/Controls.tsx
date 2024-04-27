@@ -1,7 +1,7 @@
 import Roact from "@rbxts/roact";
 import Div from "../Div";
 import { ControlButton } from "./ControlButton";
-import { GetNodeSystems } from "Services/NodeSystemService";
+import { GetAllSystems } from "Services/NodeSystemService";
 import ExportAPI from "API/ExportAPI";
 import ExportAsScript from "API/VFXScriptCreator";
 import { SaveToFile } from "Services/Saving/SaveService";
@@ -14,14 +14,14 @@ const BUTTON_HEIGHT = 25;
 
 export function Controls() {
 	const Start = () => {
-		const nodeSystems = GetNodeSystems();
+		const nodeSystems = GetAllSystems();
 		nodeSystems.forEach((nodeSystem) => {
 			nodeSystem.data.system.Run();
 		});
 	};
 
 	const Stop = () => {
-		const nodeSystems = GetNodeSystems();
+		const nodeSystems = GetAllSystems();
 		nodeSystems.forEach((nodeSystem) => {
 			nodeSystem.data.system.Stop();
 		});

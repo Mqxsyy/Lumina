@@ -6,7 +6,7 @@ import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { NodeData } from "./NodesService";
 
-// TODO: make connOut go to multiple connIn
+// IMPORTANT: make connOut go to multiple connIn
 
 export interface ConnectionData {
 	id: number;

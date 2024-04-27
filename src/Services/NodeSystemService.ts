@@ -3,6 +3,7 @@ import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem } from "API/NodeSystem";
+import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 type AllowedNodeGroups = NodeGroups.Spawn | NodeGroups.Initialize | NodeGroups.Update | NodeGroups.Render;
 
@@ -28,36 +29,43 @@ interface NodeSystemCollectioEntry {
 
 const idPool = new IdPool();
 const NodeSystemCollection = [] as NodeSystemCollectioEntry[];
-
 export const NodeSystemsChanged = new Event();
 
-export function GetNextNodeSystemId(): number {
+export function GetNextSystemId(): number {
 	return idPool.GetNextId();
 }
 
-export function UpdateNodeSystemAnchorPoint(id: number, anchorPoint: Vector2) {
-	const nodeSystem = NodeSystemCollection.find((system) => system.data.id === id);
-	if (nodeSystem) {
-		nodeSystem.data.anchorPoint = anchorPoint;
-		NodeSystemsChanged.Fire();
-	} else {
-		warn(`NodeSystem with id ${id} not found`);
-	}
-}
-
-export function GetNodeSystemById(id: number) {
-	return NodeSystemCollection.find((system) => system.data.id === id);
-}
-
-export function GetNodeSystems(): NodeSystemCollectioEntry[] {
+export function GetAllSystems(): NodeSystemCollectioEntry[] {
 	return NodeSystemCollection;
 }
 
-export function AddNodeSystem(nodeSystem: NodeSystemCollectioEntry) {
-	NodeSystemCollection.push(nodeSystem);
+export function GetSystemById(id: number) {
+	return NodeSystemCollection.find((system) => system.data.id === id);
+}
+
+export function AddSystem(api: NodeSystem, create: (data: NodeSystemData) => Roact.Element, position?: Vector2) {
+	const collectionEntry: NodeSystemCollectioEntry = {
+		data: {
+			id: GetNextSystemId(),
+			anchorPoint: position || GetMousePositionOnCanvas(),
+			system: api,
+			addToNodeGroup: {
+				[NodeGroups.Spawn]: undefined,
+				[NodeGroups.Initialize]: undefined,
+				[NodeGroups.Update]: undefined,
+				[NodeGroups.Render]: undefined,
+				[NodeGroups.Logic]: undefined as never,
+			},
+			finishedBindingGroups: new Event(),
+			onDestroy: new Event(),
+		},
+		create,
+	};
+
+	NodeSystemCollection.push(collectionEntry);
 	NodeSystemsChanged.Fire();
 
-	return nodeSystem.data;
+	return collectionEntry.data;
 }
 
 export function BindNodeGroupFunction(id: number, group: NodeGroups, fn: (id: number) => void) {
@@ -92,6 +100,17 @@ export function BindNodeGroupFunction(id: number, group: NodeGroups, fn: (id: nu
 	}
 
 	warn(`NodeSystem with id ${id} not found`);
+}
+
+export function UpdateSystemData(id: number, callback: (data: NodeSystemData) => NodeSystemData) {
+	const nodeSystem = GetSystemById(id);
+	if (nodeSystem) {
+		nodeSystem.data = callback(nodeSystem.data);
+		NodeSystemsChanged.Fire();
+		return;
+	}
+
+	warn(`Failed to update system data. Id not found`);
 }
 
 export function RemoveNodeSystem(id: number) {

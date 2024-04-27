@@ -1,17 +1,17 @@
 import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
+import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
+import { GetMousePosition, WidgetSizeChanged } from "Windows/MainWindow";
+import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { GetNodeSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
+import { GetAllSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
 import { GetAllNodes, NodesChanged } from "../Services/NodesService";
 import { Controls } from "./Controls/Controls";
 import { NodeSelection } from "./Selection/NodeSelection";
-import { GetMousePosition, WidgetSizeChanged } from "Windows/MainWindow";
-import { GetWindow, Windows } from "Windows/WindowSevice";
-import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 
-// OPTIMIZE: becomes quite laggy with more nodes
+// OPTIMIZE: moving one thing makes everything re-render
 
 export function App() {
 	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.CrescentVFX)!.AbsoluteSize);
@@ -41,18 +41,23 @@ export function App() {
 		const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
 		const newPosition = mousePosition.sub(mouseOffset);
 
-		UpdateCanvasData((canvasData) => {
-			canvasData.Position = UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5).add(newPosition);
-			return canvasData;
-		});
+		const canvasData = GetCanvasData();
+		const newCanvasPosition = UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5).add(newPosition);
 
-		UpdateCanvasData((canvasData) => {
-			canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
-				UDim2.fromOffset(math.abs(newPosition.X.Offset) * 2, math.abs(newPosition.Y.Offset) * 2),
-			);
+		if (canvasData.Position !== newCanvasPosition) {
+			UpdateCanvasData((canvasData) => {
+				canvasData.Position = newCanvasPosition;
+				return canvasData;
+			}, false);
 
-			return canvasData;
-		});
+			UpdateCanvasData((canvasData) => {
+				canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
+					UDim2.fromOffset(math.abs(newPosition.X.Offset) * 2, math.abs(newPosition.Y.Offset) * 2),
+				);
+
+				return canvasData;
+			});
+		}
 	};
 
 	const UpdateZoom = (inputObject: InputObject) => {
@@ -64,7 +69,7 @@ export function App() {
 	};
 
 	useEffect(() => {
-		WidgetSizeChanged.Connect((newSize) => {
+		const widgetSizeChangedConnection = WidgetSizeChanged.Connect((newSize) => {
 			setWidgetSize(newSize as Vector2);
 
 			UpdateCanvasData((canvasData) => {
@@ -78,25 +83,34 @@ export function App() {
 			});
 		});
 
-		ZoomScaleChanged.Connect((zoom) => {
+		const zoomChangedConnection = ZoomScaleChanged.Connect((zoom) => {
 			setZoomScale(zoom as number);
 		});
 
-		CanvasDataChanged.Connect(() => {
+		const canvasDataChangedConnection = CanvasDataChanged.Connect(() => {
 			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
 
-		NodeSystemsChanged.Connect(() => {
+		const nodeSystemsChangedConnection = NodeSystemsChanged.Connect(() => {
 			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
 
-		NodesChanged.Connect(() => {
+		const nodesChangedConnection = NodesChanged.Connect(() => {
 			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
 
-		ConnectionsChanged.Connect(() => {
+		const connectionsChangedConnection = ConnectionsChanged.Connect(() => {
 			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
 		});
+
+		return () => {
+			widgetSizeChangedConnection.Disconnect();
+			zoomChangedConnection.Disconnect();
+			canvasDataChangedConnection.Disconnect();
+			nodeSystemsChangedConnection.Disconnect();
+			nodesChangedConnection.Disconnect();
+			connectionsChangedConnection.Disconnect();
+		};
 	}, []);
 
 	return (
@@ -221,7 +235,7 @@ export function App() {
 					}}
 				/>
 			</frame>
-			{GetNodeSystems().map((nodeSystem) => {
+			{GetAllSystems().map((nodeSystem) => {
 				return nodeSystem.create(nodeSystem.data);
 			})}
 			{GetAllNodes().map((node) => {

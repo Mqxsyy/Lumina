@@ -34,7 +34,6 @@ interface NodeCollectionEntry {
 }
 
 const NodeCollection = [] as NodeCollectionEntry[];
-
 export const NodesChanged = new Event();
 
 export function GetAllNodes(): NodeCollectionEntry[] {
@@ -55,7 +54,7 @@ export function AddNode(api: Node, create: (data: NodeData) => Roact.Element) {
 			node: api,
 			onDestroy: new Event<[NodeData]>(),
 		},
-		create: create,
+		create,
 	};
 
 	NodeCollection.push(collectionEntry);
@@ -66,7 +65,6 @@ export function AddNode(api: Node, create: (data: NodeData) => Roact.Element) {
 
 export function UpdateNodeData(id: number, callback: (data: NodeData) => NodeData) {
 	const node = GetNodeById(id);
-
 	if (node !== undefined) {
 		node.data = callback(node.data);
 		NodesChanged.Fire();

@@ -45,7 +45,8 @@ export default function NodeGroup({
 	UpdateGroupSize,
 }: Props) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-	const [childContainerSize, setChildContainerSize] = useState(new UDim2(1, 0, 0, 0));
+
+	const containerSizeYExtraRef = useRef(0);
 
 	const childNodesIdRef = useRef([] as number[]);
 	const nodeDestroyConnectionsRef = useRef<{ [key: number]: RBXScriptConnection }>({});
@@ -67,10 +68,15 @@ export default function NodeGroup({
 			yOffset += node.data.element!.AbsoluteSize.Y + GROUP_LIST_PADDING;
 		}
 
-		UpdateNodeData(id, (data) => {
-			data.anchorPoint = anchor.add(new Vector2(xOffset, yOffset));
-			return data;
-		});
+		const draggingNodeData = GetNodeById(id)!;
+		const newAnchor = anchor.add(new Vector2(xOffset, yOffset));
+
+		if (draggingNodeData.data.anchorPoint !== newAnchor) {
+			UpdateNodeData(id, (data) => {
+				data.anchorPoint = newAnchor;
+				return data;
+			});
+		}
 	};
 
 	const onHover = () => {
@@ -96,7 +102,7 @@ export default function NodeGroup({
 
 		if (draggingNodeData.data.node.nodeGroup !== NodeGroup) return;
 
-		updateChildNodes(draggingNodeData.data.element!.AbsoluteSize.Y + 5, true);
+		updateChildNodes(draggingNodeData.data.element!.AbsoluteSize.Y + 5);
 		RunService.BindToRenderStep(`OverrideDraggingNodePosition${NodeGroup}`, 120, () => {
 			overrideNodePosition(draggingNodeId);
 		});
@@ -130,7 +136,12 @@ export default function NodeGroup({
 			containerSizeY += node.data.element!.AbsoluteSize.Y + GROUP_LIST_PADDING;
 		}
 
-		return containerSizeY;
+		return containerSizeY + containerSizeYExtraRef.current;
+	};
+
+	const getContainerSizeUDim = () => {
+		const containerSizeY = getContainerSize();
+		return new UDim2(1, 0, 0, containerSizeY === 0 ? 0 : containerSizeY - GROUP_LIST_PADDING);
 	};
 
 	const addChildNode = (id: number) => {
@@ -152,7 +163,7 @@ export default function NodeGroup({
 			updateChildNodes();
 		});
 
-		updateChildNodes();
+		updateChildNodes(0);
 	};
 
 	const removeChildNode = (id: number) => {
@@ -209,15 +220,14 @@ export default function NodeGroup({
 		return yOffset;
 	};
 
-	const updateChildNodes = (add: number = 0, updateGroup: boolean = true) => {
+	const updateChildNodes = (add?: number) => {
 		if (SystemNodeGroupHeights.size() !== 4) return;
 
-		if (updateGroup) {
-			const containerSizeY = getContainerSize() + add;
-
-			UpdateGroupSize(containerSizeY);
-			setChildContainerSize(new UDim2(1, 0, 0, containerSizeY === 0 ? 0 : containerSizeY - GROUP_LIST_PADDING));
+		if (add !== undefined) {
+			containerSizeYExtraRef.current = add;
 		}
+
+		UpdateGroupSize(getContainerSize());
 
 		const xOffset = (SYSTEM_WIDTH - NODE_WIDTH) * 0.5;
 		let yOffset = getNodeOffsetY();
@@ -225,18 +235,22 @@ export default function NodeGroup({
 		const anchor = NodeSystem.anchorPoint;
 
 		for (const id of childNodesIdRef.current) {
-			UpdateNodeData(id, (data) => {
-				data.anchorPoint = anchor.add(new Vector2(xOffset, yOffset));
-				return data;
-			});
-
+			const newNodeAnchor = anchor.add(new Vector2(xOffset, yOffset));
 			const node = GetNodeById(id)!;
+
+			if (node.data.anchorPoint !== newNodeAnchor) {
+				UpdateNodeData(id, (data) => {
+					data.anchorPoint = newNodeAnchor;
+					return data;
+				});
+			}
+
 			yOffset += node.data.element!.AbsoluteSize.Y + GROUP_LIST_PADDING;
 		}
 	};
 
 	useEffect(() => {
-		updateChildNodes(0, false);
+		updateChildNodes();
 	}, [SystemNodeGroupHeights[0], SystemNodeGroupHeights[1], SystemNodeGroupHeights[2], SystemNodeGroupHeights[3]]);
 
 	useEffect(() => {
@@ -324,7 +338,7 @@ export default function NodeGroup({
 						Size={new UDim2(1, 0, 0, GROUP_HEADER_HEIGHT * zoomScale)}
 						Text={NodeGroups[NodeGroup]}
 					/>
-					<Div Size={childContainerSize} />
+					<Div Size={getContainerSizeUDim()} />
 				</Div>
 			</Div>
 		</Div>

@@ -9,7 +9,7 @@
 - ... Link To Plugin Page
 
 - Notes:
-- There may be bugs and performance issues, please report them to me
+- There WILL be bugs and performance issues
 - Do NOT alter the API folder, doing so WILL break it
-- The API can be used independently, though it is recommended to use it with the plugin (for simplicity reasons)
+- The API can be used independently, though I do still recommend to use it with the plugin (for simplicity reasons)
 */

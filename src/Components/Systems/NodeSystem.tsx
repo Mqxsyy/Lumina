@@ -2,10 +2,11 @@ import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { GetCanvasData } from "Services/CanvasService";
 import { StyleColors } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { NodeSystemData, RemoveNodeSystem, UpdateNodeSystemAnchorPoint } from "../../Services/NodeSystemService";
+import { GetSystemById, NodeSystemData, RemoveNodeSystem, UpdateSystemData } from "../../Services/NodeSystemService";
 import Div from "../Div";
 import {
 	SYSTEM_BORDER_THICKNESS,
@@ -15,17 +16,13 @@ import {
 	SYSTEM_WIDTH,
 } from "../SizeConfig";
 import NodeGroup from "./NodeGroup";
-import { GetCanvasData } from "Services/CanvasService";
 
 interface Props {
 	data: NodeSystemData;
 }
 
 export default function NodeSystem({ data }: Props) {
-	const [position, setPosition] = useState(new Vector2(0, 0));
-	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-	const [isDragging, setIsDragging] = useState(false);
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const systemFrameRef = useRef(undefined as undefined | TextButton);
@@ -37,11 +34,22 @@ export default function NodeSystem({ data }: Props) {
 		const mousePosition = GetMousePosition();
 		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
 
-		setIsDragging(true);
+		RunService.BindToRenderStep("MoveSystem", Enum.RenderPriority.Input.Value, () => {
+			const mousePosition = GetMousePositionOnCanvas();
+			const newAnchorPoint = mousePosition.add(mouseOffsetRef.current);
+
+			if (data.anchorPoint !== newAnchorPoint) {
+				UpdateSystemData(data.id, (systemData) => {
+					systemData.anchorPoint = newAnchorPoint;
+					return systemData;
+				});
+			}
+
+			groupMoveBinds.current.forEach((fn) => fn(data.id));
+		});
 	};
 
 	const onMouseButton1Up = () => {
-		setIsDragging(false);
 		RunService.UnbindFromRenderStep("MoveSystem");
 	};
 
@@ -49,49 +57,33 @@ export default function NodeSystem({ data }: Props) {
 		RemoveNodeSystem(data.id);
 	};
 
-	const AddGroupMoveBind = (fn: (id: number) => void) => {
+	const addGroupMoveBind = (fn: (id: number) => void) => {
 		groupMoveBinds.current.push(fn);
 	};
 
-	useEffect(() => {
-		if (isDragging) {
-			RunService.BindToRenderStep("MoveSystem", Enum.RenderPriority.Input.Value, () => {
-				const mousePosition = GetMousePositionOnCanvas();
-				UpdateNodeSystemAnchorPoint(data.id, mousePosition.add(mouseOffsetRef.current));
-
-				groupMoveBinds.current.forEach((fn) => fn(data.id));
-			});
-		}
-
-		return () => {
-			RunService.UnbindFromRenderStep("MoveSystem");
-		};
-	});
-
-	useEffect(() => {
-		ZoomScaleChanged.Connect((zoomScale) => {
-			setZoomScale(zoomScale as number);
-		});
-	}, []);
-
-	useEffect(() => {
-		const nodeCenter = data.anchorPoint.add(new Vector2(SYSTEM_WIDTH * 0.5, 0));
-		setOffsetFromCenter(nodeCenter);
-	}, [data.anchorPoint]);
-
-	useEffect(() => {
+	const getPosition = () => {
+		const offsetFromCenter = data.anchorPoint.add(new Vector2(SYSTEM_WIDTH * 0.5, 0));
 		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
 		const position = canvasPosition.add(offsetFromCenter);
+		return UDim2.fromOffset(position.X, position.Y);
+	};
 
-		setPosition(position);
-	}, [canvasData.current.Position, canvasData.current.Size, offsetFromCenter]);
+	useEffect(() => {
+		const zoomScaleChangedConnection = ZoomScaleChanged.Connect((zoomScale) => {
+			setZoomScale(zoomScale as number);
+		});
+
+		return () => {
+			zoomScaleChangedConnection.Disconnect();
+		};
+	}, []);
 
 	return (
 		<textbutton
 			Size={UDim2.fromOffset(SYSTEM_WIDTH * zoomScale, 0)}
 			AutomaticSize={"Y"}
 			AnchorPoint={new Vector2(0.5, 0)}
-			Position={UDim2.fromOffset(position.X, position.Y)}
+			Position={getPosition()}
 			BackgroundTransparency={1}
 			Text={""}
 			Active={true}
@@ -158,7 +150,7 @@ export default function NodeSystem({ data }: Props) {
 						GradientEnd={StyleColors.InitializeGroup}
 						NodeSystem={data}
 						SystemNodeGroupHeights={groupHeightsRef.current}
-						BindSystemMove={AddGroupMoveBind}
+						BindSystemMove={addGroupMoveBind}
 						UpdateGroupSize={(number: number) => (groupHeightsRef.current[0] = number)}
 					/>
 					<NodeGroup
@@ -168,7 +160,7 @@ export default function NodeSystem({ data }: Props) {
 						GradientEnd={StyleColors.UpdateGroup}
 						NodeSystem={data}
 						SystemNodeGroupHeights={groupHeightsRef.current}
-						BindSystemMove={AddGroupMoveBind}
+						BindSystemMove={addGroupMoveBind}
 						UpdateGroupSize={(number: number) => (groupHeightsRef.current[1] = number)}
 					/>
 					<NodeGroup
@@ -178,7 +170,7 @@ export default function NodeSystem({ data }: Props) {
 						GradientEnd={StyleColors.RenderGroup}
 						NodeSystem={data}
 						SystemNodeGroupHeights={groupHeightsRef.current}
-						BindSystemMove={AddGroupMoveBind}
+						BindSystemMove={addGroupMoveBind}
 						UpdateGroupSize={(number: number) => (groupHeightsRef.current[2] = number)}
 					/>
 					<NodeGroup
@@ -188,7 +180,7 @@ export default function NodeSystem({ data }: Props) {
 						GradientEnd={StyleColors.EndGroup}
 						NodeSystem={data}
 						SystemNodeGroupHeights={groupHeightsRef.current}
-						BindSystemMove={AddGroupMoveBind}
+						BindSystemMove={addGroupMoveBind}
 						UpdateGroupSize={(number: number) => (groupHeightsRef.current[3] = number)}
 					/>
 

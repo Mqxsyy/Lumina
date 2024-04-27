@@ -1,11 +1,11 @@
-import { GetNodeSystems } from "Services/NodeSystemService";
+import { GetAllSystems } from "Services/NodeSystemService";
 import { GetExportsFolder } from "./FolderLocations";
 import { NodeSystem } from "./NodeSystem";
 
 export default function ExportAsScript() {
 	const convertedFiles: ModuleScript[] = [];
 
-	GetNodeSystems().forEach((nodeSystem) => {
+	GetAllSystems().forEach((nodeSystem) => {
 		convertedFiles.push(CreateScript(tostring(nodeSystem.data.id), nodeSystem.data.system));
 	});
 

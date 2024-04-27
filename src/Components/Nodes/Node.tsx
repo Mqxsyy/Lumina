@@ -7,7 +7,7 @@ import Div from "Components/Div";
 import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
-import { RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
@@ -28,12 +28,7 @@ export function Node({
 	ConnectioNode = undefined,
 	children,
 }: Roact.PropsWithChildren<Props>) {
-	const [position, setPosition] = useState(new Vector2(0, 0));
-	const [offsetFromCenter, setOffsetFromCenter] = useState(Vector2.zero);
-
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
-	const [isDragging, setIsDragging] = useState(false);
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const canvasData = useRef(GetCanvasData());
@@ -45,13 +40,22 @@ export function Node({
 		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
 
 		SetDraggingNodeId(Id);
-		setIsDragging(true);
+
+		RunService.BindToRenderStep("MoveNode", 110, () => {
+			const nodeData = GetNodeById(Id)!;
+			const newAnchorPosition = GetMousePositionOnCanvas().add(mouseOffsetRef.current);
+
+			if (nodeData.data.anchorPoint !== newAnchorPosition) {
+				UpdateNodeData(Id, (data) => {
+					data.anchorPoint = newAnchorPosition;
+					return data;
+				});
+			}
+		});
 	};
 
 	const onMouseButton1Up = () => {
 		SetDraggingNodeId(undefined);
-
-		setIsDragging(false);
 		RunService.UnbindFromRenderStep("MoveNode");
 	};
 
@@ -59,25 +63,22 @@ export function Node({
 		RemoveNode(Id);
 	};
 
-	useEffect(() => {
-		if (isDragging) {
-			RunService.BindToRenderStep("MoveNode", 110, () => {
-				UpdateNodeData(Id, (data) => {
-					data.anchorPoint = GetMousePositionOnCanvas().add(mouseOffsetRef.current);
-					return data;
-				});
-			});
-		}
-
-		return () => {
-			RunService.UnbindFromRenderStep("MoveNode");
-		};
-	});
+	const getPosition = () => {
+		const nodeHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
+		const offsetFromCenter = AnchorPoint.add(new Vector2(NODE_WIDTH * 0.5, nodeHeight * 0.5));
+		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
+		const position = canvasPosition.add(offsetFromCenter);
+		return UDim2.fromOffset(position.X, position.Y);
+	};
 
 	useEffect(() => {
-		ZoomScaleChanged.Connect((zoomScale) => {
+		const zoomScaleChangedConnection = ZoomScaleChanged.Connect((zoomScale) => {
 			setZoomScale(zoomScale as number);
 		});
+
+		return () => {
+			zoomScaleChangedConnection.Disconnect();
+		};
 	}, []);
 
 	useEffect(() => {
@@ -85,26 +86,12 @@ export function Node({
 		SetNodeElement(Id, elementRef.current);
 	}, [elementRef.current]);
 
-	useEffect(() => {
-		const nodeHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
-		const nodeCenter = AnchorPoint.add(new Vector2(NODE_WIDTH * 0.5, nodeHeight * 0.5));
-
-		setOffsetFromCenter(nodeCenter);
-	}, [AnchorPoint, elementRef.current?.AbsoluteSize]);
-
-	useEffect(() => {
-		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
-		const position = canvasPosition.add(offsetFromCenter);
-
-		setPosition(position);
-	}, [canvasData.current.Position, offsetFromCenter]);
-
 	return (
 		<textbutton
 			Size={UDim2.fromOffset(NODE_WIDTH * zoomScale, 0)}
 			AutomaticSize={"Y"}
 			AnchorPoint={new Vector2(0.5, 0.5)}
-			Position={UDim2.fromOffset(position.X, position.Y)}
+			Position={getPosition()}
 			BackgroundColor3={StyleColors.Primary}
 			AutoButtonColor={false}
 			Text={""}

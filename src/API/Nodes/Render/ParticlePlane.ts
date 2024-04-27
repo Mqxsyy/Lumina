@@ -12,6 +12,7 @@ import { Vector2Field } from "API/Fields/Vector2Field";
 import { NumberField } from "API/Fields/NumberField";
 
 // TODO: make double sided, required reversed image if not symmetrical
+// TODO: add more orientations
 // TODO: make use of parallel luau
 
 // flame sprite sheet: 15996621949

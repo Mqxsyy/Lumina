@@ -3,7 +3,7 @@ import { API_VERSION } from "API/ExportAPI";
 import { NodeFields } from "API/Fields/NodeFields";
 import { GetSavesFolder } from "API/FolderLocations";
 import { Node } from "API/Nodes/Node";
-import { GetNodeSystems } from "Services/NodeSystemService";
+import { GetAllSystems } from "Services/NodeSystemService";
 import { GetAllNodes, GetNodeById, NodeConnectionIn } from "Services/NodesService";
 import { SaveData, SerializedField, SerializedFloatingNode, SerializedNode, SerializedSystem } from "./SaveData";
 
@@ -19,7 +19,7 @@ export function SaveToFile() {
 		systems: [],
 	};
 
-	const systems = GetNodeSystems();
+	const systems = GetAllSystems();
 	systems.forEach((system) => {
 		const anchorPoint = system.data.anchorPoint;
 
