@@ -26,12 +26,17 @@ export function LoadFromFile() {
 	}
 
 	const selectedInstance = selection[0];
-	if (selectedInstance.IsA("ModuleScript") === false) {
+	if (selectedInstance.IsA("ModuleScript") === false && selectedInstance.IsA("StringValue") === false) {
 		warn("Please select a valid file to load from.");
 		return;
 	}
 
-	const data = HttpService.JSONDecode((selectedInstance as ModuleScript).Source) as SaveData;
+	let data;
+	if (selectedInstance.IsA("ModuleScript")) {
+		data = HttpService.JSONDecode((selectedInstance as ModuleScript).Source) as SaveData;
+	} else {
+		data = HttpService.JSONDecode((selectedInstance as StringValue).Value) as SaveData;
+	}
 
 	if (data.version !== API_VERSION && os.clock() - mismatchLoadTime > MISMATCH_LOAD_TIMEFRAME) {
 		warn(

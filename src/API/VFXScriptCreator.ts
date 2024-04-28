@@ -1,5 +1,4 @@
 import { GetAllSystems } from "Services/NodeSystemService";
-import { GetExportsFolder } from "./FolderLocations";
 import { NodeSystem } from "./NodeSystem";
 
 export default function ExportAsScript() {
@@ -13,13 +12,10 @@ export default function ExportAsScript() {
 }
 
 function CreateScript(name: string, nodeSystem: NodeSystem) {
-	const exportFolder = GetExportsFolder();
-
-	const oldVFXScript = exportFolder.FindFirstChild(name);
-	if (oldVFXScript !== undefined) oldVFXScript.Destroy();
+	// const oldVFXScript = exportFolder.FindFirstChild(name);
+	// if (oldVFXScript !== undefined) oldVFXScript.Destroy();
 
 	const newScript = new Instance("ModuleScript");
-	newScript.Parent = exportFolder;
 	newScript.Name = name;
 
 	let src = `

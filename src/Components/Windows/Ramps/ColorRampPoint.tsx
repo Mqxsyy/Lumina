@@ -17,6 +17,7 @@ interface Props {
 
 export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, RemovePoint }: Props) {
 	const lastClickTime = useRef(0);
+	const isMovingRef = useRef(false);
 	const colorWindow = useRef<DockWidgetPluginGui>();
 
 	const onMouseButton1Down = () => {
@@ -28,7 +29,12 @@ export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, Re
 			return;
 		}
 
-		if (UpdateTime !== undefined) {
+		if (UpdateTime !== undefined && !isMovingRef.current) {
+			isMovingRef.current = true;
+
+			task.wait(0.075);
+			if (!isMovingRef.current) return;
+
 			RunService.BindToRenderStep("MoveColorRampPoint", Enum.RenderPriority.Input.Value, () => {
 				const window = GetWindow(Windows.ColorRamp)!;
 				const mousePosition = window.GetRelativeMousePosition();
@@ -44,6 +50,7 @@ export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, Re
 	};
 
 	const onMouseButton1Up = () => {
+		isMovingRef.current = false;
 		if (UpdateTime === undefined) return;
 		RunService.UnbindFromRenderStep("MoveColorRampPoint");
 	};
@@ -58,15 +65,26 @@ export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, Re
 	}, []);
 
 	return (
-		<Div
+		<imagebutton
 			AnchorPoint={new Vector2(0.5, 0)}
 			Position={UDim2.fromScale(Point.time, 1)}
-			Size={UDim2.fromOffset(10, 10)}
-			onMouseButton1Down={onMouseButton1Down}
-			onMouseButton1Up={onMouseButton1Up}
-			onMouseButton2Down={onMouseButton2Down}
+			Size={UDim2.fromOffset(15, 10)}
+			BackgroundTransparency={1}
+			ImageTransparency={1}
+			AutoButtonColor={false}
 		>
-			<imagelabel Size={UDim2.fromScale(1, 1)} BackgroundTransparency={1} Image={"rbxassetid://13873199961"} />
-		</Div>
+			<Div
+				onMouseButton1Down={onMouseButton1Down}
+				onMouseButton1Up={onMouseButton1Up}
+				onMouseButton2Down={onMouseButton2Down}
+			/>
+			<imagelabel
+				AnchorPoint={new Vector2(0.5, 0)}
+				Position={UDim2.fromScale(0.5, 0)}
+				Size={UDim2.fromOffset(10, 10)}
+				BackgroundTransparency={1}
+				Image={"rbxassetid://13873199961"}
+			/>
+		</imagebutton>
 	);
 }

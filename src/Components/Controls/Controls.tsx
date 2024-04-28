@@ -6,6 +6,7 @@ import ExportAPI from "API/ExportAPI";
 import ExportAsScript from "API/VFXScriptCreator";
 import { SaveToFile } from "Services/Saving/SaveService";
 import { LoadFromFile } from "Services/Saving/LoadService";
+import { GetExportsFolder } from "API/FolderLocations";
 
 const CANVAS_PADDING = 5;
 const BUTTONS_PADDING = 5;
@@ -29,11 +30,25 @@ export function Controls() {
 
 	const Export = () => {
 		ExportAPI();
-		const conversionFiles = ExportAsScript();
-		conversionFiles.forEach((conversionFile) => {
-			const saveData = SaveToFile();
-			saveData.Parent = conversionFile;
-		});
+
+		const exportsFolder = GetExportsFolder();
+		const exportedFiles = ExportAsScript();
+		const saveData = SaveToFile();
+
+		if (exportedFiles.size() === 1) {
+			saveData.Parent = exportedFiles[0];
+			exportedFiles[0].Parent = exportsFolder;
+		} else {
+			const folder = new Instance("Folder");
+			folder.Name = "VFX Container";
+			folder.Parent = exportsFolder;
+
+			exportedFiles.forEach((file) => {
+				file.Parent = folder;
+			});
+
+			saveData.Parent = folder;
+		}
 	};
 
 	const Save = () => {

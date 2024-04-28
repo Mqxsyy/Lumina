@@ -8,7 +8,7 @@ import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 import { CapitalizeFirstLetter } from "API/Lib";
 
-export function CreateRotationZRandom() {
+export function CreateSetRotationZRandom() {
 	return AddNode(new SetRotationZRandomAPI(), (data: NodeData) => {
 		return <SetRotationZRandom key={`node_${data.node.id}`} data={data} />;
 	});

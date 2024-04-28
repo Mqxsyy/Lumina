@@ -10,8 +10,6 @@ import { GetWindow, Windows } from "Windows/WindowSevice";
 import LineGraphPoint from "./LineGraphPoint";
 
 // TODO: Add min value
-// IMPORTANT: Make points not click-through
-// IMPORTANT: add a small delay before point actually starts moving, prevents accidental movement when attempting to select
 
 const DOUBLE_CLICK_TIME = 0.25;
 const BOTTOM_SIZE = 50;
@@ -220,7 +218,6 @@ function LineGraph() {
 							key={"endpoint_" + point.id}
 							Id={point.id}
 							Position={position}
-							TimeLock={index === 0 ? 0 : 1}
 							OnSelect={selectPoint}
 							UpdatePoint={updatePoint}
 						/>

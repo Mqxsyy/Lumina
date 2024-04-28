@@ -9,7 +9,7 @@ import { Node } from "../Node";
 import Div from "Components/Div";
 
 export function CreateParticlePlane() {
-	return AddNode(new ParticlePlaneAPI(1000), (data: NodeData) => {
+	return AddNode(new ParticlePlaneAPI(500), (data: NodeData) => {
 		return <ParticlePlane key={`node_${data.node.id}`} data={data} />;
 	});
 }

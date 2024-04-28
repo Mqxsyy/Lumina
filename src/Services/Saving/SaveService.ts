@@ -10,9 +10,6 @@ import { SaveData, SerializedField, SerializedFloatingNode, SerializedNode, Seri
 const savesFolder = GetSavesFolder();
 
 export function SaveToFile() {
-	const container = new Instance("ModuleScript");
-	container.Name = "VFXSaveData";
-
 	const data: SaveData = {
 		version: API_VERSION,
 		floatingNodes: [],
@@ -74,7 +71,18 @@ export function SaveToFile() {
 		data.floatingNodes.push(serializedNode);
 	});
 
-	container.Source = HttpService.JSONEncode(data);
+	let container;
+	const stringData = HttpService.JSONEncode(data);
+
+	if (stringData.size() > 200000) {
+		container = new Instance("ModuleScript");
+		container.Source = stringData;
+	} else {
+		container = new Instance("StringValue");
+		container.Value = stringData;
+	}
+
+	container.Name = "VFXSaveData";
 	container.Parent = savesFolder;
 
 	return container;

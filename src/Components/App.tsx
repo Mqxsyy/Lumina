@@ -11,7 +11,9 @@ import { GetAllNodes, NodesChanged } from "../Services/NodesService";
 import { Controls } from "./Controls/Controls";
 import { NodeSelection } from "./Selection/NodeSelection";
 
+// TODO: add selecting, copy and paste, group selection moving, undo & redo
 // OPTIMIZE: moving one thing makes everything re-render
+// OPTIMIZE: implement: useContext?, useMemo, useCallback
 
 export function App() {
 	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.CrescentVFX)!.AbsoluteSize);

@@ -14,6 +14,7 @@ import { NumberField } from "API/Fields/NumberField";
 // TODO: make double sided, required reversed image if not symmetrical
 // TODO: add more orientations
 // TODO: make use of parallel luau
+// TODO: add automatic cache cleaner to prevent particle cache growing too large
 
 // flame sprite sheet: 15996621949
 const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
@@ -112,7 +113,8 @@ export class ParticlePlane extends RenderNode {
 		this.aliveParticleBaseParts = [];
 		this.objectPool = new ObjectPool(CreateParticlePlane);
 
-		if (pregenerateParticlesCount !== undefined) {
+		if (pregenerateParticlesCount !== undefined && !RunService.IsEdit()) {
+			// BUG: studio check not working...
 			let particlesLeft = pregenerateParticlesCount;
 
 			task.spawn(() => {

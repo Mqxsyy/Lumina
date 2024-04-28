@@ -8,7 +8,7 @@ export { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
 export { CreateSetLifetimeRandom } from "Components/Nodes/Initialize/SetLifetimeRandom";
 export { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 export { CreateSetRotationZ } from "Components/Nodes/Initialize/SetRotationZ";
-export { CreateRotationZRandom } from "Components/Nodes/Initialize/SetRotationZRandom";
+export { CreateSetRotationZRandom as CreateRotationZRandom } from "Components/Nodes/Initialize/SetRotationZRandom";
 export { CreateSetSize } from "Components/Nodes/Initialize/SetSize";
 export { CreateSetSizeRandom } from "Components/Nodes/Initialize/SetSizeRandom";
 export { CreateSetTransparency } from "Components/Nodes/Initialize/SetTransparency";
