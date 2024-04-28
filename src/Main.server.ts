@@ -6,11 +6,11 @@ import { GetWindow, InitializeWindows, Windows } from "Windows/WindowSevice";
 
 // TODO: add button to reset all windows - simply reinitializing everything does not work
 
-const toolbar = plugin.CreateToolbar("CrescentVFX");
+const toolbar = plugin.CreateToolbar("LunarVFX");
 const mainButton = toolbar.CreateButton("Open Graph", "Opens Graph", "rbxassetid://7982947463");
 
 InitializeWindows(plugin); // widgets are bloody annoying to work with
-const window = GetWindow(Windows.CrescentVFX)!;
+const window = GetWindow(Windows.LunarVFX)!;
 window.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; //--> why tf does this make the background images disappear near corners
 
 mainButton.Click.Connect(() => {

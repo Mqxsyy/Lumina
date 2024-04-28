@@ -1,5 +1,5 @@
 /*
-- CrescentVFX 0.0.1
+- LunarVFX 0.0.1
 - Made By Mqxsyy
 - Made using TypeScript & React
 - For Any Questions Or Issues Dm Me On Discord @mqxxsy

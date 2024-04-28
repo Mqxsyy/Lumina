@@ -1,7 +1,7 @@
 import { Event } from "API/Bindables/Event";
 
 export enum Windows {
-	CrescentVFX = "CrescentVFX",
+	LunarVFX = "LunarVFX",
 	ValueGraph = "Value Graph",
 	ColorPicker = "Color Picker",
 	ColorRamp = "Color Ramp",
@@ -10,7 +10,7 @@ export enum Windows {
 export const OnWinowLoaded = new Event<[Windows]>();
 
 const windows = {
-	[Windows.CrescentVFX]: {
+	[Windows.LunarVFX]: {
 		Widget: undefined as DockWidgetPluginGui | undefined,
 		Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 800, 600, 200, 150),
 	},

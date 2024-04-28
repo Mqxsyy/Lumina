@@ -17,7 +17,7 @@ import { BurstSpawnName } from "./Nodes/Spawn/BurstSpawn";
 
 if (!RunService.IsStudio()) {
 	print(
-		"This game utilizes a free custom particle system and plugin called 'CrescentVFX' to easily create great looking visual effects. Plugin can be found in the toolbox or creator store for absolutely FREE.",
+		"This game utilizes a free custom particle system and plugin called 'LunarVFX' to easily create great looking visual effects. Plugin can be found in the toolbox or creator store for absolutely FREE.",
 	);
 }
 

@@ -1,10 +1,10 @@
 import { ServerStorage, Workspace } from "@rbxts/services";
 
 export function GetLiveParticlesFolder(): Folder {
-	let liveParticlesFolder = Workspace.FindFirstChild("CrescentVFX Particles");
+	let liveParticlesFolder = Workspace.FindFirstChild("LunarVFX Particles");
 	if (liveParticlesFolder === undefined) {
 		liveParticlesFolder = new Instance("Folder");
-		liveParticlesFolder.Name = "CrescentVFX Particles";
+		liveParticlesFolder.Name = "LunarVFX Particles";
 		liveParticlesFolder.Parent = Workspace;
 	}
 
@@ -24,10 +24,10 @@ export function GetPlaneParticlesFolder(): Folder {
 	return planeParticlesFolder as Folder;
 }
 
-// let livePlanarParticlesFolder = StarterGui.FindFirstChild("CrescentVFX Planar Particles");
+// let livePlanarParticlesFolder = StarterGui.FindFirstChild("LunarVFX Planar Particles");
 // if (livePlanarParticlesFolder === undefined) {
 // 	livePlanarParticlesFolder = new Instance("ScreenGui");
-// 	livePlanarParticlesFolder.Name = "CrescentVFX Planar Particles";
+// 	livePlanarParticlesFolder.Name = "LunarVFX Planar Particles";
 // 	livePlanarParticlesFolder.Parent = StarterGui;
 // }
 
@@ -36,10 +36,10 @@ export function GetPlaneParticlesFolder(): Folder {
 // }
 
 export function GetExportsFolder(): Folder {
-	let exportsFolder = ServerStorage.FindFirstChild("CrescentVFX Exports");
+	let exportsFolder = ServerStorage.FindFirstChild("LunarVFX Exports");
 	if (exportsFolder === undefined) {
 		exportsFolder = new Instance("Folder");
-		exportsFolder.Name = "CrescentVFX Exports";
+		exportsFolder.Name = "LunarVFX Exports";
 		exportsFolder.Parent = ServerStorage;
 	}
 
@@ -47,10 +47,10 @@ export function GetExportsFolder(): Folder {
 }
 
 export function GetSavesFolder(): Folder {
-	let savesFolder = ServerStorage.FindFirstChild("CrescentVFX Saves");
+	let savesFolder = ServerStorage.FindFirstChild("LunarVFX Saves");
 	if (savesFolder === undefined) {
 		savesFolder = new Instance("Folder");
-		savesFolder.Name = "CrescentVFX Saves";
+		savesFolder.Name = "LunarVFX Saves";
 		savesFolder.Parent = ServerStorage;
 	}
 

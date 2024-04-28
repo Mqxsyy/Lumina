@@ -16,7 +16,7 @@ import { NodeSelection } from "./Selection/NodeSelection";
 // OPTIMIZE: implement: useContext?, useMemo, useCallback
 
 export function App() {
-	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.CrescentVFX)!.AbsoluteSize);
+	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.LunarVFX)!.AbsoluteSize);
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
 	const [_, setForceRender] = useState(0);
@@ -26,7 +26,7 @@ export function App() {
 
 	const StartMoveCanvas = (frame: Frame) => {
 		const mousePositionVec2 = GetMousePosition();
-		const widgetSize = GetWindow(Windows.CrescentVFX)!.AbsoluteSize.mul(0.5);
+		const widgetSize = GetWindow(Windows.LunarVFX)!.AbsoluteSize.mul(0.5);
 
 		const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
 		const mouseOffset = mousePosition.sub(frame.Position).add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
