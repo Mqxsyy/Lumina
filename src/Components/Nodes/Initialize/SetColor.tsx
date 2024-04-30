@@ -12,7 +12,7 @@ export function CreateSetColor() {
 
 function SetColor({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Color" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Color" NodeData={data}>
 			<ColorPickerField Label="Color" ColorPicker={(data.node as SetColorAPI).nodeFields.color} />
 		</Node>
 	);

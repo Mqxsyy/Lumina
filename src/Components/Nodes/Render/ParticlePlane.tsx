@@ -16,7 +16,7 @@ export function CreateParticlePlane() {
 
 function ParticlePlane({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Particle Plane" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Particle Plane" NodeData={data}>
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Orientation - Facing camera"} />
 			<NumberField
 				NodeId={data.node.id}

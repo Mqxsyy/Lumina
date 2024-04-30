@@ -23,7 +23,7 @@ function ConstantSpawn({ data }: { data: NodeData }) {
 	};
 
 	return (
-		<Node Name="Constant Spawn" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Constant Spawn" NodeData={data}>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as ConstantSpawnAPI).nodeFields.rate}

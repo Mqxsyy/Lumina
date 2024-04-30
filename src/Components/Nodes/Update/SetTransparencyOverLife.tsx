@@ -14,7 +14,7 @@ function SetTransparencyOverLife({ data }: { data: NodeData }) {
 	const graphFieldRef = useRef((data.node as TransparencyOverLifeAPI).nodeFields.graph);
 
 	return (
-		<Node Name="Set Transparency Over Life" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Transparency Over Life" NodeData={data}>
 			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} />
 		</Node>
 	);

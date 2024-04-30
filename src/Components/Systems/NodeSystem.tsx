@@ -27,9 +27,6 @@ export default function NodeSystem({ data }: Props) {
 	const zoomScale = GetZoomScale();
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
-	const systemFrameRef = useRef(undefined as undefined | TextButton);
-	const groupMoveBinds = useRef<((id: number) => void)[]>([]);
-	const groupHeightsRef = useRef<number[]>([]);
 	const canvasData = useRef(GetCanvasData());
 
 	const onMouseButton1Down = (element: TextButton) => {
@@ -46,8 +43,6 @@ export default function NodeSystem({ data }: Props) {
 					return systemData;
 				});
 			}
-
-			groupMoveBinds.current.forEach((fn) => fn(data.id));
 		});
 	};
 
@@ -59,26 +54,12 @@ export default function NodeSystem({ data }: Props) {
 		RemoveNodeSystem(data.id);
 	};
 
-	const addGroupMoveBind = (fn: (id: number) => void) => {
-		groupMoveBinds.current.push(fn);
-	};
-
 	const getPosition = () => {
 		const offsetFromCenter = data.anchorPoint.mul(zoomScale).add(new Vector2(SYSTEM_WIDTH * 0.5 * zoomScale, 0));
 		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
 		const position = canvasPosition.add(offsetFromCenter);
 		return UDim2.fromOffset(position.X, position.Y);
 	};
-
-	useEffect(() => {
-		const zoomChangedConnection = ZoomScaleChanged.Connect(() => {
-			groupMoveBinds.current.forEach((fn) => fn(data.id));
-		});
-
-		return () => {
-			zoomChangedConnection.Disconnect();
-		};
-	}, []);
 
 	return (
 		<textbutton
@@ -89,7 +70,6 @@ export default function NodeSystem({ data }: Props) {
 			BackgroundTransparency={1}
 			Text={""}
 			Active={true}
-			ref={systemFrameRef}
 			Event={{
 				InputBegan: (element, inputObject) => {
 					if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
@@ -151,9 +131,6 @@ export default function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
 						NodeSystem={data}
-						SystemNodeGroupHeights={groupHeightsRef.current}
-						BindSystemMove={addGroupMoveBind}
-						UpdateGroupSize={(number: number) => (groupHeightsRef.current[0] = number)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
@@ -161,9 +138,6 @@ export default function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
 						NodeSystem={data}
-						SystemNodeGroupHeights={groupHeightsRef.current}
-						BindSystemMove={addGroupMoveBind}
-						UpdateGroupSize={(number: number) => (groupHeightsRef.current[1] = number)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
@@ -171,9 +145,6 @@ export default function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
 						NodeSystem={data}
-						SystemNodeGroupHeights={groupHeightsRef.current}
-						BindSystemMove={addGroupMoveBind}
-						UpdateGroupSize={(number: number) => (groupHeightsRef.current[2] = number)}
 					/>
 					<NodeGroup
 						SystemId={data.id}
@@ -181,12 +152,7 @@ export default function NodeSystem({ data }: Props) {
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
 						NodeSystem={data}
-						SystemNodeGroupHeights={groupHeightsRef.current}
-						BindSystemMove={addGroupMoveBind}
-						UpdateGroupSize={(number: number) => (groupHeightsRef.current[3] = number)}
 					/>
-
-					{/* need instant trigger child update */}
 				</Div>
 			</Div>
 		</textbutton>

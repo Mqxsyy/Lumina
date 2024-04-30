@@ -16,7 +16,7 @@ export function CreateAddRotationZRandom() {
 
 function AddRotationZRandom({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Add Rotation Z Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Add Rotation Z Random" NodeData={data}>
 			<Vector2Field
 				NodeId={data.node.id}
 				NodeField={(data.node as AddRotationZRandomAPI).nodeFields.range}

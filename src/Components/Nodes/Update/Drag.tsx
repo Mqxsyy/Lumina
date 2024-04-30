@@ -13,7 +13,7 @@ export function CreateDrag() {
 
 function Drag({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Drag" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Drag" NodeData={data}>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as DragAPI).nodeFields.drag}

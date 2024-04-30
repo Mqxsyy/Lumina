@@ -14,7 +14,7 @@ function MultiplySizeOverLife({ data }: { data: NodeData }) {
 	const graphFieldRef = useRef((data.node as MultiplySizeOverLifeAPI).nodeFields.graph);
 
 	return (
-		<Node Name="Multiple Size Over Life" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Multiple Size Over Life" NodeData={data}>
 			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} MaxValue={10} />
 		</Node>
 	);

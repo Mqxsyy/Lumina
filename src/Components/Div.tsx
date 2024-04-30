@@ -9,6 +9,7 @@ interface Props {
 	SizeConstaint?: "RelativeXY" | "RelativeXX" | "RelativeYY";
 	Rotation?: number;
 	BackgroundColor?: Color3 | undefined;
+	ZIndex?: number;
 	// Active?: boolean;
 	getFrame?: (frame: Frame) => void;
 	onHover?: () => void;
@@ -28,6 +29,7 @@ export default function Div({
 	BackgroundColor = undefined,
 	Rotation = 0,
 	SizeConstaint = "RelativeXY",
+	ZIndex = 1,
 	// Active = false,
 	onHover = undefined,
 	onUnhover = undefined,
@@ -63,6 +65,7 @@ export default function Div({
 			BackgroundColor3={BackgroundColor === undefined ? Color3.fromHex("#FFFFFF") : BackgroundColor}
 			BackgroundTransparency={BackgroundColor === undefined ? 1 : 0}
 			BorderSizePixel={0}
+			ZIndex={ZIndex}
 			ref={frameRef}
 			Event={{
 				MouseEnter: () => {

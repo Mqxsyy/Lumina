@@ -13,7 +13,7 @@ export function CreateSetTransparency() {
 
 function SetTransparency({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Transparency" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Transparency" NodeData={data}>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as SetTransparencyAPI).nodeFields.transparency}

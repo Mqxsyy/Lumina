@@ -13,7 +13,7 @@ export function CreateSetEmission() {
 
 function SetEmission({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Emission" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Emission" NodeData={data}>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as SetEmissionAPI).nodeFields.emission}

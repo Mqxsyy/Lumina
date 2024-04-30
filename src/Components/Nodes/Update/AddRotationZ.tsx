@@ -13,7 +13,7 @@ export function CreateAddRotationZ() {
 
 function AddRotationZ({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Add Rotation Z" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Add Rotation Z" NodeData={data}>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as AddRotationZAPI).nodeFields.rotation}

@@ -12,7 +12,7 @@ export function CreateSetVelocity() {
 
 function SetVelocity({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Velocity" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Velocity" NodeData={data}>
 			<Vector3Field
 				NodeId={data.node.id}
 				NodeField={(data.node as SetVelocityAPI).nodeFields.velocity}

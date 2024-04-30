@@ -13,7 +13,7 @@ export function CreateSetRotationZ() {
 
 function SetRotationZ({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Rotation Z" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Rotation Z" NodeData={data}>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as SetRotationZAPI).nodeFields.rotation}

@@ -12,7 +12,7 @@ export function CreateSetColorOverLife() {
 
 function SetColorOverLife({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Color Over Life" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Color Over Life" NodeData={data}>
 			<ColorRampField Label={"Ramp"} Ramp={(data.node as ColorOverLifeAPI).nodeFields.ramp} />
 		</Node>
 	);

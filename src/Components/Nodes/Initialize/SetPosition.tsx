@@ -13,7 +13,7 @@ export function CreateSetPosition() {
 
 function SetPosition({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Position" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Position" NodeData={data}>
 			<Vector3Field
 				NodeId={data.node.id}
 				NodeField={(data.node as SetPositionAPI).nodeFields.position}

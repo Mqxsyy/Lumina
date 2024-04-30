@@ -14,7 +14,7 @@ function SetSizeOverLife({ data }: { data: NodeData }) {
 	const graphFieldRef = useRef((data.node as SizeOverLifeAPI).nodeFields.graph);
 
 	return (
-		<Node Name="Set Size Over Life" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Size Over Life" NodeData={data}>
 			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} MaxValue={10} />
 		</Node>
 	);

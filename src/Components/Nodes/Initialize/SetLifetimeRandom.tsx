@@ -16,7 +16,7 @@ export function CreateSetLifetimeRandom() {
 
 function SetLifetimeRandom({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Lifetime Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Lifetime Random" NodeData={data}>
 			<Vector2Field
 				NodeId={data.node.id}
 				NodeField={(data.node as SetLifetimeRandomAPI).nodeFields.range}

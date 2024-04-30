@@ -16,8 +16,7 @@ function RandomNumber({ data }: { data: NodeData }) {
 	return (
 		<Node
 			Name="Random Number"
-			Id={data.node.id}
-			AnchorPoint={data.anchorPoint}
+			NodeData={data}
 			ConnectionFunction={(data.node as LogicNode<number>).Calculate}
 			ConnectioNode={data.node as LogicNode}
 		>

@@ -23,12 +23,12 @@ export interface NodeData {
 	connectionsIn: NodeConnectionIn[];
 	loadedConnectionsIn?: NodeConnectionIn[];
 	element?: TextButton;
-	elementLoaded: Event;
 	node: Node;
+	elementLoaded: Event;
 	onDestroy: Event<[NodeData]>;
 }
 
-interface NodeCollectionEntry {
+export interface NodeCollectionEntry {
 	data: NodeData;
 	create: (props: NodeData) => Roact.Element;
 }
@@ -50,8 +50,8 @@ export function AddNode(api: Node, create: (data: NodeData) => Roact.Element) {
 			anchorPoint: GetMousePositionOnCanvas(),
 			connectionsOut: [],
 			connectionsIn: [],
-			elementLoaded: new Event(),
 			node: api,
+			elementLoaded: new Event(),
 			onDestroy: new Event<[NodeData]>(),
 		},
 		create,

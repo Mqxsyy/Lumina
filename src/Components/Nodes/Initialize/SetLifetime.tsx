@@ -13,7 +13,7 @@ export function CreateSetLifetime() {
 
 function SetLifetime({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Lifetime" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Lifetime" NodeData={data}>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as SetLifetimeAPI).nodeFields.time}

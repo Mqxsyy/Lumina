@@ -1,4 +1,5 @@
 import Roact from "@rbxts/roact";
+import { CapitalizeFirstLetter } from "API/Lib";
 import {
 	SetVelocityRandom as SetVelocityRandomAPI,
 	SetVelocityRandomFieldNames,
@@ -6,7 +7,6 @@ import {
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
-import { CapitalizeFirstLetter } from "API/Lib";
 
 export function CreateSetVelocityRandom() {
 	return AddNode(new SetVelocityRandomAPI(), (data: NodeData) => {
@@ -16,7 +16,7 @@ export function CreateSetVelocityRandom() {
 
 function SetVelocityRandom({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Velocity Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Velocity Random" NodeData={data}>
 			<Vector2Field
 				NodeId={data.node.id}
 				NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeX}

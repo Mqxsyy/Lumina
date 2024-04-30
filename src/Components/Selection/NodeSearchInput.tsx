@@ -17,6 +17,7 @@ export function NodeSearchInput({ TextChanged }: Props) {
 				ClearTextOnFocus={false}
 				AutoFocus={true}
 				TextChanged={TextChanged}
+				IsAffectedByZoom={false}
 			/>
 		</Div>
 	);

@@ -13,7 +13,7 @@ export function CreateBurstSpawn() {
 
 function BurstSpawn({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Burst Spawn" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Burst Spawn" NodeData={data}>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as BurstSpawnAPI).nodeFields.amount}

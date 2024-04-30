@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
@@ -7,27 +7,28 @@ import Div from "Components/Div";
 import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
-import { GetNodeById, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, NodeData, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
-import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	Name: string;
-	Id: number;
-	AnchorPoint: Vector2;
+	NodeData: NodeData;
 	ConnectionFunction?: () => number;
 	ConnectioNode?: LogicNode;
 }
 
 export function Node({
 	Name,
-	Id,
-	AnchorPoint,
+	NodeData,
 	ConnectionFunction = undefined,
 	ConnectioNode = undefined,
 	children,
 }: Roact.PropsWithChildren<Props>) {
+	const { id } = NodeData.node;
+	const { anchorPoint } = NodeData;
+
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const canvasData = useRef(GetCanvasData());
 	const elementRef = useRef(undefined as undefined | TextButton);
@@ -38,14 +39,14 @@ export function Node({
 		const mousePosition = GetMousePosition();
 		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
 
-		SetDraggingNodeId(Id);
+		SetDraggingNodeId(id);
 
 		RunService.BindToRenderStep("MoveNode", 110, () => {
-			const nodeData = GetNodeById(Id)!;
+			const nodeData = GetNodeById(id)!;
 			const newAnchorPosition = GetMousePositionOnCanvas().add(mouseOffsetRef.current).div(zoomScale);
 
 			if (nodeData.data.anchorPoint !== newAnchorPosition) {
-				UpdateNodeData(Id, (data) => {
+				UpdateNodeData(id, (data) => {
 					data.anchorPoint = newAnchorPosition;
 					return data;
 				});
@@ -53,20 +54,15 @@ export function Node({
 		});
 	};
 
-	const onMouseButton1Up = () => {
-		SetDraggingNodeId(undefined);
-		RunService.UnbindFromRenderStep("MoveNode");
-	};
-
 	const onMouseButton2Down = () => {
-		RemoveNode(Id);
+		RemoveNode(id);
 	};
 
 	const getPosition = () => {
 		const nodeHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
-		const offsetFromCenter = AnchorPoint.mul(zoomScale).add(
-			new Vector2(NODE_WIDTH * 0.5 * zoomScale, nodeHeight * 0.5),
-		);
+		const offsetFromCenter = anchorPoint
+			.mul(zoomScale)
+			.add(new Vector2(NODE_WIDTH * 0.5 * zoomScale, nodeHeight * 0.5));
 		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
 		const position = canvasPosition.add(offsetFromCenter);
 		return UDim2.fromOffset(position.X, position.Y);
@@ -74,7 +70,7 @@ export function Node({
 
 	useEffect(() => {
 		if (elementRef.current === undefined) return;
-		SetNodeElement(Id, elementRef.current);
+		SetNodeElement(id, elementRef.current);
 	}, [elementRef.current]);
 
 	return (
@@ -82,7 +78,7 @@ export function Node({
 			Size={UDim2.fromOffset(NODE_WIDTH * zoomScale, 0)}
 			AutomaticSize={"Y"}
 			AnchorPoint={new Vector2(0.5, 0.5)}
-			Position={getPosition()}
+			Position={NodeData.node.connectedSystemId !== undefined ? UDim2.fromScale(0, 0) : getPosition()}
 			BackgroundColor3={StyleColors.Primary}
 			AutoButtonColor={false}
 			Text={""}
@@ -94,11 +90,6 @@ export function Node({
 						onMouseButton1Down(element);
 					} else if (inputObject.UserInputType === Enum.UserInputType.MouseButton2) {
 						onMouseButton2Down();
-					}
-				},
-				InputEnded: (_, inputObject) => {
-					if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
-						onMouseButton1Up();
 					}
 				},
 			}}
@@ -118,7 +109,7 @@ export function Node({
 					<ConnectionPointOut
 						AnchorPoint={new Vector2(1, 0.5)}
 						Position={UDim2.fromScale(1, 0.5)}
-						NodeId={Id}
+						NodeId={id}
 						BindFunction={ConnectionFunction}
 					/>
 				)}

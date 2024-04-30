@@ -2,15 +2,17 @@ import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";
+import { SetDraggingNodeId } from "Services/DraggingService";
 import { StyleColors } from "Style";
 import { GetMousePosition, WidgetSizeChanged } from "Windows/MainWindow";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { GetAllSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
 import { GetAllNodes, NodesChanged } from "../Services/NodesService";
-import { Controls } from "./Controls/Controls";
-import { NodeSelection } from "./Selection/NodeSelection";
 import { BasicTextLabel } from "./Basic/BasicTextLabel";
+import { Controls } from "./Controls/Controls";
+import Div from "./Div";
+import { NodeSelection } from "./Selection/NodeSelection";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
 // OPTIMIZE: moving one thing makes everything re-render
@@ -244,6 +246,7 @@ export function App() {
 				return nodeSystem.create(nodeSystem.data);
 			})}
 			{GetAllNodes().map((node) => {
+				if (node.data.node.connectedSystemId !== undefined) return undefined;
 				return node.create(node.data);
 			})}
 			{GetAllConnections().map((connection) => {
@@ -260,6 +263,14 @@ export function App() {
 				Size={UDim2.fromOffset(50, 20)}
 				Text={`${math.round(GetZoomScale() * 100)}%`}
 				IsAffectedByZoom={false}
+			/>
+			<Div
+				key={"ClickDetector"}
+				ZIndex={2}
+				onMouseButton1Up={() => {
+					SetDraggingNodeId(undefined);
+					RunService.UnbindFromRenderStep("MoveNode");
+				}}
 			/>
 		</>
 	);

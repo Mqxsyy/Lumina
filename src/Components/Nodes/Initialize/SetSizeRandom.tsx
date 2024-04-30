@@ -13,7 +13,7 @@ export function CreateSetSizeRandom() {
 
 function SetSizeRandom({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Size Random" Id={data.node.id} AnchorPoint={data.anchorPoint}>
+		<Node Name="Set Size Random" NodeData={data}>
 			<Vector2Field
 				NodeId={data.node.id}
 				NodeField={(data.node as SetSizeRandomAPI).nodeFields.range}
