@@ -29,12 +29,14 @@ export default function NumberField({
 	AllowConnection = true,
 	OverrideSetNumber = undefined,
 }: Props) {
+	const zoomScale = GetZoomScale();
+
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 			<uilistlayout
 				FillDirection="Horizontal"
 				VerticalAlignment={"Center"}
-				Padding={new UDim(0, 5 * GetZoomScale())}
+				Padding={new UDim(0, 5 * zoomScale)}
 			/>
 
 			{AllowConnection && (
@@ -45,7 +47,7 @@ export default function NumberField({
 					UnbindFunction={NodeField.UnbindNumber}
 				/>
 			)}
-			<Div Size={new UDim2(1, AllowConnection ? -19 * GetZoomScale() : 0, 0, 0)} AutomaticSize="Y">
+			<Div Size={new UDim2(1, AllowConnection ? -19 * zoomScale : 0, 0, 0)} AutomaticSize="Y">
 				<BasicTextLabel Size={new UDim2(TextToInputRatio, 0, 0, 20)} Text={Label} TextYAlignment="Bottom" />
 				<NumberInput
 					AnchorPoint={new Vector2(1, 0)}

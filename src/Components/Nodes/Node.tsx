@@ -35,9 +35,6 @@ export function Node({
 
 	const zoomScale = GetZoomScale();
 
-	print(Name);
-	print(NodeData);
-
 	const onMouseButton1Down = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
 		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);

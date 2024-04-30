@@ -5,6 +5,7 @@ import Div from "Components/Div";
 import { LoadGraph } from "Components/Windows/Line/LineGraph";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	Label: string;
@@ -15,6 +16,8 @@ interface Props {
 
 export function LineGraphField({ Label, TextToInputRatio = 0.5, Graph, MaxValue = 1 }: Props) {
 	const windowRef = useRef<DockWidgetPluginGui>();
+
+	const zoomScale = GetZoomScale();
 
 	useEffect(() => {
 		windowRef.current = GetWindow(Windows.ValueGraph)!;
@@ -31,14 +34,14 @@ export function LineGraphField({ Label, TextToInputRatio = 0.5, Graph, MaxValue 
 			<Div
 				AnchorPoint={new Vector2(1, 0)}
 				Position={UDim2.fromScale(1, 0)}
-				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20)}
+				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20 * zoomScale)}
 				BackgroundColor={StyleColors.Primary}
 				onMouseButton1Down={OnMouseButton1Down}
 			>
 				<uipadding PaddingRight={new UDim(0, 4)} PaddingTop={new UDim(0, 4)} />
 
 				<Div>
-					<uistroke Thickness={4} Color={StyleColors.Secondary} />
+					<uistroke Thickness={4 * zoomScale} Color={StyleColors.Secondary} />
 				</Div>
 			</Div>
 		</Div>

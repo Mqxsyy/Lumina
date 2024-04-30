@@ -5,6 +5,7 @@ import Div from "Components/Div";
 import { LoadColorRampAPI } from "Components/Windows/Ramps/ColorRamp";
 import { StyleColors, StyleProperties } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	Label: string;
@@ -15,6 +16,8 @@ interface Props {
 export function ColorRampField({ Label, TextToInputRatio = 0.5, Ramp }: Props) {
 	const [forceRender, setForceRender] = useState(0);
 	const windowRef = useRef<DockWidgetPluginGui>();
+
+	const zoomScale = GetZoomScale();
 
 	useEffect(() => {
 		windowRef.current = GetWindow(Windows.ColorRamp)!;
@@ -49,7 +52,7 @@ export function ColorRampField({ Label, TextToInputRatio = 0.5, Ramp }: Props) {
 			<Div
 				AnchorPoint={new Vector2(1, 0)}
 				Position={UDim2.fromScale(1, 0)}
-				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20)}
+				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20 * zoomScale)}
 				BackgroundColor={StyleColors.FullWhite}
 				onMouseButton1Down={OnMouseButton1Down}
 			>

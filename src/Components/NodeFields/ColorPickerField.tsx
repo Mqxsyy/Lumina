@@ -5,6 +5,7 @@ import Div from "Components/Div";
 import { LoadColorPickerAPI } from "Components/Windows/Pickers.tsx/ColorPicker";
 import { StyleProperties } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	Label: string;
@@ -15,6 +16,8 @@ interface Props {
 export function ColorPickerField({ Label, TextToInputRatio = 0.5, ColorPicker }: Props) {
 	const windowRef = useRef<DockWidgetPluginGui>();
 	const [_, setForceRender] = useState(0);
+
+	const zoomScale = GetZoomScale();
 
 	useEffect(() => {
 		windowRef.current = GetWindow(Windows.ColorPicker)!;
@@ -37,7 +40,7 @@ export function ColorPickerField({ Label, TextToInputRatio = 0.5, ColorPicker }:
 			<Div
 				AnchorPoint={new Vector2(1, 0)}
 				Position={UDim2.fromScale(1, 0)}
-				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20)}
+				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20 * zoomScale)}
 				BackgroundColor={ColorPicker.GetColor()}
 				onMouseButton1Down={OnMouseButton1Down}
 			>

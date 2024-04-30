@@ -7,6 +7,7 @@ import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { Node } from "../Node";
 import Div from "Components/Div";
+import { GetZoomScale } from "ZoomScale";
 
 export function CreateParticlePlane() {
 	return AddNode(new ParticlePlaneAPI(500), (data: NodeData) => {
@@ -15,6 +16,8 @@ export function CreateParticlePlane() {
 }
 
 function ParticlePlane({ data }: { data: NodeData }) {
+	const zoomScale = GetZoomScale();
+
 	return (
 		<Node Name="Particle Plane" NodeData={data}>
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Orientation - Facing camera"} />
@@ -31,7 +34,7 @@ function ParticlePlane({ data }: { data: NodeData }) {
 
 				<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Sprite Sheet"} />
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-					<uilistlayout Padding={new UDim(0, 5)} />
+					<uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
 					<uipadding PaddingLeft={new UDim(0, 10)} />
 
 					<Vector2Field

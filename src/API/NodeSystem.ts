@@ -15,11 +15,11 @@ import { BurstSpawnName } from "./Nodes/Spawn/BurstSpawn";
 // easily lags in studio, doesn't lag too much in game... yay...
 // most likely probs something to do with having a UI connected idk, maybe sends more data or smthing
 
-if (!RunService.IsStudio()) {
-	print(
-		"This game utilizes a free custom particle system and plugin called 'LunarVFX' to easily create great looking visual effects. Plugin can be found in the toolbox or creator store for absolutely FREE.",
-	);
-}
+// if (!RunService.IsStudio()) {
+// 	print(
+// 		"This game utilizes a free custom particle system and plugin called 'LunarVFX' to easily create great looking visual effects. Plugin can be found in the toolbox or creator store for absolutely FREE.",
+// 	);
+// }
 
 export class NodeSystem {
 	ParticleIdPool = new IdPool();
