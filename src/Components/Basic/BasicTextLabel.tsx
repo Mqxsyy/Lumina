@@ -29,15 +29,7 @@ export function BasicTextLabel({
 	IsAffectedByZoom = true,
 	Text,
 }: Props) {
-	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
-	useEffect(() => {
-		if (!IsAffectedByZoom) return;
-
-		ZoomScaleChanged.Connect((zoomScale) => {
-			setZoomScale(zoomScale as number);
-		});
-	}, []);
+	const zoomScale = GetZoomScale();
 
 	return (
 		<textlabel

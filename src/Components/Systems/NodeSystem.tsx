@@ -6,7 +6,7 @@ import { GetCanvasData } from "Services/CanvasService";
 import { StyleColors } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { GetSystemById, NodeSystemData, RemoveNodeSystem, UpdateSystemData } from "../../Services/NodeSystemService";
+import { NodeSystemData, RemoveNodeSystem, UpdateSystemData } from "../../Services/NodeSystemService";
 import Div from "../Div";
 import {
 	SYSTEM_BORDER_THICKNESS,
@@ -17,12 +17,14 @@ import {
 } from "../SizeConfig";
 import NodeGroup from "./NodeGroup";
 
+// FIXME: some weird bug with deleting and overriding node position
+
 interface Props {
 	data: NodeSystemData;
 }
 
 export default function NodeSystem({ data }: Props) {
-	const [zoomScale, setZoomScale] = useState(GetZoomScale());
+	const zoomScale = GetZoomScale();
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const systemFrameRef = useRef(undefined as undefined | TextButton);
@@ -36,7 +38,7 @@ export default function NodeSystem({ data }: Props) {
 
 		RunService.BindToRenderStep("MoveSystem", Enum.RenderPriority.Input.Value, () => {
 			const mousePosition = GetMousePositionOnCanvas();
-			const newAnchorPoint = mousePosition.add(mouseOffsetRef.current);
+			const newAnchorPoint = mousePosition.add(mouseOffsetRef.current).div(zoomScale);
 
 			if (data.anchorPoint !== newAnchorPoint) {
 				UpdateSystemData(data.id, (systemData) => {
@@ -62,19 +64,19 @@ export default function NodeSystem({ data }: Props) {
 	};
 
 	const getPosition = () => {
-		const offsetFromCenter = data.anchorPoint.add(new Vector2(SYSTEM_WIDTH * 0.5, 0));
+		const offsetFromCenter = data.anchorPoint.mul(zoomScale).add(new Vector2(SYSTEM_WIDTH * 0.5 * zoomScale, 0));
 		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
 		const position = canvasPosition.add(offsetFromCenter);
 		return UDim2.fromOffset(position.X, position.Y);
 	};
 
 	useEffect(() => {
-		const zoomScaleChangedConnection = ZoomScaleChanged.Connect((zoomScale) => {
-			setZoomScale(zoomScale as number);
+		const zoomChangedConnection = ZoomScaleChanged.Connect(() => {
+			groupMoveBinds.current.forEach((fn) => fn(data.id));
 		});
 
 		return () => {
-			zoomScaleChangedConnection.Disconnect();
+			zoomChangedConnection.Disconnect();
 		};
 	}, []);
 

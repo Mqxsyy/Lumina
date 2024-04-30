@@ -10,6 +10,7 @@ import { GetAllSystems, NodeSystemsChanged } from "../Services/NodeSystemService
 import { GetAllNodes, NodesChanged } from "../Services/NodesService";
 import { Controls } from "./Controls/Controls";
 import { NodeSelection } from "./Selection/NodeSelection";
+import { BasicTextLabel } from "./Basic/BasicTextLabel";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
 // OPTIMIZE: moving one thing makes everything re-render
@@ -17,7 +18,7 @@ import { NodeSelection } from "./Selection/NodeSelection";
 
 export function App() {
 	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.LunarVFX)!.AbsoluteSize);
-	const [zoomScale, setZoomScale] = useState(GetZoomScale());
+	const [zoomScale, setZoomScale] = useState(1);
 	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
 	const [_, setForceRender] = useState(0);
 
@@ -71,15 +72,17 @@ export function App() {
 	};
 
 	useEffect(() => {
+		UpdateCanvasData((canvasData) => {
+			canvasData.Position = UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5);
+			canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y);
+			return canvasData;
+		});
+
 		const widgetSizeChangedConnection = WidgetSizeChanged.Connect((newSize) => {
 			setWidgetSize(newSize as Vector2);
 
 			UpdateCanvasData((canvasData) => {
 				canvasData.Position = UDim2.fromOffset(newSize.X * 0.5, newSize.Y * 0.5);
-				return canvasData;
-			});
-
-			UpdateCanvasData((canvasData) => {
 				canvasData.Size = UDim2.fromOffset(newSize.X, newSize.Y);
 				return canvasData;
 			});
@@ -250,6 +253,14 @@ export function App() {
 				<NodeSelection key="NodeSelection" Position={displayNodeSelection} />
 			)}
 			<Controls key={"Controls"} />
+			<BasicTextLabel
+				key={"ZoomLabel"}
+				AnchorPoint={new Vector2(0, 1)}
+				Position={UDim2.fromScale(0, 1)}
+				Size={UDim2.fromOffset(50, 20)}
+				Text={`${math.round(GetZoomScale() * 100)}%`}
+				IsAffectedByZoom={false}
+			/>
 		</>
 	);
 }

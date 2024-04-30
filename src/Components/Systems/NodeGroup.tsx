@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useRef } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
@@ -6,7 +6,7 @@ import { GetDraggingNodeId, NodeDraggingEnded, NodeDraggingStarted } from "Servi
 import { BindNodeGroupFunction, NodeSystemData } from "Services/NodeSystemService";
 import { GetNodeById, RemoveNode, UpdateNodeData } from "Services/NodesService";
 import { StyleColors } from "Style";
-import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
+import { GetZoomScale } from "ZoomScale";
 import Div from "../Div";
 import {
 	GROUP_BORDER_THICKNESS,
@@ -44,16 +44,15 @@ export default function NodeGroup({
 	BindSystemMove,
 	UpdateGroupSize,
 }: Props) {
-	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
 	const containerSizeYExtraRef = useRef(0);
-
 	const childNodesIdRef = useRef([] as number[]);
 	const nodeDestroyConnectionsRef = useRef<{ [key: number]: RBXScriptConnection }>({});
 	const isHovering = useRef(false);
 	const isDestroyingRef = useRef(false);
 	const nodeDragStartedConnectionRef = useRef<RBXScriptConnection>();
 	const nodeDragEndedConnectionRef = useRef<RBXScriptConnection>();
+
+	const zoomScale = GetZoomScale();
 
 	const overrideNodePosition = (id: number) => {
 		const xOffset = (SYSTEM_WIDTH - NODE_WIDTH) * 0.5;
@@ -186,13 +185,13 @@ export default function NodeGroup({
 		// absolute size addition, ew
 		// but can't figure out a better way without update delays
 		let yOffset =
-			SYSTEM_HEADER_HEIGHT +
+			SYSTEM_HEADER_HEIGHT * GetZoomScale() +
 			SYSTEM_PADDING +
 			SYSTEM_LIST_PADDING +
 			SYSTEM_BORDER_THICKNESS +
 			GROUP_BORDER_THICKNESS +
 			GROUP_PADDING +
-			GROUP_HEADER_HEIGHT +
+			GROUP_HEADER_HEIGHT * GetZoomScale() +
 			GROUP_LIST_PADDING;
 
 		for (let i = 0; i < NodeGroup; i++) {
@@ -269,10 +268,6 @@ export default function NodeGroup({
 			}
 		});
 
-		const zoomConnection = ZoomScaleChanged.Connect((zoomScale) => {
-			setZoomScale(zoomScale as number);
-		});
-
 		const destroyConnection = NodeSystem.onDestroy.Connect(() => {
 			destroyConnection.Disconnect();
 			isDestroyingRef.current = true;
@@ -291,7 +286,6 @@ export default function NodeGroup({
 
 		return () => {
 			dragConnection.Disconnect();
-			zoomConnection.Disconnect();
 			destroyConnection.Disconnect();
 		};
 	}, []);

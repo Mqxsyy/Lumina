@@ -7,6 +7,7 @@ import {
 } from "Services/ConnectionsService";
 import { GetNodeById, NodeConnectionOut, UpdateNodeData } from "Services/NodesService";
 import ConnectionPoint from "./ConnectionPoint";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	AnchorPoint?: Vector2;
@@ -20,7 +21,7 @@ export default function ConnectionPointOut({
 	NodeId,
 	AnchorPoint = new Vector2(0, 0),
 	Position = UDim2.fromScale(0, 0),
-	Size = UDim2.fromOffset(14, 14),
+	Size = UDim2.fromOffset(14 * GetZoomScale(), 14 * GetZoomScale()),
 	BindFunction,
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);

@@ -6,8 +6,8 @@ import { GetWindow, InitializeWindows, Windows } from "Windows/WindowSevice";
 
 // TODO: add button to reset all windows - simply reinitializing everything does not work
 
-const toolbar = plugin.CreateToolbar("LunarVFX");
-const mainButton = toolbar.CreateButton("Open Graph", "Opens Graph", "rbxassetid://7982947463");
+const toolbar = plugin.CreateToolbar("LunarVFX 0.0.1");
+const mainButton = toolbar.CreateButton("LunarVFX", "Opens VFX Graph", "rbxassetid://17315034818"); // Border 17315079935 ; White 17315034818
 
 InitializeWindows(plugin); // widgets are bloody annoying to work with
 const window = GetWindow(Windows.LunarVFX)!;

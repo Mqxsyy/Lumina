@@ -28,12 +28,11 @@ export function Node({
 	ConnectioNode = undefined,
 	children,
 }: Roact.PropsWithChildren<Props>) {
-	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const canvasData = useRef(GetCanvasData());
-
 	const elementRef = useRef(undefined as undefined | TextButton);
+
+	const zoomScale = GetZoomScale();
 
 	const onMouseButton1Down = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
@@ -43,7 +42,7 @@ export function Node({
 
 		RunService.BindToRenderStep("MoveNode", 110, () => {
 			const nodeData = GetNodeById(Id)!;
-			const newAnchorPosition = GetMousePositionOnCanvas().add(mouseOffsetRef.current);
+			const newAnchorPosition = GetMousePositionOnCanvas().add(mouseOffsetRef.current).div(zoomScale);
 
 			if (nodeData.data.anchorPoint !== newAnchorPosition) {
 				UpdateNodeData(Id, (data) => {
@@ -65,21 +64,13 @@ export function Node({
 
 	const getPosition = () => {
 		const nodeHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
-		const offsetFromCenter = AnchorPoint.add(new Vector2(NODE_WIDTH * 0.5, nodeHeight * 0.5));
+		const offsetFromCenter = AnchorPoint.mul(zoomScale).add(
+			new Vector2(NODE_WIDTH * 0.5 * zoomScale, nodeHeight * 0.5),
+		);
 		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
 		const position = canvasPosition.add(offsetFromCenter);
 		return UDim2.fromOffset(position.X, position.Y);
 	};
-
-	useEffect(() => {
-		const zoomScaleChangedConnection = ZoomScaleChanged.Connect((zoomScale) => {
-			setZoomScale(zoomScale as number);
-		});
-
-		return () => {
-			zoomScaleChangedConnection.Disconnect();
-		};
-	}, []);
 
 	useEffect(() => {
 		if (elementRef.current === undefined) return;
@@ -134,7 +125,7 @@ export function Node({
 			</Div>
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
-				<uipadding PaddingLeft={new UDim(0, 10)} />
+				<uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />
 
 				{children}
 			</Div>

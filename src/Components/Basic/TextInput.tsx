@@ -41,10 +41,10 @@ export function TextInput({
 	LostFocus = undefined,
 	GetRef = undefined,
 }: Props) {
-	const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
 	const textBoxRef = useRef<TextBox>();
 	const textLabelRef = useRef<TextLabel>();
+
+	const zoomScale = IsAffectedByZoom ? GetZoomScale() : 1;
 
 	const getText = () => {
 		if (typeIs(Text, "function")) {
@@ -53,14 +53,6 @@ export function TextInput({
 
 		return Text;
 	};
-
-	useEffect(() => {
-		if (!IsAffectedByZoom) return;
-
-		ZoomScaleChanged.Connect((zoomScale) => {
-			setZoomScale(zoomScale as number);
-		});
-	}, []);
 
 	useEffect(() => {
 		if (textBoxRef.current === undefined) return;

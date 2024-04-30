@@ -4,6 +4,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	NodeId: number;
@@ -30,7 +31,11 @@ export default function NumberField({
 }: Props) {
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-			<uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 5)} />
+			<uilistlayout
+				FillDirection="Horizontal"
+				VerticalAlignment={"Center"}
+				Padding={new UDim(0, 5 * GetZoomScale())}
+			/>
 
 			{AllowConnection && (
 				<ConnectionPointIn
@@ -40,7 +45,7 @@ export default function NumberField({
 					UnbindFunction={NodeField.UnbindNumber}
 				/>
 			)}
-			<Div Size={new UDim2(1, AllowConnection ? -19 : 0, 0, 0)} AutomaticSize="Y">
+			<Div Size={new UDim2(1, AllowConnection ? -19 * GetZoomScale() : 0, 0, 0)} AutomaticSize="Y">
 				<BasicTextLabel Size={new UDim2(TextToInputRatio, 0, 0, 20)} Text={Label} TextYAlignment="Bottom" />
 				<NumberInput
 					AnchorPoint={new Vector2(1, 0)}
