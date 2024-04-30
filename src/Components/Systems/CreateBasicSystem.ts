@@ -9,36 +9,37 @@ import { CreateSetVelocity } from "Lists/NodesListNodeBarrel";
 import { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
 
 export function CreateBasicSystem() {
-	const systemData = CreateEmptySystem();
+	const system = CreateEmptySystem();
+	const systemData = system.data;
 
 	systemData.finishedBindingGroups.Connect(() => {
 		const constantSpawn = CreateConstantSpawn();
 		constantSpawn.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawn.node.id);
+			systemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawn.data.node.id);
 		});
 
 		const setLifetime = CreateSetLifetime();
 		setLifetime.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetime.node.id);
+			systemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetime.data.node.id);
 		});
 
 		const setPosition = CreateSetPosition();
-		(setPosition.node as SetPosition).nodeFields.position.SetY(5);
+		(setPosition.data.node as SetPosition).nodeFields.position.SetY(5);
 		setPosition.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Initialize]!(setPosition.node.id);
+			systemData.addToNodeGroup[NodeGroups.Initialize]!(setPosition.data.node.id);
 		});
 
 		const setVelocity = CreateSetVelocity();
-		(setVelocity.node as SetVelocity).nodeFields.velocity.SetY(5);
+		(setVelocity.data.node as SetVelocity).nodeFields.velocity.SetY(5);
 		setVelocity.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocity.node.id);
+			systemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocity.data.node.id);
 		});
 
 		const particlePlane = CreateParticlePlane();
 		particlePlane.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.node.id);
+			systemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
 		});
 	});
 
-	return systemData;
+	return system;
 }

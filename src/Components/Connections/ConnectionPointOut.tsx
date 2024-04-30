@@ -25,14 +25,14 @@ export default function ConnectionPointOut({
 	BindFunction,
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
-	const nodeDataRef = useRef(GetNodeById(NodeId)!.data);
+	const nodeRef = useRef(GetNodeById(NodeId)!);
 	const elementRef = useRef<TextButton>();
 
 	const createConnection = (loadedId?: number) => {
 		if (elementRef.current === undefined) return;
-		if (nodeDataRef.current.element === undefined) return;
+		if (nodeRef.current.element === undefined) return;
 
-		const offset = elementRef.current.AbsolutePosition.sub(nodeDataRef.current.element!.AbsolutePosition).add(
+		const offset = elementRef.current.AbsolutePosition.sub(nodeRef.current.element!.AbsolutePosition).add(
 			elementRef.current.AbsoluteSize.mul(0.5),
 		);
 
@@ -82,7 +82,7 @@ export default function ConnectionPointOut({
 	};
 
 	useEffect(() => {
-		const destroyConnection = nodeDataRef.current.onDestroy.Connect(() => {
+		const destroyConnection = nodeRef.current.data.onDestroy.Connect(() => {
 			destroyConnection.Disconnect();
 			if (connectionId !== -1) {
 				UnbindMovingConnection();
@@ -93,21 +93,21 @@ export default function ConnectionPointOut({
 		return () => {
 			destroyConnection.Disconnect();
 		};
-	}, [nodeDataRef.current.onDestroy, connectionId]);
+	}, [nodeRef.current.data.onDestroy, connectionId]);
 
 	useEffect(() => {
 		if (elementRef.current === undefined) return;
-		if (nodeDataRef.current.element === undefined) return;
+		if (nodeRef.current.element === undefined) return;
 
-		if (nodeDataRef.current.loadedConnectionsOut === undefined) return;
-		if (nodeDataRef.current.loadedConnectionsOut.size() === 0) return;
+		if (nodeRef.current.data.loadedConnectionsOut === undefined) return;
+		if (nodeRef.current.data.loadedConnectionsOut.size() === 0) return;
 
-		nodeDataRef.current.loadedConnectionsOut.forEach((connection) => {
+		nodeRef.current.data.loadedConnectionsOut.forEach((connection) => {
 			createConnection(connection.id);
 		});
 
-		nodeDataRef.current.loadedConnectionsOut = undefined;
-	}, [elementRef.current, nodeDataRef.current.element]);
+		nodeRef.current.data.loadedConnectionsOut = undefined;
+	}, [elementRef.current, nodeRef.current.element]);
 
 	return (
 		<ConnectionPoint

@@ -3,7 +3,13 @@ import { API_VERSION } from "API/ExportAPI";
 import { NodeGroups } from "API/NodeGroup";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { NodeList } from "Lists/NodesList";
-import { NodeConnectionIn, NodeConnectionOut, NodeData, UpdateNodeData } from "Services/NodesService";
+import {
+	NodeCollectionEntry,
+	NodeConnectionIn,
+	NodeConnectionOut,
+	NodeData,
+	UpdateNodeData,
+} from "Services/NodesService";
 import { SaveData, SerializedField, SerializedNode } from "./SaveData";
 
 // bug: loading connections twice breaks something
@@ -53,7 +59,8 @@ export function LoadFromFile() {
 	// systems & system nodes
 	for (const system of data.systems) {
 		const anchorPoint = new Vector2(system.anchorPoint.x, system.anchorPoint.y);
-		const systemData = CreateEmptySystem(anchorPoint);
+		const systemCollectionEntry = CreateEmptySystem(anchorPoint);
+		const systemData = systemCollectionEntry.data;
 
 		for (const [group, nodes] of pairs(system.groups)) {
 			let nodeGroup = NodeGroups.Spawn;
@@ -67,27 +74,27 @@ export function LoadFromFile() {
 			}
 
 			for (const node of nodes) {
-				const nodeData = CreateNode(nodeGroup, node.nodeName, node.fields);
-				cachedNodes.push({ SerializedNode: node, NodeData: nodeData });
+				const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields);
+				cachedNodes.push({ SerializedNode: node, NodeData: nodeCollectionEntry.data });
 
 				// OPTIMIZE: janky
 				if (systemData.addToNodeGroup[nodeGroup] === undefined) {
 					systemData.finishedBindingGroups.Connect(() => {
-						if (nodeData.element === undefined) {
-							nodeData.elementLoaded.Connect(() => {
-								systemData.addToNodeGroup[nodeGroup]!(nodeData.node.id);
+						if (nodeCollectionEntry.element === undefined) {
+							nodeCollectionEntry.elementLoaded.Connect(() => {
+								systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
 							});
 						} else {
-							systemData.addToNodeGroup[nodeGroup]!(nodeData.node.id);
+							systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
 						}
 					});
 				} else {
-					if (nodeData.element === undefined) {
-						nodeData.elementLoaded.Connect(() => {
-							systemData.addToNodeGroup[nodeGroup]!(nodeData.node.id);
+					if (nodeCollectionEntry.element === undefined) {
+						nodeCollectionEntry.elementLoaded.Connect(() => {
+							systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
 						});
 					} else {
-						systemData.addToNodeGroup[nodeGroup]!(nodeData.node.id);
+						systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
 					}
 				}
 			}
@@ -96,10 +103,10 @@ export function LoadFromFile() {
 
 	// floating nodes
 	for (const node of data.floatingNodes) {
-		const nodeData = CreateNode(node.nodeGroup, node.nodeName, node.fields);
-		cachedNodes.push({ SerializedNode: node, NodeData: nodeData });
+		const nodeCollectionEntry = CreateNode(node.nodeGroup, node.nodeName, node.fields);
+		cachedNodes.push({ SerializedNode: node, NodeData: nodeCollectionEntry.data });
 
-		UpdateNodeData(nodeData.node.id, (data) => {
+		UpdateNodeData(nodeCollectionEntry.data.node.id, (data) => {
 			data.anchorPoint = new Vector2(node.anchorPoint.x, node.anchorPoint.y);
 			return data;
 		});
@@ -147,12 +154,12 @@ export function LoadFromFile() {
 	}
 }
 
-function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeData {
-	const nodeData = NodeList[group][nodeName].create!() as NodeData;
+function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeCollectionEntry {
+	const node = NodeList[group][nodeName].create!() as NodeCollectionEntry;
 
 	for (const field of fields) {
-		nodeData.node.nodeFields[field.name].ReadSerializedData(field.data);
+		node.data.node.nodeFields[field.name].ReadSerializedData(field.data);
 	}
 
-	return nodeData;
+	return node;
 }

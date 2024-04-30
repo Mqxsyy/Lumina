@@ -22,14 +22,14 @@ export interface NodeData {
 	loadedConnectionsOut?: NodeConnectionOut[];
 	connectionsIn: NodeConnectionIn[];
 	loadedConnectionsIn?: NodeConnectionIn[];
-	element?: TextButton;
 	node: Node;
-	elementLoaded: Event;
 	onDestroy: Event<[NodeData]>;
 }
 
 export interface NodeCollectionEntry {
 	data: NodeData;
+	element?: TextButton;
+	elementLoaded: Event;
 	create: (props: NodeData) => Roact.Element;
 }
 
@@ -51,16 +51,16 @@ export function AddNode(api: Node, create: (data: NodeData) => Roact.Element) {
 			connectionsOut: [],
 			connectionsIn: [],
 			node: api,
-			elementLoaded: new Event(),
 			onDestroy: new Event<[NodeData]>(),
 		},
+		elementLoaded: new Event(),
 		create,
 	};
 
 	NodeCollection.push(collectionEntry);
 	NodesChanged.Fire();
 
-	return collectionEntry.data;
+	return collectionEntry;
 }
 
 export function UpdateNodeData(id: number, callback: (data: NodeData) => NodeData) {
@@ -78,10 +78,10 @@ export function SetNodeElement(id: number, element: TextButton) {
 	const node = GetNodeById(id);
 
 	if (node !== undefined) {
-		if (node.data.element !== undefined) return;
+		if (node.element !== undefined) return;
 
-		node.data.element = element;
-		node.data.elementLoaded.Fire();
+		node.element = element;
+		node.elementLoaded.Fire();
 		return;
 	}
 

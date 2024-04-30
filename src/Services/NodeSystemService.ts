@@ -22,7 +22,7 @@ export interface NodeSystemData {
 	onDestroy: Event<[NodeSystemData]>;
 }
 
-interface NodeSystemCollectioEntry {
+export interface NodeSystemCollectioEntry {
 	data: NodeSystemData;
 	create: (props: NodeSystemData) => Roact.Element;
 }
@@ -65,7 +65,7 @@ export function AddSystem(api: NodeSystem, create: (data: NodeSystemData) => Roa
 	NodeSystemCollection.push(collectionEntry);
 	NodeSystemsChanged.Fire();
 
-	return collectionEntry.data;
+	return collectionEntry;
 }
 
 export function BindNodeGroupFunction(id: number, group: NodeGroups, fn: (id: number) => void) {

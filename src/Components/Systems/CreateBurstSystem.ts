@@ -9,39 +9,40 @@ import { CreateSetLifetimeRandom, CreateSetVelocityRandom } from "Lists/NodesLis
 import { CreateEmptySystem } from "./CreateEmptySystem";
 
 export function CreateBurstSystem() {
-	const systemData = CreateEmptySystem();
+	const system = CreateEmptySystem();
+	const systemData = system.data;
 
 	systemData.finishedBindingGroups.Connect(() => {
 		const burstSpawn = CreateBurstSpawn();
 		burstSpawn.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Spawn]!(burstSpawn.node.id);
+			systemData.addToNodeGroup[NodeGroups.Spawn]!(burstSpawn.data.node.id);
 		});
 
 		const setLifetimeRandom = CreateSetLifetimeRandom();
-		(setLifetimeRandom.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.4, 0.8);
+		(setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.4, 0.8);
 		setLifetimeRandom.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.node.id);
+			systemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.data.node.id);
 		});
 
 		const positionNode = CreateSetPosition();
-		(positionNode.node as SetPosition).nodeFields.position.SetY(5);
+		(positionNode.data.node as SetPosition).nodeFields.position.SetY(5);
 		positionNode.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Initialize]!(positionNode.node.id);
+			systemData.addToNodeGroup[NodeGroups.Initialize]!(positionNode.data.node.id);
 		});
 
 		const setVelocityRandom = CreateSetVelocityRandom();
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-5, 5);
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(-5, 5);
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-5, 5);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-5, 5);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(-5, 5);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-5, 5);
 		setVelocityRandom.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.node.id);
+			systemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.data.node.id);
 		});
 
 		const particlePlane = CreateParticlePlane();
 		particlePlane.elementLoaded.Connect(() => {
-			systemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.node.id);
+			systemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
 		});
 	});
 
-	return systemData;
+	return system;
 }

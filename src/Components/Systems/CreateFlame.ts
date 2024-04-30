@@ -31,201 +31,204 @@ import { CreateEmptySystem } from "./CreateEmptySystem";
 
 export function CreateFlameSystem() {
 	const flameSystem = CreateEmptySystem();
-	flameSystem.anchorPoint = new Vector2(-325, 0);
-	flameSystem.finishedBindingGroups.Connect(() => {
+	const flameSystemData = flameSystem.data;
+
+	flameSystemData.anchorPoint = new Vector2(-325, 0);
+	flameSystemData.finishedBindingGroups.Connect(() => {
 		// spawn
 		const constantSpawn = CreateConstantSpawn();
-		(constantSpawn.node as ConstantSpawn).nodeFields.rate.SetNumber(60);
+		(constantSpawn.data.node as ConstantSpawn).nodeFields.rate.SetNumber(60);
 		constantSpawn.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Spawn]!(constantSpawn.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawn.data.node.id);
 		});
 
 		// init
 		const setLifetimeRandom = CreateSetLifetimeRandom();
-		(setLifetimeRandom.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.8, 1.2);
+		(setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.8, 1.2);
 		setLifetimeRandom.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.data.node.id);
 		});
 
 		const setPosition = CreateSetPosition();
-		(setPosition.node as SetPosition).nodeFields.position.SetY(5);
+		(setPosition.data.node as SetPosition).nodeFields.position.SetY(5);
 		setPosition.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Initialize]!(setPosition.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setPosition.data.node.id);
 		});
 
 		const setSizeRandom = CreateSetSizeRandom();
-		(setSizeRandom.node as SetSizeRandom).nodeFields.range.SetVector2(1, 2);
+		(setSizeRandom.data.node as SetSizeRandom).nodeFields.range.SetVector2(1, 2);
 		setSizeRandom.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Initialize]!(setSizeRandom.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setSizeRandom.data.node.id);
 		});
 
 		const setEmission = CreateSetEmission();
-		(setEmission.node as SetEmission).nodeFields.emission.SetNumber(5);
+		(setEmission.data.node as SetEmission).nodeFields.emission.SetNumber(5);
 		setEmission.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Initialize]!(setEmission.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setEmission.data.node.id);
 		});
 
 		const setRotationZRandom = CreateSetRotationZRandom();
-		(setRotationZRandom.node as SetRotationZRandom).nodeFields.range.SetVector2(-360, 360);
+		(setRotationZRandom.data.node as SetRotationZRandom).nodeFields.range.SetVector2(-360, 360);
 		setRotationZRandom.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Initialize]!(setRotationZRandom.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setRotationZRandom.data.node.id);
 		});
 
 		const setVelocityRandom = CreateSetVelocityRandom();
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-0.5, 0.5);
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(10, 15);
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-0.5, 0.5);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-0.5, 0.5);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(10, 15);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-0.5, 0.5);
 		setVelocityRandom.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.data.node.id);
 		});
 
 		// upd
 		const setColorOverLife = CreateSetColorOverLife();
-		(setColorOverLife.node as SetColorOverLife).nodeFields.ramp.startPoint.color.SetHSV(0.15, 0.2, 1);
-		(setColorOverLife.node as SetColorOverLife).nodeFields.ramp.AddPoint(0.2, new Vector3(0.15, 0.85, 1));
-		(setColorOverLife.node as SetColorOverLife).nodeFields.ramp.AddPoint(0.45, new Vector3(0.01, 0.9, 1));
-		(setColorOverLife.node as SetColorOverLife).nodeFields.ramp.AddPoint(0.8, new Vector3(0, 1, 0.1));
-		(setColorOverLife.node as SetColorOverLife).nodeFields.ramp.endPoint.color.SetHSV(0, 0, 0);
+		(setColorOverLife.data.node as SetColorOverLife).nodeFields.ramp.startPoint.color.SetHSV(0.15, 0.2, 1);
+		(setColorOverLife.data.node as SetColorOverLife).nodeFields.ramp.AddPoint(0.2, new Vector3(0.15, 0.85, 1));
+		(setColorOverLife.data.node as SetColorOverLife).nodeFields.ramp.AddPoint(0.45, new Vector3(0.01, 0.9, 1));
+		(setColorOverLife.data.node as SetColorOverLife).nodeFields.ramp.AddPoint(0.8, new Vector3(0, 1, 0.1));
+		(setColorOverLife.data.node as SetColorOverLife).nodeFields.ramp.endPoint.color.SetHSV(0, 0, 0);
 		setColorOverLife.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Update]!(setColorOverLife.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Update]!(setColorOverLife.data.node.id);
 		});
 
 		const multiplySizeOverLife = CreateMultiplySizeOverLife();
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.startPoint.value = 0.5;
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.05, 1.5);
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.15, 2);
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.5, 1.5);
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.endPoint.value = 0.25;
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.startPoint.value = 0.5;
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.05, 1.5);
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.15, 2);
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.5, 1.5);
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.endPoint.value = 0.25;
 		multiplySizeOverLife.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Update]!(multiplySizeOverLife.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Update]!(multiplySizeOverLife.data.node.id);
 		});
 
 		const setTransparencyOverLife = CreateSetTransparencyOverLife();
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.startPoint.value = 1;
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.05, 0.75);
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.2, 0.25);
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.5, 0.25);
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.85, 0.4);
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.endPoint.value = 1;
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.startPoint.value = 1;
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.05, 0.75);
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.2, 0.25);
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.5, 0.25);
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.85, 0.4);
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.endPoint.value = 1;
 		setTransparencyOverLife.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Update]!(setTransparencyOverLife.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Update]!(setTransparencyOverLife.data.node.id);
 		});
 
 		const drag = CreateDrag();
-		(drag.node as Drag).nodeFields.drag.SetNumber(2);
+		(drag.data.node as Drag).nodeFields.drag.SetNumber(2);
 		drag.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Update]!(drag.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Update]!(drag.data.node.id);
 		});
 
 		const addRotationZRandom = CreateAddRotationZRandom();
-		(addRotationZRandom.node as AddRotationZRandom).nodeFields.range.SetVector2(-360, 360);
+		(addRotationZRandom.data.node as AddRotationZRandom).nodeFields.range.SetVector2(-360, 360);
 		addRotationZRandom.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Update]!(addRotationZRandom.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Update]!(addRotationZRandom.data.node.id);
 		});
 
 		// rend
 		const particlePlane = CreateParticlePlane();
-		(particlePlane.node as ParticlePlane).nodeFields.assetId.SetNumber(14151781963);
-		(particlePlane.node as ParticlePlane).nodeFields.imageSize.SetVector2(1024, 1024);
-		(particlePlane.node as ParticlePlane).nodeFields.spriteSheetRows.SetNumber(4);
-		(particlePlane.node as ParticlePlane).nodeFields.spriteSheetColumns.SetNumber(4);
-		(particlePlane.node as ParticlePlane).nodeFields.spriteSheetFrameCount.SetNumber(16);
+		(particlePlane.data.node as ParticlePlane).nodeFields.assetId.SetNumber(14151781963);
+		(particlePlane.data.node as ParticlePlane).nodeFields.imageSize.SetVector2(1024, 1024);
+		(particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetRows.SetNumber(4);
+		(particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetColumns.SetNumber(4);
+		(particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetFrameCount.SetNumber(16);
 		particlePlane.elementLoaded.Connect(() => {
-			flameSystem.addToNodeGroup[NodeGroups.Render]!(particlePlane.node.id);
+			flameSystemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
 		});
 	});
 
 	const smokeSystem = CreateEmptySystem();
-	smokeSystem.anchorPoint = new Vector2(25, 0);
-	smokeSystem.finishedBindingGroups.Connect(() => {
+	const smokeSystemData = smokeSystem.data;
+	smokeSystemData.anchorPoint = new Vector2(25, 0);
+	smokeSystemData.finishedBindingGroups.Connect(() => {
 		// spwn
 		const constantSpawn = CreateConstantSpawn();
-		(constantSpawn.node as ConstantSpawn).nodeFields.rate.SetNumber(20);
+		(constantSpawn.data.node as ConstantSpawn).nodeFields.rate.SetNumber(20);
 		constantSpawn.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Spawn]!(constantSpawn.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawn.data.node.id);
 		});
 
 		// init
 		const setLifetimeRandom = CreateSetLifetimeRandom();
-		(setLifetimeRandom.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.75, 1.5);
+		(setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.75, 1.5);
 		setLifetimeRandom.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.data.node.id);
 		});
 
 		const setPosition = CreateSetPosition();
-		(setPosition.node as SetPosition).nodeFields.position.SetY(5);
+		(setPosition.data.node as SetPosition).nodeFields.position.SetY(5);
 		setPosition.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Initialize]!(setPosition.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setPosition.data.node.id);
 		});
 
 		const setVelocityRandom = CreateSetVelocityRandom();
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-0.4, 0.4);
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(15, 20);
-		(setVelocityRandom.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-0.4, 0.4);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-0.4, 0.4);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(15, 20);
+		(setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-0.4, 0.4);
 		setVelocityRandom.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.data.node.id);
 		});
 
 		const setRotationZRandom = CreateSetRotationZRandom();
-		(setRotationZRandom.node as SetRotationZRandom).nodeFields.range.SetVector2(-360, 360);
+		(setRotationZRandom.data.node as SetRotationZRandom).nodeFields.range.SetVector2(-360, 360);
 		setRotationZRandom.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Initialize]!(setRotationZRandom.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setRotationZRandom.data.node.id);
 		});
 
 		const setEmission = CreateSetEmission();
-		(setEmission.node as SetEmission).nodeFields.emission.SetNumber(0);
+		(setEmission.data.node as SetEmission).nodeFields.emission.SetNumber(0);
 		setEmission.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Initialize]!(setEmission.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setEmission.data.node.id);
 		});
 
 		const setSizeRandom = CreateSetSizeRandom();
-		(setSizeRandom.node as SetSizeRandom).nodeFields.range.SetVector2(1, 2);
+		(setSizeRandom.data.node as SetSizeRandom).nodeFields.range.SetVector2(1, 2);
 		setSizeRandom.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Initialize]!(setSizeRandom.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setSizeRandom.data.node.id);
 		});
 
 		// upd
 		const setTransparencyOverLife = CreateSetTransparencyOverLife();
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.startPoint.value = 1;
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.1, 1);
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.4, 0.8);
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.75, 0.85);
-		(setTransparencyOverLife.node as SetTransparencyOverLife).nodeFields.graph.endPoint.value = 1;
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.startPoint.value = 1;
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.1, 1);
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.4, 0.8);
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.75, 0.85);
+		(setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.endPoint.value = 1;
 		setTransparencyOverLife.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Update]!(setTransparencyOverLife.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Update]!(setTransparencyOverLife.data.node.id);
 		});
 
 		const drag = CreateDrag();
-		(drag.node as Drag).nodeFields.drag.SetNumber(2.5);
+		(drag.data.node as Drag).nodeFields.drag.SetNumber(2.5);
 		drag.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Update]!(drag.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Update]!(drag.data.node.id);
 		});
 
 		const multiplySizeOverLife = CreateMultiplySizeOverLife();
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.startPoint.value = 0;
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.2, 2);
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.4, 2);
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.6, 1);
-		(multiplySizeOverLife.node as MultiplySizeOverLife).nodeFields.graph.endPoint.value = 0.5;
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.startPoint.value = 0;
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.2, 2);
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.4, 2);
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.6, 1);
+		(multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.endPoint.value = 0.5;
 		multiplySizeOverLife.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Update]!(multiplySizeOverLife.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Update]!(multiplySizeOverLife.data.node.id);
 		});
 
 		const addRotationZRandom = CreateAddRotationZRandom();
-		(addRotationZRandom.node as AddRotationZRandom).nodeFields.range.SetVector2(-180, 180);
+		(addRotationZRandom.data.node as AddRotationZRandom).nodeFields.range.SetVector2(-180, 180);
 		addRotationZRandom.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Update]!(addRotationZRandom.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Update]!(addRotationZRandom.data.node.id);
 		});
 
 		//rend
 		const particlePlane = CreateParticlePlane();
-		(particlePlane.node as ParticlePlane).nodeFields.assetId.SetNumber(14151754389);
-		(particlePlane.node as ParticlePlane).nodeFields.imageSize.SetVector2(1024, 1024);
-		(particlePlane.node as ParticlePlane).nodeFields.spriteSheetRows.SetNumber(4);
-		(particlePlane.node as ParticlePlane).nodeFields.spriteSheetColumns.SetNumber(4);
-		(particlePlane.node as ParticlePlane).nodeFields.spriteSheetFrameCount.SetNumber(16);
+		(particlePlane.data.node as ParticlePlane).nodeFields.assetId.SetNumber(14151754389);
+		(particlePlane.data.node as ParticlePlane).nodeFields.imageSize.SetVector2(1024, 1024);
+		(particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetRows.SetNumber(4);
+		(particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetColumns.SetNumber(4);
+		(particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetFrameCount.SetNumber(16);
 		particlePlane.elementLoaded.Connect(() => {
-			smokeSystem.addToNodeGroup[NodeGroups.Render]!(particlePlane.node.id);
+			smokeSystemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
 		});
 	});
 

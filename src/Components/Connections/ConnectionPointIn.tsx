@@ -34,14 +34,15 @@ export default function ConnectionPointIn({
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
 
-	const nodeDataRef = useRef(GetNodeById(NodeId)!.data);
+	const nodeRef = useRef(GetNodeById(NodeId)!);
+	const nodeDataRef = useRef(nodeRef.current.data);
 	const elementRef = useRef<TextButton>();
 
 	const finishConnection = (id: number) => {
 		if (elementRef.current === undefined) return;
-		if (nodeDataRef.current.element === undefined) return;
+		if (nodeRef.current.element === undefined) return;
 
-		const offset = elementRef.current.AbsolutePosition.sub(nodeDataRef.current.element!.AbsolutePosition).add(
+		const offset = elementRef.current.AbsolutePosition.sub(nodeRef.current.element!.AbsolutePosition).add(
 			elementRef.current.AbsoluteSize.mul(0.5),
 		);
 
@@ -109,7 +110,7 @@ export default function ConnectionPointIn({
 
 	useEffect(() => {
 		if (elementRef.current === undefined) return;
-		if (nodeDataRef.current.element === undefined) return;
+		if (nodeRef.current.element === undefined) return;
 
 		task.spawn(() => {
 			if (nodeDataRef.current.loadedConnectionsIn === undefined) return;
@@ -142,7 +143,7 @@ export default function ConnectionPointIn({
 
 			nodeDataRef.current.loadedConnectionsIn = undefined;
 		});
-	}, [elementRef.current, nodeDataRef.current.element]);
+	}, [elementRef.current, nodeRef.current.element]);
 
 	return (
 		<ConnectionPoint
