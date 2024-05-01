@@ -5,7 +5,7 @@
 		"$className": "DataModel",
 		"ServerScriptService": {
 			"$className": "ServerScriptService",
-			"LunarVFX": {
+			"Lumina": {
 				"$path": "./default.project.json"
 			}
 		}

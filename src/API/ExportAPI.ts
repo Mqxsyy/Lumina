@@ -2,11 +2,11 @@ import { ReplicatedStorage } from "@rbxts/services";
 
 export const API_VERSION = 75;
 
-let APIFolder = ReplicatedStorage.FindFirstChild("LunarVFX_API");
+let APIFolder = ReplicatedStorage.FindFirstChild("Lumina_API");
 
 if (APIFolder === undefined) {
 	APIFolder = new Instance("Folder");
-	APIFolder.Name = "LunarVFX_API";
+	APIFolder.Name = "Lumina_API";
 	APIFolder.Parent = ReplicatedStorage;
 }
 

@@ -5,16 +5,16 @@ import { GetCanvasData } from "Services/CanvasService";
 export const WidgetSizeChanged = new Event<[Vector2]>();
 
 OnWinowLoaded.Connect((loadedWindow) => {
-	if (loadedWindow !== Windows.LunarVFX) return;
+	if (loadedWindow !== Windows.Lumina) return;
 
-	const window = GetWindow(Windows.LunarVFX)!;
+	const window = GetWindow(Windows.Lumina)!;
 	window.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
 		WidgetSizeChanged.Fire(window.AbsoluteSize);
 	});
 });
 
 export function GetMousePosition(): Vector2 {
-	return GetWindow(Windows.LunarVFX)!.GetRelativeMousePosition();
+	return GetWindow(Windows.Lumina)!.GetRelativeMousePosition();
 }
 
 export function GetMousePositionOnCanvas(): Vector2 {

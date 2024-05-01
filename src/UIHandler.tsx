@@ -5,7 +5,7 @@ import { GetWindow, Windows } from "Windows/WindowSevice";
 let canvas = undefined as Roact.Tree | undefined;
 
 export function InitUI() {
-	const window = GetWindow(Windows.LunarVFX)!;
+	const window = GetWindow(Windows.Lumina)!;
 	canvas = Roact.mount(<App />, window, "Graph");
 }
 

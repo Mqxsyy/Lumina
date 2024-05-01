@@ -20,7 +20,7 @@ import { NodeSelection } from "./Selection/NodeSelection";
 // tbh probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
 
 export function App() {
-	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.LunarVFX)!.AbsoluteSize);
+	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.Lumina)!.AbsoluteSize);
 	const [zoomScale, setZoomScale] = useState(1);
 	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
 	const [_, setForceRender] = useState(0);
@@ -30,7 +30,7 @@ export function App() {
 
 	const StartMoveCanvas = (frame: Frame) => {
 		const mousePositionVec2 = GetMousePosition();
-		const widgetSize = GetWindow(Windows.LunarVFX)!.AbsoluteSize.mul(0.5);
+		const widgetSize = GetWindow(Windows.Lumina)!.AbsoluteSize.mul(0.5);
 
 		const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
 		const mouseOffset = mousePosition.sub(frame.Position).add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));

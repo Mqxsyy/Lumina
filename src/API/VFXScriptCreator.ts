@@ -27,8 +27,8 @@ function CreateScript(name: string, nodeSystem: NodeSystem) {
 local VFXScript = {}
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local APIFolder = ReplicatedStorage.LunarVFX_API.API
-local TS = require(ReplicatedStorage.LunarVFX_API.include.RuntimeLib)
+local APIFolder = ReplicatedStorage.Lumina_API.API
+local TS = require(ReplicatedStorage.Lumina_API.include.RuntimeLib)
 
 local NodeSystem = TS.import(script, APIFolder, "NodeSystem").NodeSystem
 local nodeSystem = NodeSystem.new()`;

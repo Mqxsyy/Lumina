@@ -1,7 +1,7 @@
 {
 	"description": "",
 	"scripts": {
-		"build": "rbxtsc build && rojo build --plugin LunarVFX.rbxmx"
+		"build": "rbxtsc build && rojo build --plugin Lumina.rbxmx"
 	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "^2.2.0-types.0",

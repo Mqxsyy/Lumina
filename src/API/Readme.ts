@@ -1,5 +1,5 @@
 /*
-- LunarVFX 0.0.1
+- Lumina 0.0.1
 - Made By Mqxsyy
 - Made using TypeScript & React
 - For Any Questions Or Issues Dm Me On Discord @mqxxsy
