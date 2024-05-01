@@ -6,7 +6,7 @@ let zoomScale = 1;
 export const ZoomScaleChanged = new Event<[number]>();
 
 export const ZoomScaleConstraint = {
-	min: 0.25,
+	min: 0.2,
 	max: 1.5,
 };
 

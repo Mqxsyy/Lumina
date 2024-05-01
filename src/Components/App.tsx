@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useMemo, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";
@@ -10,13 +10,14 @@ import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { GetAllSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
 import { GetAllNodes, NodesChanged } from "../Services/NodesService";
 import { BasicTextLabel } from "./Basic/BasicTextLabel";
-import { Controls } from "./Controls/Controls";
+import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
-// OPTIMIZE: moving one thing makes everything re-render
-// OPTIMIZE: implement: useContext?, useMemo, useCallback
+
+// No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?
+// tbh probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
 
 export function App() {
 	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.LunarVFX)!.AbsoluteSize);
@@ -74,12 +75,6 @@ export function App() {
 	};
 
 	useEffect(() => {
-		UpdateCanvasData((canvasData) => {
-			canvasData.Position = UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5);
-			canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y);
-			return canvasData;
-		});
-
 		const widgetSizeChangedConnection = WidgetSizeChanged.Connect((newSize) => {
 			setWidgetSize(newSize as Vector2);
 
@@ -108,6 +103,12 @@ export function App() {
 
 		const connectionsChangedConnection = ConnectionsChanged.Connect(() => {
 			setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+		});
+
+		UpdateCanvasData((canvasData) => {
+			canvasData.Position = UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5);
+			canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y);
+			return canvasData;
 		});
 
 		return () => {
@@ -256,14 +257,19 @@ export function App() {
 				<NodeSelection key="NodeSelection" Position={displayNodeSelection} />
 			)}
 			<Controls key={"Controls"} />
-			<BasicTextLabel
-				key={"ZoomLabel"}
-				AnchorPoint={new Vector2(0, 1)}
-				Position={UDim2.fromScale(0, 1)}
-				Size={UDim2.fromOffset(50, 20)}
-				Text={`${math.round(GetZoomScale() * 100)}%`}
-				IsAffectedByZoom={false}
-			/>
+			{useMemo(
+				() => (
+					<BasicTextLabel
+						key={"ZoomLabel"}
+						AnchorPoint={new Vector2(0, 1)}
+						Position={UDim2.fromScale(0, 1)}
+						Size={UDim2.fromOffset(50, 20)}
+						Text={`${math.round(GetZoomScale() * 100)}%`}
+						IsAffectedByZoom={false}
+					/>
+				),
+				[zoomScale],
+			)}
 			<Div
 				key={"ClickDetector"}
 				ZIndex={2}

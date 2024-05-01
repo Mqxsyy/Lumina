@@ -1,19 +1,19 @@
 import Roact from "@rbxts/roact";
+import ExportAPI from "API/ExportAPI";
+import { GetExportsFolder } from "API/FolderLocations";
+import ExportAsScript from "API/VFXScriptCreator";
+import { GetAllSystems } from "Services/NodeSystemService";
+import { LoadFromFile } from "Services/Saving/LoadService";
+import { SaveToFile } from "Services/Saving/SaveService";
 import Div from "../Div";
 import { ControlButton } from "./ControlButton";
-import { GetAllSystems } from "Services/NodeSystemService";
-import ExportAPI from "API/ExportAPI";
-import ExportAsScript from "API/VFXScriptCreator";
-import { SaveToFile } from "Services/Saving/SaveService";
-import { LoadFromFile } from "Services/Saving/LoadService";
-import { GetExportsFolder } from "API/FolderLocations";
 
 const CANVAS_PADDING = 5;
 const BUTTONS_PADDING = 5;
 const BUTTON_WIDTH = 125;
 const BUTTON_HEIGHT = 25;
 
-export function Controls() {
+function Controls() {
 	const Start = () => {
 		const nodeSystems = GetAllSystems();
 		nodeSystems.forEach((nodeSystem) => {
@@ -98,3 +98,5 @@ export function Controls() {
 		</Div>
 	);
 }
+
+export default Roact.memo(Controls);

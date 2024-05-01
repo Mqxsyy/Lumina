@@ -2,7 +2,7 @@ import Roact from "@rbxts/roact";
 import { SetVelocity as SetVelocityAPI, SetVelocityFieldNames } from "API/Nodes/Initialize/SetVelocity";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateSetVelocity() {
 	return AddNode(new SetVelocityAPI(), (data: NodeData) => {
@@ -12,7 +12,12 @@ export function CreateSetVelocity() {
 
 function SetVelocity({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Velocity" NodeData={data}>
+		<Node
+			Name="Set Velocity"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<Vector3Field
 				NodeId={data.node.id}
 				NodeField={(data.node as SetVelocityAPI).nodeFields.velocity}

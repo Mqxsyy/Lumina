@@ -2,7 +2,7 @@ import Roact from "@rbxts/roact";
 import { SetColorOverLife as ColorOverLifeAPI } from "API/Nodes/Update/SetColorOverLife";
 import { ColorRampField } from "Components/NodeFields/ColorRampField";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateSetColorOverLife() {
 	return AddNode(new ColorOverLifeAPI(), (data: NodeData) => {
@@ -12,7 +12,12 @@ export function CreateSetColorOverLife() {
 
 function SetColorOverLife({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Color Over Life" NodeData={data}>
+		<Node
+			Name="Set Color Over Life"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<ColorRampField Label={"Ramp"} Ramp={(data.node as ColorOverLifeAPI).nodeFields.ramp} />
 		</Node>
 	);

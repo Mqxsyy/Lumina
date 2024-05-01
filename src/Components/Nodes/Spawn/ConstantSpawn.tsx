@@ -1,9 +1,9 @@
-import Roact, { useRef } from "@rbxts/roact";
-import { ConstantSpawn as ConstantSpawnAPI, ConstantSpawnFieldNames } from "API/Nodes/Spawn/ConstantSpawn";
-import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
-import NumberField from "Components/NodeFields/NumberField";
+import Roact from "@rbxts/roact";
 import { CapitalizeFirstLetter } from "API/Lib";
+import { ConstantSpawn as ConstantSpawnAPI, ConstantSpawnFieldNames } from "API/Nodes/Spawn/ConstantSpawn";
+import NumberField from "Components/NodeFields/NumberField";
+import { AddNode, NodeData } from "Services/NodesService";
+import Node from "../Node";
 
 export function CreateConstantSpawn() {
 	return AddNode(new ConstantSpawnAPI(), (data: NodeData) => {
@@ -12,21 +12,27 @@ export function CreateConstantSpawn() {
 }
 
 function ConstantSpawn({ data }: { data: NodeData }) {
-	const rateFieldRef = useRef((data.node as ConstantSpawnAPI).nodeFields.rate);
+	const { node } = data;
+	const { id, nodeFields } = node as ConstantSpawnAPI;
 
 	const rateChanged = (number: number) => {
 		if (number > 1000) {
-			rateFieldRef.current.SetNumber(1000);
+			nodeFields.rate.SetNumber(1000);
 		}
 
-		rateFieldRef.current.SetNumber(number);
+		nodeFields.rate.SetNumber(number);
 	};
 
 	return (
-		<Node Name="Constant Spawn" NodeData={data}>
+		<Node
+			Name="Constant Spawn"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<NumberField
-				NodeId={data.node.id}
-				NodeField={(data.node as ConstantSpawnAPI).nodeFields.rate}
+				NodeId={id}
+				NodeField={nodeFields.rate}
 				NodeFieldName={ConstantSpawnFieldNames.rate}
 				Label={CapitalizeFirstLetter(ConstantSpawnFieldNames.rate)}
 				AllowConnection={false}

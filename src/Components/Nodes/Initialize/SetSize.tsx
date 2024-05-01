@@ -3,7 +3,7 @@ import { CapitalizeFirstLetter } from "API/Lib";
 import { SetSize as SetSizeAPI, SetSizeFieldNames } from "API/Nodes/Initialize/SetSize";
 import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateSetSize() {
 	return AddNode(new SetSizeAPI(), (data: NodeData) => {
@@ -13,7 +13,12 @@ export function CreateSetSize() {
 
 function SetSize({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Size" NodeData={data}>
+		<Node
+			Name="Set Size"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as SetSizeAPI).nodeFields.size}

@@ -1,8 +1,9 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import Roact, { useEffect, useMemo, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
+import { Event } from "API/Bindables/Event";
 import { NodeGroups } from "API/NodeGroup";
+import { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { GetCanvasData } from "Services/CanvasService";
 import { StyleColors } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
@@ -20,14 +21,17 @@ import NodeGroup from "./NodeGroup";
 // FIXME: some weird bug with deleting and overriding node position
 
 interface Props {
-	data: NodeSystemData;
+	anchorPoint: Vector2;
+	canvasPosition: UDim2;
+	systemId: number;
+	systemAPI: NodeSystemAPI;
+	systemDestroyEvent: Event<[NodeSystemData]>;
 }
 
-export default function NodeSystem({ data }: Props) {
-	const zoomScale = GetZoomScale();
+function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDestroyEvent }: Props) {
+	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
-	const canvasData = useRef(GetCanvasData());
 
 	const onMouseButton1Down = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
@@ -37,8 +41,8 @@ export default function NodeSystem({ data }: Props) {
 			const mousePosition = GetMousePositionOnCanvas();
 			const newAnchorPoint = mousePosition.add(mouseOffsetRef.current).div(zoomScale);
 
-			if (data.anchorPoint !== newAnchorPoint) {
-				UpdateSystemData(data.id, (systemData) => {
+			if (anchorPoint !== newAnchorPoint) {
+				UpdateSystemData(systemId, (systemData) => {
 					systemData.anchorPoint = newAnchorPoint;
 					return systemData;
 				});
@@ -51,15 +55,25 @@ export default function NodeSystem({ data }: Props) {
 	};
 
 	const onMouseButton2Down = () => {
-		RemoveNodeSystem(data.id);
+		RemoveNodeSystem(systemId);
 	};
 
 	const getPosition = () => {
-		const offsetFromCenter = data.anchorPoint.mul(zoomScale).add(new Vector2(SYSTEM_WIDTH * 0.5 * zoomScale, 0));
-		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
-		const position = canvasPosition.add(offsetFromCenter);
+		const offsetFromCenter = anchorPoint.mul(zoomScale).add(new Vector2(SYSTEM_WIDTH * 0.5 * zoomScale, 0));
+		const canvasPositionVec2 = new Vector2(canvasPosition.X.Offset, canvasPosition.Y.Offset);
+		const position = canvasPositionVec2.add(offsetFromCenter);
 		return UDim2.fromOffset(position.X, position.Y);
 	};
+
+	useEffect(() => {
+		const connection = ZoomScaleChanged.Connect((newScale) => {
+			setZoomScale(newScale);
+		});
+
+		return () => {
+			connection.Disconnect();
+		};
+	}, []);
 
 	return (
 		<textbutton
@@ -120,41 +134,52 @@ export default function NodeSystem({ data }: Props) {
 						HorizontalAlignment={"Center"}
 					/>
 
-					<BasicTextLabel
-						Size={new UDim2(1, 0, 0, SYSTEM_HEADER_HEIGHT * zoomScale)}
-						Text={`VFX System (${data.id})`}
-					/>
+					{useMemo(
+						() => (
+							<BasicTextLabel
+								Size={new UDim2(1, 0, 0, SYSTEM_HEADER_HEIGHT * zoomScale)}
+								Text={`VFX System (${systemId})`}
+							/>
+						),
+						[zoomScale],
+					)}
 
 					<NodeGroup
-						SystemId={data.id}
+						SystemId={systemId}
+						SystemAPI={systemAPI}
+						SystemDestroyEvent={systemDestroyEvent}
 						NodeGroup={NodeGroups.Spawn}
 						GradientStart={StyleColors.SpawnGroup}
 						GradientEnd={StyleColors.InitializeGroup}
-						NodeSystem={data}
 					/>
 					<NodeGroup
-						SystemId={data.id}
+						SystemId={systemId}
+						SystemAPI={systemAPI}
+						SystemDestroyEvent={systemDestroyEvent}
 						NodeGroup={NodeGroups.Initialize}
 						GradientStart={StyleColors.InitializeGroup}
 						GradientEnd={StyleColors.UpdateGroup}
-						NodeSystem={data}
 					/>
 					<NodeGroup
-						SystemId={data.id}
+						SystemId={systemId}
+						SystemAPI={systemAPI}
+						SystemDestroyEvent={systemDestroyEvent}
 						NodeGroup={NodeGroups.Update}
 						GradientStart={StyleColors.UpdateGroup}
 						GradientEnd={StyleColors.RenderGroup}
-						NodeSystem={data}
 					/>
 					<NodeGroup
-						SystemId={data.id}
+						SystemId={systemId}
+						SystemAPI={systemAPI}
+						SystemDestroyEvent={systemDestroyEvent}
 						NodeGroup={NodeGroups.Render}
 						GradientStart={StyleColors.RenderGroup}
 						GradientEnd={StyleColors.EndGroup}
-						NodeSystem={data}
 					/>
 				</Div>
 			</Div>
 		</textbutton>
 	);
 }
+
+export default Roact.memo(NodeSystem);

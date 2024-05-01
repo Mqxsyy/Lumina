@@ -3,7 +3,7 @@ import { CapitalizeFirstLetter } from "API/Lib";
 import { Drag as DragAPI, DragFieldNames } from "API/Nodes/Update/Drag";
 import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateDrag() {
 	return AddNode(new DragAPI(), (data: NodeData) => {
@@ -13,7 +13,12 @@ export function CreateDrag() {
 
 function Drag({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Drag" NodeData={data}>
+		<Node
+			Name="Drag"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as DragAPI).nodeFields.drag}

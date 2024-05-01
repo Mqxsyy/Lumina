@@ -6,7 +6,7 @@ import {
 } from "API/Nodes/Initialize/SetVelocityRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateSetVelocityRandom() {
 	return AddNode(new SetVelocityRandomAPI(), (data: NodeData) => {
@@ -16,7 +16,12 @@ export function CreateSetVelocityRandom() {
 
 function SetVelocityRandom({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Velocity Random" NodeData={data}>
+		<Node
+			Name="Set Velocity Random"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<Vector2Field
 				NodeId={data.node.id}
 				NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeX}

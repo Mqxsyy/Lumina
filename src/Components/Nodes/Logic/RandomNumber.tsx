@@ -4,7 +4,7 @@ import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { RandomNumber as RandomNumberAPI, RandomNumberFieldNames } from "API/Nodes/Logic/RandomNumber";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateRandomNumber() {
 	return AddNode(new RandomNumberAPI(), (data: NodeData) => {
@@ -16,7 +16,9 @@ function RandomNumber({ data }: { data: NodeData }) {
 	return (
 		<Node
 			Name="Random Number"
-			NodeData={data}
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
 			ConnectionFunction={(data.node as LogicNode<number>).Calculate}
 			ConnectioNode={data.node as LogicNode}
 		>

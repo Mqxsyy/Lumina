@@ -5,7 +5,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import NumberField from "Components/NodeFields/NumberField";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 import Div from "Components/Div";
 import { GetZoomScale } from "ZoomScale";
 
@@ -19,7 +19,12 @@ function ParticlePlane({ data }: { data: NodeData }) {
 	const zoomScale = GetZoomScale();
 
 	return (
-		<Node Name="Particle Plane" NodeData={data}>
+		<Node
+			Name="Particle Plane"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Orientation - Facing camera"} />
 			<NumberField
 				NodeId={data.node.id}

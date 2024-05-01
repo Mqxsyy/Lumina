@@ -6,7 +6,7 @@ import {
 } from "API/Nodes/Initialize/SetLifetimeRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateSetLifetimeRandom() {
 	return AddNode(new SetLifetimeRandomAPI(), (data: NodeData) => {
@@ -16,7 +16,12 @@ export function CreateSetLifetimeRandom() {
 
 function SetLifetimeRandom({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Lifetime Random" NodeData={data}>
+		<Node
+			Name="Set Lifetime Random"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<Vector2Field
 				NodeId={data.node.id}
 				NodeField={(data.node as SetLifetimeRandomAPI).nodeFields.range}

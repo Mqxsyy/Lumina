@@ -3,7 +3,7 @@ import { CapitalizeFirstLetter } from "API/Lib";
 import { SetLifetime as SetLifetimeAPI, SetLifetimeFieldNames } from "API/Nodes/Initialize/SetLifetime";
 import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateSetLifetime() {
 	return AddNode(new SetLifetimeAPI(), (data: NodeData) => {
@@ -13,7 +13,12 @@ export function CreateSetLifetime() {
 
 function SetLifetime({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Lifetime" NodeData={data}>
+		<Node
+			Name="Set Lifetime"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as SetLifetimeAPI).nodeFields.time}

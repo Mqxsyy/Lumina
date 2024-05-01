@@ -3,7 +3,7 @@ import { CapitalizeFirstLetter } from "API/Lib";
 import { SetTransparency as SetTransparencyAPI, SetTransparencyFieldNames } from "API/Nodes/Initialize/SetTransparency";
 import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateSetTransparency() {
 	return AddNode(new SetTransparencyAPI(), (data: NodeData) => {
@@ -13,7 +13,12 @@ export function CreateSetTransparency() {
 
 function SetTransparency({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Set Transparency" NodeData={data}>
+		<Node
+			Name="Set Transparency"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as SetTransparencyAPI).nodeFields.transparency}

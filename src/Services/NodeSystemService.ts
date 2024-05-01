@@ -4,6 +4,7 @@ import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem } from "API/NodeSystem";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { GetZoomScale } from "ZoomScale";
 
 type AllowedNodeGroups = NodeGroups.Spawn | NodeGroups.Initialize | NodeGroups.Update | NodeGroups.Render;
 
@@ -47,7 +48,7 @@ export function AddSystem(api: NodeSystem, create: (data: NodeSystemData) => Roa
 	const collectionEntry: NodeSystemCollectioEntry = {
 		data: {
 			id: GetNextSystemId(),
-			anchorPoint: position || GetMousePositionOnCanvas(),
+			anchorPoint: position || GetMousePositionOnCanvas().div(GetZoomScale()),
 			system: api,
 			addToNodeGroup: {
 				[NodeGroups.Spawn]: undefined,

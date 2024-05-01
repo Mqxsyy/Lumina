@@ -1,30 +1,33 @@
-import Roact, { useEffect, useRef } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { NodeGroups } from "API/NodeGroup";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetDraggingNodeId } from "Services/DraggingService";
 import { BindNodeGroupFunction, NodeSystemData, NodeSystemsChanged } from "Services/NodeSystemService";
 import { GetNodeById, NodeCollectionEntry, RemoveNode } from "Services/NodesService";
 import { StyleColors } from "Style";
-import { GetZoomScale } from "ZoomScale";
+import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
 import { GROUP_BORDER_THICKNESS, GROUP_HEADER_HEIGHT, GROUP_LIST_PADDING, GROUP_PADDING } from "../SizeConfig";
+import { Event } from "API/Bindables/Event";
+import { NodeSystem } from "API/NodeSystem";
 
 // TODO: add node reordering
 
 interface Props {
 	SystemId: number;
+	SystemAPI: NodeSystem;
+	SystemDestroyEvent: Event<[NodeSystemData]>;
 	NodeGroup: NodeGroups;
 	GradientStart: Color3;
 	GradientEnd: Color3;
-	NodeSystem: NodeSystemData;
 }
 
-export default function NodeGroup({ SystemId, NodeGroup, GradientStart, GradientEnd, NodeSystem }: Props) {
-	const childNodes = useRef([] as NodeCollectionEntry[]);
+function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, GradientStart, GradientEnd }: Props) {
+	const [childNodes, setChildNodes] = useState([] as NodeCollectionEntry[]);
+	const [zoomScale, setZoomScale] = useState(GetZoomScale());
+
 	const nodeDestroyConnectionsRef = useRef<{ [key: number]: RBXScriptConnection }>({});
 	const isDestroyingRef = useRef(false);
-
-	const zoomScale = GetZoomScale();
 
 	const onHover = () => {
 		const draggingNodeId = GetDraggingNodeId();
@@ -38,48 +41,51 @@ export default function NodeGroup({ SystemId, NodeGroup, GradientStart, Gradient
 
 		if (node.data.node.nodeGroup !== NodeGroup) return;
 
-		childNodes.current.push(node);
+		setChildNodes((prev) => [...prev, node]);
 
 		node.data.node.ConnectToSystem(SystemId);
-		NodeSystem.system.AddNode(node.data.node);
+		SystemAPI.AddNode(node.data.node);
 
 		nodeDestroyConnectionsRef.current[id] = node.data.onDestroy.Connect((nodeData) => {
 			nodeDestroyConnectionsRef.current[id].Disconnect();
 			delete nodeDestroyConnectionsRef.current[id];
 
-			const destroyingNodeIndex = childNodes.current.findIndex((n) => n.data.node.id === id);
-			NodeSystem.system.RemoveNode(nodeData.node);
-			childNodes.current.remove(destroyingNodeIndex);
+			SystemAPI.RemoveNode(nodeData.node);
+			setChildNodes((prev) => prev.filter((n) => n.data.node.id !== id));
 		});
 
 		NodeSystemsChanged.Fire();
 	};
 
 	const onUnhover = () => {
-		const draggingNodeId = GetDraggingNodeId();
-		if (draggingNodeId !== undefined) {
-			const draggingNodeIndex = childNodes.current.findIndex((n) => n.data.node.id === draggingNodeId);
+		const nodeId = GetDraggingNodeId();
+		if (nodeId !== undefined) {
+			const node = childNodes.find((n) => n.data.node.id === nodeId);
 
-			if (draggingNodeIndex !== -1) {
-				const node = childNodes.current.remove(draggingNodeIndex)!;
+			if (node !== undefined) {
+				setChildNodes((prev) => prev.filter((n) => n.data.node.id !== nodeId));
 				node.data.node.RemoveSystemConnection();
-				NodeSystem.system.RemoveNode(node.data.node);
+				SystemAPI.RemoveNode(node.data.node);
 
-				if (nodeDestroyConnectionsRef.current[draggingNodeIndex] !== undefined) {
-					nodeDestroyConnectionsRef.current[draggingNodeIndex].Disconnect();
-					delete nodeDestroyConnectionsRef.current[draggingNodeIndex];
+				if (nodeDestroyConnectionsRef.current[nodeId] !== undefined) {
+					nodeDestroyConnectionsRef.current[nodeId].Disconnect();
+					delete nodeDestroyConnectionsRef.current[nodeId];
 				}
 			}
 		}
 	};
 
 	useEffect(() => {
-		const destroyConnection = NodeSystem.onDestroy.Connect(() => {
+		const destroyConnection = SystemDestroyEvent.Connect(() => {
 			destroyConnection.Disconnect();
 			isDestroyingRef.current = true;
-			childNodes.current.forEach((node) => {
+			childNodes.forEach((node) => {
 				RemoveNode(node.data.node.id);
 			});
+		});
+
+		const zoomChangedConnection = ZoomScaleChanged.Connect((newScale) => {
+			setZoomScale(newScale);
 		});
 
 		BindNodeGroupFunction(SystemId, NodeGroup, addChildNode);
@@ -90,6 +96,7 @@ export default function NodeGroup({ SystemId, NodeGroup, GradientStart, Gradient
 			}
 
 			destroyConnection.Disconnect();
+			zoomChangedConnection.Disconnect();
 		};
 	}, []);
 
@@ -137,7 +144,7 @@ export default function NodeGroup({ SystemId, NodeGroup, GradientStart, Gradient
 					/>
 					<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 						<uilistlayout HorizontalAlignment={"Center"} Padding={new UDim(0, 5)} />
-						{childNodes.current.map((node) => {
+						{childNodes.map((node) => {
 							return node.create(node.data);
 						})}
 					</Div>
@@ -146,3 +153,5 @@ export default function NodeGroup({ SystemId, NodeGroup, GradientStart, Gradient
 		</Div>
 	);
 }
+
+export default Roact.memo(NodeGroup);

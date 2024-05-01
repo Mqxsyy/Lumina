@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef } from "@rbxts/roact";
+import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
 import { RunService } from "@rbxts/services";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
@@ -7,46 +7,47 @@ import Div from "Components/Div";
 import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
-import { GetNodeById, NodeData, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
-import { GetZoomScale } from "ZoomScale";
+import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 
 interface Props {
 	Name: string;
-	NodeData: NodeData;
+	NodeId: number;
+	NodeAnchorPoint: Vector2;
+	IsConnectedToSystem: boolean;
 	ConnectionFunction?: () => number;
 	ConnectioNode?: LogicNode;
 }
 
-export function Node({
+function Node({
 	Name,
-	NodeData,
+	NodeId,
+	NodeAnchorPoint,
+	IsConnectedToSystem,
 	ConnectionFunction = undefined,
 	ConnectioNode = undefined,
 	children,
 }: Roact.PropsWithChildren<Props>) {
-	const { id } = NodeData.node;
-	const { anchorPoint } = NodeData;
+	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const canvasData = useRef(GetCanvasData());
 	const elementRef = useRef(undefined as undefined | TextButton);
 
-	const zoomScale = GetZoomScale();
-
 	const onMouseButton1Down = (element: TextButton) => {
 		const mousePosition = GetMousePosition();
 		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
 
-		SetDraggingNodeId(id);
+		SetDraggingNodeId(NodeId);
 
 		RunService.BindToRenderStep("MoveNode", 110, () => {
-			const nodeData = GetNodeById(id)!;
+			const nodeData = GetNodeById(NodeId)!;
 			const newAnchorPosition = GetMousePositionOnCanvas().add(mouseOffsetRef.current).div(zoomScale);
 
 			if (nodeData.data.anchorPoint !== newAnchorPosition) {
-				UpdateNodeData(id, (data) => {
+				UpdateNodeData(NodeId, (data) => {
 					data.anchorPoint = newAnchorPosition;
 					return data;
 				});
@@ -55,22 +56,32 @@ export function Node({
 	};
 
 	const onMouseButton2Down = () => {
-		RemoveNode(id);
+		RemoveNode(NodeId);
 	};
 
 	const getPosition = () => {
 		const nodeHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
-		const offsetFromCenter = anchorPoint
-			.mul(zoomScale)
-			.add(new Vector2(NODE_WIDTH * 0.5 * zoomScale, nodeHeight * 0.5));
+		const offsetFromCenter = NodeAnchorPoint.mul(zoomScale).add(
+			new Vector2(NODE_WIDTH * 0.5 * zoomScale, nodeHeight * 0.5),
+		);
 		const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
 		const position = canvasPosition.add(offsetFromCenter);
 		return UDim2.fromOffset(position.X, position.Y);
 	};
 
 	useEffect(() => {
+		const connection = ZoomScaleChanged.Connect((newScale) => {
+			setZoomScale(newScale);
+		});
+
+		return () => {
+			connection.Disconnect();
+		};
+	}, []);
+
+	useEffect(() => {
 		if (elementRef.current === undefined) return;
-		SetNodeElement(id, elementRef.current);
+		SetNodeElement(NodeId, elementRef.current);
 	}, [elementRef.current]);
 
 	return (
@@ -78,7 +89,7 @@ export function Node({
 			Size={UDim2.fromOffset(NODE_WIDTH * zoomScale, 0)}
 			AutomaticSize={"Y"}
 			AnchorPoint={new Vector2(0.5, 0.5)}
-			Position={NodeData.node.connectedSystemId !== undefined ? UDim2.fromScale(0, 0) : getPosition()}
+			Position={IsConnectedToSystem ? UDim2.fromScale(0, 0) : getPosition()}
 			BackgroundColor3={StyleColors.Primary}
 			AutoButtonColor={false}
 			Text={""}
@@ -109,7 +120,7 @@ export function Node({
 					<ConnectionPointOut
 						AnchorPoint={new Vector2(1, 0.5)}
 						Position={UDim2.fromScale(1, 0.5)}
-						NodeId={id}
+						NodeId={NodeId}
 						BindFunction={ConnectionFunction}
 					/>
 				)}
@@ -123,3 +134,5 @@ export function Node({
 		</textbutton>
 	);
 }
+
+export default Roact.memo(Node);

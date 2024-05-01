@@ -3,7 +3,7 @@ import { CapitalizeFirstLetter } from "API/Lib";
 import { AddRotationZ as AddRotationZAPI, AddRotationZFieldNames } from "API/Nodes/Update/AddRotationZ";
 import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
-import { Node } from "../Node";
+import Node from "../Node";
 
 export function CreateAddRotationZ() {
 	return AddNode(new AddRotationZAPI(), (data: NodeData) => {
@@ -13,7 +13,12 @@ export function CreateAddRotationZ() {
 
 function AddRotationZ({ data }: { data: NodeData }) {
 	return (
-		<Node Name="Add Rotation Z" NodeData={data}>
+		<Node
+			Name="Add Rotation Z"
+			NodeId={data.node.id}
+			NodeAnchorPoint={data.anchorPoint}
+			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+		>
 			<NumberField
 				NodeId={data.node.id}
 				NodeField={(data.node as AddRotationZAPI).nodeFields.rotation}

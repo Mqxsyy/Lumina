@@ -4,6 +4,7 @@ import { NodeGroups } from "API/NodeGroup";
 import { Node } from "API/Nodes/Node";
 import { RenderNode } from "API/Nodes/Render/RenderNode";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { GetZoomScale } from "ZoomScale";
 
 // TODO: Add render order changing
 
@@ -47,7 +48,7 @@ export function GetNodeById(id: number) {
 export function AddNode(api: Node, create: (data: NodeData) => Roact.Element) {
 	const collectionEntry: NodeCollectionEntry = {
 		data: {
-			anchorPoint: GetMousePositionOnCanvas(),
+			anchorPoint: GetMousePositionOnCanvas().div(GetZoomScale()),
 			connectionsOut: [],
 			connectionsIn: [],
 			node: api,
