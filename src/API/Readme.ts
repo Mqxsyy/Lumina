@@ -5,9 +5,6 @@
 - For Any Questions Or Issues Dm Me On Discord @mqxxsy
 - Thank You For Using My Plugin!
 
-- ... Link To Devforum Post
-- ... Link To Plugin Page
-
 - Notes:
 - There WILL be bugs and performance issues
 - Do NOT alter the API folder, doing so WILL break it
