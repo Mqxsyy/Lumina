@@ -1,10 +1,10 @@
-import Roact, { useEffect, useRef } from "@rbxts/roact";
+import React, { useEffect, useRef } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { ColorPoint } from "API/Fields/ColorRampField";
+import { RoundDecimal } from "API/Lib";
 import Div from "Components/Div";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import { LoadColorPickerAPI } from "../Pickers.tsx/ColorPicker";
-import { RoundDecimal } from "API/Lib";
 
 const DOUBLE_CLICK_TIME = 0.25;
 

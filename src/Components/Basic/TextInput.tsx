@@ -1,6 +1,6 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import React, { useEffect, useRef } from "@rbxts/react";
 import { StyleColors, StyleProperties, StyleText } from "Style";
-import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	AnchorPoint?: Vector2;

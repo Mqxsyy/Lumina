@@ -1,4 +1,4 @@
-import Roact, { useEffect, useMemo, useRef, useState } from "@rbxts/roact";
+import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { NodeGroups } from "API/NodeGroup";
@@ -180,4 +180,4 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
 	);
 }
 
-export default Roact.memo(NodeSystem);
+export default React.memo(NodeSystem);

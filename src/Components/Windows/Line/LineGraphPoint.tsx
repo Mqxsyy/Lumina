@@ -1,4 +1,4 @@
-import Roact, { useRef } from "@rbxts/roact";
+import React, { useRef } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import Div from "Components/Div";
 import { StyleColors } from "Style";

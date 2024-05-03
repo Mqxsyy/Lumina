@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
@@ -29,7 +29,7 @@ function Node({
 	ConnectionFunction = undefined,
 	ConnectioNode = undefined,
 	children,
-}: Roact.PropsWithChildren<Props>) {
+}: React.PropsWithChildren<Props>) {
 	const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
@@ -134,4 +134,4 @@ function Node({
 	);
 }
 
-export default Roact.memo(Node);
+export default React.memo(Node);

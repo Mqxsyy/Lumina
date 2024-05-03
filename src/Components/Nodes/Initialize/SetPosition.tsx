@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { SetPosition as SetPositionAPI, SetPositionFieldNames } from "API/Nodes/Initialize/SetPosition";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, NodeData } from "Services/NodesService";

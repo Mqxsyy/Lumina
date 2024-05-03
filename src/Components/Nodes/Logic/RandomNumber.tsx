@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { RandomNumber as RandomNumberAPI, RandomNumberFieldNames } from "API/Nodes/Logic/RandomNumber";

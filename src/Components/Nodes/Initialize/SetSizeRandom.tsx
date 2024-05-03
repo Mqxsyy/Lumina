@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { SetSizeRandom as SetSizeRandomAPI, SetSizeRandomFieldNames } from "API/Nodes/Initialize/SetSizeRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";

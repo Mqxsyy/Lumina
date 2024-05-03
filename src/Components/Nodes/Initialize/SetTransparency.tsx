@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { SetTransparency as SetTransparencyAPI, SetTransparencyFieldNames } from "API/Nodes/Initialize/SetTransparency";
 import NumberField from "Components/NodeFields/NumberField";

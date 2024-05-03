@@ -1,4 +1,4 @@
-import Roact, { useEffect, useMemo, useRef, useState } from "@rbxts/roact";
+import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";

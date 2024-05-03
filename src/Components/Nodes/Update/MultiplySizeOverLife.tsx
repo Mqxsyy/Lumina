@@ -1,4 +1,4 @@
-import Roact, { useRef } from "@rbxts/roact";
+import React, { useRef } from "@rbxts/react";
 import { MultiplySizeOverLife as MultiplySizeOverLifeAPI } from "API/Nodes/Update/MultiplySizeOverLife";
 import { LineGraphField } from "Components/NodeFields/LineGraphField";
 import { AddNode, NodeData } from "Services/NodesService";

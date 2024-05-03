@@ -1,4 +1,5 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import React, { StrictMode, useEffect, useRef, useState } from "@rbxts/react";
+import { createRoot } from "@rbxts/react-roblox";
 import { Event } from "API/Bindables/Event";
 import { GraphPoint, LineGraphField } from "API/Fields/LineGraphField";
 import { FixFloatingPointError, RemapValue, RoundDecimal } from "API/Lib";
@@ -15,7 +16,13 @@ const DOUBLE_CLICK_TIME = 0.25;
 const BOTTOM_SIZE = 50;
 
 export function InitializeLineGraph() {
-	Roact.mount(<LineGraph />, GetWindow(Windows.ValueGraph)!, "LineGraph");
+	const window = GetWindow(Windows.ValueGraph)!;
+	const root = createRoot(window);
+	root.render(
+		<StrictMode>
+			<LineGraph />
+		</StrictMode>,
+	);
 }
 
 let loadedGraphAPI: LineGraphField;

@@ -1,4 +1,4 @@
-import Roact, { useRef, useState } from "@rbxts/roact";
+import React, { useRef, useState } from "@rbxts/react";
 import { NodeGroups } from "API/NodeGroup";
 import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { NodeList } from "Lists/NodesList";

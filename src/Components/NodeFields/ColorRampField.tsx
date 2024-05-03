@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { ColorRampField as ColorRampFieldAPI } from "API/Fields/ColorRampField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";

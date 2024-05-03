@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { SetLifetime as SetLifetimeAPI, SetLifetimeFieldNames } from "API/Nodes/Initialize/SetLifetime";
 import NumberField from "Components/NodeFields/NumberField";

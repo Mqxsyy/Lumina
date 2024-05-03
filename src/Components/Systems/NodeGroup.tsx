@@ -1,5 +1,7 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import React, { useEffect, useRef, useState } from "@rbxts/react";
+import { Event } from "API/Bindables/Event";
 import { NodeGroups } from "API/NodeGroup";
+import { NodeSystem } from "API/NodeSystem";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetDraggingNodeId } from "Services/DraggingService";
 import { BindNodeGroupFunction, NodeSystemData, NodeSystemsChanged } from "Services/NodeSystemService";
@@ -8,8 +10,6 @@ import { StyleColors } from "Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
 import { GROUP_BORDER_THICKNESS, GROUP_HEADER_HEIGHT, GROUP_LIST_PADDING, GROUP_PADDING } from "../SizeConfig";
-import { Event } from "API/Bindables/Event";
-import { NodeSystem } from "API/NodeSystem";
 
 // TODO: add node reordering
 
@@ -151,4 +151,4 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 	);
 }
 
-export default Roact.memo(NodeGroup);
+export default React.memo(NodeGroup);

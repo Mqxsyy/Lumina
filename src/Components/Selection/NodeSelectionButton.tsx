@@ -1,4 +1,4 @@
-import Roact, { useState } from "@rbxts/roact";
+import React, { useState } from "@rbxts/react";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { StyleColors, StyleProperties } from "Style";
 
@@ -51,7 +51,7 @@ export function NodeSelectionButton({ ElementName, Text, ToggleSelection, Create
 				</frame>
 			)}
 
-			<BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} />
+			<BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} ZIndex={2} />
 		</imagebutton>
 	);
 }

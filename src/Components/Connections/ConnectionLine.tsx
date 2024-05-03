@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { GetCanvasData } from "Services/CanvasService";
 import { ConnectionData } from "Services/ConnectionsService";
 import { StyleColors } from "Style";

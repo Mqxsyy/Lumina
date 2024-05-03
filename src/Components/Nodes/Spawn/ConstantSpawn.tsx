@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { ConstantSpawn as ConstantSpawnAPI, ConstantSpawnFieldNames } from "API/Nodes/Spawn/ConstantSpawn";
 import NumberField from "Components/NodeFields/NumberField";

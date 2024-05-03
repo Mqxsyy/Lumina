@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { AddRotationZ as AddRotationZAPI, AddRotationZFieldNames } from "API/Nodes/Update/AddRotationZ";
 import NumberField from "Components/NodeFields/NumberField";

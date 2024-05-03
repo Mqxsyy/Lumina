@@ -18,22 +18,20 @@ function CreateScript(name: string, nodeSystem: NodeSystem) {
 	const newScript = new Instance("ModuleScript");
 	newScript.Name = name;
 
-	let src = `
---[[
-    Auto generated script.
-    Call .Start() to run the VFX.
-]]
+	let src = "";
+	src += "--[[\n";
+	src += "    Auto generated script.\n";
+	src += "    Call .Start() to run the VFX.\n";
+	src += "]]\n\n";
 
-local VFXScript = {}
+	src += "local VFXScript = {}\n\n";
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local APIFolder = ReplicatedStorage.Lumina_API.API
-local TS = require(ReplicatedStorage.Lumina_API.include.RuntimeLib)
+	src += 'local ReplicatedStorage = game:GetService("ReplicatedStorage")\n';
+	src += "local APIFolder = ReplicatedStorage.Lumina_API.API\n";
+	src += "local TS = require(ReplicatedStorage.Lumina_API.include.RuntimeLib)\n\n";
 
-local NodeSystem = TS.import(script, APIFolder, "NodeSystem").NodeSystem
-local nodeSystem = NodeSystem.new()`;
-
-	src += "\n\n";
+	src += 'local NodeSystem = TS.import(script, APIFolder, "NodeSystem").NodeSystem\n';
+	src += "local nodeSystem = NodeSystem.new()\n\n";
 
 	src += nodeSystem.spawnNode!.GetAutoGenerationCode();
 	src += "\n\n";
@@ -51,16 +49,15 @@ local nodeSystem = NodeSystem.new()`;
 	src += nodeSystem.renderNode!.GetAutoGenerationCode();
 	src += "\n\n";
 
-	src += `
-function VFXScript.Start()
-    nodeSystem:Run()
-end
+	src += "function VFXScript.Start()\n";
+	src += "    nodeSystem:Run()\n";
+	src += "end\n\n";
 
-function VFXScript.Stop()
-    nodeSystem:Stop()
-end
+	src += "function VFXScript.Stop()\n";
+	src += "    nodeSystem:Stop()\n";
+	src += "end\n\n";
 
-return VFXScript`;
+	src += "return VFXScript";
 
 	newScript.Source = src;
 	return newScript;

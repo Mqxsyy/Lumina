@@ -1,14 +1,15 @@
-import Roact from "@rbxts/roact";
+import React, { StrictMode } from "@rbxts/react";
+import { createRoot } from "@rbxts/react-roblox";
 import { App } from "Components/App";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 
-let canvas = undefined as Roact.Tree | undefined;
-
 export function InitUI() {
 	const window = GetWindow(Windows.Lumina)!;
-	canvas = Roact.mount(<App />, window, "Graph");
-}
+	const root = createRoot(window);
 
-export function GetCanvas() {
-	return canvas;
+	root.render(
+		<StrictMode>
+			<App />
+		</StrictMode>,
+	);
 }

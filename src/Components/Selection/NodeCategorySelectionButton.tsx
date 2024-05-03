@@ -1,9 +1,9 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
-import Div from "../Div";
-import { StyleColors, StyleProperties } from "Style";
-import { NodeSelectionButton } from "./NodeSelectionButton";
+import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { StyleColors, StyleProperties } from "Style";
+import Div from "../Div";
+import { NodeSelectionButton } from "./NodeSelectionButton";
 
 interface Props {
 	Text: string;
@@ -81,12 +81,6 @@ export function NodeCategorySelectionButton({
 					<uicorner CornerRadius={StyleProperties.CornerRadius} />
 				</frame>
 			)}
-			<Div Size={new UDim2(1, -8, 1, 0)}>
-				<uipadding PaddingLeft={new UDim(0, 15)} PaddingRight={new UDim(0, 15)} />
-
-				<BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} />
-				<BasicTextLabel Text=">" TextXAlignment={"Right"} IsAffectedByZoom={false} />
-			</Div>
 			{hovering && (
 				<Div
 					Position={new UDim2(1, -3, 0, -3)}
@@ -124,6 +118,12 @@ export function NodeCategorySelectionButton({
 					</scrollingframe>
 				</Div>
 			)}
+			<Div Size={new UDim2(1, -8, 1, 0)} ZIndex={2}>
+				<uipadding PaddingLeft={new UDim(0, 15)} PaddingRight={new UDim(0, 15)} />
+
+				<BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} />
+				<BasicTextLabel Text=">" TextXAlignment={"Right"} IsAffectedByZoom={false} />
+			</Div>
 		</Div>
 	);
 }

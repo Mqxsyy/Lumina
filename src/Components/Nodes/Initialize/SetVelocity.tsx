@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { SetVelocity as SetVelocityAPI, SetVelocityFieldNames } from "API/Nodes/Initialize/SetVelocity";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, NodeData } from "Services/NodesService";

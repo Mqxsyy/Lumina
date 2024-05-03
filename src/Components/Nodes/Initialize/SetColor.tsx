@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { SetColor as SetColorAPI } from "API/Nodes/Initialize/SetColor";
 import { ColorPickerField } from "Components/NodeFields/ColorPickerField";
 import { AddNode, NodeData } from "Services/NodesService";

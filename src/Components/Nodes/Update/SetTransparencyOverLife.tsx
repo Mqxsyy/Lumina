@@ -1,4 +1,4 @@
-import Roact, { useRef } from "@rbxts/roact";
+import React, { useRef } from "@rbxts/react";
 import { SetTransparencyOverLife as TransparencyOverLifeAPI } from "API/Nodes/Update/SetTransparencyOverLife";
 import { LineGraphField } from "Components/NodeFields/LineGraphField";
 import { AddNode, NodeData } from "Services/NodesService";

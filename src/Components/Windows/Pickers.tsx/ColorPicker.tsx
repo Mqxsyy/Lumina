@@ -1,4 +1,5 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import React, { StrictMode, useEffect, useRef, useState } from "@rbxts/react";
+import { createRoot } from "@rbxts/react-roblox";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { ColorField } from "API/Fields/ColorField";
@@ -17,7 +18,13 @@ import PickerCursor from "./PickerCursor";
 // also long ass file
 
 export function InitializeColorPicker() {
-	Roact.mount(<ColorPicker />, GetWindow(Windows.ColorPicker)!, "LineGraph");
+	const window = GetWindow(Windows.ColorPicker)!;
+	const root = createRoot(window);
+	root.render(
+		<StrictMode>
+			<ColorPicker />
+		</StrictMode>,
+	);
 }
 
 const blackGradient = new ColorSequence([

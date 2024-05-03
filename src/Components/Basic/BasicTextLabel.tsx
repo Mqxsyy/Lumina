@@ -1,6 +1,6 @@
-import Roact, { useEffect, useState } from "@rbxts/roact";
+import React from "@rbxts/react";
 import { StyleColors, StyleText } from "Style";
-import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	AnchorPoint?: Vector2;
@@ -15,6 +15,8 @@ interface Props {
 	TextYAlignment?: "Top" | "Center" | "Bottom";
 	Text: string;
 
+	ZIndex?: number;
+
 	IsAffectedByZoom?: boolean;
 }
 
@@ -28,8 +30,9 @@ export function BasicTextLabel({
 	TextColor = StyleColors.TextLight,
 	TextXAlignment = "Left",
 	TextYAlignment = "Center",
-	IsAffectedByZoom = true,
 	Text,
+	ZIndex = 1,
+	IsAffectedByZoom = true,
 }: Props) {
 	const zoomScale = GetZoomScale();
 
@@ -51,6 +54,7 @@ export function BasicTextLabel({
 			TextXAlignment={TextXAlignment}
 			TextYAlignment={TextYAlignment}
 			Text={Text}
+			ZIndex={ZIndex}
 		/>
 	);
 }

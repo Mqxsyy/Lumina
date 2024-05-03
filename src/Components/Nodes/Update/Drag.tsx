@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { Drag as DragAPI, DragFieldNames } from "API/Nodes/Update/Drag";
 import NumberField from "Components/NodeFields/NumberField";

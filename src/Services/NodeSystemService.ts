@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
@@ -25,7 +25,7 @@ export interface NodeSystemData {
 
 export interface NodeSystemCollectioEntry {
 	data: NodeSystemData;
-	create: (props: NodeSystemData) => Roact.Element;
+	create: (props: NodeSystemData) => React.Element;
 }
 
 const idPool = new IdPool();
@@ -44,7 +44,7 @@ export function GetSystemById(id: number) {
 	return NodeSystemCollection.find((system) => system.data.id === id);
 }
 
-export function AddSystem(api: NodeSystem, create: (data: NodeSystemData) => Roact.Element, position?: Vector2) {
+export function AddSystem(api: NodeSystem, create: (data: NodeSystemData) => React.Element, position?: Vector2) {
 	const collectionEntry: NodeSystemCollectioEntry = {
 		data: {
 			id: GetNextSystemId(),

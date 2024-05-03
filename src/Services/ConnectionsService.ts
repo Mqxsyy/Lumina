@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
@@ -22,7 +22,7 @@ export interface ConnectionData {
 
 interface ConnectionCollectionEntry {
 	data: ConnectionData;
-	create: (props: ConnectionData) => Roact.Element;
+	create: (props: ConnectionData) => React.Element;
 }
 
 let movingConnectionId = -1;

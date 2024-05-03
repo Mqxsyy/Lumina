@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { Event } from "API/Bindables/Event";
 import { NodeGroups } from "API/NodeGroup";
 import { Node } from "API/Nodes/Node";
@@ -31,7 +31,7 @@ export interface NodeCollectionEntry {
 	data: NodeData;
 	element?: ImageButton;
 	elementLoaded: Event;
-	create: (props: NodeData) => Roact.Element;
+	create: (props: NodeData) => React.Element;
 }
 
 const NodeCollection = [] as NodeCollectionEntry[];
@@ -45,7 +45,7 @@ export function GetNodeById(id: number) {
 	return NodeCollection.find((collection) => collection.data.node.id === id);
 }
 
-export function AddNode(api: Node, create: (data: NodeData) => Roact.Element) {
+export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
 	const collectionEntry: NodeCollectionEntry = {
 		data: {
 			anchorPoint: GetMousePositionOnCanvas().div(GetZoomScale()),

@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { SetColorOverLife as ColorOverLifeAPI } from "API/Nodes/Update/SetColorOverLife";
 import { ColorRampField } from "Components/NodeFields/ColorRampField";
 import { AddNode, NodeData } from "Services/NodesService";

@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import ExportAPI from "API/ExportAPI";
 import { GetExportsFolder } from "API/FolderLocations";
 import ExportAsScript from "API/VFXScriptCreator";
@@ -99,4 +99,4 @@ function Controls() {
 	);
 }
 
-export default Roact.memo(Controls);
+export default React.memo(Controls);

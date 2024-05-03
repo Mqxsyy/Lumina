@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { StyleColors, StyleProperties } from "Style";
 

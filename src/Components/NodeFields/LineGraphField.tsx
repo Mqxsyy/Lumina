@@ -1,4 +1,4 @@
-import Roact, { useEffect, useRef } from "@rbxts/roact";
+import React, { useEffect, useRef } from "@rbxts/react";
 import { LineGraphField as LineGraphFieldAPI } from "API/Fields/LineGraphField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";

@@ -1,4 +1,4 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
 import { TextInput } from "Components/Basic/TextInput";
 import Div from "../Div";
 

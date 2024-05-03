@@ -1,4 +1,4 @@
-import Roact, { useEffect } from "@rbxts/roact";
+import React, { useEffect, useRef } from "@rbxts/react";
 
 interface Props {
 	ElementName?: string;
@@ -39,8 +39,8 @@ export default function Div({
 	onMouseButton2Up = undefined,
 	getFrame = undefined,
 	children,
-}: Roact.PropsWithChildren<Props>) {
-	const frameRef = Roact.createRef<Frame>();
+}: React.PropsWithChildren<Props>) {
+	const frameRef = useRef<Frame>();
 
 	useEffect(() => {
 		if (frameRef.current === undefined) return;

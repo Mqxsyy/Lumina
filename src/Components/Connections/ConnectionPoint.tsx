@@ -1,5 +1,4 @@
-import Roact, { useEffect, useRef } from "@rbxts/roact";
-import Div from "Components/Div";
+import React, { useEffect, useRef } from "@rbxts/react";
 import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 

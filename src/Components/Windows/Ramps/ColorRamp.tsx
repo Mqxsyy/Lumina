@@ -1,19 +1,26 @@
-import Roact, { useEffect, useRef, useState } from "@rbxts/roact";
+import React, { StrictMode, useEffect, useRef, useState } from "@rbxts/react";
+import { createRoot } from "@rbxts/react-roblox";
 import { Event } from "API/Bindables/Event";
 import { ColorPoint, ColorRampField } from "API/Fields/ColorRampField";
+import { RoundDecimal } from "API/Lib";
+import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { NumberInput } from "Components/Basic/NumberInput";
 import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
-import ColorRampPoint from "./ColorRampPoint";
-import { NumberInput } from "Components/Basic/NumberInput";
-import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { RoundDecimal } from "API/Lib";
 import { LoadColorPickerAPI } from "../Pickers.tsx/ColorPicker";
+import ColorRampPoint from "./ColorRampPoint";
 
 const DOUBLE_CLICK_TIME = 0.25;
 
 export function InitializeColorRamp() {
-	Roact.mount(<ColorRamp />, GetWindow(Windows.ColorRamp)!, "LineGraph");
+	const window = GetWindow(Windows.ColorRamp)!;
+	const root = createRoot(window);
+	root.render(
+		<StrictMode>
+			<ColorRamp />
+		</StrictMode>,
+	);
 }
 
 let loadedRampAPI: ColorRampField;
