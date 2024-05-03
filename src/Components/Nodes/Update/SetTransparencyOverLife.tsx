@@ -5,22 +5,22 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetTransparencyOverLife() {
-	return AddNode(new TransparencyOverLifeAPI(), (data: NodeData) => {
-		return <SetTransparencyOverLife key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new TransparencyOverLifeAPI(), (data: NodeData) => {
+        return <SetTransparencyOverLife key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function SetTransparencyOverLife({ data }: { data: NodeData }) {
-	const graphFieldRef = useRef((data.node as TransparencyOverLifeAPI).nodeFields.graph);
+    const graphFieldRef = useRef((data.node as TransparencyOverLifeAPI).nodeFields.graph);
 
-	return (
-		<Node
-			Name="Set Transparency Over Life"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-		>
-			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} />
-		</Node>
-	);
+    return (
+        <Node
+            Name="Set Transparency Over Life"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+        >
+            <LineGraphField Label={"Graph"} Graph={graphFieldRef.current} />
+        </Node>
+    );
 }

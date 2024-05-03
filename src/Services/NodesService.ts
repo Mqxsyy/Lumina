@@ -9,101 +9,101 @@ import { GetZoomScale } from "ZoomScale";
 // TODO: Add render order changing
 
 export interface NodeConnectionOut {
-	id: number;
+    id: number;
 }
 
 export interface NodeConnectionIn {
-	id: number;
-	fieldName: string;
+    id: number;
+    fieldName: string;
 }
 
 export interface NodeData {
-	anchorPoint: Vector2;
-	connectionsOut: NodeConnectionOut[];
-	loadedConnectionsOut?: NodeConnectionOut[];
-	connectionsIn: NodeConnectionIn[];
-	loadedConnectionsIn?: NodeConnectionIn[];
-	node: Node;
-	onDestroy: Event<[NodeData]>;
+    anchorPoint: Vector2;
+    connectionsOut: NodeConnectionOut[];
+    loadedConnectionsOut?: NodeConnectionOut[];
+    connectionsIn: NodeConnectionIn[];
+    loadedConnectionsIn?: NodeConnectionIn[];
+    node: Node;
+    onDestroy: Event<[NodeData]>;
 }
 
 export interface NodeCollectionEntry {
-	data: NodeData;
-	element?: ImageButton;
-	elementLoaded: Event;
-	create: (props: NodeData) => React.Element;
+    data: NodeData;
+    element?: ImageButton;
+    elementLoaded: Event;
+    create: (props: NodeData) => React.Element;
 }
 
 const NodeCollection = [] as NodeCollectionEntry[];
 export const NodesChanged = new Event();
 
 export function GetAllNodes(): NodeCollectionEntry[] {
-	return NodeCollection;
+    return NodeCollection;
 }
 
 export function GetNodeById(id: number) {
-	return NodeCollection.find((collection) => collection.data.node.id === id);
+    return NodeCollection.find((collection) => collection.data.node.id === id);
 }
 
 export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
-	const collectionEntry: NodeCollectionEntry = {
-		data: {
-			anchorPoint: GetMousePositionOnCanvas().div(GetZoomScale()),
-			connectionsOut: [],
-			connectionsIn: [],
-			node: api,
-			onDestroy: new Event<[NodeData]>(),
-		},
-		elementLoaded: new Event(),
-		create,
-	};
+    const collectionEntry: NodeCollectionEntry = {
+        data: {
+            anchorPoint: GetMousePositionOnCanvas().div(GetZoomScale()),
+            connectionsOut: [],
+            connectionsIn: [],
+            node: api,
+            onDestroy: new Event<[NodeData]>(),
+        },
+        elementLoaded: new Event(),
+        create,
+    };
 
-	NodeCollection.push(collectionEntry);
-	NodesChanged.Fire();
+    NodeCollection.push(collectionEntry);
+    NodesChanged.Fire();
 
-	return collectionEntry;
+    return collectionEntry;
 }
 
 export function UpdateNodeData(id: number, callback: (data: NodeData) => NodeData) {
-	const node = GetNodeById(id);
-	if (node !== undefined) {
-		node.data = callback(node.data);
-		NodesChanged.Fire();
-		return;
-	}
+    const node = GetNodeById(id);
+    if (node !== undefined) {
+        node.data = callback(node.data);
+        NodesChanged.Fire();
+        return;
+    }
 
-	warn(`Node with id ${id} not found`);
+    warn(`Node with id ${id} not found`);
 }
 
 export function SetNodeElement(id: number, element: ImageButton) {
-	const node = GetNodeById(id);
+    const node = GetNodeById(id);
 
-	if (node !== undefined) {
-		if (node.element !== undefined) return;
+    if (node !== undefined) {
+        if (node.element !== undefined) return;
 
-		node.element = element;
-		node.elementLoaded.Fire();
-		return;
-	}
+        node.element = element;
+        node.elementLoaded.Fire();
+        return;
+    }
 
-	warn(`Node with id ${id} not found`);
+    warn(`Node with id ${id} not found`);
 }
 
 export function RemoveNode(id: number) {
-	const index = NodeCollection.findIndex((collection) => collection.data.node.id === id);
-	if (index !== -1) {
-		const node = NodeCollection[index];
-		if (node.data.node.nodeGroup === NodeGroups.Render) {
-			(node.data.node as RenderNode).Destroy();
-		}
+    const index = NodeCollection.findIndex((collection) => collection.data.node.id === id);
+    if (index !== -1) {
+        const node = NodeCollection[index];
+        if (node.data.node.nodeGroup === NodeGroups.Render) {
+            (node.data.node as RenderNode).Destroy();
+        }
 
-		node.data.onDestroy.Fire(node.data);
+        node.data.onDestroy.Fire(node.data);
 
-		NodeCollection.remove(index);
-		NodesChanged.Fire();
+        NodeCollection.remove(index);
+        NodesChanged.Fire();
 
-		return;
-	}
+        return;
+    }
 
-	warn(`Failed to delete node. Id not found`);
+    warn(`Failed to delete node. Id not found`);
 }

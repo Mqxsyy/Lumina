@@ -5,24 +5,24 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetPosition() {
-	return AddNode(new SetPositionAPI(), (data: NodeData) => {
-		return <SetPosition key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new SetPositionAPI(), (data: NodeData) => {
+        return <SetPosition key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function SetPosition({ data }: { data: NodeData }) {
-	return (
-		<Node
-			Name="Set Position"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-		>
-			<Vector3Field
-				NodeId={data.node.id}
-				NodeField={(data.node as SetPositionAPI).nodeFields.position}
-				NodeFieldName={SetPositionFieldNames.position}
-			/>
-		</Node>
-	);
+    return (
+        <Node
+            Name="Set Position"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+        >
+            <Vector3Field
+                NodeId={data.node.id}
+                NodeField={(data.node as SetPositionAPI).nodeFields.position}
+                NodeFieldName={SetPositionFieldNames.position}
+            />
+        </Node>
+    );
 }

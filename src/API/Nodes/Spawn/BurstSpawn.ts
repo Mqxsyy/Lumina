@@ -5,32 +5,32 @@ import { SpawnNode } from "./SpawnNode";
 
 export const BurstSpawnName = "BurstSpawn";
 export const BurstSpawnFieldNames = {
-	amount: "amount",
+    amount: "amount",
 };
 
 export class BurstSpawn extends SpawnNode {
-	nodeGroup: NodeGroups = NodeGroups.Spawn;
-	nodeFields: {
-		amount: NumberField;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Spawn;
+    nodeFields: {
+        amount: NumberField;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			amount: new NumberField(20),
-		};
-	}
+        this.nodeFields = {
+            amount: new NumberField(20),
+        };
+    }
 
-	GetNodeName() {
-		return BurstSpawnName;
-	}
+    GetNodeName() {
+        return BurstSpawnName;
+    }
 
-	GetValue = (): number => {
-		return this.nodeFields.amount.GetNumber();
-	};
+    GetValue = (): number => {
+        return this.nodeFields.amount.GetNumber();
+    };
 
-	GetAutoGenerationCode() {
-		return AutoGenBurstSpawn(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenBurstSpawn(this);
+    }
 }

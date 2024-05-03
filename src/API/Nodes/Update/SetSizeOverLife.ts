@@ -6,39 +6,39 @@ import { UpdateNode } from "./UpdateNode";
 
 export const SetSizeOverLifeName = "SetSizeOverLife";
 export const SetSizeOverLifeFieldNames = {
-	graph: "graph",
+    graph: "graph",
 };
 
 export class SetSizeOverLife extends UpdateNode {
-	nodeGroup: NodeGroups = NodeGroups.Update;
-	nodeFields = {
-		graph: new LineGraphField(),
-	};
+    nodeGroup: NodeGroups = NodeGroups.Update;
+    nodeFields = {
+        graph: new LineGraphField(),
+    };
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	Update(id: number) {
-		UpdateParticleData(id, (data) => {
-			const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
-			const size = this.nodeFields.graph.GetNumber(lifetime);
-			const sizeVector3 = new Vector3(size, size, 0.001);
+    Update(id: number) {
+        UpdateParticleData(id, (data) => {
+            const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
+            const size = this.nodeFields.graph.GetNumber(lifetime);
+            const sizeVector3 = new Vector3(size, size, 0.001);
 
-			if (data.size === sizeVector3) return data;
+            if (data.size === sizeVector3) return data;
 
-			data.size = sizeVector3;
-			data.particle.Size = sizeVector3;
+            data.size = sizeVector3;
+            data.particle.Size = sizeVector3;
 
-			return data;
-		});
-	}
+            return data;
+        });
+    }
 
-	GetNodeName(): string {
-		return SetSizeOverLifeName;
-	}
+    GetNodeName(): string {
+        return SetSizeOverLifeName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenSetSizeOverLife(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenSetSizeOverLife(this);
+    }
 }

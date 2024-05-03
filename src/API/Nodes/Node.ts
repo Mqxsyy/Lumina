@@ -3,29 +3,29 @@ import { NodeGroups } from "../NodeGroup";
 import { NodeIdPool } from "./NodeIdPool";
 
 export interface ParticleInitData {
-	lifetime?: number;
-	spawnPosition?: Vector3;
+    lifetime?: number;
+    spawnPosition?: Vector3;
 }
 
 export abstract class Node {
-	id: number;
+    id: number;
 
-	abstract nodeGroup: NodeGroups;
-	abstract nodeFields: { [key: string]: NodeFields };
-	connectedSystemId?: number;
+    abstract nodeGroup: NodeGroups;
+    abstract nodeFields: { [key: string]: NodeFields };
+    connectedSystemId?: number;
 
-	constructor() {
-		this.id = NodeIdPool.GetNextId();
-	}
+    constructor() {
+        this.id = NodeIdPool.GetNextId();
+    }
 
-	ConnectToSystem(systemId: number) {
-		this.connectedSystemId = systemId;
-	}
+    ConnectToSystem(systemId: number) {
+        this.connectedSystemId = systemId;
+    }
 
-	RemoveSystemConnection() {
-		this.connectedSystemId = undefined;
-	}
+    RemoveSystemConnection() {
+        this.connectedSystemId = undefined;
+    }
 
-	abstract GetNodeName(): string;
-	abstract GetAutoGenerationCode(wrapper?: string): string;
+    abstract GetNodeName(): string;
+    abstract GetAutoGenerationCode(wrapper?: string): string;
 }

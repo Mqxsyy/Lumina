@@ -6,25 +6,25 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetRotationZ() {
-	return AddNode(new SetRotationZAPI(), (data: NodeData) => {
-		return <SetRotationZ key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new SetRotationZAPI(), (data: NodeData) => {
+        return <SetRotationZ key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function SetRotationZ({ data }: { data: NodeData }) {
-	return (
-		<Node
-			Name="Set Rotation Z"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-		>
-			<NumberField
-				NodeId={data.node.id}
-				NodeField={(data.node as SetRotationZAPI).nodeFields.rotation}
-				NodeFieldName={SetRotationZFieldNames.rotation}
-				Label={CapitalizeFirstLetter(SetRotationZFieldNames.rotation)}
-			/>
-		</Node>
-	);
+    return (
+        <Node
+            Name="Set Rotation Z"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+        >
+            <NumberField
+                NodeId={data.node.id}
+                NodeField={(data.node as SetRotationZAPI).nodeFields.rotation}
+                NodeFieldName={SetRotationZFieldNames.rotation}
+                Label={CapitalizeFirstLetter(SetRotationZFieldNames.rotation)}
+            />
+        </Node>
+    );
 }

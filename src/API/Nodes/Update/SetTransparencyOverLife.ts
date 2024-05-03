@@ -6,30 +6,30 @@ import { UpdateNode } from "./UpdateNode";
 
 export const SetTransparencyOverLifeName = "SetTransparencyOverLife";
 export const SetTransparencyOverLifeFieldNames = {
-	graph: "graph",
+    graph: "graph",
 };
 
 export class SetTransparencyOverLife extends UpdateNode {
-	nodeGroup: NodeGroups = NodeGroups.Update;
-	nodeFields = {
-		graph: new LineGraphField(),
-	};
+    nodeGroup: NodeGroups = NodeGroups.Update;
+    nodeFields = {
+        graph: new LineGraphField(),
+    };
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	Update(id: number) {
-		const particleData = GetParticleData(id);
-		const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
-		particleData.particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.graph.GetNumber(lifetime);
-	}
+    Update(id: number) {
+        const particleData = GetParticleData(id);
+        const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
+        particleData.particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.graph.GetNumber(lifetime);
+    }
 
-	GetNodeName(): string {
-		return SetTransparencyOverLifeName;
-	}
+    GetNodeName(): string {
+        return SetTransparencyOverLifeName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenTransparencyOverLife(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenTransparencyOverLife(this);
+    }
 }

@@ -7,57 +7,57 @@ import Div from "Components/Div";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
-	NodeId: number;
-	NodeField: NumberFieldAPI;
-	NodeFieldName: string;
+    NodeId: number;
+    NodeField: NumberFieldAPI;
+    NodeFieldName: string;
 
-	Label: string;
-	AllowNegative?: boolean;
+    Label: string;
+    AllowNegative?: boolean;
 
-	AllowConnection?: boolean;
-	OverrideSetNumber?: (number: number) => void;
+    AllowConnection?: boolean;
+    OverrideSetNumber?: (number: number) => void;
 }
 
 export default function NumberField({
-	NodeId,
-	NodeField,
-	NodeFieldName,
-	Label,
-	AllowNegative = false,
-	AllowConnection = true,
-	OverrideSetNumber = undefined,
+    NodeId,
+    NodeField,
+    NodeFieldName,
+    Label,
+    AllowNegative = false,
+    AllowConnection = true,
+    OverrideSetNumber = undefined,
 }: Props) {
-	const zoomScale = GetZoomScale();
+    const zoomScale = GetZoomScale();
 
-	return (
-		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-			<uilistlayout
-				FillDirection={"Horizontal"}
-				VerticalAlignment={"Center"}
-				Padding={new UDim(0, 10 * zoomScale)}
-			/>
+    return (
+        <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+            <uilistlayout
+                FillDirection={"Horizontal"}
+                VerticalAlignment={"Center"}
+                Padding={new UDim(0, 10 * zoomScale)}
+            />
 
-			{AllowConnection && (
-				<ConnectionPointIn
-					NodeId={NodeId}
-					NodeFieldName={NodeFieldName}
-					BindFunction={NodeField.BindNumber}
-					UnbindFunction={NodeField.UnbindNumber}
-				/>
-			)}
+            {AllowConnection && (
+                <ConnectionPointIn
+                    NodeId={NodeId}
+                    NodeFieldName={NodeFieldName}
+                    BindFunction={NodeField.BindNumber}
+                    UnbindFunction={NodeField.UnbindNumber}
+                />
+            )}
 
-			<BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
-			<NumberInput
-				AnchorPoint={new Vector2(1, 0)}
-				Position={UDim2.fromScale(1, 0)}
-				Size={new UDim2(1, 0, 0, 20)}
-				Text={() => tostring(NodeField.GetNumber())}
-				AllowNegative={AllowNegative}
-				Disabled={NodeField.boundNode !== undefined}
-				NumberChanged={OverrideSetNumber || NodeField.SetNumber}
-			>
-				<uiflexitem FlexMode={"Fill"} />
-			</NumberInput>
-		</Div>
-	);
+            <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
+            <NumberInput
+                AnchorPoint={new Vector2(1, 0)}
+                Position={UDim2.fromScale(1, 0)}
+                Size={new UDim2(1, 0, 0, 20)}
+                Text={() => tostring(NodeField.GetNumber())}
+                AllowNegative={AllowNegative}
+                Disabled={NodeField.boundNode !== undefined}
+                NumberChanged={OverrideSetNumber || NodeField.SetNumber}
+            >
+                <uiflexitem FlexMode={"Fill"} />
+            </NumberInput>
+        </Div>
+    );
 }

@@ -6,124 +6,124 @@ import Div from "../Div";
 import { NodeSelectionButton } from "./NodeSelectionButton";
 
 interface Props {
-	Text: string;
-	NodeCategory: { [key: string]: SelectionEntry };
-	CategoryUnhoverFunctions: (() => void)[];
-	ToggleSelection: () => void;
-	ExposeUnhover: (fn: () => void) => void;
+    Text: string;
+    NodeCategory: { [key: string]: SelectionEntry };
+    CategoryUnhoverFunctions: (() => void)[];
+    ToggleSelection: () => void;
+    ExposeUnhover: (fn: () => void) => void;
 }
 
 export function NodeCategorySelectionButton({
-	Text,
-	NodeCategory,
-	CategoryUnhoverFunctions,
-	ToggleSelection,
-	ExposeUnhover,
+    Text,
+    NodeCategory,
+    CategoryUnhoverFunctions,
+    ToggleSelection,
+    ExposeUnhover,
 }: Props) {
-	const [hovering, setHovering] = useState(false);
-	const [nodes, setNodes] = useState([] as SelectionEntry[]);
+    const [hovering, setHovering] = useState(false);
+    const [nodes, setNodes] = useState([] as SelectionEntry[]);
 
-	const isHoveringButtonRef = useRef(false);
-	const isHoveringSelectionRef = useRef(false);
+    const isHoveringButtonRef = useRef(false);
+    const isHoveringSelectionRef = useRef(false);
 
-	const onHoverButton = () => {
-		CategoryUnhoverFunctions.forEach((fn) => fn()); // OPTIMIZE: may not be required anymore
+    const onHoverButton = () => {
+        CategoryUnhoverFunctions.forEach((fn) => fn()); // OPTIMIZE: may not be required anymore
 
-		isHoveringButtonRef.current = true;
-		setHovering(true);
-	};
+        isHoveringButtonRef.current = true;
+        setHovering(true);
+    };
 
-	const onUnhoverButton = () => {
-		isHoveringButtonRef.current = false;
-		if (!isHoveringSelectionRef.current) {
-			setHovering(false);
-		}
-	};
+    const onUnhoverButton = () => {
+        isHoveringButtonRef.current = false;
+        if (!isHoveringSelectionRef.current) {
+            setHovering(false);
+        }
+    };
 
-	const onHoverSelection = () => {
-		isHoveringSelectionRef.current = true;
-		setHovering(true);
-	};
+    const onHoverSelection = () => {
+        isHoveringSelectionRef.current = true;
+        setHovering(true);
+    };
 
-	const onUnhoverSelection = () => {
-		isHoveringSelectionRef.current = false;
-		if (!isHoveringButtonRef.current) {
-			setHovering(false);
-		}
-	};
+    const onUnhoverSelection = () => {
+        isHoveringSelectionRef.current = false;
+        if (!isHoveringButtonRef.current) {
+            setHovering(false);
+        }
+    };
 
-	useEffect(() => {
-		const nodes = [];
+    useEffect(() => {
+        const nodes = [];
 
-		for (const [_, v] of pairs(NodeCategory)) {
-			if (v.create === undefined) continue;
-			nodes.push(v);
-		}
+        for (const [_, v] of pairs(NodeCategory)) {
+            if (v.create === undefined) continue;
+            nodes.push(v);
+        }
 
-		ExposeUnhover(() => {
-			onUnhoverButton();
-			onUnhoverSelection();
-		});
+        ExposeUnhover(() => {
+            onUnhoverButton();
+            onUnhoverSelection();
+        });
 
-		// Nodes are rendered in alphabetical order
-		setNodes(nodes);
-	}, []);
+        // Nodes are rendered in alphabetical order
+        setNodes(nodes);
+    }, []);
 
-	return (
-		<Div Size={new UDim2(1, 8, 0, 25)} onHover={onHoverButton} onUnhover={onUnhoverButton}>
-			{hovering && (
-				<frame
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					Position={new UDim2(0.5, -4, 0.5, 0)}
-					Size={new UDim2(0.95, -8, 0.9, 0)}
-					BackgroundColor3={StyleColors.Highlight}
-				>
-					<uicorner CornerRadius={StyleProperties.CornerRadius} />
-				</frame>
-			)}
-			{hovering && (
-				<Div
-					Position={new UDim2(1, -3, 0, -3)}
-					Size={UDim2.fromOffset(200, nodes.size() < 8 ? nodes.size() * 30 + 1 : 8 * 30 + 1)}
-					BackgroundColor={StyleColors.Primary}
-				>
-					<uicorner CornerRadius={StyleProperties.CornerRadius} />
-					<uipadding PaddingTop={new UDim(0, 3)} PaddingBottom={new UDim(0, 3)} />
+    return (
+        <Div Size={new UDim2(1, 8, 0, 25)} onHover={onHoverButton} onUnhover={onUnhoverButton}>
+            {hovering && (
+                <frame
+                    AnchorPoint={new Vector2(0.5, 0.5)}
+                    Position={new UDim2(0.5, -4, 0.5, 0)}
+                    Size={new UDim2(0.95, -8, 0.9, 0)}
+                    BackgroundColor3={StyleColors.Highlight}
+                >
+                    <uicorner CornerRadius={StyleProperties.CornerRadius} />
+                </frame>
+            )}
+            {hovering && (
+                <Div
+                    Position={new UDim2(1, -3, 0, -3)}
+                    Size={UDim2.fromOffset(200, nodes.size() < 8 ? nodes.size() * 30 + 1 : 8 * 30 + 1)}
+                    BackgroundColor={StyleColors.Primary}
+                >
+                    <uicorner CornerRadius={StyleProperties.CornerRadius} />
+                    <uipadding PaddingTop={new UDim(0, 3)} PaddingBottom={new UDim(0, 3)} />
 
-					<scrollingframe
-						Size={UDim2.fromScale(1, 1)}
-						ScrollBarThickness={6}
-						CanvasSize={UDim2.fromScale(1, 0)}
-						AutomaticCanvasSize={"Y"}
-						BackgroundTransparency={1}
-						ScrollingDirection={"Y"}
-						Event={{
-							MouseEnter: onHoverSelection,
-							MouseLeave: onUnhoverSelection,
-						}}
-					>
-						<uilistlayout FillDirection={"Vertical"} Padding={new UDim(0, 5)} />
-						<uipadding PaddingRight={new UDim(0, nodes.size() > 8 ? 6 : 0)} />
+                    <scrollingframe
+                        Size={UDim2.fromScale(1, 1)}
+                        ScrollBarThickness={6}
+                        CanvasSize={UDim2.fromScale(1, 0)}
+                        AutomaticCanvasSize={"Y"}
+                        BackgroundTransparency={1}
+                        ScrollingDirection={"Y"}
+                        Event={{
+                            MouseEnter: onHoverSelection,
+                            MouseLeave: onUnhoverSelection,
+                        }}
+                    >
+                        <uilistlayout FillDirection={"Vertical"} Padding={new UDim(0, 5)} />
+                        <uipadding PaddingRight={new UDim(0, nodes.size() > 8 ? 6 : 0)} />
 
-						{nodes.map((node) => {
-							return (
-								<NodeSelectionButton
-									ElementName={node.name}
-									Text={node.name}
-									ToggleSelection={ToggleSelection}
-									CreateFn={node.create}
-								/>
-							);
-						})}
-					</scrollingframe>
-				</Div>
-			)}
-			<Div Size={new UDim2(1, -8, 1, 0)} ZIndex={2}>
-				<uipadding PaddingLeft={new UDim(0, 15)} PaddingRight={new UDim(0, 15)} />
+                        {nodes.map((node) => {
+                            return (
+                                <NodeSelectionButton
+                                    ElementName={node.name}
+                                    Text={node.name}
+                                    ToggleSelection={ToggleSelection}
+                                    CreateFn={node.create}
+                                />
+                            );
+                        })}
+                    </scrollingframe>
+                </Div>
+            )}
+            <Div Size={new UDim2(1, -8, 1, 0)} ZIndex={2}>
+                <uipadding PaddingLeft={new UDim(0, 15)} PaddingRight={new UDim(0, 15)} />
 
-				<BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} />
-				<BasicTextLabel Text=">" TextXAlignment={"Right"} IsAffectedByZoom={false} />
-			</Div>
-		</Div>
-	);
+                <BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} />
+                <BasicTextLabel Text=">" TextXAlignment={"Right"} IsAffectedByZoom={false} />
+            </Div>
+        </Div>
+    );
 }

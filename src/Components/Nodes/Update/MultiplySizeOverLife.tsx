@@ -5,22 +5,22 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateMultiplySizeOverLife() {
-	return AddNode(new MultiplySizeOverLifeAPI(), (data: NodeData) => {
-		return <MultiplySizeOverLife key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new MultiplySizeOverLifeAPI(), (data: NodeData) => {
+        return <MultiplySizeOverLife key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function MultiplySizeOverLife({ data }: { data: NodeData }) {
-	const graphFieldRef = useRef((data.node as MultiplySizeOverLifeAPI).nodeFields.graph);
+    const graphFieldRef = useRef((data.node as MultiplySizeOverLifeAPI).nodeFields.graph);
 
-	return (
-		<Node
-			Name="Multiple Size Over Life"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-		>
-			<LineGraphField Label={"Graph"} Graph={graphFieldRef.current} MaxValue={10} />
-		</Node>
-	);
+    return (
+        <Node
+            Name="Multiple Size Over Life"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+        >
+            <LineGraphField Label={"Graph"} Graph={graphFieldRef.current} MaxValue={10} />
+        </Node>
+    );
 }

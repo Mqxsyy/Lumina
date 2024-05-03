@@ -5,32 +5,32 @@ import { SpawnNode } from "./SpawnNode";
 
 export const ConstantSpawnName = "ConstantSpawn";
 export const ConstantSpawnFieldNames = {
-	rate: "rate",
+    rate: "rate",
 };
 
 export class ConstantSpawn extends SpawnNode {
-	nodeGroup: NodeGroups = NodeGroups.Spawn;
-	nodeFields: {
-		rate: NumberField; // per second
-	};
+    nodeGroup: NodeGroups = NodeGroups.Spawn;
+    nodeFields: {
+        rate: NumberField; // per second
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			rate: new NumberField(20),
-		};
-	}
+        this.nodeFields = {
+            rate: new NumberField(20),
+        };
+    }
 
-	GetNodeName() {
-		return ConstantSpawnName;
-	}
+    GetNodeName() {
+        return ConstantSpawnName;
+    }
 
-	GetValue = (): number => {
-		return this.nodeFields.rate.GetNumber();
-	};
+    GetValue = (): number => {
+        return this.nodeFields.rate.GetNumber();
+    };
 
-	GetAutoGenerationCode() {
-		return AutoGenConstantSpawn(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenConstantSpawn(this);
+    }
 }

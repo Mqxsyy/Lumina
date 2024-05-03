@@ -7,33 +7,33 @@ import { UpdateNode } from "./UpdateNode";
 
 export const AddRotationZName = "AddRotationZ";
 export const AddRotationZFieldNames = {
-	rotation: "rotation",
+    rotation: "rotation",
 };
 
 export class AddRotationZ extends UpdateNode {
-	nodeGroup: NodeGroups = NodeGroups.Update;
-	nodeFields: {
-		rotation: NumberField;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Update;
+    nodeFields: {
+        rotation: NumberField;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			rotation: new NumberField(0),
-		};
-	}
+        this.nodeFields = {
+            rotation: new NumberField(0),
+        };
+    }
 
-	Update(id: number) {
-		const zAddition = this.nodeFields.rotation.GetNumber() * FrameRateMultiplier;
-		GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation += zAddition;
-	}
+    Update(id: number) {
+        const zAddition = this.nodeFields.rotation.GetNumber() * FrameRateMultiplier;
+        GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation += zAddition;
+    }
 
-	GetNodeName(): string {
-		return AddRotationZName;
-	}
+    GetNodeName(): string {
+        return AddRotationZName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenAddRotationZ(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenAddRotationZ(this);
+    }
 }

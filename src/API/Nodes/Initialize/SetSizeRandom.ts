@@ -7,41 +7,41 @@ import { InitializeNode } from "./InitializeNode";
 
 export const SetSizeRandomName = "SetSizeRandom";
 export const SetSizeRandomFieldNames = {
-	range: "range",
+    range: "range",
 };
 
 export class SetSizeRandom extends InitializeNode {
-	nodeGroup: NodeGroups = NodeGroups.Initialize;
-	nodeFields: {
-		range: Vector2Field;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Initialize;
+    nodeFields: {
+        range: Vector2Field;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			range: new Vector2Field(0, 0),
-		};
-	}
+        this.nodeFields = {
+            range: new Vector2Field(0, 0),
+        };
+    }
 
-	Initialize(id: number) {
-		UpdateParticleData(id, (data) => {
-			const range = this.nodeFields.range.GetVector2();
-			const size = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
-			const sizeVector3 = new Vector3(size, size, 0.001);
+    Initialize(id: number) {
+        UpdateParticleData(id, (data) => {
+            const range = this.nodeFields.range.GetVector2();
+            const size = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
+            const sizeVector3 = new Vector3(size, size, 0.001);
 
-			data.size = sizeVector3;
-			data.particle.Size = sizeVector3;
+            data.size = sizeVector3;
+            data.particle.Size = sizeVector3;
 
-			return data;
-		});
-	}
+            return data;
+        });
+    }
 
-	GetNodeName(): string {
-		return SetSizeRandomName;
-	}
+    GetNodeName(): string {
+        return SetSizeRandomName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenSetSizeRandom(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenSetSizeRandom(this);
+    }
 }

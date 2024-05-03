@@ -6,30 +6,30 @@ import { UpdateNode } from "./UpdateNode";
 
 export const SetColorOverLifeName = "SetColorOverLife";
 export const SetColorOverLifeFieldNames = {
-	ramp: "ramp",
+    ramp: "ramp",
 };
 
 export class SetColorOverLife extends UpdateNode {
-	nodeGroup: NodeGroups = NodeGroups.Update;
-	nodeFields = {
-		ramp: new ColorRampField(),
-	};
+    nodeGroup: NodeGroups = NodeGroups.Update;
+    nodeFields = {
+        ramp: new ColorRampField(),
+    };
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	Update(id: number) {
-		const particleData = GetParticleData(id);
-		const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
-		particleData.particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.ramp.GetColor(lifetime);
-	}
+    Update(id: number) {
+        const particleData = GetParticleData(id);
+        const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
+        particleData.particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.ramp.GetColor(lifetime);
+    }
 
-	GetNodeName(): string {
-		return SetColorOverLifeName;
-	}
+    GetNodeName(): string {
+        return SetColorOverLifeName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenSetColorOverLife(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenSetColorOverLife(this);
+    }
 }

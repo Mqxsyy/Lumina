@@ -7,45 +7,45 @@ import { LogicNode } from "./LogicNode";
 
 export const RandomNumberName = "RandomNumber";
 export const RandomNumberFieldNames = {
-	range: "range",
-	isInt: "isInt",
-	randomizeOnce: "randomizeOnce",
+    range: "range",
+    isInt: "isInt",
+    randomizeOnce: "randomizeOnce",
 };
 
 export class RandomNumber extends LogicNode<number> {
-	nodeGroup: NodeGroups = NodeGroups.Logic;
-	nodeFields: {
-		range: Vector2Field;
-		isInt: BooleanField;
-		randomizeOnce: BooleanField;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Logic;
+    nodeFields: {
+        range: Vector2Field;
+        isInt: BooleanField;
+        randomizeOnce: BooleanField;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			range: new Vector2Field(0, 0),
-			isInt: new BooleanField(false),
-			randomizeOnce: new BooleanField(false),
-		};
-	}
+        this.nodeFields = {
+            range: new Vector2Field(0, 0),
+            isInt: new BooleanField(false),
+            randomizeOnce: new BooleanField(false),
+        };
+    }
 
-	Calculate = () => {
-		const range = this.nodeFields.range.GetVector2();
-		let value = range.x + Rand.NextNumber() * (range.y - range.x);
+    Calculate = () => {
+        const range = this.nodeFields.range.GetVector2();
+        let value = range.x + Rand.NextNumber() * (range.y - range.x);
 
-		if (this.nodeFields.isInt.GetBoolean()) {
-			value = math.round(value);
-		}
+        if (this.nodeFields.isInt.GetBoolean()) {
+            value = math.round(value);
+        }
 
-		return value;
-	};
+        return value;
+    };
 
-	GetNodeName(): string {
-		return RandomNumberName;
-	}
+    GetNodeName(): string {
+        return RandomNumberName;
+    }
 
-	GetAutoGenerationCode(wrapper: string) {
-		return AutoGenRandomNumber(this, wrapper);
-	}
+    GetAutoGenerationCode(wrapper: string) {
+        return AutoGenRandomNumber(this, wrapper);
+    }
 }

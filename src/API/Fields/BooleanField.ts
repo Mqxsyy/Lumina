@@ -3,49 +3,49 @@ import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
 interface SerializedData {
-	boolean: boolean;
+    boolean: boolean;
 }
 
 export class BooleanField extends NodeField {
-	boolean: boolean;
-	boundNode: undefined | LogicNode;
-	private boundFunction: undefined | (() => boolean);
+    boolean: boolean;
+    boundNode: undefined | LogicNode;
+    private boundFunction: undefined | (() => boolean);
 
-	FieldChanged = new Event();
+    FieldChanged = new Event();
 
-	constructor(boolean: boolean) {
-		super();
-		this.boolean = boolean;
-	}
+    constructor(boolean: boolean) {
+        super();
+        this.boolean = boolean;
+    }
 
-	GetBoolean() {
-		if (this.boundFunction !== undefined) {
-			return this.boundFunction();
-		}
+    GetBoolean() {
+        if (this.boundFunction !== undefined) {
+            return this.boundFunction();
+        }
 
-		return this.boolean;
-	}
+        return this.boolean;
+    }
 
-	SetBoolean = (boolean: boolean) => {
-		this.boolean = boolean;
-		this.boundFunction = undefined;
-		this.boundNode = undefined;
-		this.FieldChanged.Fire();
-	};
+    SetBoolean = (boolean: boolean) => {
+        this.boolean = boolean;
+        this.boundFunction = undefined;
+        this.boundNode = undefined;
+        this.FieldChanged.Fire();
+    };
 
-	BindBoolean = (boundFunction: (() => boolean) | undefined, boundNode: LogicNode | undefined) => {
-		this.boundFunction = boundFunction;
-		this.boundNode = boundNode;
-		this.FieldChanged.Fire();
-	};
+    BindBoolean = (boundFunction: (() => boolean) | undefined, boundNode: LogicNode | undefined) => {
+        this.boundFunction = boundFunction;
+        this.boundNode = boundNode;
+        this.FieldChanged.Fire();
+    };
 
-	SerializeData() {
-		return {
-			boolean: this.boolean,
-		};
-	}
+    SerializeData() {
+        return {
+            boolean: this.boolean,
+        };
+    }
 
-	ReadSerializedData(data: {}) {
-		this.SetBoolean((data as SerializedData).boolean);
-	}
+    ReadSerializedData(data: {}) {
+        this.SetBoolean((data as SerializedData).boolean);
+    }
 }

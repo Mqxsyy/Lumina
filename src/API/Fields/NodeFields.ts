@@ -8,11 +8,11 @@ import { Vector2Field } from "./Vector2Field";
 import { Vector3Field } from "./Vector3Field";
 
 export type NodeFields =
-	| NumberField
-	| BooleanField
-	| Vector2Field
-	| Vector3Field
-	| OrientationField
-	| ColorField
-	| LineGraphField
-	| ColorRampField;
+    | NumberField
+    | BooleanField
+    | Vector2Field
+    | Vector3Field
+    | OrientationField
+    | ColorField
+    | LineGraphField
+    | ColorRampField;

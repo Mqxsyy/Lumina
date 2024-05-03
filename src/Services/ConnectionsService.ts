@@ -10,20 +10,20 @@ import { NodeData } from "./NodesService";
 // IMPORTANT: FIX THESE, THEY'RE BROKEN
 
 export interface ConnectionData {
-	id: number;
-	loadedId?: number;
-	startNode: NodeData;
-	startOffset: Vector2;
-	endPos?: Vector2;
-	endNode?: NodeData;
-	endOffset?: Vector2;
-	fn: () => number;
-	onDestroy: Event;
+    id: number;
+    loadedId?: number;
+    startNode: NodeData;
+    startOffset: Vector2;
+    endPos?: Vector2;
+    endNode?: NodeData;
+    endOffset?: Vector2;
+    fn: () => number;
+    onDestroy: Event;
 }
 
 interface ConnectionCollectionEntry {
-	data: ConnectionData;
-	create: (props: ConnectionData) => React.Element;
+    data: ConnectionData;
+    create: (props: ConnectionData) => React.Element;
 }
 
 let movingConnectionId = -1;
@@ -34,91 +34,91 @@ const ConnectionCollection = [] as ConnectionCollectionEntry[];
 export const ConnectionsChanged = new Event();
 
 export function GetNextConnectionId(): number {
-	return idPool.GetNextId();
+    return idPool.GetNextId();
 }
 
 export function GetAllConnections(): ConnectionCollectionEntry[] {
-	return ConnectionCollection;
+    return ConnectionCollection;
 }
 
 export function GetConnectionById(id: number) {
-	return ConnectionCollection.find((connection) => connection.data.id === id);
+    return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
 export function CreateConnection(startNode: NodeData, startOffset: Vector2, fn: () => number, loadedId?: number) {
-	const connection: ConnectionCollectionEntry = {
-		data: {
-			id: idPool.GetNextId(),
-			loadedId,
-			startNode,
-			startOffset,
-			fn,
-			onDestroy: new Event(),
-		},
-		create: CreateConnectionLine,
-	};
+    const connection: ConnectionCollectionEntry = {
+        data: {
+            id: idPool.GetNextId(),
+            loadedId,
+            startNode,
+            startOffset,
+            fn,
+            onDestroy: new Event(),
+        },
+        create: CreateConnectionLine,
+    };
 
-	ConnectionCollection.push(connection);
-	ConnectionsChanged.Fire();
+    ConnectionCollection.push(connection);
+    ConnectionsChanged.Fire();
 
-	return connection.data;
+    return connection.data;
 }
 
 export function UpdateConnectionData(id: number, fn: (data: ConnectionData) => ConnectionData) {
-	const connection = GetConnectionById(id);
-	if (connection === undefined) {
-		warn(`Failed to update connection data. Id not found`);
-		return;
-	}
+    const connection = GetConnectionById(id);
+    if (connection === undefined) {
+        warn(`Failed to update connection data. Id not found`);
+        return;
+    }
 
-	connection.data = fn(connection.data);
-	ConnectionsChanged.Fire();
+    connection.data = fn(connection.data);
+    ConnectionsChanged.Fire();
 }
 
 export function DestroyConnection(id: number) {
-	const index = ConnectionCollection.findIndex((connection) => connection.data.id === id);
-	if (index !== -1) {
-		idPool.ReleaseId(id);
+    const index = ConnectionCollection.findIndex((connection) => connection.data.id === id);
+    if (index !== -1) {
+        idPool.ReleaseId(id);
 
-		const connection = ConnectionCollection.remove(index);
-		connection!.data.onDestroy.Fire();
-		ConnectionsChanged.Fire();
-		return;
-	}
+        const connection = ConnectionCollection.remove(index);
+        connection!.data.onDestroy.Fire();
+        ConnectionsChanged.Fire();
+        return;
+    }
 
-	warn(`Failed to delete connection. Id not found`);
+    warn(`Failed to delete connection. Id not found`);
 }
 
 export function StartMovingConnection(id: number) {
-	movingConnectionId = id;
+    movingConnectionId = id;
 
-	RunService.BindToRenderStep("MoveConnection", 200, () => {
-		const mousePosition = GetMousePositionOnCanvas();
+    RunService.BindToRenderStep("MoveConnection", 200, () => {
+        const mousePosition = GetMousePositionOnCanvas();
 
-		UpdateConnectionData(movingConnectionId, (data) => {
-			data.endPos = mousePosition;
-			return data;
-		});
-	});
+        UpdateConnectionData(movingConnectionId, (data) => {
+            data.endPos = mousePosition;
+            return data;
+        });
+    });
 }
 
 export function UnbindMovingConnection(destroyConnection = false) {
-	if (movingConnectionId === -1) return;
+    if (movingConnectionId === -1) return;
 
-	RunService.UnbindFromRenderStep("MoveConnection");
+    RunService.UnbindFromRenderStep("MoveConnection");
 
-	if (destroyConnection) {
-		DestroyConnection(movingConnectionId);
-	}
+    if (destroyConnection) {
+        DestroyConnection(movingConnectionId);
+    }
 
-	UpdateConnectionData(movingConnectionId, (data) => {
-		data.endPos = undefined;
-		return data;
-	});
+    UpdateConnectionData(movingConnectionId, (data) => {
+        data.endPos = undefined;
+        return data;
+    });
 
-	movingConnectionId = -1;
+    movingConnectionId = -1;
 }
 
 export function GetMovingConnectionId() {
-	return movingConnectionId;
+    return movingConnectionId;
 }

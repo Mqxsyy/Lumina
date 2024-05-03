@@ -5,20 +5,20 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetColorOverLife() {
-	return AddNode(new ColorOverLifeAPI(), (data: NodeData) => {
-		return <SetColorOverLife key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new ColorOverLifeAPI(), (data: NodeData) => {
+        return <SetColorOverLife key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function SetColorOverLife({ data }: { data: NodeData }) {
-	return (
-		<Node
-			Name="Set Color Over Life"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-		>
-			<ColorRampField Label={"Ramp"} Ramp={(data.node as ColorOverLifeAPI).nodeFields.ramp} />
-		</Node>
-	);
+    return (
+        <Node
+            Name="Set Color Over Life"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+        >
+            <ColorRampField Label={"Ramp"} Ramp={(data.node as ColorOverLifeAPI).nodeFields.ramp} />
+        </Node>
+    );
 }

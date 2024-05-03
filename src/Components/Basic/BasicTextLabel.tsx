@@ -3,61 +3,61 @@ import { StyleColors, StyleText } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
-	AnchorPoint?: Vector2;
-	Position?: UDim2;
-	Size?: UDim2;
-	AutomaticSize?: "None" | "X" | "Y" | "XY";
+    AnchorPoint?: Vector2;
+    Position?: UDim2;
+    Size?: UDim2;
+    AutomaticSize?: "None" | "X" | "Y" | "XY";
 
-	FontWeight?: Enum.FontWeight;
-	TextSize?: number;
-	TextColor?: Color3;
-	TextXAlignment?: "Left" | "Center" | "Right";
-	TextYAlignment?: "Top" | "Center" | "Bottom";
-	Text: string;
+    FontWeight?: Enum.FontWeight;
+    TextSize?: number;
+    TextColor?: Color3;
+    TextXAlignment?: "Left" | "Center" | "Right";
+    TextYAlignment?: "Top" | "Center" | "Bottom";
+    Text: string;
 
-	ZIndex?: number;
+    ZIndex?: number;
 
-	IsAffectedByZoom?: boolean;
+    IsAffectedByZoom?: boolean;
 }
 
 export function BasicTextLabel({
-	AnchorPoint = Vector2.zero,
-	Position = UDim2.fromScale(0, 0),
-	Size = UDim2.fromScale(1, 1),
-	AutomaticSize = "None",
-	TextSize = StyleText.FontSize,
-	FontWeight = StyleText.FontWeight,
-	TextColor = StyleColors.TextLight,
-	TextXAlignment = "Left",
-	TextYAlignment = "Center",
-	Text,
-	ZIndex = 1,
-	IsAffectedByZoom = true,
-	children,
+    AnchorPoint = Vector2.zero,
+    Position = UDim2.fromScale(0, 0),
+    Size = UDim2.fromScale(1, 1),
+    AutomaticSize = "None",
+    TextSize = StyleText.FontSize,
+    FontWeight = StyleText.FontWeight,
+    TextColor = StyleColors.TextLight,
+    TextXAlignment = "Left",
+    TextYAlignment = "Center",
+    Text,
+    ZIndex = 1,
+    IsAffectedByZoom = true,
+    children,
 }: React.PropsWithChildren<Props>) {
-	const zoomScale = GetZoomScale();
+    const zoomScale = GetZoomScale();
 
-	return (
-		<textlabel
-			AnchorPoint={AnchorPoint}
-			Position={Position}
-			Size={
-				IsAffectedByZoom
-					? new UDim2(Size.X.Scale, Size.X.Offset, Size.Y.Scale, Size.Y.Offset * zoomScale)
-					: Size
-			}
-			AutomaticSize={AutomaticSize}
-			BackgroundTransparency={1}
-			BorderSizePixel={0}
-			TextSize={IsAffectedByZoom ? TextSize * zoomScale : TextSize}
-			FontFace={new Font(StyleText.FontId, FontWeight)}
-			TextColor3={TextColor}
-			TextXAlignment={TextXAlignment}
-			TextYAlignment={TextYAlignment}
-			Text={Text}
-			ZIndex={ZIndex}
-		>
-			{children}
-		</textlabel>
-	);
+    return (
+        <textlabel
+            AnchorPoint={AnchorPoint}
+            Position={Position}
+            Size={
+                IsAffectedByZoom
+                    ? new UDim2(Size.X.Scale, Size.X.Offset, Size.Y.Scale, Size.Y.Offset * zoomScale)
+                    : Size
+            }
+            AutomaticSize={AutomaticSize}
+            BackgroundTransparency={1}
+            BorderSizePixel={0}
+            TextSize={IsAffectedByZoom ? TextSize * zoomScale : TextSize}
+            FontFace={new Font(StyleText.FontId, FontWeight)}
+            TextColor3={TextColor}
+            TextXAlignment={TextXAlignment}
+            TextYAlignment={TextYAlignment}
+            Text={Text}
+            ZIndex={ZIndex}
+        >
+            {children}
+        </textlabel>
+    );
 }

@@ -7,43 +7,43 @@ import { UpdateNode } from "./UpdateNode";
 
 export const DragName = "Drag";
 export const DragFieldNames = {
-	drag: "drag",
+    drag: "drag",
 };
 
 export class Drag extends UpdateNode {
-	nodeGroup: NodeGroups = NodeGroups.Update;
-	nodeFields: {
-		drag: NumberField;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Update;
+    nodeFields: {
+        drag: NumberField;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			drag: new NumberField(0),
-		};
-	}
+        this.nodeFields = {
+            drag: new NumberField(0),
+        };
+    }
 
-	Update(id: number) {
-		const drag = this.nodeFields.drag.GetNumber() * FrameRateMultiplier;
+    Update(id: number) {
+        const drag = this.nodeFields.drag.GetNumber() * FrameRateMultiplier;
 
-		UpdateParticleData(id, (data) => {
-			const oldVelocity = data.velocity;
+        UpdateParticleData(id, (data) => {
+            const oldVelocity = data.velocity;
 
-			const x = LerpNumber(oldVelocity.X, 0, drag);
-			const y = LerpNumber(oldVelocity.Y, 0, drag);
-			const z = LerpNumber(oldVelocity.Z, 0, drag);
+            const x = LerpNumber(oldVelocity.X, 0, drag);
+            const y = LerpNumber(oldVelocity.Y, 0, drag);
+            const z = LerpNumber(oldVelocity.Z, 0, drag);
 
-			data.velocity = new Vector3(x, y, z);
-			return data;
-		});
-	}
+            data.velocity = new Vector3(x, y, z);
+            return data;
+        });
+    }
 
-	GetNodeName(): string {
-		return DragName;
-	}
+    GetNodeName(): string {
+        return DragName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenDrag(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenDrag(this);
+    }
 }

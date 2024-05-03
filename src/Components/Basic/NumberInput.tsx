@@ -3,99 +3,99 @@ import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
 
 interface Props {
-	AnchorPoint?: Vector2;
-	Position?: UDim2;
-	Size?: UDim2;
+    AnchorPoint?: Vector2;
+    Position?: UDim2;
+    Size?: UDim2;
 
-	TextSize?: number;
-	FontWeight?: Enum.FontWeight;
-	TextColor?: Color3;
-	TextXAlignment?: Enum.TextXAlignment;
-	PlaceholderText?: string;
-	Text?: string | (() => string);
+    TextSize?: number;
+    FontWeight?: Enum.FontWeight;
+    TextColor?: Color3;
+    TextXAlignment?: Enum.TextXAlignment;
+    PlaceholderText?: string;
+    Text?: string | (() => string);
 
-	IsAffectedByZoom?: boolean;
-	AllowNegative?: boolean;
+    IsAffectedByZoom?: boolean;
+    AllowNegative?: boolean;
 
-	Disabled?: boolean;
+    Disabled?: boolean;
 
-	NumberChanged?: (number: number) => void | number;
+    NumberChanged?: (number: number) => void | number;
 }
 
 export function NumberInput({
-	AnchorPoint = Vector2.zero,
-	Position = UDim2.fromScale(0, 0),
-	Size = UDim2.fromScale(1, 1),
-	TextSize = StyleText.FontSize,
-	FontWeight = StyleText.FontWeight,
-	TextColor = StyleColors.TextDark,
-	TextXAlignment = Enum.TextXAlignment.Left,
-	PlaceholderText = "",
-	Text = "",
-	IsAffectedByZoom = true,
-	AllowNegative = false,
-	Disabled = false,
-	NumberChanged = undefined,
-	children,
+    AnchorPoint = Vector2.zero,
+    Position = UDim2.fromScale(0, 0),
+    Size = UDim2.fromScale(1, 1),
+    TextSize = StyleText.FontSize,
+    FontWeight = StyleText.FontWeight,
+    TextColor = StyleColors.TextDark,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    PlaceholderText = "",
+    Text = "",
+    IsAffectedByZoom = true,
+    AllowNegative = false,
+    Disabled = false,
+    NumberChanged = undefined,
+    children,
 }: React.PropsWithChildren<Props>) {
-	const validateNumber = (text: string) => {
-		const number = tonumber(text);
+    const validateNumber = (text: string) => {
+        const number = tonumber(text);
 
-		if (number === undefined) {
-			if (AllowNegative) {
-				if (text === "-") return text;
-			}
+        if (number === undefined) {
+            if (AllowNegative) {
+                if (text === "-") return text;
+            }
 
-			return undefined;
-		}
+            return undefined;
+        }
 
-		return text;
-	};
+        return text;
+    };
 
-	const getDefaultText = () => {
-		if (typeIs(Text, "function")) {
-			return Text();
-		}
+    const getDefaultText = () => {
+        if (typeIs(Text, "function")) {
+            return Text();
+        }
 
-		return Text;
-	};
+        return Text;
+    };
 
-	const textChanged = (text: string) => {
-		let number = validateNumber(text);
-		if (number === undefined) return "";
+    const textChanged = (text: string) => {
+        let number = validateNumber(text);
+        if (number === undefined) return "";
 
-		if (NumberChanged !== undefined) {
-			const adjustedNumber = NumberChanged(tonumber(number) as number);
-			if (adjustedNumber !== undefined) {
-				number = tostring(adjustedNumber);
-			}
-		}
+        if (NumberChanged !== undefined) {
+            const adjustedNumber = NumberChanged(tonumber(number) as number);
+            if (adjustedNumber !== undefined) {
+                number = tostring(adjustedNumber);
+            }
+        }
 
-		return number;
-	};
+        return number;
+    };
 
-	const lostFocus = (text: string) => {
-		const number = validateNumber(text);
-		if (number === undefined) return getDefaultText();
-	};
+    const lostFocus = (text: string) => {
+        const number = validateNumber(text);
+        if (number === undefined) return getDefaultText();
+    };
 
-	return (
-		<TextInput
-			AnchorPoint={AnchorPoint}
-			Position={Position}
-			Size={Size}
-			TextSize={TextSize}
-			FontWeight={FontWeight}
-			TextColor={TextColor}
-			TextXAlignment={TextXAlignment}
-			PlaceholderText={PlaceholderText}
-			Text={getDefaultText()}
-			IsAffectedByZoom={IsAffectedByZoom}
-			Disabled={Disabled}
-			TextChanged={textChanged}
-			LostFocus={lostFocus}
-		>
-			{children}
-		</TextInput>
-	);
+    return (
+        <TextInput
+            AnchorPoint={AnchorPoint}
+            Position={Position}
+            Size={Size}
+            TextSize={TextSize}
+            FontWeight={FontWeight}
+            TextColor={TextColor}
+            TextXAlignment={TextXAlignment}
+            PlaceholderText={PlaceholderText}
+            Text={getDefaultText()}
+            IsAffectedByZoom={IsAffectedByZoom}
+            Disabled={Disabled}
+            TextChanged={textChanged}
+            LostFocus={lostFocus}
+        >
+            {children}
+        </TextInput>
+    );
 }

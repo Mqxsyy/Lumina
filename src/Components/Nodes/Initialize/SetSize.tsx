@@ -6,25 +6,25 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetSize() {
-	return AddNode(new SetSizeAPI(), (data: NodeData) => {
-		return <SetSize key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new SetSizeAPI(), (data: NodeData) => {
+        return <SetSize key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function SetSize({ data }: { data: NodeData }) {
-	return (
-		<Node
-			Name="Set Size"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-		>
-			<NumberField
-				NodeId={data.node.id}
-				NodeField={(data.node as SetSizeAPI).nodeFields.size}
-				NodeFieldName={SetSizeFieldNames.size}
-				Label={CapitalizeFirstLetter(SetSizeFieldNames.size)}
-			/>
-		</Node>
-	);
+    return (
+        <Node
+            Name="Set Size"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+        >
+            <NumberField
+                NodeId={data.node.id}
+                NodeField={(data.node as SetSizeAPI).nodeFields.size}
+                NodeFieldName={SetSizeFieldNames.size}
+                Label={CapitalizeFirstLetter(SetSizeFieldNames.size)}
+            />
+        </Node>
+    );
 }

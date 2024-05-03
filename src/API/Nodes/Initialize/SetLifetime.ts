@@ -6,35 +6,35 @@ import { InitializeNode } from "./InitializeNode";
 
 export const SetLifetimeName = "SetLifetime";
 export const SetLifetimeFieldNames = {
-	time: "time",
+    time: "time",
 };
 
 export class SetLifetime extends InitializeNode {
-	nodeGroup: NodeGroups = NodeGroups.Initialize;
-	nodeFields: {
-		time: NumberField;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Initialize;
+    nodeFields: {
+        time: NumberField;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			time: new NumberField(1),
-		};
-	}
+        this.nodeFields = {
+            time: new NumberField(1),
+        };
+    }
 
-	Initialize(id: number) {
-		UpdateParticleData(id, (data) => {
-			data.lifetime = this.nodeFields.time.GetNumber();
-			return data;
-		});
-	}
+    Initialize(id: number) {
+        UpdateParticleData(id, (data) => {
+            data.lifetime = this.nodeFields.time.GetNumber();
+            return data;
+        });
+    }
 
-	GetNodeName(): string {
-		return SetLifetimeName;
-	}
+    GetNodeName(): string {
+        return SetLifetimeName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenSetLifetime(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenSetLifetime(this);
+    }
 }

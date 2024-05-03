@@ -7,28 +7,28 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateRandomNumber() {
-	return AddNode(new RandomNumberAPI(), (data: NodeData) => {
-		return <RandomNumber key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new RandomNumberAPI(), (data: NodeData) => {
+        return <RandomNumber key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function RandomNumber({ data }: { data: NodeData }) {
-	return (
-		<Node
-			Name="Random Number"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-			ConnectionFunction={(data.node as LogicNode<number>).Calculate}
-			ConnectioNode={data.node as LogicNode}
-		>
-			<Vector2Field
-				NodeId={data.node.id}
-				NodeField={(data.node as RandomNumberAPI).nodeFields.range}
-				NodeFieldName={RandomNumberFieldNames.range}
-				Label={CapitalizeFirstLetter(RandomNumberFieldNames.range)}
-				ValueLabels={["Min", "Max"]}
-			/>
-		</Node>
-	);
+    return (
+        <Node
+            Name="Random Number"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+            ConnectionFunction={(data.node as LogicNode<number>).Calculate}
+            ConnectioNode={data.node as LogicNode}
+        >
+            <Vector2Field
+                NodeId={data.node.id}
+                NodeField={(data.node as RandomNumberAPI).nodeFields.range}
+                NodeFieldName={RandomNumberFieldNames.range}
+                Label={CapitalizeFirstLetter(RandomNumberFieldNames.range)}
+                ValueLabels={["Min", "Max"]}
+            />
+        </Node>
+    );
 }

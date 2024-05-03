@@ -5,25 +5,25 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetVelocity() {
-	return AddNode(new SetVelocityAPI(), (data: NodeData) => {
-		return <SetVelocity key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new SetVelocityAPI(), (data: NodeData) => {
+        return <SetVelocity key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function SetVelocity({ data }: { data: NodeData }) {
-	return (
-		<Node
-			Name="Set Velocity"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-		>
-			<Vector3Field
-				NodeId={data.node.id}
-				NodeField={(data.node as SetVelocityAPI).nodeFields.velocity}
-				NodeFieldName={SetVelocityFieldNames.velocity}
-				Label={"Velocity"}
-			/>
-		</Node>
-	);
+    return (
+        <Node
+            Name="Set Velocity"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+        >
+            <Vector3Field
+                NodeId={data.node.id}
+                NodeField={(data.node as SetVelocityAPI).nodeFields.velocity}
+                NodeFieldName={SetVelocityFieldNames.velocity}
+                Label={"Velocity"}
+            />
+        </Node>
+    );
 }

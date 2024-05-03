@@ -6,36 +6,36 @@ import { InitializeNode } from "./InitializeNode";
 
 export const SetVelocityName = "SetVelocity";
 export const SetVelocityFieldNames = {
-	velocity: "velocity",
+    velocity: "velocity",
 };
 
 export class SetVelocity extends InitializeNode {
-	nodeGroup: NodeGroups = NodeGroups.Initialize;
-	nodeFields: {
-		velocity: Vector3Field;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Initialize;
+    nodeFields: {
+        velocity: Vector3Field;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			velocity: new Vector3Field(0, 0, 0),
-		};
-	}
+        this.nodeFields = {
+            velocity: new Vector3Field(0, 0, 0),
+        };
+    }
 
-	Initialize(id: number) {
-		UpdateParticleData(id, (data) => {
-			const vector3 = this.nodeFields.velocity.GetVector3();
-			data.velocity = new Vector3(vector3.x, vector3.y, vector3.z);
-			return data;
-		});
-	}
+    Initialize(id: number) {
+        UpdateParticleData(id, (data) => {
+            const vector3 = this.nodeFields.velocity.GetVector3();
+            data.velocity = new Vector3(vector3.x, vector3.y, vector3.z);
+            return data;
+        });
+    }
 
-	GetNodeName(): string {
-		return SetVelocityName;
-	}
+    GetNodeName(): string {
+        return SetVelocityName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenSetVelocity(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenSetVelocity(this);
+    }
 }

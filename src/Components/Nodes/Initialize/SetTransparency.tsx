@@ -6,25 +6,25 @@ import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetTransparency() {
-	return AddNode(new SetTransparencyAPI(), (data: NodeData) => {
-		return <SetTransparency key={`node_${data.node.id}`} data={data} />;
-	});
+    return AddNode(new SetTransparencyAPI(), (data: NodeData) => {
+        return <SetTransparency key={`node_${data.node.id}`} data={data} />;
+    });
 }
 
 function SetTransparency({ data }: { data: NodeData }) {
-	return (
-		<Node
-			Name="Set Transparency"
-			NodeId={data.node.id}
-			NodeAnchorPoint={data.anchorPoint}
-			IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-		>
-			<NumberField
-				NodeId={data.node.id}
-				NodeField={(data.node as SetTransparencyAPI).nodeFields.transparency}
-				NodeFieldName={SetTransparencyFieldNames.transparency}
-				Label={CapitalizeFirstLetter(SetTransparencyFieldNames.transparency)}
-			/>
-		</Node>
-	);
+    return (
+        <Node
+            Name="Set Transparency"
+            NodeId={data.node.id}
+            NodeAnchorPoint={data.anchorPoint}
+            IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+        >
+            <NumberField
+                NodeId={data.node.id}
+                NodeField={(data.node as SetTransparencyAPI).nodeFields.transparency}
+                NodeFieldName={SetTransparencyFieldNames.transparency}
+                Label={CapitalizeFirstLetter(SetTransparencyFieldNames.transparency)}
+            />
+        </Node>
+    );
 }

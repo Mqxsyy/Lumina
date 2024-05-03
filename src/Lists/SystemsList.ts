@@ -5,20 +5,20 @@ import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { CreateFlameSystem } from "Components/Systems/CreateFlame";
 
 export const NodeSystems: { [key: string]: SelectionEntry } = {
-	Empty: {
-		name: "Create Empty",
-		create: () => CreateEmptySystem(),
-	},
-	Basic: {
-		name: "Create Basic",
-		create: () => CreateBasicSystem(),
-	},
-	Burst: {
-		name: "Create Burst",
-		create: () => CreateBurstSystem(),
-	},
-	Flame: {
-		name: "Create Flame",
-		create: () => CreateFlameSystem(),
-	},
+    Empty: {
+        name: "Create Empty",
+        create: () => CreateEmptySystem(),
+    },
+    Basic: {
+        name: "Create Basic",
+        create: () => CreateBasicSystem(),
+    },
+    Burst: {
+        name: "Create Burst",
+        create: () => CreateBurstSystem(),
+    },
+    Flame: {
+        name: "Create Flame",
+        create: () => CreateFlameSystem(),
+    },
 };

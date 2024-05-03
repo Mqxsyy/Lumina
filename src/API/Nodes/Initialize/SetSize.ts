@@ -6,40 +6,40 @@ import { InitializeNode } from "./InitializeNode";
 
 export const SetSizeName = "SetSize";
 export const SetSizeFieldNames = {
-	size: "size",
+    size: "size",
 };
 
 export class SetSize extends InitializeNode {
-	nodeGroup: NodeGroups = NodeGroups.Initialize;
-	nodeFields: {
-		size: NumberField;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Initialize;
+    nodeFields: {
+        size: NumberField;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			size: new NumberField(1),
-		};
-	}
+        this.nodeFields = {
+            size: new NumberField(1),
+        };
+    }
 
-	Initialize(id: number) {
-		UpdateParticleData(id, (data) => {
-			const size = this.nodeFields.size.GetNumber();
-			const sizeVector3 = new Vector3(size, size, 0.001);
+    Initialize(id: number) {
+        UpdateParticleData(id, (data) => {
+            const size = this.nodeFields.size.GetNumber();
+            const sizeVector3 = new Vector3(size, size, 0.001);
 
-			data.size = sizeVector3;
-			data.particle.Size = sizeVector3;
+            data.size = sizeVector3;
+            data.particle.Size = sizeVector3;
 
-			return data;
-		});
-	}
+            return data;
+        });
+    }
 
-	GetNodeName(): string {
-		return SetSizeName;
-	}
+    GetNodeName(): string {
+        return SetSizeName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenSetSize(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenSetSize(this);
+    }
 }

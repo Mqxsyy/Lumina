@@ -5,18 +5,18 @@ import { AddSystem } from "Services/NodeSystemService";
 import NodeSystem from "./NodeSystem";
 
 export function CreateEmptySystem(position?: Vector2) {
-	return AddSystem(
-		new NodeSystemAPI(),
-		(systemData) => (
-			<NodeSystem
-				key={`system_${systemData.id}`}
-				anchorPoint={systemData.anchorPoint}
-				canvasPosition={GetCanvasData().Position}
-				systemId={systemData.id}
-				systemAPI={systemData.system}
-				systemDestroyEvent={systemData.onDestroy}
-			/>
-		),
-		position,
-	);
+    return AddSystem(
+        new NodeSystemAPI(),
+        (systemData) => (
+            <NodeSystem
+                key={`system_${systemData.id}`}
+                anchorPoint={systemData.anchorPoint}
+                canvasPosition={GetCanvasData().Position}
+                systemId={systemData.id}
+                systemAPI={systemData.system}
+                systemDestroyEvent={systemData.onDestroy}
+            />
+        ),
+        position,
+    );
 }

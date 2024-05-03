@@ -4,12 +4,12 @@ import { App } from "Components/App";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 
 export function InitUI() {
-	const window = GetWindow(Windows.Lumina)!;
-	const root = createRoot(window);
+    const window = GetWindow(Windows.Lumina)!;
+    const root = createRoot(window);
 
-	root.render(
-		<StrictMode>
-			<App />
-		</StrictMode>,
-	);
+    root.render(
+        <StrictMode>
+            <App />
+        </StrictMode>,
+    );
 }

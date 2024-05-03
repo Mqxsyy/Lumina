@@ -14,7 +14,7 @@ const window = GetWindow(Windows.Lumina)!;
 window.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; //--> why tf does this make the background images disappear near corners
 
 mainButton.Click.Connect(() => {
-	window.Enabled = !window.Enabled;
+    window.Enabled = !window.Enabled;
 });
 
 InitUI();

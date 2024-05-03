@@ -7,38 +7,38 @@ import { InitializeNode } from "./InitializeNode";
 
 export const SetLifetimeRandomName = "SetLifetimeRandom";
 export const SetLifetimeRandomFieldNames = {
-	range: "range",
+    range: "range",
 };
 
 export class SetLifetimeRandom extends InitializeNode {
-	nodeGroup: NodeGroups = NodeGroups.Initialize;
-	nodeFields: {
-		range: Vector2Field;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Initialize;
+    nodeFields: {
+        range: Vector2Field;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			range: new Vector2Field(0.5, 1),
-		};
-	}
+        this.nodeFields = {
+            range: new Vector2Field(0.5, 1),
+        };
+    }
 
-	Initialize(id: number) {
-		const range = this.nodeFields.range.GetVector2();
-		const lifetime = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
+    Initialize(id: number) {
+        const range = this.nodeFields.range.GetVector2();
+        const lifetime = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
 
-		UpdateParticleData(id, (data) => {
-			data.lifetime = lifetime;
-			return data;
-		});
-	}
+        UpdateParticleData(id, (data) => {
+            data.lifetime = lifetime;
+            return data;
+        });
+    }
 
-	GetNodeName(): string {
-		return SetLifetimeRandomName;
-	}
+    GetNodeName(): string {
+        return SetLifetimeRandomName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenSetLifetimeRandom(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenSetLifetimeRandom(this);
+    }
 }

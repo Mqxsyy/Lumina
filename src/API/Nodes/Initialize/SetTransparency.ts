@@ -6,32 +6,32 @@ import { InitializeNode } from "./InitializeNode";
 
 export const SetTransparencyName = "SetTransparency";
 export const SetTransparencyFieldNames = {
-	transparency: "transparency",
+    transparency: "transparency",
 };
 
 export class SetTransparency extends InitializeNode {
-	nodeGroup: NodeGroups = NodeGroups.Initialize;
-	nodeFields: {
-		transparency: NumberField;
-	};
+    nodeGroup: NodeGroups = NodeGroups.Initialize;
+    nodeFields: {
+        transparency: NumberField;
+    };
 
-	constructor() {
-		super();
+    constructor() {
+        super();
 
-		this.nodeFields = {
-			transparency: new NumberField(0),
-		};
-	}
+        this.nodeFields = {
+            transparency: new NumberField(0),
+        };
+    }
 
-	Initialize(id: number) {
-		GetParticleData(id).particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetNumber();
-	}
+    Initialize(id: number) {
+        GetParticleData(id).particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetNumber();
+    }
 
-	GetNodeName(): string {
-		return SetTransparencyName;
-	}
+    GetNodeName(): string {
+        return SetTransparencyName;
+    }
 
-	GetAutoGenerationCode() {
-		return AutoGenSetTransparency(this);
-	}
+    GetAutoGenerationCode() {
+        return AutoGenSetTransparency(this);
+    }
 }
