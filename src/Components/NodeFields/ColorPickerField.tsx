@@ -9,11 +9,10 @@ import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	Label: string;
-	TextToInputRatio?: number;
 	ColorPicker: ColorField;
 }
 
-export function ColorPickerField({ Label, TextToInputRatio = 0.5, ColorPicker }: Props) {
+export function ColorPickerField({ Label, ColorPicker }: Props) {
 	const windowRef = useRef<DockWidgetPluginGui>();
 	const [_, setForceRender] = useState(0);
 
@@ -36,15 +35,20 @@ export function ColorPickerField({ Label, TextToInputRatio = 0.5, ColorPicker }:
 
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-			<BasicTextLabel Size={new UDim2(TextToInputRatio, 0, 0, 20)} Text={Label} />
+			<uilistlayout
+				FillDirection="Horizontal"
+				VerticalAlignment={"Center"}
+				Padding={new UDim(0, 10 * zoomScale)}
+			/>
+
+			<BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} />
 			<Div
-				AnchorPoint={new Vector2(1, 0)}
-				Position={UDim2.fromScale(1, 0)}
-				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20 * zoomScale)}
+				Size={new UDim2(1, 0, 0, 20 * zoomScale)}
 				BackgroundColor={ColorPicker.GetColor()}
 				onMouseButton1Down={OnMouseButton1Down}
 			>
 				<uicorner CornerRadius={StyleProperties.CornerRadius} />
+				<uiflexitem FlexMode="Fill" />
 			</Div>
 		</Div>
 	);

@@ -36,7 +36,8 @@ export function NumberInput({
 	AllowNegative = false,
 	Disabled = false,
 	NumberChanged = undefined,
-}: Props) {
+	children,
+}: React.PropsWithChildren<Props>) {
 	const validateNumber = (text: string) => {
 		const number = tonumber(text);
 
@@ -93,6 +94,8 @@ export function NumberInput({
 			Disabled={Disabled}
 			TextChanged={textChanged}
 			LostFocus={lostFocus}
-		/>
+		>
+			{children}
+		</TextInput>
 	);
 }

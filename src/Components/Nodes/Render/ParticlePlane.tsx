@@ -31,7 +31,6 @@ function ParticlePlane({ data }: { data: NodeData }) {
 				NodeField={(data.node as ParticlePlaneAPI).nodeFields.assetId}
 				NodeFieldName={ParticlePlaneFieldNames.assetId}
 				Label={CapitalizeFirstLetter(ParticlePlaneFieldNames.assetId)}
-				TextToInputRatio={0.3}
 				AllowConnection={false}
 			/>
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
@@ -47,14 +46,12 @@ function ParticlePlane({ data }: { data: NodeData }) {
 						NodeField={(data.node as ParticlePlaneAPI).nodeFields.imageSize}
 						NodeFieldName={ParticlePlaneFieldNames.imageSize}
 						ValueLabels={["Width", "Height"]}
-						TextToInputRatios={[0.25, 0.25]}
 					/>
 					<NumberField
 						NodeId={data.node.id}
 						NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetRows}
 						NodeFieldName={ParticlePlaneFieldNames.spriteSheetRows}
 						Label={"Rows"}
-						TextToInputRatio={0.65}
 						AllowConnection={false}
 					/>
 					<NumberField
@@ -62,7 +59,6 @@ function ParticlePlane({ data }: { data: NodeData }) {
 						NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetColumns}
 						NodeFieldName={ParticlePlaneFieldNames.spriteSheetColumns}
 						Label={"Columns"}
-						TextToInputRatio={0.65}
 						AllowConnection={false}
 					/>
 					<NumberField
@@ -70,7 +66,6 @@ function ParticlePlane({ data }: { data: NodeData }) {
 						NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetFrameCount}
 						NodeFieldName={ParticlePlaneFieldNames.spriteSheetFrameCount}
 						Label={"Frame Count"}
-						TextToInputRatio={0.65}
 						AllowConnection={false}
 					/>
 				</Div>

@@ -33,7 +33,8 @@ export function BasicTextLabel({
 	Text,
 	ZIndex = 1,
 	IsAffectedByZoom = true,
-}: Props) {
+	children,
+}: React.PropsWithChildren<Props>) {
 	const zoomScale = GetZoomScale();
 
 	return (
@@ -55,6 +56,8 @@ export function BasicTextLabel({
 			TextYAlignment={TextYAlignment}
 			Text={Text}
 			ZIndex={ZIndex}
-		/>
+		>
+			{children}
+		</textlabel>
 	);
 }

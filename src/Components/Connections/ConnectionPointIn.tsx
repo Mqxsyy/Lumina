@@ -28,7 +28,7 @@ export default function ConnectionPointIn({
 	NodeFieldName,
 	AnchorPoint = new Vector2(0, 0),
 	Position = UDim2.fromScale(0, 0),
-	Size = UDim2.fromOffset(14 * GetZoomScale(), 14 * GetZoomScale()),
+	Size = UDim2.fromOffset(10 * GetZoomScale(), 10 * GetZoomScale()),
 	BindFunction,
 	UnbindFunction,
 }: Props) {

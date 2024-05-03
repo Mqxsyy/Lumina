@@ -40,7 +40,8 @@ export function TextInput({
 	TextChanged = undefined,
 	LostFocus = undefined,
 	GetRef = undefined,
-}: Props) {
+	children,
+}: React.PropsWithChildren<Props>) {
 	const textBoxRef = useRef<TextBox>();
 	const textLabelRef = useRef<TextLabel>();
 
@@ -147,7 +148,9 @@ export function TextInput({
 				Text={Disabled ? "-" : getText()}
 				TextTruncate={Enum.TextTruncate.AtEnd}
 				ref={textLabelRef}
-			></textlabel>
+			/>
+
+			{children}
 		</textbox>
 	);
 }

@@ -9,12 +9,11 @@ import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	Label: string;
-	TextToInputRatio?: number;
 	Graph: LineGraphFieldAPI;
 	MaxValue?: number;
 }
 
-export function LineGraphField({ Label, TextToInputRatio = 0.5, Graph, MaxValue = 1 }: Props) {
+export function LineGraphField({ Label, Graph, MaxValue = 1 }: Props) {
 	const windowRef = useRef<DockWidgetPluginGui>();
 
 	const zoomScale = GetZoomScale();
@@ -30,15 +29,20 @@ export function LineGraphField({ Label, TextToInputRatio = 0.5, Graph, MaxValue 
 
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-			<BasicTextLabel Size={new UDim2(TextToInputRatio, 0, 0, 20)} Text={Label} />
+			<uilistlayout
+				FillDirection="Horizontal"
+				VerticalAlignment={"Center"}
+				Padding={new UDim(0, 10 * zoomScale)}
+			/>
+
+			<BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} />
 			<Div
-				AnchorPoint={new Vector2(1, 0)}
-				Position={UDim2.fromScale(1, 0)}
-				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20 * zoomScale)}
+				Size={new UDim2(1, 0, 0, 20 * zoomScale)}
 				BackgroundColor={StyleColors.Primary}
 				onMouseButton1Down={OnMouseButton1Down}
 			>
-				<uipadding PaddingRight={new UDim(0, 4)} PaddingTop={new UDim(0, 4)} />
+				<uipadding PaddingRight={new UDim(0, 4 * zoomScale)} PaddingTop={new UDim(0, 4 * zoomScale)} />
+				<uiflexitem FlexMode="Fill" />
 
 				<Div>
 					<uistroke Thickness={4 * zoomScale} Color={StyleColors.Secondary} />

@@ -9,11 +9,10 @@ import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	Label: string;
-	TextToInputRatio?: number;
 	Ramp: ColorRampFieldAPI;
 }
 
-export function ColorRampField({ Label, TextToInputRatio = 0.5, Ramp }: Props) {
+export function ColorRampField({ Label, Ramp }: Props) {
 	const [forceRender, setForceRender] = useState(0);
 	const windowRef = useRef<DockWidgetPluginGui>();
 
@@ -48,16 +47,21 @@ export function ColorRampField({ Label, TextToInputRatio = 0.5, Ramp }: Props) {
 
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-			<BasicTextLabel Size={new UDim2(TextToInputRatio, 0, 0, 20)} Text={Label} />
+			<uilistlayout
+				FillDirection="Horizontal"
+				VerticalAlignment={"Center"}
+				Padding={new UDim(0, 10 * zoomScale)}
+			/>
+
+			<BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} />
 			<Div
-				AnchorPoint={new Vector2(1, 0)}
-				Position={UDim2.fromScale(1, 0)}
-				Size={new UDim2(1 - TextToInputRatio, 0, 0, 20 * zoomScale)}
+				Size={new UDim2(1, 0, 0, 20 * zoomScale)}
 				BackgroundColor={StyleColors.FullWhite}
 				onMouseButton1Down={OnMouseButton1Down}
 			>
 				<uicorner CornerRadius={StyleProperties.CornerRadius} />
 				<uigradient Color={Ramp.GetGradient()} />
+				<uiflexitem FlexMode="Fill" />
 			</Div>
 		</Div>
 	);

@@ -12,7 +12,6 @@ interface Props {
 	NodeFieldName: string;
 
 	Label: string;
-	TextToInputRatio?: number;
 	AllowNegative?: boolean;
 
 	AllowConnection?: boolean;
@@ -24,7 +23,6 @@ export default function NumberField({
 	NodeField,
 	NodeFieldName,
 	Label,
-	TextToInputRatio = 0.5,
 	AllowNegative = false,
 	AllowConnection = true,
 	OverrideSetNumber = undefined,
@@ -34,9 +32,9 @@ export default function NumberField({
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 			<uilistlayout
-				FillDirection="Horizontal"
+				FillDirection={"Horizontal"}
 				VerticalAlignment={"Center"}
-				Padding={new UDim(0, 5 * zoomScale)}
+				Padding={new UDim(0, 10 * zoomScale)}
 			/>
 
 			{AllowConnection && (
@@ -47,18 +45,19 @@ export default function NumberField({
 					UnbindFunction={NodeField.UnbindNumber}
 				/>
 			)}
-			<Div Size={new UDim2(1, AllowConnection ? -19 * zoomScale : 0, 0, 0)} AutomaticSize="Y">
-				<BasicTextLabel Size={new UDim2(TextToInputRatio, 0, 0, 20)} Text={Label} TextYAlignment="Bottom" />
-				<NumberInput
-					AnchorPoint={new Vector2(1, 0)}
-					Position={UDim2.fromScale(1, 0)}
-					Size={new UDim2(1 - TextToInputRatio, 0, 0, 20)}
-					Text={() => tostring(NodeField.GetNumber())}
-					AllowNegative={AllowNegative}
-					Disabled={NodeField.boundNode !== undefined}
-					NumberChanged={OverrideSetNumber || NodeField.SetNumber}
-				/>
-			</Div>
+
+			<BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
+			<NumberInput
+				AnchorPoint={new Vector2(1, 0)}
+				Position={UDim2.fromScale(1, 0)}
+				Size={new UDim2(1, 0, 0, 20)}
+				Text={() => tostring(NodeField.GetNumber())}
+				AllowNegative={AllowNegative}
+				Disabled={NodeField.boundNode !== undefined}
+				NumberChanged={OverrideSetNumber || NodeField.SetNumber}
+			>
+				<uiflexitem FlexMode={"Fill"} />
+			</NumberInput>
 		</Div>
 	);
 }
