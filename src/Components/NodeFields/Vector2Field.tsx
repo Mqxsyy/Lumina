@@ -36,7 +36,7 @@ export function Vector2Field({
 
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5 * zoomScale)} />
-				{Label !== undefined && <uipadding PaddingLeft={new UDim(0, 10)} />}
+				{Label !== undefined && <uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />}
 
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout

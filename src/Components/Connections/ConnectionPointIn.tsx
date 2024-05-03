@@ -36,7 +36,7 @@ export default function ConnectionPointIn({
 
 	const nodeRef = useRef(GetNodeById(NodeId)!);
 	const nodeDataRef = useRef(nodeRef.current.data);
-	const elementRef = useRef<TextButton>();
+	const elementRef = useRef<ImageButton>();
 
 	const finishConnection = (id: number) => {
 		if (elementRef.current === undefined) return;

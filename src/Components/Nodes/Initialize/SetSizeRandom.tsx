@@ -1,5 +1,4 @@
 import Roact from "@rbxts/roact";
-import { CapitalizeFirstLetter } from "API/Lib";
 import { SetSizeRandom as SetSizeRandomAPI, SetSizeRandomFieldNames } from "API/Nodes/Initialize/SetSizeRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
@@ -23,7 +22,6 @@ function SetSizeRandom({ data }: { data: NodeData }) {
 				NodeId={data.node.id}
 				NodeField={(data.node as SetSizeRandomAPI).nodeFields.range}
 				NodeFieldName={SetSizeRandomFieldNames.range}
-				Label={CapitalizeFirstLetter(SetSizeRandomFieldNames.range)}
 				ValueLabels={["Min", "Max"]}
 			/>
 		</Node>

@@ -1,5 +1,4 @@
 import Roact from "@rbxts/roact";
-import { CapitalizeFirstLetter } from "API/Lib";
 import {
 	AddRotationZRandom as AddRotationZRandomAPI,
 	AddRotationZRandomFieldNames,
@@ -26,7 +25,6 @@ function AddRotationZRandom({ data }: { data: NodeData }) {
 				NodeId={data.node.id}
 				NodeField={(data.node as AddRotationZRandomAPI).nodeFields.range}
 				NodeFieldName={AddRotationZRandomFieldNames.range}
-				Label={CapitalizeFirstLetter(AddRotationZRandomFieldNames.range)}
 				ValueLabels={["Min", "Max"]}
 			/>
 		</Node>

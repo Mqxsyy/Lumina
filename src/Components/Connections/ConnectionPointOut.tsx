@@ -26,7 +26,7 @@ export default function ConnectionPointOut({
 }: Props) {
 	const [connectionId, setConnectionId] = useState(-1);
 	const nodeRef = useRef(GetNodeById(NodeId)!);
-	const elementRef = useRef<TextButton>();
+	const elementRef = useRef<ImageButton>();
 
 	const createConnection = (loadedId?: number) => {
 		if (elementRef.current === undefined) return;

@@ -18,8 +18,6 @@ import {
 } from "../SizeConfig";
 import NodeGroup from "./NodeGroup";
 
-// FIXME: some weird bug with deleting and overriding node position
-
 interface Props {
 	anchorPoint: Vector2;
 	canvasPosition: UDim2;
@@ -109,7 +107,7 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
 				<Div>
 					<uistroke
 						Color={StyleColors.FullWhite}
-						Thickness={SYSTEM_BORDER_THICKNESS * zoomScale}
+						Thickness={math.clamp(SYSTEM_BORDER_THICKNESS * zoomScale, 0.5, math.huge)}
 						Transparency={0.75}
 					>
 						<uigradient
@@ -130,14 +128,14 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
 						PaddingTop={new UDim(0, SYSTEM_PADDING * zoomScale)}
 					/>
 					<uilistlayout
-						Padding={new UDim(0, SYSTEM_LIST_PADDING * zoomScale)}
+						Padding={new UDim(0, 1 + SYSTEM_LIST_PADDING * zoomScale)}
 						HorizontalAlignment={"Center"}
 					/>
 
 					{useMemo(
 						() => (
 							<BasicTextLabel
-								Size={new UDim2(1, 0, 0, SYSTEM_HEADER_HEIGHT * zoomScale)}
+								Size={new UDim2(1, 0, 0, SYSTEM_HEADER_HEIGHT)}
 								Text={`VFX System (${systemId})`}
 							/>
 						),

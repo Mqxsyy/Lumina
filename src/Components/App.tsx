@@ -22,7 +22,7 @@ import { NodeSelection } from "./Selection/NodeSelection";
 export function App() {
 	const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.Lumina)!.AbsoluteSize);
 	const [zoomScale, setZoomScale] = useState(1);
-	const [displayNodeSelection, setDisplayNodeSelection] = useState(undefined as UDim2 | undefined);
+	const [nodeSelectionPosition, setNodeSelectionPosition] = useState(undefined as UDim2 | undefined);
 	const [_, setForceRender] = useState(0);
 
 	const canvasRef = useRef(undefined as Frame | undefined);
@@ -132,12 +132,12 @@ export function App() {
 					InputBegan: (_, input: InputObject) => {
 						if (input.KeyCode === Enum.KeyCode.Space) {
 							const mousePositionVec2 = GetMousePosition();
-							setDisplayNodeSelection(UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y));
+							setNodeSelectionPosition(UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y));
 						} else if (input.UserInputType === Enum.UserInputType.MouseButton1) {
 							UnbindMovingConnection(true);
-							setDisplayNodeSelection(undefined);
+							setNodeSelectionPosition(undefined);
 						} else if (input.UserInputType === Enum.UserInputType.MouseButton3) {
-							setDisplayNodeSelection(undefined);
+							setNodeSelectionPosition(undefined);
 						}
 					},
 				}}
@@ -253,8 +253,12 @@ export function App() {
 			{GetAllConnections().map((connection) => {
 				return connection.create(connection.data);
 			})}
-			{displayNodeSelection !== undefined && (
-				<NodeSelection key="NodeSelection" Position={displayNodeSelection} />
+			{nodeSelectionPosition !== undefined && (
+				<NodeSelection
+					key="NodeSelection"
+					Position={nodeSelectionPosition}
+					ToggleSelection={() => setNodeSelectionPosition(undefined)}
+				/>
 			)}
 			<Controls key={"Controls"} />
 			{useMemo(

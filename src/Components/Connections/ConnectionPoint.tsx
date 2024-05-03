@@ -1,16 +1,17 @@
 import Roact, { useEffect, useRef } from "@rbxts/roact";
 import Div from "Components/Div";
 import { StyleColors } from "Style";
+import { GetZoomScale } from "ZoomScale";
 
 interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
 	ConnectionId?: number;
-	GetElementRef?: (element: TextButton) => void;
+	GetElementRef?: (element: ImageButton) => void;
 	MouseButton1Down?: () => void;
 	MouseButton1Up?: () => void;
-	UpdateConnecton?: (element: TextButton) => void;
+	UpdateConnecton?: (element: ImageButton) => void;
 }
 
 export default function ConnectionPoint({
@@ -23,7 +24,9 @@ export default function ConnectionPoint({
 	MouseButton1Up = undefined,
 	UpdateConnecton = undefined,
 }: Props) {
-	const connectionPointRef = useRef<TextButton>();
+	const connectionPointRef = useRef<ImageButton>();
+
+	const zoomScale = GetZoomScale();
 
 	useEffect(() => {
 		if (GetElementRef === undefined) return;
@@ -40,15 +43,14 @@ export default function ConnectionPoint({
 	}, [connectionPointRef.current?.AbsolutePosition, ConnectionId]);
 
 	return (
-		<textbutton
+		<imagebutton
 			AnchorPoint={AnchorPoint}
 			Position={Position}
 			Size={Size}
 			SizeConstraint="RelativeYY"
 			BackgroundTransparency={1}
 			AutoButtonColor={false}
-			Text={""}
-			Active={true}
+			ImageTransparency={1}
 			ref={connectionPointRef}
 			Event={{
 				InputBegan: (_, input) => {
@@ -66,28 +68,19 @@ export default function ConnectionPoint({
 				},
 			}}
 		>
-			<uipadding
-				PaddingBottom={new UDim(0, 2)}
-				PaddingLeft={new UDim(0, 2)}
-				PaddingRight={new UDim(0, 2)}
-				PaddingTop={new UDim(0, 2)}
-			/>
+			<uicorner CornerRadius={new UDim(2, 0)} />
+			<uistroke Color={StyleColors.Highlight} Thickness={math.clamp(2 * zoomScale, 1, math.huge)} />
 
-			<Div>
-				<uicorner CornerRadius={new UDim(2, 0)} />
-				<uistroke Color={StyleColors.Highlight} Thickness={2} />
-
-				{ConnectionId !== undefined && (
-					<frame
-						AnchorPoint={new Vector2(0.5, 0.5)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						Size={UDim2.fromOffset(Size.X.Offset - 8, Size.Y.Offset - 8)}
-						BackgroundColor3={StyleColors.Highlight}
-					>
-						<uicorner CornerRadius={new UDim(2, 0)} />
-					</frame>
-				)}
-			</Div>
-		</textbutton>
+			{ConnectionId !== undefined && (
+				<frame
+					AnchorPoint={new Vector2(0.5, 0.5)}
+					Position={UDim2.fromScale(0.5, 0.5)}
+					Size={UDim2.fromOffset(Size.X.Offset - 8, Size.Y.Offset - 8)}
+					BackgroundColor3={StyleColors.Highlight}
+				>
+					<uicorner CornerRadius={new UDim(2, 0)} />
+				</frame>
+			)}
+		</imagebutton>
 	);
 }

@@ -34,9 +34,9 @@ function Node({
 
 	const mouseOffsetRef = useRef(new Vector2(0, 0));
 	const canvasData = useRef(GetCanvasData());
-	const elementRef = useRef(undefined as undefined | TextButton);
+	const elementRef = useRef(undefined as undefined | ImageButton);
 
-	const onMouseButton1Down = (element: TextButton) => {
+	const onMouseButton1Down = (element: ImageButton) => {
 		const mousePosition = GetMousePosition();
 		mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
 
@@ -85,15 +85,14 @@ function Node({
 	}, [elementRef.current]);
 
 	return (
-		<textbutton
+		<imagebutton
 			Size={UDim2.fromOffset(NODE_WIDTH * zoomScale, 0)}
 			AutomaticSize={"Y"}
 			AnchorPoint={new Vector2(0.5, 0.5)}
 			Position={IsConnectedToSystem ? UDim2.fromScale(0, 0) : getPosition()}
 			BackgroundColor3={StyleColors.Primary}
 			AutoButtonColor={false}
-			Text={""}
-			Active={true}
+			ImageTransparency={1}
 			ref={elementRef}
 			Event={{
 				InputBegan: (element, inputObject) => {
@@ -108,14 +107,14 @@ function Node({
 			<uicorner CornerRadius={StyleProperties.CornerRadius} />
 			<uilistlayout Padding={new UDim(0, 5 * zoomScale)} HorizontalAlignment={"Center"} />
 			<uipadding
-				PaddingLeft={new UDim(0, 5 * zoomScale)}
-				PaddingRight={new UDim(0, 5 * zoomScale)}
-				PaddingTop={new UDim(0, 5 * zoomScale)}
-				PaddingBottom={new UDim(0, 5 * zoomScale)}
+				PaddingLeft={new UDim(0, 1 + 5 * zoomScale)}
+				PaddingRight={new UDim(0, 1 + 5 * zoomScale)}
+				PaddingTop={new UDim(0, 1 + 5 * zoomScale)}
+				PaddingBottom={new UDim(0, 1 + 5 * zoomScale)}
 			/>
 
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-				<BasicTextLabel Size={new UDim2(1, 0, 0, 20 * zoomScale)} Text={Name} />
+				<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={Name} />
 				{ConnectionFunction !== undefined && ConnectioNode !== undefined && (
 					<ConnectionPointOut
 						AnchorPoint={new Vector2(1, 0.5)}
@@ -131,7 +130,7 @@ function Node({
 
 				{children}
 			</Div>
-		</textbutton>
+		</imagebutton>
 	);
 }
 

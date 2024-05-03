@@ -17,9 +17,10 @@ const SELECTION_WIDTH = 200;
 
 interface Props {
 	Position: UDim2;
+	ToggleSelection: () => void;
 }
 
-export function NodeSelection({ Position }: Props) {
+export function NodeSelection({ Position, ToggleSelection }: Props) {
 	const [searchedSelection, setSearchedSelection] = useState<SelectionEntry[]>([]);
 	const [displayDefaultCategories, setDisplayDefaultCategories] = useState(true);
 	const categoryUnhoverFunctionsRef = useRef<(() => void)[]>([]);
@@ -56,7 +57,13 @@ export function NodeSelection({ Position }: Props) {
 	};
 
 	return (
-		<Div Position={Position} Size={UDim2.fromOffset(SELECTION_WIDTH, 0)} AutomaticSize="Y">
+		<imagebutton
+			Position={Position}
+			Size={UDim2.fromOffset(SELECTION_WIDTH, 0)}
+			AutomaticSize="Y"
+			BackgroundTransparency={1}
+			ImageTransparency={1}
+		>
 			<frame Size={UDim2.fromScale(1, 1)} BackgroundColor3={StyleColors.Primary}>
 				<uicorner CornerRadius={StyleProperties.CornerRadius} />
 				<uipadding PaddingTop={new UDim(0, 3)} PaddingBottom={new UDim(0, 3)} />
@@ -105,6 +112,7 @@ export function NodeSelection({ Position }: Props) {
 											key={node.name}
 											ElementName={node.name}
 											Text={node.name}
+											ToggleSelection={ToggleSelection}
 											CreateFn={node.create}
 										/>
 									);
@@ -125,42 +133,48 @@ export function NodeSelection({ Position }: Props) {
 								Text="Systems"
 								NodeCategory={NodeSystems}
 								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ToggleSelection={ToggleSelection}
 								ExposeUnhover={getCategoryUnhover}
 							/>
 							<NodeCategorySelectionButton
 								Text="Spawner"
 								NodeCategory={NodeList[NodeGroups.Spawn]}
 								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ToggleSelection={ToggleSelection}
 								ExposeUnhover={getCategoryUnhover}
 							/>
 							<NodeCategorySelectionButton
 								Text="Initialize"
 								NodeCategory={NodeList[NodeGroups.Initialize]}
 								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ToggleSelection={ToggleSelection}
 								ExposeUnhover={getCategoryUnhover}
 							/>
 							<NodeCategorySelectionButton
 								Text="Update"
 								NodeCategory={NodeList[NodeGroups.Update]}
 								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ToggleSelection={ToggleSelection}
 								ExposeUnhover={getCategoryUnhover}
 							/>
 							<NodeCategorySelectionButton
 								Text="Render"
 								NodeCategory={NodeList[NodeGroups.Render]}
 								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ToggleSelection={ToggleSelection}
 								ExposeUnhover={getCategoryUnhover}
 							/>
 							<NodeCategorySelectionButton
 								Text="Logic"
 								NodeCategory={NodeList[NodeGroups.Logic]}
 								CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
+								ToggleSelection={ToggleSelection}
 								ExposeUnhover={getCategoryUnhover}
 							/>
 						</Div>
 					)}
 				</Div>
 			</frame>
-		</Div>
+		</imagebutton>
 	);
 }

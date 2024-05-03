@@ -1,4 +1,5 @@
 import { Event } from "API/Bindables/Event";
+import { RoundDecimal } from "API/Lib";
 
 // TODO: make zoom go to cursor
 
@@ -16,7 +17,7 @@ export function GetZoomScale(): number {
 }
 
 export function UpdateZoomScale(value: number) {
-	let newZoomScale = zoomScale + value;
+	let newZoomScale = RoundDecimal(zoomScale + value, 0.01);
 
 	if (newZoomScale > ZoomScaleConstraint.max) {
 		newZoomScale = ZoomScaleConstraint.max;

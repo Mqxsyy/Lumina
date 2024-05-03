@@ -118,7 +118,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 					/>
 					<uistroke
 						Color={StyleColors.FullWhite}
-						Thickness={GROUP_BORDER_THICKNESS * zoomScale}
+						Thickness={math.clamp(GROUP_BORDER_THICKNESS * zoomScale, 0.5, math.huge)}
 						Transparency={0.35}
 					>
 						<uigradient
@@ -138,12 +138,9 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 						PaddingBottom={new UDim(0, GROUP_PADDING * zoomScale)}
 					/>
 
-					<BasicTextLabel
-						Size={new UDim2(1, 0, 0, GROUP_HEADER_HEIGHT * zoomScale)}
-						Text={NodeGroups[NodeGroup]}
-					/>
+					<BasicTextLabel Size={new UDim2(1, 0, 0, GROUP_HEADER_HEIGHT)} Text={NodeGroups[NodeGroup]} />
 					<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-						<uilistlayout HorizontalAlignment={"Center"} Padding={new UDim(0, 5)} />
+						<uilistlayout HorizontalAlignment={"Center"} Padding={new UDim(0, 5 * zoomScale)} />
 						{childNodes.map((node) => {
 							return node.create(node.data);
 						})}

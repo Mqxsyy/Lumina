@@ -1,5 +1,4 @@
 import Roact from "@rbxts/roact";
-import { CapitalizeFirstLetter } from "API/Lib";
 import {
 	SetLifetimeRandom as SetLifetimeRandomAPI,
 	SetLifetimeRandomFieldNames,
@@ -26,7 +25,6 @@ function SetLifetimeRandom({ data }: { data: NodeData }) {
 				NodeId={data.node.id}
 				NodeField={(data.node as SetLifetimeRandomAPI).nodeFields.range}
 				NodeFieldName={SetLifetimeRandomFieldNames.range}
-				Label={CapitalizeFirstLetter(SetLifetimeRandomFieldNames.range)}
 				ValueLabels={["Min", "Max"]}
 			/>
 		</Node>

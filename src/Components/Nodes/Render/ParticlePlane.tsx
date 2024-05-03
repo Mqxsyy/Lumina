@@ -35,18 +35,17 @@ function ParticlePlane({ data }: { data: NodeData }) {
 				AllowConnection={false}
 			/>
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-				<uilistlayout Padding={new UDim(0, 5)} />
+				<uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
 
 				<BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Sprite Sheet"} />
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
-					<uipadding PaddingLeft={new UDim(0, 10)} />
+					<uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />
 
 					<Vector2Field
 						NodeId={data.node.id}
 						NodeField={(data.node as ParticlePlaneAPI).nodeFields.imageSize}
 						NodeFieldName={ParticlePlaneFieldNames.imageSize}
-						// Label="Image Size"
 						ValueLabels={["Width", "Height"]}
 						TextToInputRatios={[0.25, 0.25]}
 					/>

@@ -6,6 +6,7 @@ interface Props {
 	AnchorPoint?: Vector2;
 	Position?: UDim2;
 	Size?: UDim2;
+	AutomaticSize?: "None" | "X" | "Y" | "XY";
 
 	FontWeight?: Enum.FontWeight;
 	TextSize?: number;
@@ -21,6 +22,7 @@ export function BasicTextLabel({
 	AnchorPoint = Vector2.zero,
 	Position = UDim2.fromScale(0, 0),
 	Size = UDim2.fromScale(1, 1),
+	AutomaticSize = "None",
 	TextSize = StyleText.FontSize,
 	FontWeight = StyleText.FontWeight,
 	TextColor = StyleColors.TextLight,
@@ -40,6 +42,7 @@ export function BasicTextLabel({
 					? new UDim2(Size.X.Scale, Size.X.Offset, Size.Y.Scale, Size.Y.Offset * zoomScale)
 					: Size
 			}
+			AutomaticSize={AutomaticSize}
 			BackgroundTransparency={1}
 			BorderSizePixel={0}
 			TextSize={IsAffectedByZoom ? TextSize * zoomScale : TextSize}

@@ -29,7 +29,7 @@ export interface NodeData {
 
 export interface NodeCollectionEntry {
 	data: NodeData;
-	element?: TextButton;
+	element?: ImageButton;
 	elementLoaded: Event;
 	create: (props: NodeData) => Roact.Element;
 }
@@ -75,7 +75,7 @@ export function UpdateNodeData(id: number, callback: (data: NodeData) => NodeDat
 	warn(`Node with id ${id} not found`);
 }
 
-export function SetNodeElement(id: number, element: TextButton) {
+export function SetNodeElement(id: number, element: ImageButton) {
 	const node = GetNodeById(id);
 
 	if (node !== undefined) {

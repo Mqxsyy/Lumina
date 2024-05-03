@@ -9,10 +9,17 @@ interface Props {
 	Text: string;
 	NodeCategory: { [key: string]: SelectionEntry };
 	CategoryUnhoverFunctions: (() => void)[];
+	ToggleSelection: () => void;
 	ExposeUnhover: (fn: () => void) => void;
 }
 
-export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhoverFunctions, ExposeUnhover }: Props) {
+export function NodeCategorySelectionButton({
+	Text,
+	NodeCategory,
+	CategoryUnhoverFunctions,
+	ToggleSelection,
+	ExposeUnhover,
+}: Props) {
 	const [hovering, setHovering] = useState(false);
 	const [nodes, setNodes] = useState([] as SelectionEntry[]);
 
@@ -106,7 +113,12 @@ export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhove
 
 						{nodes.map((node) => {
 							return (
-								<NodeSelectionButton ElementName={node.name} Text={node.name} CreateFn={node.create} />
+								<NodeSelectionButton
+									ElementName={node.name}
+									Text={node.name}
+									ToggleSelection={ToggleSelection}
+									CreateFn={node.create}
+								/>
 							);
 						})}
 					</scrollingframe>

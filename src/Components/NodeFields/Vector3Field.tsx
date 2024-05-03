@@ -11,7 +11,7 @@ interface Props {
 	NodeField: Vector3FieldAPI;
 	NodeFieldName: string;
 
-	Label: string;
+	Label?: string;
 	ValueLabels?: [string, string, string];
 	TextToInputRatios?: [number, number, number];
 
@@ -22,7 +22,7 @@ export function Vector3Field({
 	NodeId,
 	NodeField,
 	NodeFieldName,
-	Label,
+	Label = undefined,
 	ValueLabels = ["X", "Y", "Z"],
 	TextToInputRatios = [0.15, 0.15, 0.15],
 	AllowConnections = [true, true, true],
@@ -31,12 +31,12 @@ export function Vector3Field({
 
 	return (
 		<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-			<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5 * zoomScale)} />
+			{Label !== undefined && <uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5 * zoomScale)} />}
+			{Label !== undefined && <BasicTextLabel Size={new UDim2(0.5, 0, 0, 20)} Text={Label} />}
 
-			<BasicTextLabel Size={new UDim2(0.5, 0, 0, 20)} Text={Label} />
 			<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 				<uilistlayout FillDirection="Vertical" Padding={new UDim(0, 5 * zoomScale)} />
-				<uipadding PaddingLeft={new UDim(0, 10)} />
+				{Label !== undefined && <uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />}
 
 				<Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
 					<uilistlayout

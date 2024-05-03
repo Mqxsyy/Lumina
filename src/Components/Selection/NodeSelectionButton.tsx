@@ -1,15 +1,15 @@
 import Roact, { useState } from "@rbxts/roact";
-import Div from "../Div";
-import { StyleColors, StyleProperties } from "Style";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { StyleColors, StyleProperties } from "Style";
 
 interface Props {
 	ElementName: string;
 	Text: string;
+	ToggleSelection: () => void;
 	CreateFn?: () => void;
 }
 
-export function NodeSelectionButton({ ElementName, Text, CreateFn }: Props) {
+export function NodeSelectionButton({ ElementName, Text, ToggleSelection, CreateFn }: Props) {
 	const [displayHighlight, setDisplayHighlight] = useState(false);
 
 	const onHover = () => {
@@ -24,15 +24,21 @@ export function NodeSelectionButton({ ElementName, Text, CreateFn }: Props) {
 		if (CreateFn !== undefined) {
 			CreateFn();
 		}
+
+		ToggleSelection();
 	};
 
 	return (
-		<Div
-			ElementName={ElementName}
+		<imagebutton
+			key={ElementName}
 			Size={new UDim2(1, 0, 0, 25)}
-			onHover={onHover}
-			onUnhover={onUnhover}
-			onMouseButton1Down={onClick}
+			BackgroundTransparency={1}
+			ImageTransparency={1}
+			Event={{
+				MouseEnter: onHover,
+				MouseLeave: onUnhover,
+				MouseButton1Down: onClick,
+			}}
 		>
 			{displayHighlight && (
 				<frame
@@ -46,6 +52,6 @@ export function NodeSelectionButton({ ElementName, Text, CreateFn }: Props) {
 			)}
 
 			<BasicTextLabel Text={Text} TextXAlignment={"Center"} IsAffectedByZoom={false} />
-		</Div>
+		</imagebutton>
 	);
 }

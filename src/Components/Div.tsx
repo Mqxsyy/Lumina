@@ -45,10 +45,6 @@ export default function Div({
 	useEffect(() => {
 		if (frameRef.current === undefined) return;
 
-		if (ElementName !== undefined) {
-			frameRef.current.Name = ElementName;
-		}
-
 		if (getFrame !== undefined) {
 			getFrame(frameRef.current);
 		}
@@ -66,6 +62,7 @@ export default function Div({
 			BackgroundTransparency={BackgroundColor === undefined ? 1 : 0}
 			BorderSizePixel={0}
 			ZIndex={ZIndex}
+			key={ElementName}
 			ref={frameRef}
 			Event={{
 				MouseEnter: () => {
