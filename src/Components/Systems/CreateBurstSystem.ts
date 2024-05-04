@@ -11,6 +11,7 @@ import { CreateEmptySystem } from "./CreateEmptySystem";
 export function CreateBurstSystem() {
     const system = CreateEmptySystem();
     const systemData = system.data;
+    systemData.systemName = "Burst System";
 
     systemData.finishedBindingGroups.Connect(() => {
         const burstSpawn = CreateBurstSpawn();

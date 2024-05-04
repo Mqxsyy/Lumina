@@ -7,7 +7,6 @@ import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { NodeData } from "./NodesService";
 
 // IMPORTANT: make connOut go to multiple connIn
-// IMPORTANT: FIX THESE, THEY'RE BROKEN
 
 export interface ConnectionData {
     id: number;

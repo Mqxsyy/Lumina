@@ -32,8 +32,9 @@ import { CreateEmptySystem } from "./CreateEmptySystem";
 export function CreateFlameSystem() {
     const flameSystem = CreateEmptySystem();
     const flameSystemData = flameSystem.data;
-
+    flameSystemData.systemName = "Flame";
     flameSystemData.anchorPoint = new Vector2(-325, 0);
+
     flameSystemData.finishedBindingGroups.Connect(() => {
         // spawn
         const constantSpawn = CreateConstantSpawn();
@@ -139,7 +140,9 @@ export function CreateFlameSystem() {
 
     const smokeSystem = CreateEmptySystem();
     const smokeSystemData = smokeSystem.data;
+    smokeSystemData.systemName = "Smoke";
     smokeSystemData.anchorPoint = new Vector2(25, 0);
+
     smokeSystemData.finishedBindingGroups.Connect(() => {
         // spwn
         const constantSpawn = CreateConstantSpawn();

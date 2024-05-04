@@ -61,6 +61,7 @@ export function LoadFromFile() {
         const anchorPoint = new Vector2(system.anchorPoint.x, system.anchorPoint.y);
         const systemCollectionEntry = CreateEmptySystem(anchorPoint);
         const systemData = systemCollectionEntry.data;
+        systemData.systemName = system.systemName;
 
         for (const [group, nodes] of pairs(system.groups)) {
             let nodeGroup = NodeGroups.Spawn;

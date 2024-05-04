@@ -11,8 +11,8 @@ import { InitializeNode } from "../Initialize/InitializeNode";
 import { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
+// IMPORTANT: add more orientations
 // TODO: make double sided, required reversed image if not symmetrical
-// TODO: add more orientations
 // TODO: make use of parallel luau
 // TODO: add automatic cache cleaner to prevent particle cache growing too large
 

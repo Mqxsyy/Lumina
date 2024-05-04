@@ -7,6 +7,7 @@ import NodeSystem from "./NodeSystem";
 export function CreateEmptySystem(position?: Vector2) {
     return AddSystem(
         new NodeSystemAPI(),
+        "Empty System",
         (systemData) => (
             <NodeSystem
                 key={`system_${systemData.id}`}

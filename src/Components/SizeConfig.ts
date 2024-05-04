@@ -1,6 +1,6 @@
 export const SYSTEM_WIDTH = 300;
 export const SYSTEM_PADDING = 10;
-export const SYSTEM_HEADER_HEIGHT = 20;
+export const SYSTEM_HEADER_HEIGHT = 22;
 export const SYSTEM_LIST_PADDING = 10;
 export const SYSTEM_BORDER_THICKNESS = 3;
 

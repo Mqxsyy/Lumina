@@ -7,7 +7,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { StyleColors } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { NodeSystemData, RemoveNodeSystem, UpdateSystemData } from "../../Services/NodeSystemService";
+import { GetSystemById, NodeSystemData, RemoveNodeSystem, UpdateSystemData } from "../../Services/NodeSystemService";
 import Div from "../Div";
 import {
     SYSTEM_BORDER_THICKNESS,
@@ -17,6 +17,9 @@ import {
     SYSTEM_WIDTH,
 } from "../SizeConfig";
 import NodeGroup from "./NodeGroup";
+import { TextInput } from "Components/Basic/TextInput";
+
+// IMPORTANT: make systems nameable
 
 interface Props {
     anchorPoint: Vector2;
@@ -61,6 +64,29 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
         const canvasPositionVec2 = new Vector2(canvasPosition.X.Offset, canvasPosition.Y.Offset);
         const position = canvasPositionVec2.add(offsetFromCenter);
         return UDim2.fromOffset(position.X, position.Y);
+    };
+
+    const getSystemName = () => {
+        const data = GetSystemById(systemId)!;
+        return data.data.systemName;
+    };
+
+    const updateSystemName = (name: string) => {
+        if (name === "") return "";
+
+        UpdateSystemData(systemId, (systemData) => {
+            systemData.systemName = name;
+            return systemData;
+        });
+    };
+
+    const updateSystemNameLostFocus = (name: string) => {
+        if (name === "") return getSystemName();
+
+        UpdateSystemData(systemId, (systemData) => {
+            systemData.systemName = name;
+            return systemData;
+        });
     };
 
     useEffect(() => {
@@ -134,9 +160,14 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
 
                     {useMemo(
                         () => (
-                            <BasicTextLabel
+                            <TextInput
                                 Size={new UDim2(1, 0, 0, SYSTEM_HEADER_HEIGHT)}
-                                Text={`VFX System (${systemId})`}
+                                HideBackground={true}
+                                Text={getSystemName()}
+                                TextSize={20}
+                                TextColor={StyleColors.White}
+                                TextChanged={updateSystemName}
+                                LostFocus={updateSystemNameLostFocus}
                             />
                         ),
                         [zoomScale],

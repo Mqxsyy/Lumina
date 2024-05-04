@@ -5,7 +5,9 @@ export default function ExportAsScript() {
     const convertedFiles: ModuleScript[] = [];
 
     GetAllSystems().forEach((nodeSystem) => {
-        convertedFiles.push(CreateScript(tostring(nodeSystem.data.id), nodeSystem.data.system));
+        const convertedFile = CreateScript(tostring(nodeSystem.data.id), nodeSystem.data.system);
+        convertedFile.Name = tostring(nodeSystem.data.systemName);
+        convertedFiles.push(convertedFile);
     });
 
     return convertedFiles;

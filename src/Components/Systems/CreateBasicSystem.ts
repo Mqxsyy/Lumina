@@ -11,6 +11,7 @@ import { CreateEmptySystem } from "./CreateEmptySystem";
 export function CreateBasicSystem() {
     const system = CreateEmptySystem();
     const systemData = system.data;
+    systemData.systemName = "Basic System";
 
     systemData.finishedBindingGroups.Connect(() => {
         const constantSpawn = CreateConstantSpawn();

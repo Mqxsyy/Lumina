@@ -7,6 +7,8 @@ interface Props {
     Position?: UDim2;
     Size?: UDim2;
 
+    HideBackground?: boolean;
+
     FontWeight?: Enum.FontWeight;
     TextSize?: number;
     TextColor?: Color3;
@@ -28,6 +30,7 @@ export function TextInput({
     AnchorPoint = Vector2.zero,
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromScale(1, 1),
+    HideBackground = false,
     TextSize = StyleText.FontSize,
     FontWeight = StyleText.FontWeight,
     TextColor = StyleColors.TextDark,
@@ -122,6 +125,7 @@ export function TextInput({
                     : Size
             }
             BackgroundColor3={Disabled ? StyleColors.Disabled : StyleColors.Highlight}
+            BackgroundTransparency={HideBackground ? 1 : 0}
             BorderSizePixel={0}
             ClearTextOnFocus={Disabled ? false : ClearTextOnFocus}
             TextEditable={!Disabled}
@@ -135,7 +139,7 @@ export function TextInput({
             Text={" "}
             ref={textBoxRef}
         >
-            <uipadding PaddingLeft={new UDim(0, 5)} />
+            <uipadding PaddingLeft={new UDim(0, math.clamp(5 * zoomScale, 1, math.huge))} />
             <uicorner CornerRadius={StyleProperties.CornerRadius} />
             <textlabel
                 Size={UDim2.fromScale(1, 1)}

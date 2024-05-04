@@ -12,6 +12,7 @@ export interface NodeSystemData {
     id: number;
     anchorPoint: Vector2;
     system: NodeSystem;
+    systemName: string;
     addToNodeGroup: {
         [NodeGroups.Spawn]: undefined | ((id: number) => void);
         [NodeGroups.Initialize]: undefined | ((id: number) => void);
@@ -44,12 +45,18 @@ export function GetSystemById(id: number) {
     return NodeSystemCollection.find((system) => system.data.id === id);
 }
 
-export function AddSystem(api: NodeSystem, create: (data: NodeSystemData) => React.Element, position?: Vector2) {
+export function AddSystem(
+    system: NodeSystem,
+    systemName: string,
+    create: (data: NodeSystemData) => React.Element,
+    position?: Vector2,
+) {
     const collectionEntry: NodeSystemCollectioEntry = {
         data: {
             id: GetNextSystemId(),
             anchorPoint: position || GetMousePositionOnCanvas().div(GetZoomScale()),
-            system: api,
+            system,
+            systemName,
             addToNodeGroup: {
                 [NodeGroups.Spawn]: undefined,
                 [NodeGroups.Initialize]: undefined,

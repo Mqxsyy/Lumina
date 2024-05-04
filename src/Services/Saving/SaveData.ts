@@ -6,6 +6,7 @@ export interface SaveData {
 
 export interface SerializedSystem {
     anchorPoint: { x: number; y: number };
+    systemName: string;
     groups: {
         spawn: SerializedNode[];
         initialize: SerializedNode[];

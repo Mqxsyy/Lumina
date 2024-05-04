@@ -10,16 +10,13 @@ import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 import { UpdateNode } from "./Nodes/Update/UpdateNode";
 
 // TODO: split groups and make them connectable
-// OPTIMIZE: with burst spawn 50 already creates a decent lag spike
 // OPTIMIZE: add culling?
-// easily lags in studio, doesn't lag too much in game... yay...
-// most likely probs something to do with having a UI connected idk, maybe sends more data or smthing
 
-// if (!RunService.IsStudio()) {
-// 	print(
-// 		"This game utilizes a free custom particle system and plugin called 'Lumina' to easily create great looking visual effects. Plugin can be found in the toolbox or creator store for absolutely FREE.",
-// 	);
-// }
+if (!RunService.IsStudio()) {
+    print(
+        "This game utilizes a free custom particle system and plugin called 'Lumina' to easily create great looking visual effects. Plugin can be found in the toolbox or creator store for absolutely FREE.",
+    );
+}
 
 export class NodeSystem {
     ParticleIdPool = new IdPool();

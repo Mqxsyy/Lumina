@@ -21,6 +21,7 @@ export function SaveToFile() {
         const anchorPoint = system.data.anchorPoint;
 
         const serializedSystem: SerializedSystem = {
+            systemName: system.data.systemName,
             anchorPoint: { x: anchorPoint.X, y: anchorPoint.Y },
             groups: {
                 spawn: [],
