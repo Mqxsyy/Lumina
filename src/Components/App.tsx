@@ -13,7 +13,6 @@ import { BasicTextLabel } from "./Basic/BasicTextLabel";
 import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
-import { RoundDecimal } from "API/Lib";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
 
@@ -297,6 +296,7 @@ export function App() {
                         Size={UDim2.fromOffset(50, 20)}
                         Text={`${math.round(GetZoomScale() * 100)}%`}
                         IsAffectedByZoom={false}
+                        ZIndex={10}
                     />
                 ),
                 [zoomScale],

@@ -21,7 +21,7 @@ export default function ConnectionPointOut({
     NodeId,
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
-    Size = UDim2.fromOffset(14 * GetZoomScale(), 14 * GetZoomScale()),
+    Size = UDim2.fromOffset(10 * GetZoomScale(), 10 * GetZoomScale()),
     BindFunction,
 }: Props) {
     const [connectionId, setConnectionId] = useState(-1);
@@ -32,12 +32,8 @@ export default function ConnectionPointOut({
         if (elementRef.current === undefined) return;
         if (nodeRef.current.element === undefined) return;
 
-        const offset = elementRef.current.AbsolutePosition.sub(nodeRef.current.element!.AbsolutePosition).add(
-            elementRef.current.AbsoluteSize.mul(0.5),
-        );
-
         const node = GetNodeById(NodeId)!.data;
-        const connectionData = CreateConnection(node, offset, BindFunction, loadedId);
+        const connectionData = CreateConnection(node, elementRef.current, BindFunction, loadedId);
 
         setConnectionId(connectionData.id);
 

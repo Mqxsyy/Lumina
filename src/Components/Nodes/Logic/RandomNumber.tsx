@@ -26,7 +26,6 @@ function RandomNumber({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as RandomNumberAPI).nodeFields.range}
                 NodeFieldName={RandomNumberFieldNames.range}
-                Label={CapitalizeFirstLetter(RandomNumberFieldNames.range)}
                 ValueLabels={["Min", "Max"]}
             />
         </Node>

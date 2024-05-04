@@ -42,15 +42,10 @@ export default function ConnectionPointIn({
         if (elementRef.current === undefined) return;
         if (nodeRef.current.element === undefined) return;
 
-        const offset = elementRef.current.AbsolutePosition.sub(nodeRef.current.element!.AbsolutePosition).add(
-            elementRef.current.AbsoluteSize.mul(0.5),
-        );
-
         setConnectionId(id);
 
         UpdateConnectionData(id, (data: ConnectionData) => {
-            data.endNode = GetNodeById(NodeId)!.data;
-            data.endOffset = offset;
+            data.endElement = elementRef.current;
             return data;
         });
 
@@ -94,6 +89,18 @@ export default function ConnectionPointIn({
         UnbindMovingConnection();
         finishConnection(movingConnectionId);
     };
+
+    useEffect(() => {
+        if (nodeDataRef.current.connectionsIn.size() === 0) return;
+        if (connectionId !== -1) return;
+
+        const connection = nodeDataRef.current.connectionsIn.find(
+            (connection) => connection.fieldName === NodeFieldName,
+        );
+
+        if (connection === undefined) return;
+        finishConnection(connection.id);
+    });
 
     useEffect(() => {
         const destroyConnection = nodeDataRef.current.onDestroy.Connect(() => {

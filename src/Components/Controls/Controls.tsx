@@ -64,6 +64,7 @@ function Controls() {
             AnchorPoint={new Vector2(1, 0)}
             Position={new UDim2(1, -CANVAS_PADDING, 0, CANVAS_PADDING)}
             Size={UDim2.fromOffset(BUTTON_WIDTH, BUTTON_HEIGHT * 2 + BUTTONS_PADDING)}
+            ZIndex={10}
         >
             <ControlButton
                 Position={UDim2.fromOffset(0, 0)}

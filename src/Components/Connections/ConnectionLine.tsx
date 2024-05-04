@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { GetCanvasData } from "Services/CanvasService";
 import { ConnectionData } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
+import { GetZoomScale } from "ZoomScale";
+
+// BUG: ConnectionLine has a delay in rendering because it relies on AbsolutePosition, not sure how to fix because nodeData.AnchorPoint can not be used anymore, since that's not used when a node is inside a system
 
 export const CreateConnectionLine = (connectionData: ConnectionData) => {
     return <ConnectionLine key={`connection_${connectionData.id}`} data={connectionData} />;
@@ -18,19 +21,28 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
     const [middleSegment, setMiddleSegment] = useState({ position: Vector2.zero, length: 0, rotation: 0 });
     const [endSegment, setEndSegment] = useState({ position: Vector2.zero, length: 0, rotation: 0 });
 
+    const zoomScale = GetZoomScale();
     const canvasData = useRef(GetCanvasData());
 
     useEffect(() => {
-        const startPoint1 = data.startNode.anchorPoint.add(data.startOffset);
-        const endPoint1 = data.endNode === undefined ? data.endPos! : data.endNode.anchorPoint.add(data.endOffset!);
+        if (data.endPos === undefined && data.endElement === undefined) return;
+
+        const canvasPositionUDim2 = canvasData.current.Position;
+        const canvasPosition = new Vector2(canvasPositionUDim2.X.Offset, canvasPositionUDim2.Y.Offset);
+
+        const startPoint1 = data.startElement.AbsolutePosition.add(data.startElement.AbsoluteSize.div(2)).sub(
+            canvasPosition,
+        );
+
+        const endPoint1 =
+            data.endElement === undefined
+                ? data.endPos!
+                : data.endElement.AbsolutePosition.add(data.endElement.AbsoluteSize.div(2)).sub(canvasPosition);
 
         const xDistance = endPoint1.X - startPoint1.X;
 
         const startPoint2 = startPoint1.add(new Vector2(xDistance * 0.2, 0));
         const endPoint2 = endPoint1.sub(new Vector2(xDistance * 0.2, 0));
-
-        const canvasPositionUDim2 = canvasData.current.Position;
-        const canvasPosition = new Vector2(canvasPositionUDim2.X.Offset, canvasPositionUDim2.Y.Offset);
 
         const startSegmentPosition1 = canvasPosition.add(startPoint1);
         const startSegmentPosition2 = canvasPosition.add(startPoint2);
@@ -61,7 +73,12 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
             rotation: 0,
         } as LineSegment;
         setEndSegment(endSegment);
-    }, [data.startNode.anchorPoint, data.endPos, data.endNode?.anchorPoint, canvasData.current.Position]);
+    }, [
+        data.startElement.AbsolutePosition,
+        data.endPos,
+        data.endElement?.AbsolutePosition,
+        canvasData.current.Position,
+    ]);
 
     return (
         <>
@@ -71,10 +88,11 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 }
                 Position={UDim2.fromOffset(startSegment.position.X, startSegment.position.Y)}
                 Rotation={startSegment.rotation}
-                Size={UDim2.fromOffset(startSegment.length + 1, 3)}
+                Size={UDim2.fromOffset(startSegment.length + 1, math.clamp(3 * zoomScale, 1, math.huge))}
                 BackgroundColor3={StyleColors.Highlight}
                 BackgroundTransparency={0}
                 BorderSizePixel={0}
+                ZIndex={3}
                 key={`connection_start_${data.id}`}
             >
                 <uicorner CornerRadius={new UDim(1, 10)} />
@@ -83,10 +101,11 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 AnchorPoint={new Vector2(0.5, 0.5)}
                 Position={UDim2.fromOffset(middleSegment.position.X, middleSegment.position.Y)}
                 Rotation={middleSegment.rotation}
-                Size={UDim2.fromOffset(middleSegment.length + 2, 3)}
+                Size={UDim2.fromOffset(middleSegment.length + 2, math.clamp(3 * zoomScale, 1, math.huge))}
                 BackgroundColor3={StyleColors.Highlight}
                 BackgroundTransparency={0}
                 BorderSizePixel={0}
+                ZIndex={3}
                 key={`connection_middle_${data.id}`}
             >
                 <uicorner CornerRadius={new UDim(1, 10)} />
@@ -97,10 +116,11 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 }
                 Position={UDim2.fromOffset(endSegment.position.X, endSegment.position.Y)}
                 Rotation={endSegment.rotation}
-                Size={UDim2.fromOffset(endSegment.length + 1, 3)}
+                Size={UDim2.fromOffset(endSegment.length + 1, math.clamp(3 * zoomScale, 1, math.huge))}
                 BackgroundColor3={StyleColors.Highlight}
                 BackgroundTransparency={0}
                 BorderSizePixel={0}
+                ZIndex={3}
                 key={`connection_end_${data.id}`}
             >
                 <uicorner CornerRadius={new UDim(1, 10)} />

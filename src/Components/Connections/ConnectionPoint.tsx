@@ -74,7 +74,7 @@ export default function ConnectionPoint({
                 <frame
                     AnchorPoint={new Vector2(0.5, 0.5)}
                     Position={UDim2.fromScale(0.5, 0.5)}
-                    Size={UDim2.fromOffset(Size.X.Offset - 8, Size.Y.Offset - 8)}
+                    Size={UDim2.fromOffset(Size.X.Offset - 4 * zoomScale, Size.Y.Offset - 4 * zoomScale)}
                     BackgroundColor3={StyleColors.Highlight}
                 >
                     <uicorner CornerRadius={new UDim(2, 0)} />

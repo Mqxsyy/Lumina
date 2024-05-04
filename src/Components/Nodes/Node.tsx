@@ -114,14 +114,17 @@ function Node({
             />
 
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                <BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={Name} />
+                <uilistlayout
+                    FillDirection={"Horizontal"}
+                    Padding={new UDim(0, 10 * zoomScale)}
+                    VerticalAlignment={"Center"}
+                />
+
+                <BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={Name}>
+                    <uiflexitem FlexMode={"Fill"} />
+                </BasicTextLabel>
                 {ConnectionFunction !== undefined && ConnectioNode !== undefined && (
-                    <ConnectionPointOut
-                        AnchorPoint={new Vector2(1, 0.5)}
-                        Position={UDim2.fromScale(1, 0.5)}
-                        NodeId={NodeId}
-                        BindFunction={ConnectionFunction}
-                    />
+                    <ConnectionPointOut NodeId={NodeId} BindFunction={ConnectionFunction} />
                 )}
             </Div>
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">

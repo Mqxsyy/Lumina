@@ -1,9 +1,10 @@
-import React from "@rbxts/react";
+import React, { useEffect, useState } from "@rbxts/react";
 import { NumberField as NumberFieldAPI } from "API/Fields/NumberField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
+import { GetNodeById } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
@@ -27,7 +28,19 @@ export default function NumberField({
     AllowConnection = true,
     OverrideSetNumber = undefined,
 }: Props) {
+    const [_, setForceRender] = useState(0);
+
     const zoomScale = GetZoomScale();
+
+    useEffect(() => {
+        const connection = NodeField.FieldChanged.Connect(() => {
+            setForceRender((prev) => (prev > 10 ? 0 : prev + 1));
+        });
+
+        return () => {
+            connection.Disconnect();
+        };
+    }, []);
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">

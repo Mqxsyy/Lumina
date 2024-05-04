@@ -13,10 +13,9 @@ export interface ConnectionData {
     id: number;
     loadedId?: number;
     startNode: NodeData;
-    startOffset: Vector2;
+    startElement: ImageButton;
     endPos?: Vector2;
-    endNode?: NodeData;
-    endOffset?: Vector2;
+    endElement?: ImageButton;
     fn: () => number;
     onDestroy: Event;
 }
@@ -45,13 +44,13 @@ export function GetConnectionById(id: number) {
     return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
-export function CreateConnection(startNode: NodeData, startOffset: Vector2, fn: () => number, loadedId?: number) {
+export function CreateConnection(startNode: NodeData, startElement: ImageButton, fn: () => number, loadedId?: number) {
     const connection: ConnectionCollectionEntry = {
         data: {
             id: idPool.GetNextId(),
             loadedId,
             startNode,
-            startOffset,
+            startElement,
             fn,
             onDestroy: new Event(),
         },
