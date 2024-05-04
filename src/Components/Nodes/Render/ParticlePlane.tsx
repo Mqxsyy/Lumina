@@ -8,6 +8,7 @@ import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
+import OrientationField from "Components/NodeFields/OrientationField";
 
 export function CreateParticlePlane() {
     return AddNode(new ParticlePlaneAPI(500), (data: NodeData) => {
@@ -25,7 +26,10 @@ function ParticlePlane({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={"Orientation - Facing camera"} />
+            <OrientationField
+                NodeField={(data.node as ParticlePlaneAPI).nodeFields.orientation}
+                Label={"Orientation"}
+            />
             <NumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as ParticlePlaneAPI).nodeFields.assetId}

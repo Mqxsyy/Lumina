@@ -13,11 +13,13 @@ import { BasicTextLabel } from "./Basic/BasicTextLabel";
 import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
+import Dropdown from "./Basic/Dropdown";
+import CanvasBackground from "./Background";
+import { DisableDropdown, DropdownDataChanged, GetDropdownData } from "Services/DropdownService";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
 
-// No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?
-// tbh probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
+// No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
 
 export function App() {
     const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.Lumina)!.AbsoluteSize);
@@ -27,6 +29,8 @@ export function App() {
 
     const canvasRef = useRef(undefined as Frame | undefined);
     const canvasDataRef = useRef(GetCanvasData());
+
+    const dropdownData = GetDropdownData();
 
     const StartMoveCanvas = () => {
         const mousePositionVec2 = GetMousePosition();
@@ -93,11 +97,15 @@ export function App() {
             const oldZoom = GetZoomScale();
             const newZoom = UpdateZoomScale(0.1);
             adjustCanvasPositionAfterZoom(oldZoom, newZoom);
+            setZoomScale(newZoom);
         } else if (inputObject.Position.Z < 0) {
             const oldZoom = GetZoomScale();
             const newZoom = UpdateZoomScale(-0.1);
             adjustCanvasPositionAfterZoom(oldZoom, newZoom);
+            setZoomScale(newZoom);
         }
+
+        DisableDropdown();
     };
 
     useEffect(() => {
@@ -109,10 +117,6 @@ export function App() {
                 canvasData.Size = UDim2.fromOffset(newSize.X, newSize.Y);
                 return canvasData;
             });
-        });
-
-        const zoomChangedConnection = ZoomScaleChanged.Connect((zoom) => {
-            setZoomScale(zoom as number);
         });
 
         const canvasDataChangedConnection = CanvasDataChanged.Connect(() => {
@@ -131,6 +135,10 @@ export function App() {
             setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
         });
 
+        const dropdownDataChangedConnection = DropdownDataChanged.Connect(() => {
+            setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+        });
+
         UpdateCanvasData((canvasData) => {
             canvasData.Position = UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5);
             canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y);
@@ -139,11 +147,11 @@ export function App() {
 
         return () => {
             widgetSizeChangedConnection.Disconnect();
-            zoomChangedConnection.Disconnect();
             canvasDataChangedConnection.Disconnect();
             nodeSystemsChangedConnection.Disconnect();
             nodesChangedConnection.Disconnect();
             connectionsChangedConnection.Disconnect();
+            dropdownDataChangedConnection.Disconnect();
         };
     }, []);
 
@@ -161,7 +169,6 @@ export function App() {
                             setNodeSelectionPosition(UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y));
                         } else if (input.UserInputType === Enum.UserInputType.MouseButton1) {
                             UnbindMovingConnection(true);
-                            setNodeSelectionPosition(undefined);
                         } else if (input.UserInputType === Enum.UserInputType.MouseButton3) {
                             setNodeSelectionPosition(undefined);
                         }
@@ -170,86 +177,7 @@ export function App() {
                 key={"Background"}
                 ref={canvasRef}
             >
-                {/* Top Left */}
-                <imagelabel
-                    Position={UDim2.fromOffset(0, 0)}
-                    Size={UDim2.fromOffset(
-                        canvasDataRef.current.Size.X.Offset * 0.5,
-                        canvasDataRef.current.Size.Y.Offset * 0.5,
-                    )}
-                    Rotation={180}
-                    BackgroundTransparency={1}
-                    // BackgroundTransparency={0.95}
-                    // BackgroundColor3={Color3.fromRGB(255, 0, 0)}
-                    Image={"rbxassetid://15952812715"} // alt: 15952811095
-                    ImageTransparency={0.5}
-                    ScaleType={"Tile"}
-                    TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
-                />
-                {/* Bottom Right */}
-                <imagelabel
-                    Position={UDim2.fromOffset(
-                        canvasDataRef.current.Size.X.Offset * 0.5,
-                        canvasDataRef.current.Size.Y.Offset * 0.5,
-                    )}
-                    Size={UDim2.fromOffset(
-                        canvasDataRef.current.Size.X.Offset * 0.5,
-                        canvasDataRef.current.Size.Y.Offset * 0.5,
-                    )}
-                    BackgroundTransparency={1}
-                    // BackgroundTransparency={0.95}
-                    // BackgroundColor3={Color3.fromRGB(0, 255, 0)}
-                    Image={"rbxassetid://15952812715"} // alt: 15952811095
-                    ImageTransparency={0.5}
-                    ScaleType={"Tile"}
-                    TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
-                />
-                {/* Top Right */}
-                <imagelabel
-                    Position={
-                        new UDim2(
-                            0.5,
-                            canvasDataRef.current.Size.X.Offset * 0.25 - canvasDataRef.current.Size.Y.Offset * 0.25,
-                            0,
-                            canvasDataRef.current.Size.Y.Offset * 0.25 - canvasDataRef.current.Size.X.Offset * 0.25,
-                        )
-                    }
-                    Size={UDim2.fromOffset(
-                        canvasDataRef.current.Size.Y.Offset * 0.5,
-                        canvasDataRef.current.Size.X.Offset * 0.5,
-                    )}
-                    Rotation={270}
-                    BackgroundTransparency={1}
-                    // BackgroundTransparency={0.95}
-                    // BackgroundColor3={Color3.fromRGB(0, 0, 255)}
-                    Image={"rbxassetid://15952812715"} // alt: 15952811095
-                    ImageTransparency={0.5}
-                    ScaleType={"Tile"}
-                    TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
-                />
-                {/* Bottom Left */}
-                <imagelabel
-                    Position={
-                        new UDim2(
-                            0,
-                            canvasDataRef.current.Size.X.Offset * 0.25 - canvasDataRef.current.Size.Y.Offset * 0.25,
-                            0.5,
-                            canvasDataRef.current.Size.Y.Offset * 0.25 - canvasDataRef.current.Size.X.Offset * 0.25,
-                        )
-                    }
-                    Size={UDim2.fromOffset(
-                        canvasDataRef.current.Size.Y.Offset * 0.5,
-                        canvasDataRef.current.Size.X.Offset * 0.5,
-                    )}
-                    Rotation={90}
-                    BackgroundTransparency={1}
-                    // BackgroundTransparency={0.95}
-                    // BackgroundColor3={Color3.fromRGB(255, 0, 255)}
-                    Image={"rbxassetid://15952812715"} // alt: 15952811095
-                    ImageTransparency={0.5}
-                    ScaleType={"Tile"}
-                    TileSize={UDim2.fromOffset(100 * zoomScale, 100 * zoomScale)}
-                />
+                <CanvasBackground canvasSize={canvasDataRef.current.Size} />
                 <frame
                     Size={UDim2.fromScale(1, 1)}
                     BackgroundTransparency={1}
@@ -286,6 +214,7 @@ export function App() {
                     ToggleSelection={() => setNodeSelectionPosition(undefined)}
                 />
             )}
+            {dropdownData.position !== undefined && <Dropdown key={"Dropdown"} />}
             <Controls key={"Controls"} />
             {useMemo(
                 () => (
@@ -303,10 +232,20 @@ export function App() {
             )}
             <Div
                 key={"ClickDetector"}
-                ZIndex={2}
+                ZIndex={10}
+                onMouseButton1Down={() => {
+                    setNodeSelectionPosition(undefined);
+                    DisableDropdown();
+                }}
                 onMouseButton1Up={() => {
                     SetDraggingNodeId(undefined);
                     RunService.UnbindFromRenderStep("MoveNode");
+                }}
+                onMouseButton2Down={() => {
+                    DisableDropdown();
+                }}
+                onMouseButton3Down={() => {
+                    DisableDropdown();
                 }}
             />
         </>

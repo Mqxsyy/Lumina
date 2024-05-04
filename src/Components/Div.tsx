@@ -16,8 +16,10 @@ interface Props {
     onUnhover?: () => void;
     onMouseButton1Down?: (element: GuiObject) => void;
     onMouseButton2Down?: (element: GuiObject) => void;
+    onMouseButton3Down?: (element: GuiObject) => void;
     onMouseButton1Up?: (element: GuiObject) => void;
     onMouseButton2Up?: (element: GuiObject) => void;
+    onMouseButton3Up?: (element: GuiObject) => void;
 }
 
 export default function Div({
@@ -35,8 +37,10 @@ export default function Div({
     onUnhover = undefined,
     onMouseButton1Down = undefined,
     onMouseButton2Down = undefined,
+    onMouseButton3Down = undefined,
     onMouseButton1Up = undefined,
     onMouseButton2Up = undefined,
+    onMouseButton3Up = undefined,
     getFrame = undefined,
     children,
 }: React.PropsWithChildren<Props>) {
@@ -85,6 +89,10 @@ export default function Div({
                             if (onMouseButton2Down !== undefined) onMouseButton2Down(element);
                             break;
                         }
+                        case Enum.UserInputType.MouseButton3: {
+                            if (onMouseButton3Down !== undefined) onMouseButton3Down(element);
+                            break;
+                        }
                     }
                 },
                 InputEnded: (element, inputObject) => {
@@ -95,6 +103,10 @@ export default function Div({
                         }
                         case Enum.UserInputType.MouseButton2: {
                             if (onMouseButton2Up !== undefined) onMouseButton2Up(element);
+                            break;
+                        }
+                        case Enum.UserInputType.MouseButton3: {
+                            if (onMouseButton3Up !== undefined) onMouseButton3Up(element);
                             break;
                         }
                     }

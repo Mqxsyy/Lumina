@@ -113,8 +113,8 @@ export class ParticlePlane extends RenderNode {
         this.aliveParticleBaseParts = [];
         this.objectPool = new ObjectPool(CreateParticlePlane);
 
+        // BUG: studio check not working...
         if (pregenerateParticlesCount !== undefined && !RunService.IsEdit()) {
-            // BUG: studio check not working...
             let particlesLeft = pregenerateParticlesCount;
 
             task.spawn(() => {
@@ -146,6 +146,7 @@ export class ParticlePlane extends RenderNode {
         });
 
         const orientation = this.nodeFields.orientation.GetOrientation();
+        print(orientation);
         if (orientation === Orientation.FacingCamera) {
             particle.CFrame = CFrame.lookAt(particle.CFrame.Position, game.Workspace.CurrentCamera!.CFrame.Position);
         }

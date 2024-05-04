@@ -2,6 +2,19 @@ import { NodeField } from "./NodeField";
 
 export enum Orientation {
     FacingCamera = 1,
+    VelocityParallel = 2,
+    VelocityPerpendicular = 3,
+}
+
+function GetOrientationName(orientation: Orientation) {
+    switch (orientation) {
+        case Orientation.FacingCamera:
+            return "Facing Camera";
+        case Orientation.VelocityParallel:
+            return "Velocity Parrallel";
+        case Orientation.VelocityPerpendicular:
+            return "Velocity Perpendicular";
+    }
 }
 
 interface SerializedData {
@@ -18,6 +31,10 @@ export class OrientationField extends NodeField {
 
     GetOrientation() {
         return this.orientation;
+    }
+
+    GetOrientationName() {
+        return GetOrientationName(this.orientation);
     }
 
     SetOrientation = (orientation: number) => {

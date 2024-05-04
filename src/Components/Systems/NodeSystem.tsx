@@ -3,7 +3,7 @@ import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
-import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import { TextInput } from "Components/Basic/TextInput";
 import { StyleColors } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
@@ -17,9 +17,6 @@ import {
     SYSTEM_WIDTH,
 } from "../SizeConfig";
 import NodeGroup from "./NodeGroup";
-import { TextInput } from "Components/Basic/TextInput";
-
-// IMPORTANT: make systems nameable
 
 interface Props {
     anchorPoint: Vector2;
