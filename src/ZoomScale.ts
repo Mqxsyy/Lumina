@@ -1,8 +1,6 @@
 import { Event } from "API/Bindables/Event";
 import { RoundDecimal } from "API/Lib";
 
-// TODO: make zoom go to cursor
-
 let zoomScale = 1;
 export const ZoomScaleChanged = new Event<[number]>();
 
@@ -29,4 +27,6 @@ export function UpdateZoomScale(value: number) {
         zoomScale = newZoomScale;
         ZoomScaleChanged.Fire(zoomScale);
     }
+
+    return zoomScale;
 }

@@ -4,7 +4,7 @@ import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/Can
 import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { StyleColors } from "Style";
-import { GetMousePosition, WidgetSizeChanged } from "Windows/MainWindow";
+import { GetMousePosition, GetMousePositionOnCanvas, WidgetSizeChanged } from "Windows/MainWindow";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { GetAllSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
@@ -13,6 +13,7 @@ import { BasicTextLabel } from "./Basic/BasicTextLabel";
 import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
+import { RoundDecimal } from "API/Lib";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
 
@@ -28,12 +29,14 @@ export function App() {
     const canvasRef = useRef(undefined as Frame | undefined);
     const canvasDataRef = useRef(GetCanvasData());
 
-    const StartMoveCanvas = (frame: Frame) => {
+    const StartMoveCanvas = () => {
         const mousePositionVec2 = GetMousePosition();
         const widgetSize = GetWindow(Windows.Lumina)!.AbsoluteSize.mul(0.5);
 
         const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
-        const mouseOffset = mousePosition.sub(frame.Position).add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
+        const mouseOffset = mousePosition
+            .sub(canvasDataRef.current.Position)
+            .add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
 
         RunService.BindToRenderStep("MoveCanvas", Enum.RenderPriority.Input.Value, () => MoveCanvas(mouseOffset));
     };
@@ -44,6 +47,7 @@ export function App() {
 
     const MoveCanvas = (mouseOffset: UDim2) => {
         const mousePositionVec2 = GetMousePosition();
+
         const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
         const newPosition = mousePosition.sub(mouseOffset);
 
@@ -53,10 +57,6 @@ export function App() {
         if (canvasData.Position !== newCanvasPosition) {
             UpdateCanvasData((canvasData) => {
                 canvasData.Position = newCanvasPosition;
-                return canvasData;
-            }, false);
-
-            UpdateCanvasData((canvasData) => {
                 canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
                     UDim2.fromOffset(math.abs(newPosition.X.Offset) * 2, math.abs(newPosition.Y.Offset) * 2),
                 );
@@ -66,11 +66,38 @@ export function App() {
         }
     };
 
+    const adjustCanvasPositionAfterZoom = (oldZoom: number, newZoom: number) => {
+        // i hate making zooming to mouse
+        const mousePosition = GetMousePositionOnCanvas();
+        const newMousePosition = mousePosition.div(oldZoom).mul(newZoom);
+        const delta = newMousePosition.sub(mousePosition);
+
+        UpdateCanvasData((canvasData) => {
+            canvasData.Position = UDim2.fromOffset(
+                canvasData.Position.X.Offset - delta.X,
+                canvasData.Position.Y.Offset - delta.Y,
+            );
+
+            canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
+                UDim2.fromOffset(
+                    math.abs(canvasData.Position.X.Offset - widgetSize.X * 0.5) * 2,
+                    math.abs(canvasData.Position.Y.Offset - widgetSize.Y * 0.5) * 2,
+                ),
+            );
+
+            return canvasData;
+        });
+    };
+
     const UpdateZoom = (inputObject: InputObject) => {
         if (inputObject.Position.Z > 0) {
-            UpdateZoomScale(0.1);
+            const oldZoom = GetZoomScale();
+            const newZoom = UpdateZoomScale(0.1);
+            adjustCanvasPositionAfterZoom(oldZoom, newZoom);
         } else if (inputObject.Position.Z < 0) {
-            UpdateZoomScale(-0.1);
+            const oldZoom = GetZoomScale();
+            const newZoom = UpdateZoomScale(-0.1);
+            adjustCanvasPositionAfterZoom(oldZoom, newZoom);
         }
     };
 
@@ -230,7 +257,7 @@ export function App() {
                     Event={{
                         InputBegan: (element, inputObject: InputObject) => {
                             if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
-                            StartMoveCanvas(element.Parent as Frame);
+                            StartMoveCanvas();
                         },
                         InputEnded: (_, inputObject: InputObject) => {
                             if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
