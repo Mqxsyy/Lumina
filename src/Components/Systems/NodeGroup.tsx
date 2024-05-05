@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { Event } from "API/Bindables/Event";
+import { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem } from "API/NodeSystem";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
@@ -16,7 +16,7 @@ import { GROUP_BORDER_THICKNESS, GROUP_HEADER_HEIGHT, GROUP_LIST_PADDING, GROUP_
 interface Props {
     SystemId: number;
     SystemAPI: NodeSystem;
-    SystemDestroyEvent: Event<[NodeSystemData]>;
+    SystemDestroyEvent: FastEvent<[NodeSystemData]>;
     NodeGroup: NodeGroups;
     GradientStart: Color3;
     GradientEnd: Color3;
@@ -26,8 +26,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
     const [childNodes, setChildNodes] = useState([] as NodeCollectionEntry[]);
     const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
-    const nodeDestroyConnectionsRef = useRef<{ [key: number]: RBXScriptConnection }>({});
-    const isDestroyingRef = useRef(false);
+    const nodeDestroyConnectionsRef = useRef<{ [key: number]: FastEventConnection }>({});
 
     const onHover = () => {
         const draggingNodeId = GetDraggingNodeId();
@@ -76,14 +75,6 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
     };
 
     useEffect(() => {
-        const destroyConnection = SystemDestroyEvent.Connect(() => {
-            destroyConnection.Disconnect();
-            isDestroyingRef.current = true;
-            childNodes.forEach((node) => {
-                RemoveNode(node.data.node.id);
-            });
-        });
-
         const zoomChangedConnection = ZoomScaleChanged.Connect((newScale) => {
             setZoomScale(newScale);
         });
@@ -95,10 +86,25 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
                 connection.Disconnect();
             }
 
-            destroyConnection.Disconnect();
             zoomChangedConnection.Disconnect();
         };
     }, []);
+
+    useEffect(() => {
+        let destroyConnection: FastEventConnection | undefined = SystemDestroyEvent.Connect(() => {
+            if (destroyConnection === undefined) return;
+            destroyConnection = destroyConnection.Disconnect();
+
+            childNodes.forEach((node) => {
+                RemoveNode(node.data.node.id);
+            });
+        });
+
+        return () => {
+            if (destroyConnection === undefined) return;
+            destroyConnection = destroyConnection.Disconnect();
+        };
+    }, [childNodes]);
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize={"Y"} onHover={onHover} onUnhover={onUnhover}>

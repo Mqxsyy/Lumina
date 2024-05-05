@@ -1,5 +1,6 @@
 import React from "@rbxts/react";
 import { Event } from "API/Bindables/Event";
+import { FastEvent } from "API/Bindables/FastEvent";
 import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem } from "API/NodeSystem";
@@ -21,7 +22,7 @@ export interface NodeSystemData {
         [NodeGroups.Logic]: never;
     };
     finishedBindingGroups: Event;
-    onDestroy: Event<[NodeSystemData]>;
+    onDestroy: FastEvent<[NodeSystemData]>;
 }
 
 export interface NodeSystemCollectioEntry {
@@ -65,7 +66,7 @@ export function AddSystem(
                 [NodeGroups.Logic]: undefined as never,
             },
             finishedBindingGroups: new Event(),
-            onDestroy: new Event(),
+            onDestroy: new FastEvent(),
         },
         create,
     };
@@ -125,6 +126,7 @@ export function RemoveNodeSystem(id: number) {
     const index = NodeSystemCollection.findIndex((system) => system.data.id === id);
     if (index !== -1) {
         const nodeSystem = NodeSystemCollection[index];
+        nodeSystem.data.system.Stop();
         nodeSystem.data.onDestroy.Fire(nodeSystem.data);
 
         NodeSystemCollection.remove(index);

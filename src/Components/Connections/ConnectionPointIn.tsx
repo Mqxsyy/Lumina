@@ -12,6 +12,7 @@ import {
 import { GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import ConnectionPoint from "./ConnectionPoint";
+import { FastEventConnection } from "API/Bindables/FastEvent";
 
 interface Props {
     AnchorPoint?: Vector2;
@@ -103,14 +104,19 @@ export default function ConnectionPointIn({
     });
 
     useEffect(() => {
-        const destroyConnection = nodeDataRef.current.onDestroy.Connect(() => {
+        let destroyConnection: FastEventConnection | undefined = nodeDataRef.current.onDestroy.Connect(() => {
+            if (destroyConnection === undefined) return;
+
             destroyConnection.Disconnect();
+            destroyConnection = undefined;
+
             if (connectionId !== -1) {
                 DestroyConnection(connectionId);
             }
         });
 
         return () => {
+            if (destroyConnection === undefined) return;
             destroyConnection.Disconnect();
         };
     }, [nodeDataRef.current.onDestroy, connectionId]);

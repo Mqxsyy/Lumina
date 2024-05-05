@@ -1,5 +1,6 @@
 import React from "@rbxts/react";
 import { Event } from "API/Bindables/Event";
+import { FastEvent } from "API/Bindables/FastEvent";
 import { NodeGroups } from "API/NodeGroup";
 import { Node } from "API/Nodes/Node";
 import { RenderNode } from "API/Nodes/Render/RenderNode";
@@ -24,7 +25,7 @@ export interface NodeData {
     connectionsIn: NodeConnectionIn[];
     loadedConnectionsIn?: NodeConnectionIn[];
     node: Node;
-    onDestroy: Event<[NodeData]>;
+    onDestroy: FastEvent<[NodeData]>;
 }
 
 export interface NodeCollectionEntry {
@@ -52,7 +53,7 @@ export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
             connectionsOut: [],
             connectionsIn: [],
             node: api,
-            onDestroy: new Event<[NodeData]>(),
+            onDestroy: new FastEvent(),
         },
         elementLoaded: new Event(),
         create,

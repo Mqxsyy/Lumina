@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
-import { Event } from "API/Bindables/Event";
+import { FastEvent } from "API/Bindables/FastEvent";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
 import { TextInput } from "Components/Basic/TextInput";
@@ -23,7 +23,7 @@ interface Props {
     canvasPosition: UDim2;
     systemId: number;
     systemAPI: NodeSystemAPI;
-    systemDestroyEvent: Event<[NodeSystemData]>;
+    systemDestroyEvent: FastEvent<[NodeSystemData]>;
 }
 
 function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDestroyEvent }: Props) {
