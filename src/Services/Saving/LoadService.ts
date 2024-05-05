@@ -2,7 +2,7 @@ import { HttpService } from "@rbxts/services";
 import { API_VERSION } from "API/ExportAPI";
 import { NodeGroups } from "API/NodeGroup";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
-import { NodeList } from "Lists/NodesList";
+import { NodeList } from "Lists/NodeList";
 import {
     NodeCollectionEntry,
     NodeConnectionIn,

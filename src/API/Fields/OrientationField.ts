@@ -11,7 +11,7 @@ function GetOrientationName(orientation: Orientation) {
         case Orientation.FacingCamera:
             return "Facing Camera";
         case Orientation.VelocityParallel:
-            return "Velocity Parrallel";
+            return "Velocity Parallel";
         case Orientation.VelocityPerpendicular:
             return "Velocity Perpendicular";
     }

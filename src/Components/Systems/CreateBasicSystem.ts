@@ -5,7 +5,7 @@ import { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
 import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 import { CreateParticlePlane } from "Components/Nodes/Render/ParticlePlane";
 import { CreateConstantSpawn } from "Components/Nodes/Spawn/ConstantSpawn";
-import { CreateSetVelocity } from "Lists/NodesListNodeBarrel";
+import { CreateSetVelocity } from "Lists/NodeListCreateBarrel";
 import { CreateEmptySystem } from "./CreateEmptySystem";
 
 export function CreateBasicSystem() {

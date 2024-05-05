@@ -11,6 +11,11 @@ export function GetLiveParticlesFolder(): Folder {
     return liveParticlesFolder as Folder;
 }
 
+const liveParticlesFolder = GetLiveParticlesFolder();
+if (liveParticlesFolder !== undefined) {
+    liveParticlesFolder.ClearAllChildren();
+}
+
 export function GetPlaneParticlesFolder(): Folder {
     const liveParticlesFolder = GetLiveParticlesFolder();
 

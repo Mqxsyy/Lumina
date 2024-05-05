@@ -5,7 +5,7 @@ import { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
 import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 import { CreateParticlePlane } from "Components/Nodes/Render/ParticlePlane";
 import { CreateBurstSpawn } from "Components/Nodes/Spawn/BurstSpawn";
-import { CreateSetLifetimeRandom, CreateSetVelocityRandom } from "Lists/NodesListNodeBarrel";
+import { CreateSetLifetimeRandom, CreateSetVelocityRandom } from "Lists/NodeListCreateBarrel";
 import { CreateEmptySystem } from "./CreateEmptySystem";
 
 export function CreateBurstSystem() {

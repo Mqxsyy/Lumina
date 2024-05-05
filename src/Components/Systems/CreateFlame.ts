@@ -26,7 +26,7 @@ import {
     CreateSetSizeRandom,
     CreateSetTransparencyOverLife,
     CreateSetVelocityRandom,
-} from "Lists/NodesListNodeBarrel";
+} from "Lists/NodeListCreateBarrel";
 import { CreateEmptySystem } from "./CreateEmptySystem";
 
 export function CreateFlameSystem() {

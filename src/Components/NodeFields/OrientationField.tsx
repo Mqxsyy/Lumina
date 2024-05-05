@@ -44,7 +44,7 @@ export default function OrientationField({ NodeField, Label }: Props) {
             />,
             <HighlightableTextButton
                 Size={UDim2.fromScale(1, 0)}
-                Text="Velocity Parrallel"
+                Text="Velocity Parallel"
                 OnClick={() => {
                     NodeField.SetOrientation(Orientation.VelocityParallel);
                 }}

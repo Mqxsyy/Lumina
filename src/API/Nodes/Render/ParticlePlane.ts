@@ -11,12 +11,10 @@ import { InitializeNode } from "../Initialize/InitializeNode";
 import { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
-// IMPORTANT: add more orientations
-// TODO: make double sided, required reversed image if not symmetrical
-// TODO: make use of parallel luau
-// TODO: add automatic cache cleaner to prevent particle cache growing too large
+// IMPORTANT: make double sided, required reversed image if not symmetrical
 
-// flame sprite sheet: 15996621949
+// TODO: make use of parallel luau
+
 const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 const DEFAULT_TEXTURE = "rbxassetid://7848741169";
 const DEFAULT_COLOR = new Color3(1, 1, 1);
@@ -128,6 +126,47 @@ export class ParticlePlane extends RenderNode {
         }
     }
 
+    CheckOrientation(orientation: Orientation, position: Vector3, particleId: number): CFrame {
+        switch (orientation) {
+            case Orientation.FacingCamera: {
+                return CFrame.lookAt(position, game.Workspace.CurrentCamera!.CFrame.Position);
+            }
+            case Orientation.VelocityParallel: {
+                const data = GetParticleData(particleId)!;
+
+                const velocity = data.velocity.Unit;
+                if (velocity === Vector3.zero) return new CFrame(position);
+
+                // math :O
+                // kinda maybe understand it, took around 3 hours to get working
+                const cameraPosition = game.Workspace.CurrentCamera!.CFrame.Position;
+                const cameraToPosition = cameraPosition.sub(position);
+                const cameraDirection = cameraToPosition.sub(
+                    velocity.mul(cameraToPosition.Dot(velocity) / velocity.Dot(velocity)),
+                ).Unit;
+
+                const velocityAligned = CFrame.lookAt(position, position.add(velocity)).mul(
+                    CFrame.Angles(0, math.rad(90), 0),
+                );
+                const newLookVector = velocityAligned.LookVector;
+
+                const dot = cameraDirection.Dot(newLookVector);
+                let angle = math.acos(dot / (cameraDirection.Magnitude * newLookVector.Magnitude));
+
+                if (cameraDirection.Cross(newLookVector).Dot(velocity) > 0) {
+                    angle = -angle;
+                }
+
+                return velocityAligned.mul(CFrame.Angles(angle, 0, 0));
+            }
+            case Orientation.VelocityPerpendicular: {
+                const velocity = GetParticleData(particleId).velocity;
+                const nextPosition = position.add(velocity);
+                return CFrame.lookAt(position, nextPosition);
+            }
+        }
+    }
+
     Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
         const particle = this.objectPool.GetItem() as PlaneParticle;
         particle.SurfaceGui.ImageLabel.ImageTransparency = 0;
@@ -146,10 +185,8 @@ export class ParticlePlane extends RenderNode {
         });
 
         const orientation = this.nodeFields.orientation.GetOrientation();
-        print(orientation);
-        if (orientation === Orientation.FacingCamera) {
-            particle.CFrame = CFrame.lookAt(particle.CFrame.Position, game.Workspace.CurrentCamera!.CFrame.Position);
-        }
+        const rotation = this.CheckOrientation(orientation, particle.CFrame.Position, id);
+        particle.CFrame = new CFrame(particle.Position).mul(rotation);
 
         if (this.nodeFields.spriteSheetFrameCount.GetNumber() >= 1) {
             const size = this.nodeFields.imageSize.GetVector2();
@@ -232,15 +269,14 @@ export class ParticlePlane extends RenderNode {
                         }
 
                         let cframe;
-                        if (particle.orientation === Orientation.FacingCamera) {
-                            if (position !== undefined) {
-                                cframe = CFrame.lookAt(position, game.Workspace.CurrentCamera!.CFrame.Position);
-                            } else {
-                                cframe = CFrame.lookAt(
-                                    particle.basePart.CFrame.Position,
-                                    game.Workspace.CurrentCamera!.CFrame.Position,
-                                );
-                            }
+                        if (position !== undefined) {
+                            cframe = this.CheckOrientation(particle.orientation, position, particle.id);
+                        } else {
+                            cframe = this.CheckOrientation(
+                                particle.orientation,
+                                particle.basePart.Position,
+                                particle.id,
+                            );
                         }
 
                         targetParticles.push(particle.basePart);

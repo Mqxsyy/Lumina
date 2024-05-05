@@ -1,5 +1,6 @@
 // Spawn
 export { CreateConstantSpawn } from "Components/Nodes/Spawn/ConstantSpawn";
+export { CreateBurstSpawn } from "Components/Nodes/Spawn/BurstSpawn";
 
 // Initialize
 export { CreateSetColor } from "Components/Nodes/Initialize/SetColor";
