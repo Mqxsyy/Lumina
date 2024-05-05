@@ -1,3 +1,5 @@
+import { AddVelocityName } from "API/Nodes/Update/AddVelocity";
+
 // Spawn
 export { ConstantSpawnName } from "API/Nodes/Spawn/ConstantSpawn";
 export { BurstSpawnName } from "API/Nodes/Spawn/BurstSpawn";
@@ -24,6 +26,8 @@ export { MultiplySizeOverLifeName } from "API/Nodes/Update/MultiplySizeOverLife"
 export { SetColorOverLifeName } from "API/Nodes/Update/SetColorOverLife";
 export { SetSizeOverLifeName } from "API/Nodes/Update/SetSizeOverLife";
 export { SetTransparencyOverLifeName } from "API/Nodes/Update/SetTransparencyOverLife";
+export { AccelerateName } from "API/Nodes/Update/Accelerate";
+export { AddVelocityName } from "API/Nodes/Update/AddVelocity";
 
 // Render
 export { ParticlePlaneName } from "API/Nodes/Render/ParticlePlane";

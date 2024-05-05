@@ -74,7 +74,7 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             create: () => CreateBarrel.CreateAddRotationZRandom(),
         },
         [NameBarrel.DragName]: {
-            name: "Set Drag",
+            name: "Drag",
             create: () => CreateBarrel.CreateDrag(),
         },
         [NameBarrel.MultiplySizeOverLifeName]: {
@@ -92,6 +92,14 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         [NameBarrel.SetTransparencyOverLifeName]: {
             name: "Set Transparency Over Life",
             create: () => CreateBarrel.CreateSetTransparencyOverLife(),
+        },
+        [NameBarrel.AccelerateName]: {
+            name: "Accelerate",
+            create: () => CreateBarrel.CreateAccelerate(),
+        },
+        [NameBarrel.AddVelocityName]: {
+            name: "Add Velocity",
+            create: () => CreateBarrel.CreateAddVelocity(),
         },
     },
     [NodeGroups.Render]: {

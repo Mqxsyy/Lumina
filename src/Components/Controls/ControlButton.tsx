@@ -18,12 +18,14 @@ export function ControlButton({
     MouseButton1Down = undefined,
 }: Props) {
     return (
-        <frame
+        <imagebutton
             AnchorPoint={AnchorPoint}
             Position={Position}
             Size={Size}
             BackgroundColor3={StyleColors.Primary}
             BorderSizePixel={0}
+            ImageTransparency={1}
+            AutoButtonColor={false}
             Event={{
                 InputBegan: (_, inputObject) => {
                     if (inputObject.UserInputType === Enum.UserInputType.MouseButton1) {
@@ -41,6 +43,6 @@ export function ControlButton({
                 TextXAlignment={"Center"}
                 IsAffectedByZoom={false}
             />
-        </frame>
+        </imagebutton>
     );
 }

@@ -30,9 +30,27 @@ export class Drag extends UpdateNode {
         UpdateParticleData(id, (data) => {
             const oldVelocity = data.velocity;
 
-            const x = LerpNumber(oldVelocity.X, 0, drag);
-            const y = LerpNumber(oldVelocity.Y, 0, drag);
-            const z = LerpNumber(oldVelocity.Z, 0, drag);
+            let x = 0;
+            let y = 0;
+            let z = 0;
+
+            if (oldVelocity.X > 0 && oldVelocity.X - drag > 0) {
+                x = oldVelocity.X - drag;
+            } else if (oldVelocity.X < 0 && oldVelocity.X + drag < 0) {
+                x = oldVelocity.X + drag;
+            }
+
+            if (oldVelocity.Y > 0 && oldVelocity.Y - drag > 0) {
+                y = oldVelocity.Y - drag;
+            } else if (oldVelocity.Y < 0 && oldVelocity.Y + drag < 0) {
+                y = oldVelocity.Y + drag;
+            }
+
+            if (oldVelocity.Z > 0 && oldVelocity.Z - drag > 0) {
+                z = oldVelocity.Z - drag;
+            } else if (oldVelocity.Z < 0 && oldVelocity.Z + drag < 0) {
+                z = oldVelocity.Z + drag;
+            }
 
             data.velocity = new Vector3(x, y, z);
             return data;

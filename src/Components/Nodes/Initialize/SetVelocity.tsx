@@ -22,7 +22,6 @@ function SetVelocity({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as SetVelocityAPI).nodeFields.velocity}
                 NodeFieldName={SetVelocityFieldNames.velocity}
-                Label={"Velocity"}
             />
         </Node>
     );

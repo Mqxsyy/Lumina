@@ -24,6 +24,8 @@ export { CreateMultiplySizeOverLife } from "Components/Nodes/Update/MultiplySize
 export { CreateSetColorOverLife } from "Components/Nodes/Update/SetColorOverLife";
 export { CreateSetSizeOverLife } from "Components/Nodes/Update/SetSizeOverLife";
 export { CreateSetTransparencyOverLife } from "Components/Nodes/Update/SetTransparencyOverLife";
+export { CreateAccelerate } from "Components/Nodes/Update/Accelerate";
+export { CreateAddVelocity } from "Components/Nodes/Update/AddVelocity";
 
 // Render
 export { CreateParticlePlane } from "Components/Nodes/Render/ParticlePlane";

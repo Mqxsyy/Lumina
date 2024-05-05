@@ -11,6 +11,7 @@ import { UpdateNode } from "./Nodes/Update/UpdateNode";
 
 // TODO: split groups and make them connectable
 // OPTIMIZE: add culling?
+// BUG: when running and delete then continues to run
 
 if (!RunService.IsStudio()) {
     print(
