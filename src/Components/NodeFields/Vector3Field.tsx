@@ -6,8 +6,7 @@ import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
 import { GetZoomScale } from "ZoomScale";
 
-// BUG: "-" sets number value to NaN
-// BUG: "connections don't quite work"
+// BUG: connections don't quite work
 
 interface Props {
     NodeId: number;

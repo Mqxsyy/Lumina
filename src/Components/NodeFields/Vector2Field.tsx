@@ -14,6 +14,7 @@ interface Props {
     Label?: string;
     ValueLabels?: [string, string];
 
+    AllowNegatives?: [boolean, boolean];
     AllowConnections?: [boolean, boolean];
 }
 
@@ -23,6 +24,7 @@ export function Vector2Field({
     NodeFieldName,
     Label = undefined,
     ValueLabels = ["X", "Y"],
+    AllowNegatives = [true, true],
     AllowConnections = [true, true],
 }: Props) {
     const zoomScale = GetZoomScale();
@@ -62,7 +64,7 @@ export function Vector2Field({
                         Position={UDim2.fromScale(1, 0)}
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetX())}
-                        AllowNegative={true}
+                        AllowNegative={AllowNegatives[0]}
                         NumberChanged={NodeField.SetX}
                     >
                         <uiflexitem FlexMode={"Fill"} />
@@ -94,7 +96,7 @@ export function Vector2Field({
                         Position={UDim2.fromScale(1, 0)}
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetY())}
-                        AllowNegative={true}
+                        AllowNegative={AllowNegatives[1]}
                         NumberChanged={NodeField.SetY}
                     >
                         <uiflexitem FlexMode={"Fill"} />

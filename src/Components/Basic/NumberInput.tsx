@@ -2,6 +2,8 @@ import React from "@rbxts/react";
 import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
 
+// BUG: Allownegative not working; can still use negatives if not allowed
+
 interface Props {
     AnchorPoint?: Vector2;
     Position?: UDim2;
@@ -63,6 +65,7 @@ export function NumberInput({
     const textChanged = (text: string) => {
         let number = validateNumber(text);
         if (number === undefined) return "";
+        if (number === "-") return number;
 
         if (NumberChanged !== undefined) {
             const adjustedNumber = NumberChanged(tonumber(number) as number);
@@ -76,7 +79,7 @@ export function NumberInput({
 
     const lostFocus = (text: string) => {
         const number = validateNumber(text);
-        if (number === undefined) return getDefaultText();
+        if (number === undefined || number === "-") return getDefaultText();
     };
 
     return (

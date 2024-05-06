@@ -35,6 +35,7 @@ function ParticlePlane({ data }: { data: NodeData }) {
                 NodeField={(data.node as ParticlePlaneAPI).nodeFields.assetId}
                 NodeFieldName={ParticlePlaneFieldNames.assetId}
                 Label={CapitalizeFirstLetter(ParticlePlaneFieldNames.assetId)}
+                AllowNegative={false}
                 AllowConnection={false}
             />
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
@@ -50,12 +51,14 @@ function ParticlePlane({ data }: { data: NodeData }) {
                         NodeField={(data.node as ParticlePlaneAPI).nodeFields.imageSize}
                         NodeFieldName={ParticlePlaneFieldNames.imageSize}
                         ValueLabels={["Width", "Height"]}
+                        AllowNegatives={[false, false]}
                     />
                     <NumberField
                         NodeId={data.node.id}
                         NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetRows}
                         NodeFieldName={ParticlePlaneFieldNames.spriteSheetRows}
                         Label={"Rows"}
+                        AllowNegative={false}
                         AllowConnection={false}
                     />
                     <NumberField
@@ -63,6 +66,7 @@ function ParticlePlane({ data }: { data: NodeData }) {
                         NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetColumns}
                         NodeFieldName={ParticlePlaneFieldNames.spriteSheetColumns}
                         Label={"Columns"}
+                        AllowNegative={false}
                         AllowConnection={false}
                     />
                     <NumberField
@@ -70,6 +74,7 @@ function ParticlePlane({ data }: { data: NodeData }) {
                         NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetFrameCount}
                         NodeFieldName={ParticlePlaneFieldNames.spriteSheetFrameCount}
                         Label={"Frame Count"}
+                        AllowNegative={false}
                         AllowConnection={false}
                     />
                 </Div>
