@@ -2,8 +2,6 @@ import React from "@rbxts/react";
 import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
 
-// BUG: Allownegative not working; can still use negatives if not allowed
-
 interface Props {
     AnchorPoint?: Vector2;
     Position?: UDim2;
@@ -48,6 +46,10 @@ export function NumberInput({
                 if (text === "-") return text;
             }
 
+            return undefined;
+        }
+
+        if (!AllowNegative && (number < 0 || text.sub(1, 1) === "-")) {
             return undefined;
         }
 
