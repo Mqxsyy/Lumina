@@ -20,6 +20,7 @@ interface Props {
     Size?: UDim2;
     NodeId: number;
     NodeFieldName: string;
+    ValueName?: string;
     BindFunction: (newValue: () => number, boundNode: LogicNode) => void;
     UnbindFunction: () => void;
 }
@@ -27,6 +28,7 @@ interface Props {
 export default function ConnectionPointIn({
     NodeId,
     NodeFieldName,
+    ValueName = undefined,
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromOffset(10 * GetZoomScale(), 10 * GetZoomScale()),
@@ -56,6 +58,7 @@ export default function ConnectionPointIn({
             const connection: NodeConnectionIn = {
                 id: id,
                 fieldName: NodeFieldName,
+                valueName: ValueName,
             };
 
             data.connectionsIn.push(connection);
@@ -95,12 +98,13 @@ export default function ConnectionPointIn({
         if (nodeDataRef.current.connectionsIn.size() === 0) return;
         if (connectionId !== -1) return;
 
-        const connection = nodeDataRef.current.connectionsIn.find(
-            (connection) => connection.fieldName === NodeFieldName,
-        );
+        for (const connection of nodeDataRef.current.connectionsIn) {
+            if (connection.fieldName !== NodeFieldName) continue;
+            if (connection.valueName !== ValueName) continue;
 
-        if (connection === undefined) return;
-        finishConnection(connection.id);
+            finishConnection(connection.id);
+            break;
+        }
     });
 
     useEffect(() => {
@@ -129,18 +133,23 @@ export default function ConnectionPointIn({
             if (nodeDataRef.current.loadedConnectionsIn === undefined) return;
             if (nodeDataRef.current.loadedConnectionsIn.size() === 0) return;
 
+            // optimize: do i need attempts? most likely do
             const maxAttempts = 10;
             let attempts = 0;
 
             while (attempts < maxAttempts) {
+                if (nodeDataRef.current.loadedConnectionsIn === undefined) return;
+
                 for (let i = nodeDataRef.current.loadedConnectionsIn.size() - 1; i >= 0; i--) {
                     const loadedConnection = nodeDataRef.current.loadedConnectionsIn[i];
 
                     for (const connection of GetAllConnections()) {
                         if (connection.data.loadedId === loadedConnection.id) {
-                            finishConnection(connection.data.id);
-                            nodeDataRef.current.loadedConnectionsIn.remove(i);
-                            break;
+                            if (loadedConnection.valueName === ValueName) {
+                                finishConnection(connection.data.id);
+                                nodeDataRef.current.loadedConnectionsIn.remove(i);
+                                break;
+                            }
                         }
                     }
                 }

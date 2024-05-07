@@ -64,6 +64,7 @@ export function NodeSelection({ Position, ToggleSelection }: Props) {
             AutomaticSize="Y"
             BackgroundTransparency={1}
             ImageTransparency={1}
+            ZIndex={10}
         >
             <frame Size={UDim2.fromScale(1, 1)} BackgroundColor3={StyleColors.Primary}>
                 <uicorner CornerRadius={StyleProperties.CornerRadius} />

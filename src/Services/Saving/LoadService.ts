@@ -12,7 +12,7 @@ import {
 } from "Services/NodesService";
 import { SaveData, SerializedField, SerializedNode } from "./SaveData";
 
-// bug: loading connections twice breaks something
+// IMPORTANT: Something in loading doesn't fully load resulting in odd behavior
 
 const Selection = game.GetService("Selection");
 let mismatchLoadTime = 0;
@@ -115,17 +115,18 @@ export function LoadFromFile() {
 
     // connections
     for (const cachedNode of cachedNodes) {
-        if (cachedNode.SerializedNode.connectionIds === undefined) continue;
-        if (cachedNode.SerializedNode.connectionIds.size() === 0) continue;
+        if (cachedNode.SerializedNode.connections === undefined) continue;
+        if (cachedNode.SerializedNode.connections.size() === 0) continue;
 
-        for (const connectionId of cachedNode.SerializedNode.connectionIds) {
+        for (const serializedConnection of cachedNode.SerializedNode.connections) {
             for (const cachedNode2 of cachedNodes) {
-                for (const field of cachedNode2.SerializedNode.fields) {
-                    if (field.connectionId !== connectionId) continue;
+                for (const serializedField of cachedNode2.SerializedNode.fields) {
+                    if (serializedField.connection === undefined) continue;
+                    if (serializedField.connection.id !== serializedConnection.id) continue;
 
                     UpdateNodeData(cachedNode.NodeData.node.id, (data) => {
                         const connection: NodeConnectionOut = {
-                            id: connectionId,
+                            id: serializedConnection.id,
                         };
 
                         if (data.loadedConnectionsOut === undefined) {
@@ -138,9 +139,13 @@ export function LoadFromFile() {
 
                     UpdateNodeData(cachedNode2.NodeData.node.id, (data) => {
                         const connection: NodeConnectionIn = {
-                            id: connectionId,
-                            fieldName: field.name,
+                            id: serializedConnection.id,
+                            fieldName: serializedField.name,
                         };
+
+                        if (serializedField.connection!.valueName !== undefined) {
+                            connection.valueName = serializedField.connection!.valueName;
+                        }
 
                         if (data.loadedConnectionsIn === undefined) {
                             data.loadedConnectionsIn = [];

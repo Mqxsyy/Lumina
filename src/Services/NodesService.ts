@@ -16,6 +16,7 @@ export interface NodeConnectionOut {
 export interface NodeConnectionIn {
     id: number;
     fieldName: string;
+    valueName?: string;
 }
 
 export interface NodeData {

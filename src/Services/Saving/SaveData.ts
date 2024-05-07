@@ -15,8 +15,13 @@ export interface SerializedSystem {
     };
 }
 
+export interface SerializedConnection {
+    id: number;
+    valueName?: string;
+}
+
 export interface SerializedNode {
-    connectionIds?: number[];
+    connections?: SerializedConnection[];
     nodeName: string;
     fields: SerializedField[];
 }
@@ -27,7 +32,7 @@ export interface SerializedFloatingNode extends SerializedNode {
 }
 
 export interface SerializedField {
-    connectionId?: number;
+    connection?: SerializedConnection;
     name: string;
     data: {};
 }

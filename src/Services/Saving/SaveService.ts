@@ -5,7 +5,14 @@ import { GetSavesFolder } from "API/FolderLocations";
 import { Node } from "API/Nodes/Node";
 import { GetAllSystems } from "Services/NodeSystemService";
 import { GetAllNodes, GetNodeById, NodeConnectionIn } from "Services/NodesService";
-import { SaveData, SerializedField, SerializedFloatingNode, SerializedNode, SerializedSystem } from "./SaveData";
+import {
+    SaveData,
+    SerializedConnection,
+    SerializedField,
+    SerializedFloatingNode,
+    SerializedNode,
+    SerializedSystem,
+} from "./SaveData";
 
 const savesFolder = GetSavesFolder();
 
@@ -98,9 +105,9 @@ function SerializeNode(node: Node): SerializedNode {
     };
 
     if (nodeData.connectionsOut.size() !== 0) {
-        serializedNode.connectionIds = [];
+        serializedNode.connections = [];
         nodeData.connectionsOut.forEach((connection) => {
-            serializedNode.connectionIds!.push(connection.id);
+            serializedNode.connections!.push({ id: connection.id });
         });
     }
 
@@ -122,7 +129,15 @@ function SerializeFields(fields: { [key: string]: NodeFields }, connectionsIn: N
     connectionsIn.forEach((connection) => {
         for (const serializedField of serializedFields) {
             if (serializedField.name === connection.fieldName) {
-                serializedField.connectionId = connection.id;
+                const serializedConnection: SerializedConnection = {
+                    id: connection.id,
+                };
+
+                if (connection.valueName !== undefined) {
+                    serializedConnection.valueName = connection.valueName;
+                }
+
+                serializedField.connection = serializedConnection;
                 break;
             }
         }

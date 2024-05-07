@@ -1,4 +1,4 @@
-import React from "@rbxts/react";
+import React, { useEffect, useState } from "@rbxts/react";
 import { Vector2Field as Vector2FieldAPI } from "API/Fields/Vector2Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
@@ -27,7 +27,19 @@ export function Vector2Field({
     AllowNegatives = [true, true],
     AllowConnections = [true, true],
 }: Props) {
+    const [_, setForceRender] = useState(0);
+
     const zoomScale = GetZoomScale();
+
+    useEffect(() => {
+        const connection = NodeField.FieldChanged.Connect(() => {
+            setForceRender((prev) => (prev > 10 ? 0 : prev + 1));
+        });
+
+        return () => {
+            connection.Disconnect();
+        };
+    }, []);
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
@@ -49,6 +61,7 @@ export function Vector2Field({
                         <ConnectionPointIn
                             NodeId={NodeId}
                             NodeFieldName={NodeFieldName}
+                            ValueName={"X"}
                             BindFunction={NodeField.BindX}
                             UnbindFunction={NodeField.UnbindX}
                         />
@@ -65,6 +78,7 @@ export function Vector2Field({
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetX())}
                         AllowNegative={AllowNegatives[0]}
+                        Disabled={NodeField.boundNodeX !== undefined}
                         NumberChanged={NodeField.SetX}
                     >
                         <uiflexitem FlexMode={"Fill"} />
@@ -81,6 +95,7 @@ export function Vector2Field({
                         <ConnectionPointIn
                             NodeId={NodeId}
                             NodeFieldName={NodeFieldName}
+                            ValueName={"Y"}
                             BindFunction={NodeField.BindY}
                             UnbindFunction={NodeField.UnbindY}
                         />
@@ -97,6 +112,7 @@ export function Vector2Field({
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetY())}
                         AllowNegative={AllowNegatives[1]}
+                        Disabled={NodeField.boundNodeY !== undefined}
                         NumberChanged={NodeField.SetY}
                     >
                         <uiflexitem FlexMode={"Fill"} />

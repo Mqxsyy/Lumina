@@ -1,12 +1,10 @@
-import React from "@rbxts/react";
+import React, { useEffect, useState } from "@rbxts/react";
 import { Vector3Field as Vector3FieldAPI } from "API/Fields/Vector3Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
 import { GetZoomScale } from "ZoomScale";
-
-// BUG: connections don't quite work
 
 interface Props {
     NodeId: number;
@@ -27,7 +25,19 @@ export function Vector3Field({
     ValueLabels = ["X", "Y", "Z"],
     AllowConnections = [true, true, true],
 }: Props) {
+    const [_, setForceRender] = useState(0);
+
     const zoomScale = GetZoomScale();
+
+    useEffect(() => {
+        const connection = NodeField.FieldChanged.Connect(() => {
+            setForceRender((prev) => (prev > 10 ? 0 : prev + 1));
+        });
+
+        return () => {
+            connection.Disconnect();
+        };
+    }, []);
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
@@ -49,6 +59,7 @@ export function Vector3Field({
                         <ConnectionPointIn
                             NodeId={NodeId}
                             NodeFieldName={NodeFieldName}
+                            ValueName={"X"}
                             BindFunction={NodeField.BindX}
                             UnbindFunction={NodeField.UnbindX}
                         />
@@ -65,6 +76,7 @@ export function Vector3Field({
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetX())}
                         AllowNegative={true}
+                        Disabled={NodeField.boundNodeX !== undefined}
                         NumberChanged={NodeField.SetX}
                     >
                         <uiflexitem FlexMode={"Fill"} />
@@ -81,6 +93,7 @@ export function Vector3Field({
                         <ConnectionPointIn
                             NodeId={NodeId}
                             NodeFieldName={NodeFieldName}
+                            ValueName={"Y"}
                             BindFunction={NodeField.BindY}
                             UnbindFunction={NodeField.UnbindY}
                         />
@@ -97,6 +110,7 @@ export function Vector3Field({
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetY())}
                         AllowNegative={true}
+                        Disabled={NodeField.boundNodeY !== undefined}
                         NumberChanged={NodeField.SetY}
                     >
                         <uiflexitem FlexMode={"Fill"} />
@@ -113,6 +127,7 @@ export function Vector3Field({
                         <ConnectionPointIn
                             NodeId={NodeId}
                             NodeFieldName={NodeFieldName}
+                            ValueName={"Z"}
                             BindFunction={NodeField.BindZ}
                             UnbindFunction={NodeField.UnbindZ}
                         />
@@ -129,6 +144,7 @@ export function Vector3Field({
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetZ())}
                         AllowNegative={true}
+                        Disabled={NodeField.boundNodeZ !== undefined}
                         NumberChanged={NodeField.SetZ}
                     >
                         <uiflexitem FlexMode={"Fill"} />
