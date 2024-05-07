@@ -1,4 +1,4 @@
-import { GetParticleData } from "API/ParticleService";
+import { UpdateParticleData } from "API/ParticleService";
 import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetEmission } from "../AutoGeneration/InitializeNodes/AutoGenSetEmission";
@@ -24,7 +24,10 @@ export class SetEmission extends InitializeNode {
     }
 
     Initialize(id: number) {
-        GetParticleData(id).particle.SurfaceGui.Brightness = this.nodeFields.emission.GetNumber();
+        UpdateParticleData(id, (data) => {
+            data.emission = this.nodeFields.emission.GetNumber();
+            return data;
+        });
     }
 
     GetNodeName(): string {

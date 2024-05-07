@@ -1,5 +1,5 @@
 import { ColorField } from "API/Fields/ColorField";
-import { GetParticleData } from "API/ParticleService";
+import { GetParticleData, UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetColor } from "../AutoGeneration/InitializeNodes/AutoGenSetColor";
 import { InitializeNode } from "./InitializeNode";
@@ -24,7 +24,10 @@ export class SetColor extends InitializeNode {
     }
 
     Initialize(id: number) {
-        GetParticleData(id).particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.color.GetColor();
+        UpdateParticleData(id, (data) => {
+            data.color = this.nodeFields.color.GetColor();
+            return data;
+        });
     }
 
     GetNodeName(): string {

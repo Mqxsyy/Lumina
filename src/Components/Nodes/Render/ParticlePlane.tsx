@@ -9,6 +9,7 @@ import { AddNode, NodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
 import OrientationField from "Components/NodeFields/OrientationField";
+import BooleanField from "Components/NodeFields/BooleanField";
 
 export function CreateParticlePlane() {
     return AddNode(new ParticlePlaneAPI(500), (data: NodeData) => {
@@ -38,6 +39,7 @@ function ParticlePlane({ data }: { data: NodeData }) {
                 AllowNegative={false}
                 AllowConnection={false}
             />
+            <BooleanField NodeField={(data.node as ParticlePlaneAPI).nodeFields.doubleSided} Label={"DoubleSided"} />
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                 <uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
 

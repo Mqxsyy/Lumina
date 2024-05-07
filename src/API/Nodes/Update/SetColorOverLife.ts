@@ -1,6 +1,6 @@
 import { ColorRampField } from "API/Fields/ColorRampField";
 import { NodeGroups } from "API/NodeGroup";
-import { GetParticleData } from "API/ParticleService";
+import { GetParticleData, UpdateParticleData } from "API/ParticleService";
 import { AutoGenSetColorOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetColorOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -22,7 +22,10 @@ export class SetColorOverLife extends UpdateNode {
     Update(id: number) {
         const particleData = GetParticleData(id);
         const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
-        particleData.particle.SurfaceGui.ImageLabel.ImageColor3 = this.nodeFields.ramp.GetColor(lifetime);
+        UpdateParticleData(id, (data) => {
+            data.color = this.nodeFields.ramp.GetColor(lifetime);
+            return data;
+        });
     }
 
     GetNodeName(): string {

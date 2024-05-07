@@ -1,4 +1,4 @@
-import { GetParticleData } from "API/ParticleService";
+import { GetParticleData, UpdateParticleData } from "API/ParticleService";
 import { NumberField } from "../../Fields/NumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetTransparency } from "../AutoGeneration/InitializeNodes/AutoGenSetTransparency";
@@ -24,7 +24,10 @@ export class SetTransparency extends InitializeNode {
     }
 
     Initialize(id: number) {
-        GetParticleData(id).particle.SurfaceGui.ImageLabel.ImageTransparency = this.nodeFields.transparency.GetNumber();
+        UpdateParticleData(id, (data) => {
+            data.transparency = this.nodeFields.transparency.GetNumber();
+            return data;
+        });
     }
 
     GetNodeName(): string {

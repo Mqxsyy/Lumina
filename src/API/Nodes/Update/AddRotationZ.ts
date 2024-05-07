@@ -1,7 +1,7 @@
 import { NumberField } from "API/Fields/NumberField";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { GetParticleData } from "API/ParticleService";
+import { GetParticleData, UpdateParticleData } from "API/ParticleService";
 import { AutoGenAddRotationZ } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZ";
 import { UpdateNode } from "./UpdateNode";
 
@@ -26,7 +26,10 @@ export class AddRotationZ extends UpdateNode {
 
     Update(id: number) {
         const zAddition = this.nodeFields.rotation.GetNumber() * FrameRateMultiplier;
-        GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation += zAddition;
+        UpdateParticleData(id, (data) => {
+            data.rotation = new Vector3(data.rotation.X, data.rotation.Y, data.rotation.Z + zAddition);
+            return data;
+        });
     }
 
     GetNodeName(): string {

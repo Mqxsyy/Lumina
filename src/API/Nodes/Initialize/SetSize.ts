@@ -28,9 +28,7 @@ export class SetSize extends InitializeNode {
             const size = this.nodeFields.size.GetNumber();
             const sizeVector3 = new Vector3(size, size, 0.001);
 
-            data.size = sizeVector3;
-            data.particle.Size = sizeVector3;
-
+            data.sizeNormal = sizeVector3;
             return data;
         });
     }

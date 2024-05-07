@@ -1,7 +1,7 @@
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { FrameRateMultiplier, Rand, RoundDecimal } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { GetParticleData } from "API/ParticleService";
+import { GetParticleData, UpdateParticleData } from "API/ParticleService";
 import { AutoGenAddRotationZRandom } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZRandom";
 import { UpdateNode } from "./UpdateNode";
 
@@ -34,7 +34,10 @@ export class AddRotationZRandom extends UpdateNode {
             this.storedValues.set(id, zAddition);
         }
 
-        GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation += zAddition;
+        UpdateParticleData(id, (data) => {
+            data.rotation = new Vector3(data.rotation.X, data.rotation.Y, data.rotation.Z + zAddition);
+            return data;
+        });
     }
 
     GetNodeName(): string {

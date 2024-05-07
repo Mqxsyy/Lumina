@@ -1,6 +1,6 @@
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
-import { GetParticleData } from "API/ParticleService";
+import { GetParticleData, UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetRotationZRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZRandom";
 import { InitializeNode } from "./InitializeNode";
@@ -27,7 +27,11 @@ export class SetRotationZRandom extends InitializeNode {
     Initialize(id: number) {
         const range = this.nodeFields.range.GetVector2();
         const zRotation = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
-        GetParticleData(id).particle.SurfaceGui.ImageLabel.Rotation = zRotation;
+
+        UpdateParticleData(id, (data) => {
+            data.rotation = new Vector3(data.rotation.X, data.rotation.Y, zRotation);
+            return data;
+        });
     }
 
     GetNodeName(): string {

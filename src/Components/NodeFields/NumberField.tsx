@@ -4,7 +4,6 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
-import { GetNodeById } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
