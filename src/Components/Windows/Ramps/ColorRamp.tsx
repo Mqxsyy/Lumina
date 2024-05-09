@@ -75,8 +75,14 @@ function ColorRamp() {
     const updatePointTime = (id: number, time: number) => {
         if (rampAPIRef.current === undefined) return;
 
+        if (time > 1) {
+            time = 1;
+        }
+
         rampAPIRef.current.UpdatePointTime(id, time);
         setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+
+        return time;
     };
 
     const removePoint = (id: number) => {
@@ -175,16 +181,22 @@ function ColorRamp() {
                         Padding={new UDim(0, 10)}
                     />
 
-                    <BasicTextLabel Size={new UDim2(0.4, 0, 0, 20)} Text={"Time:"} TextXAlignment={"Right"} />
+                    <BasicTextLabel
+                        Size={new UDim2(0.4, 0, 0, 20)}
+                        Text={"Time:"}
+                        TextXAlignment={"Right"}
+                        IsAffectedByZoom={false}
+                    />
                     {selectedPointRef.current !== undefined ? (
                         <NumberInput
                             Size={new UDim2(0.4, 0, 0, 20)}
                             Text={tostring(selectedPointRef.current.time)}
                             Disabled={!selectedPointRef.current.canEditTime}
                             NumberChanged={(number) => updatePointTime(selectedPointRef.current!.id, number)}
+                            IsAffectedByZoom={false}
                         />
                     ) : (
-                        <NumberInput Size={new UDim2(0.4, 0, 0, 20)} Disabled={true} />
+                        <NumberInput Size={new UDim2(0.4, 0, 0, 20)} Disabled={true} IsAffectedByZoom={false} />
                     )}
                 </Div>
                 <Div Size={UDim2.fromScale(0.5, 1)}>

@@ -7,6 +7,8 @@ import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale } from "ZoomScale";
 
+// TODO: add mini visualization
+
 interface Props {
     Label: string;
     Graph: LineGraphFieldAPI;

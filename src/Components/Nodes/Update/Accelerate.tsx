@@ -24,6 +24,7 @@ function Accelerate({ data }: { data: NodeData }) {
                 NodeField={(data.node as AccelerateAPI).nodeFields.acceleration}
                 NodeFieldName={AccelerateFieldNames.acceleration}
                 Label={CapitalizeFirstLetter(AccelerateFieldNames.acceleration)}
+                AllowNegative={true}
             />
         </Node>
     );

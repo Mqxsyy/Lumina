@@ -93,16 +93,24 @@ function LineGraph() {
 
     const controlsTimeChanged = (time: number) => {
         if (graphAPIRef.current === undefined || selectedPointRef.current === undefined) return;
+        if (time > 1) {
+            time = 1;
+        }
 
         const clampedTime = math.clamp(time, 0, maxValue);
         graphAPIRef.current.UpdatePoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
+
+        return time;
     };
 
     const controlsValueChanged = (value: number) => {
         if (graphAPIRef.current === undefined || selectedPointRef.current === undefined) return;
+        if (value > maxValue) {
+            value = maxValue;
+        }
 
-        const clampedValue = math.clamp(value, 0, maxValue);
-        graphAPIRef.current.UpdatePoint(selectedPointRef.current!.id, selectedPointRef.current!.time, clampedValue);
+        graphAPIRef.current.UpdatePoint(selectedPointRef.current!.id, selectedPointRef.current!.time, value);
+        return value;
     };
 
     useEffect(() => {
@@ -188,6 +196,7 @@ function LineGraph() {
                     Size={new UDim2(0.1, 0, 0, 20)}
                     Text={tostring(maxValue)}
                     TextXAlignment={"Right"}
+                    IsAffectedByZoom={false}
                 />
                 {/* Bottom Left Text */}
                 <BasicTextLabel
@@ -196,6 +205,7 @@ function LineGraph() {
                     Size={new UDim2(0.1, 0, 0, 20)}
                     Text={"0"}
                     TextXAlignment={"Right"}
+                    IsAffectedByZoom={false}
                 />
                 {/* Bottom Right Text */}
                 <BasicTextLabel
@@ -204,6 +214,7 @@ function LineGraph() {
                     Size={new UDim2(0.1, 0, 0, 20)}
                     Text={"1"}
                     TextXAlignment={"Right"}
+                    IsAffectedByZoom={false}
                 />
             </Div>
             {/* Points */}
@@ -302,7 +313,12 @@ function LineGraph() {
                         Padding={new UDim(0, 10)}
                     />
 
-                    <BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Time" />
+                    <BasicTextLabel
+                        Size={new UDim2(0.25, 0, 0, 20)}
+                        TextXAlignment={"Right"}
+                        Text="Time"
+                        IsAffectedByZoom={false}
+                    />
                     <NumberInput
                         Size={new UDim2(0.75, 0, 0, 20)}
                         Text={
@@ -310,6 +326,7 @@ function LineGraph() {
                         }
                         NumberChanged={controlsTimeChanged}
                         Disabled={selectedPointRef.current === undefined || !selectedPointRef.current.canEditTime}
+                        IsAffectedByZoom={false}
                     />
                 </Div>
                 <Div Size={UDim2.fromScale(0.5, 1)}>
@@ -321,7 +338,12 @@ function LineGraph() {
                         Padding={new UDim(0, 10)}
                     />
 
-                    <BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Value" />
+                    <BasicTextLabel
+                        Size={new UDim2(0.25, 0, 0, 20)}
+                        TextXAlignment={"Right"}
+                        Text="Value"
+                        IsAffectedByZoom={false}
+                    />
                     <NumberInput
                         Size={new UDim2(0.75, 0, 0, 20)}
                         Text={
@@ -331,6 +353,7 @@ function LineGraph() {
                         }
                         NumberChanged={controlsValueChanged}
                         Disabled={selectedPointRef.current === undefined}
+                        IsAffectedByZoom={false}
                     />
                 </Div>
             </Div>

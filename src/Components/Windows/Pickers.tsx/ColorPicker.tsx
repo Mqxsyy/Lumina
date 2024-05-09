@@ -366,41 +366,45 @@ function ColorPicker() {
                         <uilistlayout FillDirection={"Horizontal"} Padding={new UDim(0.05, 0)} />
 
                         <Div Size={UDim2.fromScale(0.3, 1)}>
-                            <BasicTextLabel Size={UDim2.fromScale(0.2, 1)} Text={"R: "} />
+                            <BasicTextLabel Size={UDim2.fromScale(0.2, 1)} Text={"R: "} IsAffectedByZoom={false} />
                             <NumberInput
                                 Position={UDim2.fromScale(0.25, 0)}
                                 Size={UDim2.fromScale(0.75, 1)}
                                 Text={() => tostring(getRGB().R)}
                                 NumberChanged={rChanged}
+                                IsAffectedByZoom={false}
                             />
                         </Div>
                         <Div Size={UDim2.fromScale(0.3, 1)}>
-                            <BasicTextLabel Size={UDim2.fromScale(0.2, 1)} Text={"G: "} />
+                            <BasicTextLabel Size={UDim2.fromScale(0.2, 1)} Text={"G: "} IsAffectedByZoom={false} />
                             <NumberInput
                                 Position={UDim2.fromScale(0.25, 0)}
                                 Size={UDim2.fromScale(0.75, 1)}
                                 Text={() => tostring(getRGB().G)}
                                 NumberChanged={gChanged}
+                                IsAffectedByZoom={false}
                             />
                         </Div>
                         <Div Size={UDim2.fromScale(0.3, 1)}>
-                            <BasicTextLabel Size={UDim2.fromScale(0.2, 1)} Text={"B: "} />
+                            <BasicTextLabel Size={UDim2.fromScale(0.2, 1)} Text={"B: "} IsAffectedByZoom={false} />
                             <NumberInput
                                 Position={UDim2.fromScale(0.25, 0)}
                                 Size={UDim2.fromScale(0.75, 1)}
                                 Text={() => tostring(getRGB().B)}
                                 NumberChanged={bChanged}
+                                IsAffectedByZoom={false}
                             />
                         </Div>
                     </Div>
                     <Div Position={UDim2.fromScale(0.2, 0)} Size={new UDim2(0.6, 0, 0.5, -5)}>
-                        <BasicTextLabel Size={UDim2.fromScale(0.2, 1)} Text={"Hex: "} />
+                        <BasicTextLabel Size={UDim2.fromScale(0.2, 1)} Text={"Hex: "} IsAffectedByZoom={false} />
                         <TextInput
                             Position={UDim2.fromScale(0.25, 0)}
                             Size={UDim2.fromScale(0.75, 1)}
                             Text={() => getHex().upper()}
                             TextChanged={hexChanged}
                             LostFocus={hexLostFocus}
+                            IsAffectedByZoom={false}
                         />
                     </Div>
                 </Div>

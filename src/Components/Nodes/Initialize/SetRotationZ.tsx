@@ -24,6 +24,7 @@ function SetRotationZ({ data }: { data: NodeData }) {
                 NodeField={(data.node as SetRotationZAPI).nodeFields.rotation}
                 NodeFieldName={SetRotationZFieldNames.rotation}
                 Label={CapitalizeFirstLetter(SetRotationZFieldNames.rotation)}
+                AllowNegative={true}
             />
         </Node>
     );

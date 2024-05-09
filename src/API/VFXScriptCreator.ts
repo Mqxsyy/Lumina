@@ -24,6 +24,7 @@ function CreateScript(name: string, nodeSystem: NodeSystem) {
     src += "--[[\n";
     src += "    Auto generated script.\n";
     src += "    Call .Start() to run the VFX.\n";
+    src += "    Call .Stop() to stop the VFX.\n";
     src += "]]\n\n";
 
     src += "local VFXScript = {}\n\n";

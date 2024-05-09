@@ -3,21 +3,23 @@ import { RunService } from "@rbxts/services";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";
 import { SetDraggingNodeId } from "Services/DraggingService";
+import { DisableDropdown, DropdownDataChanged, GetDropdownData } from "Services/DropdownService";
 import { StyleColors } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas, WidgetSizeChanged } from "Windows/MainWindow";
 import { GetWindow, Windows } from "Windows/WindowSevice";
-import { GetZoomScale, UpdateZoomScale, ZoomScaleChanged } from "ZoomScale";
+import { GetZoomScale, UpdateZoomScale } from "ZoomScale";
 import { GetAllSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
 import { GetAllNodes, NodesChanged } from "../Services/NodesService";
+import CanvasBackground from "./Background";
 import { BasicTextLabel } from "./Basic/BasicTextLabel";
+import Dropdown from "./Basic/Dropdown";
 import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
-import Dropdown from "./Basic/Dropdown";
-import CanvasBackground from "./Background";
-import { DisableDropdown, DropdownDataChanged, GetDropdownData } from "Services/DropdownService";
+import { LoadingFinished } from "Services/Saving/LoadService";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
+// TODO: redeisgn UI to be more clean and minimalistic
 
 // No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
 
@@ -139,6 +141,10 @@ export function App() {
             setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
         });
 
+        const loadServiceConnection = LoadingFinished.Connect(() => {
+            setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+        });
+
         UpdateCanvasData((canvasData) => {
             canvasData.Position = UDim2.fromOffset(widgetSize.X * 0.5, widgetSize.Y * 0.5);
             canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y);
@@ -152,6 +158,7 @@ export function App() {
             nodesChangedConnection.Disconnect();
             connectionsChangedConnection.Disconnect();
             dropdownDataChangedConnection.Disconnect();
+            loadServiceConnection.Disconnect();
         };
     }, []);
 
@@ -182,7 +189,7 @@ export function App() {
                     Size={UDim2.fromScale(1, 1)}
                     BackgroundTransparency={1}
                     Event={{
-                        InputBegan: (element, inputObject: InputObject) => {
+                        InputBegan: (_, inputObject: InputObject) => {
                             if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
                             StartMoveCanvas();
                         },

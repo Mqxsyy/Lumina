@@ -26,21 +26,21 @@ function SetVelocityRandom({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeX}
                 NodeFieldName={SetVelocityRandomFieldNames.rangeX}
-                Label={CapitalizeFirstLetter(SetVelocityRandomFieldNames.rangeX)}
+                Label={"Range X"}
                 ValueLabels={["Min", "Max"]}
             />
             <Vector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeY}
                 NodeFieldName={SetVelocityRandomFieldNames.rangeY}
-                Label={CapitalizeFirstLetter(SetVelocityRandomFieldNames.rangeY)}
+                Label={"Range Y"}
                 ValueLabels={["Min", "Max"]}
             />
             <Vector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeZ}
                 NodeFieldName={SetVelocityRandomFieldNames.rangeZ}
-                Label={CapitalizeFirstLetter(SetVelocityRandomFieldNames.rangeZ)}
+                Label={"Range Z"}
                 ValueLabels={["Min", "Max"]}
             />
         </Node>

@@ -23,6 +23,7 @@ function SetSizeRandom({ data }: { data: NodeData }) {
                 NodeField={(data.node as SetSizeRandomAPI).nodeFields.range}
                 NodeFieldName={SetSizeRandomFieldNames.range}
                 ValueLabels={["Min", "Max"]}
+                AllowNegatives={[false, false]}
             />
         </Node>
     );

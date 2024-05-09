@@ -11,12 +11,13 @@ import {
     UpdateNodeData,
 } from "Services/NodesService";
 import { SaveData, SerializedField, SerializedNode } from "./SaveData";
-
-// IMPORTANT: Something in loading doesn't fully load resulting in odd behavior
+import { FastEvent } from "API/Bindables/FastEvent";
 
 const Selection = game.GetService("Selection");
 let mismatchLoadTime = 0;
 const MISMATCH_LOAD_TIMEFRAME = 10;
+
+export const LoadingFinished = new FastEvent();
 
 export function LoadFromFile() {
     const selection = Selection.Get();
@@ -158,6 +159,9 @@ export function LoadFromFile() {
             }
         }
     }
+
+    task.wait();
+    LoadingFinished.Fire();
 }
 
 function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeCollectionEntry {

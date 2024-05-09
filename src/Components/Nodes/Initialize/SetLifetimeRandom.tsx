@@ -26,6 +26,7 @@ function SetLifetimeRandom({ data }: { data: NodeData }) {
                 NodeField={(data.node as SetLifetimeRandomAPI).nodeFields.range}
                 NodeFieldName={SetLifetimeRandomFieldNames.range}
                 ValueLabels={["Min", "Max"]}
+                AllowNegatives={[false, false]}
             />
         </Node>
     );

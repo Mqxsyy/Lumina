@@ -139,7 +139,7 @@ export function NodeSelection({ Position, ToggleSelection }: Props) {
                                 ExposeUnhover={getCategoryUnhover}
                             />
                             <NodeCategorySelectionButton
-                                Text="Spawner"
+                                Text="Spawn"
                                 NodeCategory={NodeList[NodeGroups.Spawn]}
                                 CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
                                 ToggleSelection={ToggleSelection}

@@ -1,31 +1,37 @@
 import { ReplicatedStorage } from "@rbxts/services";
 
-export const API_VERSION = 79;
+export const API_VERSION = 81;
 
-let APIFolder = ReplicatedStorage.FindFirstChild("Lumina_API");
+function GetAPIFolder() {
+    let APIFolder = ReplicatedStorage.FindFirstChild("Lumina_API");
+    if (APIFolder !== undefined) return APIFolder;
 
-if (APIFolder === undefined) {
     APIFolder = new Instance("Folder");
     APIFolder.Name = "Lumina_API";
     APIFolder.Parent = ReplicatedStorage;
+    return APIFolder;
 }
 
 function CreateAPI() {
-    for (const child of APIFolder!.GetChildren()) {
+    const apiFolder = GetAPIFolder();
+
+    for (const child of apiFolder!.GetChildren()) {
         if (child.Name === "API_VERSION") continue;
         child.Destroy();
     }
 
     const API = script.Parent!.Clone();
-    API.Parent = APIFolder;
-    API.FindFirstChild("Readme")!.Parent = APIFolder;
+    API.Parent = apiFolder;
+    API.FindFirstChild("Readme")!.Parent = apiFolder;
 
     const include = script.Parent!.Parent!.FindFirstChild("include")!.Clone();
-    include.Parent = APIFolder;
+    include.Parent = apiFolder;
 }
 
 export default function ExportAPI() {
-    const previousVersion = APIFolder!.FindFirstChild("API_VERSION") as NumberValue | undefined;
+    const apiFolder = GetAPIFolder();
+    const previousVersion = apiFolder!.FindFirstChild("API_VERSION") as NumberValue | undefined;
+
     if (previousVersion !== undefined) {
         if (previousVersion.Value === API_VERSION) return;
 
@@ -34,10 +40,10 @@ export default function ExportAPI() {
         return;
     }
 
+    CreateAPI();
+
     const version = new Instance("NumberValue");
     version.Name = "API_VERSION";
     version.Value = API_VERSION;
-    version.Parent = APIFolder;
-
-    CreateAPI();
+    version.Parent = apiFolder;
 }
