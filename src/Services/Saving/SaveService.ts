@@ -106,6 +106,7 @@ function SerializeNode(node: Node): SerializedNode {
 
     if (nodeData.connectionsOut.size() !== 0) {
         serializedNode.connections = [];
+
         nodeData.connectionsOut.forEach((connection) => {
             serializedNode.connections!.push({ id: connection.id });
         });

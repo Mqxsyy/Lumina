@@ -4,8 +4,6 @@ import { ConnectionData } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
-// BUG: ConnectionLine has a delay in rendering because it relies on AbsolutePosition, not sure how to fix because nodeData.AnchorPoint can not be used anymore, since that's not used when a node is inside a system
-
 export const CreateConnectionLine = (connectionData: ConnectionData) => {
     return <ConnectionLine key={`connection_${connectionData.id}`} data={connectionData} />;
 };

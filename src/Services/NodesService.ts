@@ -32,7 +32,7 @@ export interface NodeData {
 export interface NodeCollectionEntry {
     data: NodeData;
     element?: ImageButton;
-    elementLoaded: Event;
+    elementLoaded: FastEvent;
     create: (props: NodeData) => React.Element;
 }
 
@@ -56,7 +56,7 @@ export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
             node: api,
             onDestroy: new FastEvent(),
         },
-        elementLoaded: new Event(),
+        elementLoaded: new FastEvent(),
         create,
     };
 

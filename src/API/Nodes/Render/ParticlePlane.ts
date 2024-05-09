@@ -20,6 +20,7 @@ import { BooleanField } from "API/Fields/BooleanField";
 
 // TODO: make use of parallel luau
 // OPTIMIZE: kinda long file
+// BUG: Flipping the particle image with negative size not working properly, seems more like an engine bug than a bug with the code. on second thought was it ever possible to flip an image with negative size?
 
 const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 const DEFAULT_TEXTURE = "rbxassetid://7848741169";

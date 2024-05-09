@@ -11,7 +11,7 @@ export interface FastEventCallback<T extends unknown[]> {
 
 // isnt there a better way to do these generics...?
 // ngl didn't even test so it may be exact same as bindableEvent
-export class FastEvent<T extends unknown[]> {
+export class FastEvent<T extends unknown[] = []> {
     idPool = new IdPool();
     callbacks: FastEventCallback<T>[] = [];
 

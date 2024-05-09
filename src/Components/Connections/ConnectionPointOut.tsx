@@ -25,18 +25,28 @@ export default function ConnectionPointOut({
     Size = UDim2.fromOffset(10 * GetZoomScale(), 10 * GetZoomScale()),
     BindFunction,
 }: Props) {
+    const [_, setForceRender] = useState(0);
     const [connectionId, setConnectionId] = useState(-1);
-    const nodeRef = useRef(GetNodeById(NodeId)!);
     const elementRef = useRef<ImageButton>();
+
+    const node = GetNodeById(NodeId)!;
+    const nodeData = node.data;
 
     const createConnection = (loadedId?: number) => {
         if (elementRef.current === undefined) return;
-        if (nodeRef.current.element === undefined) return;
+        if (node.element === undefined) return;
 
-        const node = GetNodeById(NodeId)!.data;
-        const connectionData = CreateConnection(node, elementRef.current, BindFunction, loadedId);
-
+        const connectionData = CreateConnection(nodeData, elementRef.current, BindFunction, loadedId);
         setConnectionId(connectionData.id);
+
+        UpdateNodeData(NodeId, (data) => {
+            const connection: NodeConnectionOut = {
+                id: connectionData.id,
+            };
+
+            data.connectionsOut.push(connection);
+            return data;
+        });
 
         const onDestroy = connectionData.onDestroy.Connect(() => {
             onDestroy.Disconnect();
@@ -60,16 +70,6 @@ export default function ConnectionPointOut({
     const mouseButton1Down = () => {
         if (connectionId === -1) {
             const connectionData = createConnection()!;
-
-            UpdateNodeData(NodeId, (data) => {
-                const connection: NodeConnectionOut = {
-                    id: connectionData.id,
-                };
-
-                data.connectionsOut.push(connection);
-                return data;
-            });
-
             StartMovingConnection(connectionData.id);
             return;
         }
@@ -79,7 +79,17 @@ export default function ConnectionPointOut({
     };
 
     useEffect(() => {
-        let destroyConnection: FastEventConnection | undefined = nodeRef.current.data.onDestroy.Connect(() => {
+        const connection = node.elementLoaded.Connect(() => {
+            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+        });
+
+        return () => {
+            connection.Disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        let destroyConnection: FastEventConnection | undefined = nodeData.onDestroy.Connect(() => {
             if (destroyConnection === undefined) return;
 
             destroyConnection.Disconnect();
@@ -94,21 +104,24 @@ export default function ConnectionPointOut({
             if (destroyConnection === undefined) return;
             destroyConnection.Disconnect();
         };
-    }, [nodeRef.current.data.onDestroy, connectionId]);
+    }, [nodeData.onDestroy, connectionId]);
 
     useEffect(() => {
         if (elementRef.current === undefined) return;
-        if (nodeRef.current.element === undefined) return;
+        if (node.element === undefined) return;
 
-        if (nodeRef.current.data.loadedConnectionsOut === undefined) return;
-        if (nodeRef.current.data.loadedConnectionsOut.size() === 0) return;
+        if (nodeData.loadedConnectionsOut === undefined) return;
+        if (nodeData.loadedConnectionsOut.size() === 0) return;
 
-        nodeRef.current.data.loadedConnectionsOut.forEach((connection) => {
+        nodeData.loadedConnectionsOut.forEach((connection) => {
             createConnection(connection.id);
         });
 
-        nodeRef.current.data.loadedConnectionsOut = undefined;
-    }, [elementRef.current, nodeRef.current.element]);
+        UpdateNodeData(NodeId, (data) => {
+            data.loadedConnectionsOut = undefined;
+            return data;
+        });
+    }, [elementRef.current, node.element, nodeData.loadedConnectionsOut]);
 
     return (
         <ConnectionPoint

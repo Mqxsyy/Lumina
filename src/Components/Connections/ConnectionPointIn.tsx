@@ -35,15 +35,17 @@ export default function ConnectionPointIn({
     BindFunction,
     UnbindFunction,
 }: Props) {
+    const [_, setForceRender] = useState(0);
     const [connectionId, setConnectionId] = useState(-1);
-
-    const nodeRef = useRef(GetNodeById(NodeId)!);
-    const nodeDataRef = useRef(nodeRef.current.data);
     const elementRef = useRef<ImageButton>();
+    const isLoadingConnectionsRef = useRef(false);
+
+    const node = GetNodeById(NodeId)!;
+    const nodeData = node.data;
 
     const finishConnection = (id: number) => {
         if (elementRef.current === undefined) return;
-        if (nodeRef.current.element === undefined) return;
+        if (node.element === undefined) return;
 
         setConnectionId(id);
 
@@ -51,8 +53,6 @@ export default function ConnectionPointIn({
             data.endElement = elementRef.current;
             return data;
         });
-
-        const connectionData = GetConnectionById(id)!.data;
 
         UpdateNodeData(NodeId, (data) => {
             const connection: NodeConnectionIn = {
@@ -64,6 +64,8 @@ export default function ConnectionPointIn({
             data.connectionsIn.push(connection);
             return data;
         });
+
+        const connectionData = GetConnectionById(id)!.data;
 
         const destroyConnection = connectionData.onDestroy.Connect(() => {
             destroyConnection.Disconnect();
@@ -95,10 +97,10 @@ export default function ConnectionPointIn({
     };
 
     useEffect(() => {
-        if (nodeDataRef.current.connectionsIn.size() === 0) return;
+        if (nodeData.connectionsIn.size() === 0) return;
         if (connectionId !== -1) return;
 
-        for (const connection of nodeDataRef.current.connectionsIn) {
+        for (const connection of nodeData.connectionsIn) {
             if (connection.fieldName !== NodeFieldName) continue;
             if (connection.valueName !== ValueName) continue;
 
@@ -108,7 +110,17 @@ export default function ConnectionPointIn({
     });
 
     useEffect(() => {
-        let destroyConnection: FastEventConnection | undefined = nodeDataRef.current.onDestroy.Connect(() => {
+        const connection = node.elementLoaded.Connect(() => {
+            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+        });
+
+        return () => {
+            connection.Disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        let destroyConnection: FastEventConnection | undefined = nodeData.onDestroy.Connect(() => {
             if (destroyConnection === undefined) return;
 
             destroyConnection.Disconnect();
@@ -123,49 +135,53 @@ export default function ConnectionPointIn({
             if (destroyConnection === undefined) return;
             destroyConnection.Disconnect();
         };
-    }, [nodeDataRef.current.onDestroy, connectionId]);
+    }, [nodeData.onDestroy, connectionId]);
 
     useEffect(() => {
         if (elementRef.current === undefined) return;
-        if (nodeRef.current.element === undefined) return;
+        if (node.element === undefined) return;
+        if (nodeData.loadedConnectionsIn === undefined) return;
+        if (nodeData.loadedConnectionsIn.size() === 0) return;
+        if (isLoadingConnectionsRef.current) return;
 
+        isLoadingConnectionsRef.current = true;
         task.spawn(() => {
-            if (nodeDataRef.current.loadedConnectionsIn === undefined) return;
-            if (nodeDataRef.current.loadedConnectionsIn.size() === 0) return;
-
-            // optimize: do i need attempts? most likely do
             const maxAttempts = 10;
             let attempts = 0;
 
             while (attempts < maxAttempts) {
-                if (nodeDataRef.current.loadedConnectionsIn === undefined) return;
+                if (nodeData.loadedConnectionsIn === undefined) return;
 
-                for (let i = nodeDataRef.current.loadedConnectionsIn.size() - 1; i >= 0; i--) {
-                    const loadedConnection = nodeDataRef.current.loadedConnectionsIn[i];
+                for (let i = nodeData.loadedConnectionsIn.size() - 1; i >= 0; i--) {
+                    const loadedConnection = nodeData.loadedConnectionsIn[i];
 
                     for (const connection of GetAllConnections()) {
                         if (connection.data.loadedId === loadedConnection.id) {
-                            if (loadedConnection.valueName === ValueName) {
+                            if (
+                                loadedConnection.fieldName === NodeFieldName &&
+                                loadedConnection.valueName === ValueName
+                            ) {
                                 finishConnection(connection.data.id);
-                                nodeDataRef.current.loadedConnectionsIn.remove(i);
+                                nodeData.loadedConnectionsIn.remove(i);
                                 break;
                             }
                         }
                     }
                 }
 
-                if (nodeDataRef.current.loadedConnectionsIn.size() === 0) break;
+                if (nodeData.loadedConnectionsIn.size() === 0) break;
                 attempts++;
-                task.wait(0.1);
+                task.wait(0.25);
             }
 
             if (attempts >= maxAttempts) {
-                warn("Failed to load connection for node: " + nodeDataRef.current.node.GetNodeName());
+                warn("Failed to load connection for node: " + nodeData.node.GetNodeName());
             }
 
-            nodeDataRef.current.loadedConnectionsIn = undefined;
+            nodeData.loadedConnectionsIn = undefined;
+            isLoadingConnectionsRef.current = false;
         });
-    }, [elementRef.current, nodeRef.current.element]);
+    }, [elementRef.current, node.element, nodeData.loadedConnectionsIn]);
 
     return (
         <ConnectionPoint

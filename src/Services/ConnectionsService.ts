@@ -76,8 +76,6 @@ export function UpdateConnectionData(id: number, fn: (data: ConnectionData) => C
 export function DestroyConnection(id: number) {
     const index = ConnectionCollection.findIndex((connection) => connection.data.id === id);
     if (index !== -1) {
-        idPool.ReleaseId(id);
-
         const connection = ConnectionCollection.remove(index);
         connection!.data.onDestroy.Fire();
         ConnectionsChanged.Fire();
