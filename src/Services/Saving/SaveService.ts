@@ -24,6 +24,7 @@ export function SaveToFile() {
     };
 
     const systems = GetAllSystems();
+
     systems.forEach((system) => {
         const anchorPoint = system.data.anchorPoint;
 

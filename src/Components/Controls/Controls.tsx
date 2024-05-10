@@ -33,6 +33,11 @@ function Controls() {
 
         const exportsFolder = GetExportsFolder();
         const exportedFiles = ExportAsScript();
+
+        if (exportedFiles.size() === 0) {
+            return;
+        }
+
         const saveData = SaveToFile();
 
         if (exportedFiles.size() === 1) {

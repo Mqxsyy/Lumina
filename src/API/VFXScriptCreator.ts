@@ -4,19 +4,30 @@ import { NodeSystem } from "./NodeSystem";
 export default function ExportAsScript() {
     const convertedFiles: ModuleScript[] = [];
 
-    GetAllSystems().forEach((nodeSystem) => {
-        const convertedFile = CreateScript(tostring(nodeSystem.data.id), nodeSystem.data.system);
-        convertedFile.Name = tostring(nodeSystem.data.systemName);
+    for (const system of GetAllSystems()) {
+        let passedChecks = true;
+
+        if (system.data.system.spawnNode === undefined) {
+            warn(system.data.systemName + " is missing a spawn node.");
+            passedChecks = false;
+        }
+
+        if (system.data.system.renderNode === undefined) {
+            warn(system.data.systemName + " is missing a render node.");
+            passedChecks = false;
+        }
+
+        if (!passedChecks) continue;
+
+        const convertedFile = CreateScript(tostring(system.data.id), system.data.system);
+        convertedFile.Name = tostring(system.data.systemName);
         convertedFiles.push(convertedFile);
-    });
+    }
 
     return convertedFiles;
 }
 
 function CreateScript(name: string, nodeSystem: NodeSystem) {
-    // const oldVFXScript = exportFolder.FindFirstChild(name);
-    // if (oldVFXScript !== undefined) oldVFXScript.Destroy();
-
     const newScript = new Instance("ModuleScript");
     newScript.Name = name;
 
