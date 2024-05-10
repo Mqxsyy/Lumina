@@ -5,6 +5,7 @@ export enum Windows {
     ValueGraph = "Value Graph",
     ColorPicker = "Color Picker",
     ColorRamp = "Color Ramp",
+    RequestUpdate = "Lumina Update Checker",
 }
 
 export const OnWinowLoaded = new Event<[Windows]>();
@@ -25,6 +26,10 @@ const windows = {
     [Windows.ColorRamp]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
         Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 200, 200, 100),
+    },
+    [Windows.RequestUpdate]: {
+        Widget: undefined as DockWidgetPluginGui | undefined,
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 300, 150, 200, 100),
     },
 };
 

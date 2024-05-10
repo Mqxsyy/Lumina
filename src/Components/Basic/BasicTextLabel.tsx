@@ -13,6 +13,7 @@ interface Props {
     TextColor?: Color3;
     TextXAlignment?: "Left" | "Center" | "Right";
     TextYAlignment?: "Top" | "Center" | "Bottom";
+    TextWrapped?: boolean;
     Text: string;
 
     ZIndex?: number;
@@ -30,6 +31,7 @@ export function BasicTextLabel({
     TextColor = StyleColors.TextLight,
     TextXAlignment = "Left",
     TextYAlignment = "Center",
+    TextWrapped = false,
     Text,
     ZIndex = 1,
     IsAffectedByZoom = true,
@@ -54,6 +56,7 @@ export function BasicTextLabel({
             TextColor3={TextColor}
             TextXAlignment={TextXAlignment}
             TextYAlignment={TextYAlignment}
+            TextWrapped={TextWrapped}
             Text={Text}
             ZIndex={ZIndex}
         >

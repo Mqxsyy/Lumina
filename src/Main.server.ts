@@ -1,3 +1,4 @@
+import CheckForUpdates from "UpdateChecker/CheckForUpdates";
 import { InitializeLineGraph } from "Components/Windows/Line/LineGraph";
 import { InitializeColorPicker } from "Components/Windows/Pickers.tsx/ColorPicker";
 import { InitializeColorRamp } from "Components/Windows/Ramps/ColorRamp";
@@ -22,3 +23,5 @@ InitUI();
 InitializeLineGraph();
 InitializeColorPicker();
 InitializeColorRamp();
+
+CheckForUpdates();
