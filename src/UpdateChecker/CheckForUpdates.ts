@@ -5,7 +5,7 @@ interface Data {
     version: number;
 }
 
-const localPluginVersion = 1;
+const localPluginVersion = 2;
 
 export default function CheckForUpdates() {
     if (RunService.IsRunning()) return;
