@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
+import { FastEventConnection } from "API/Bindables/FastEvent";
 import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
@@ -8,9 +9,12 @@ import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { GetNodeById, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
+import { GetSelectedNodeId, SetSelectNodeId, selectedNodeIdChanged } from "Services/SelectionService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
+
+const NODE_SELECT_TIME = 0.1;
 
 interface Props {
     Name: string;
@@ -30,17 +34,21 @@ function Node({
     ConnectioNode = undefined,
     children,
 }: React.PropsWithChildren<Props>) {
+    const [_, setForceRender] = useState(0);
     const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
     const mouseOffsetRef = useRef(new Vector2(0, 0));
     const canvasData = useRef(GetCanvasData());
     const elementRef = useRef(undefined as undefined | ImageButton);
+    const selectingNodeTimeRef = useRef(0);
+    const selectedNodeIdChangedConnectionRef = useRef<FastEventConnection>();
 
     const onMouseButton1Down = (element: ImageButton) => {
         const mousePosition = GetMousePosition();
         mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
 
         SetDraggingNodeId(NodeId);
+        selectingNodeTimeRef.current = os.clock();
 
         RunService.BindToRenderStep("MoveNode", 110, () => {
             const nodeData = GetNodeById(NodeId)!;
@@ -55,8 +63,29 @@ function Node({
         });
     };
 
+    const onMouseButton1Up = () => {
+        if (os.clock() - selectingNodeTimeRef.current > NODE_SELECT_TIME) return;
+
+        SetSelectNodeId(NodeId);
+        setForceRender((prev) => prev + 1);
+
+        if (selectedNodeIdChangedConnectionRef.current !== undefined) return;
+
+        selectedNodeIdChangedConnectionRef.current = selectedNodeIdChanged.Connect((newNodeId) => {
+            if (newNodeId !== NodeId) {
+                setForceRender((prev) => prev + 1);
+                selectedNodeIdChangedConnectionRef.current!.Disconnect();
+                selectedNodeIdChangedConnectionRef.current = undefined;
+            }
+        });
+    };
+
     const onMouseButton2Down = () => {
         RemoveNode(NodeId);
+
+        if (GetSelectedNodeId() === NodeId) {
+            SetSelectNodeId(-1);
+        }
     };
 
     const getPosition = () => {
@@ -75,6 +104,10 @@ function Node({
         });
 
         return () => {
+            if (selectedNodeIdChangedConnectionRef.current !== undefined) {
+                selectedNodeIdChangedConnectionRef.current.Disconnect();
+            }
+
             connection.Disconnect();
         };
     }, []);
@@ -82,6 +115,7 @@ function Node({
     useEffect(() => {
         if (elementRef.current === undefined) return;
         SetNodeElement(NodeId, elementRef.current);
+        setForceRender((prev) => (prev > 10 ? 0 : ++prev));
     }, [elementRef.current]);
 
     return (
@@ -102,6 +136,11 @@ function Node({
                         onMouseButton2Down();
                     }
                 },
+
+                InputEnded: (_, inputObject) => {
+                    if (inputObject.UserInputType !== Enum.UserInputType.MouseButton1) return;
+                    onMouseButton1Up();
+                },
             }}
         >
             <uicorner CornerRadius={StyleProperties.CornerRadius} />
@@ -112,7 +151,9 @@ function Node({
                 PaddingTop={new UDim(0, 1 + 5 * zoomScale)}
                 PaddingBottom={new UDim(0, 1 + 5 * zoomScale)}
             />
-
+            {GetSelectedNodeId() === NodeId && (
+                <uistroke Thickness={math.clamp(3 * zoomScale, 1, math.huge)} Color={StyleColors.Selection} />
+            )}
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                 <uilistlayout
                     FillDirection={"Horizontal"}

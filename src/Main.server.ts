@@ -7,7 +7,7 @@ import { GetWindow, InitializeWindows, Windows } from "Windows/WindowSevice";
 
 // TODO: add button to reset all windows - simply reinitializing everything does not work
 
-const toolbar = plugin.CreateToolbar("Lumina 0.0.1");
+const toolbar = plugin.CreateToolbar("Lumina 0.0.2");
 const mainButton = toolbar.CreateButton("Lumina", "Opens VFX Graph", "rbxassetid://17315034818"); // Border 17315079935 ; White 17315034818
 
 InitializeWindows(plugin); // widgets are bloody annoying to work with

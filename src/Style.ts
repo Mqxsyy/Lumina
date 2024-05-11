@@ -13,6 +13,8 @@ export const StyleColorHexes = {
     Highlight: "#5B5D6B",
     Disabled: "#3d3d4d",
 
+    Selection: "#00ccdc",
+
     // Node Group
     SpawnGroup: "#7FFF7F",
     InitializeGroup: "#00FF00",
@@ -35,6 +37,8 @@ export const StyleColors = {
 
     Highlight: Color3.fromHex(StyleColorHexes.Highlight),
     Disabled: Color3.fromHex(StyleColorHexes.Disabled),
+
+    Selection: Color3.fromHex(StyleColorHexes.Selection),
 
     // Node Group
     SpawnGroup: Color3.fromHex(StyleColorHexes.SpawnGroup),

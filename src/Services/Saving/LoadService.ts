@@ -10,7 +10,7 @@ import {
     NodeData,
     UpdateNodeData,
 } from "Services/NodesService";
-import { SaveData, SerializedField, SerializedNode } from "./SaveData";
+import { SaveData, SerializedField, SerializedNode, SerializedSystem } from "./SaveData";
 import { FastEvent } from "API/Bindables/FastEvent";
 
 const Selection = game.GetService("Selection");
@@ -57,50 +57,10 @@ export function LoadFromFile() {
     mismatchLoadTime = 0;
     const cachedNodes: { SerializedNode: SerializedNode; NodeData: NodeData }[] = [];
 
-    // systems & system nodes
+    // systems
     for (const system of data.systems) {
-        const anchorPoint = new Vector2(system.anchorPoint.x, system.anchorPoint.y);
-        const systemCollectionEntry = CreateEmptySystem(anchorPoint);
-        const systemData = systemCollectionEntry.data;
-        systemData.systemName = system.systemName;
-
-        for (const [group, nodes] of pairs(system.groups)) {
-            let nodeGroup = NodeGroups.Spawn;
-
-            if (group === "initialize") {
-                nodeGroup = NodeGroups.Initialize;
-            } else if (group === "update") {
-                nodeGroup = NodeGroups.Update;
-            } else if (group === "render") {
-                nodeGroup = NodeGroups.Render;
-            }
-
-            for (const node of nodes) {
-                const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields);
-                cachedNodes.push({ SerializedNode: node, NodeData: nodeCollectionEntry.data });
-
-                // OPTIMIZE: janky
-                if (systemData.addToNodeGroup[nodeGroup] === undefined) {
-                    systemData.finishedBindingGroups.Connect(() => {
-                        if (nodeCollectionEntry.element === undefined) {
-                            nodeCollectionEntry.elementLoaded.Connect(() => {
-                                systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
-                            });
-                        } else {
-                            systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
-                        }
-                    });
-                } else {
-                    if (nodeCollectionEntry.element === undefined) {
-                        nodeCollectionEntry.elementLoaded.Connect(() => {
-                            systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
-                        });
-                    } else {
-                        systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
-                    }
-                }
-            }
-        }
+        const [newSystem, systemCachedNodes] = CreateSystem(system);
+        systemCachedNodes.forEach((cachedNode) => cachedNodes.push(cachedNode));
     }
 
     // floating nodes
@@ -164,7 +124,58 @@ export function LoadFromFile() {
     LoadingFinished.Fire();
 }
 
-function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeCollectionEntry {
+export function CreateSystem(
+    system: SerializedSystem,
+): [SerializedSystem, { SerializedNode: SerializedNode; NodeData: NodeData }[]] {
+    const cachedNodes = [];
+
+    const anchorPoint = new Vector2(system.anchorPoint.x, system.anchorPoint.y);
+    const systemCollectionEntry = CreateEmptySystem(anchorPoint);
+    const systemData = systemCollectionEntry.data;
+    systemData.systemName = system.systemName;
+
+    for (const [group, nodes] of pairs(system.groups)) {
+        let nodeGroup = NodeGroups.Spawn;
+
+        if (group === "initialize") {
+            nodeGroup = NodeGroups.Initialize;
+        } else if (group === "update") {
+            nodeGroup = NodeGroups.Update;
+        } else if (group === "render") {
+            nodeGroup = NodeGroups.Render;
+        }
+
+        for (const node of nodes) {
+            const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields);
+            cachedNodes.push({ SerializedNode: node, NodeData: nodeCollectionEntry.data });
+
+            // OPTIMIZE: janky
+            if (systemData.addToNodeGroup[nodeGroup] === undefined) {
+                systemData.finishedBindingGroups.Connect(() => {
+                    if (nodeCollectionEntry.element === undefined) {
+                        nodeCollectionEntry.elementLoaded.Connect(() => {
+                            systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
+                        });
+                    } else {
+                        systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
+                    }
+                });
+            } else {
+                if (nodeCollectionEntry.element === undefined) {
+                    nodeCollectionEntry.elementLoaded.Connect(() => {
+                        systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
+                    });
+                } else {
+                    systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
+                }
+            }
+        }
+    }
+
+    return [system, cachedNodes];
+}
+
+export function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeCollectionEntry {
     const node = NodeList[group][nodeName].create!() as NodeCollectionEntry;
 
     for (const field of fields) {

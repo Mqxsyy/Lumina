@@ -17,6 +17,8 @@ import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
 import { LoadingFinished } from "Services/Saving/LoadService";
+import { SetSelectNodeId, SetIsHoldingControl } from "Services/SelectionService";
+import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
 // TODO: redeisgn UI to be more clean and minimalistic
@@ -34,7 +36,7 @@ export function App() {
 
     const dropdownData = GetDropdownData();
 
-    const StartMoveCanvas = () => {
+    const startMoveCanvas = () => {
         const mousePositionVec2 = GetMousePosition();
         const widgetSize = GetWindow(Windows.Lumina)!.AbsoluteSize.mul(0.5);
 
@@ -43,14 +45,14 @@ export function App() {
             .sub(canvasDataRef.current.Position)
             .add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
 
-        RunService.BindToRenderStep("MoveCanvas", Enum.RenderPriority.Input.Value, () => MoveCanvas(mouseOffset));
+        RunService.BindToRenderStep("MoveCanvas", Enum.RenderPriority.Input.Value, () => moveCanvas(mouseOffset));
     };
 
-    const EndMoveCanvas = () => {
+    const endMoveCanvas = () => {
         RunService.UnbindFromRenderStep("MoveCanvas");
     };
 
-    const MoveCanvas = (mouseOffset: UDim2) => {
+    const moveCanvas = (mouseOffset: UDim2) => {
         const mousePositionVec2 = GetMousePosition();
 
         const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
@@ -94,7 +96,7 @@ export function App() {
         });
     };
 
-    const UpdateZoom = (inputObject: InputObject) => {
+    const updateZoom = (inputObject: InputObject) => {
         if (inputObject.Position.Z > 0) {
             const oldZoom = GetZoomScale();
             const newZoom = UpdateZoomScale(0.1);
@@ -169,40 +171,11 @@ export function App() {
                 Position={canvasDataRef.current.Position}
                 Size={canvasDataRef.current.Size}
                 BackgroundColor3={StyleColors.Background}
-                Event={{
-                    InputBegan: (_, input: InputObject) => {
-                        if (input.KeyCode === Enum.KeyCode.Space) {
-                            const mousePositionVec2 = GetMousePosition();
-                            setNodeSelectionPosition(UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y));
-                        } else if (input.UserInputType === Enum.UserInputType.MouseButton1) {
-                            UnbindMovingConnection(true);
-                        } else if (input.UserInputType === Enum.UserInputType.MouseButton3) {
-                            setNodeSelectionPosition(undefined);
-                        }
-                    },
-                }}
                 key={"Background"}
                 ref={canvasRef}
             >
                 <CanvasBackground canvasSize={canvasDataRef.current.Size} />
-                <frame
-                    Size={UDim2.fromScale(1, 1)}
-                    BackgroundTransparency={1}
-                    Event={{
-                        InputBegan: (_, inputObject: InputObject) => {
-                            if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
-                            StartMoveCanvas();
-                        },
-                        InputEnded: (_, inputObject: InputObject) => {
-                            if (inputObject.UserInputType !== Enum.UserInputType.MouseButton3) return;
-                            EndMoveCanvas();
-                        },
-                        InputChanged: (_, inputObject: InputObject) => {
-                            if (inputObject.UserInputType !== Enum.UserInputType.MouseWheel) return;
-                            UpdateZoom(inputObject);
-                        },
-                    }}
-                />
+                <Div onMouseButton1Down={() => SetSelectNodeId(-1)} />
             </frame>
             {GetAllSystems().map((nodeSystem) => {
                 return nodeSystem.create(nodeSystem.data);
@@ -237,22 +210,91 @@ export function App() {
                 ),
                 [zoomScale],
             )}
-            <Div
-                key={"ClickDetector"}
+            <frame
+                key={"InputListener"}
+                Size={UDim2.fromScale(1, 1)}
+                BackgroundTransparency={1}
                 ZIndex={10}
-                onMouseButton1Down={() => {
-                    setNodeSelectionPosition(undefined);
-                    DisableDropdown();
-                }}
-                onMouseButton1Up={() => {
-                    SetDraggingNodeId(undefined);
-                    RunService.UnbindFromRenderStep("MoveNode");
-                }}
-                onMouseButton2Down={() => {
-                    DisableDropdown();
-                }}
-                onMouseButton3Down={() => {
-                    DisableDropdown();
+                Event={{
+                    InputBegan: (_, input: InputObject) => {
+                        switch (input.KeyCode) {
+                            case Enum.KeyCode.Space: {
+                                const mousePositionVec2 = GetMousePosition();
+                                setNodeSelectionPosition(UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y));
+                                return;
+                            }
+                            case Enum.KeyCode.LeftControl: {
+                                SetIsHoldingControl(true);
+                                return;
+                            }
+                            case Enum.KeyCode.C: {
+                                Copy();
+                                return;
+                            }
+                            case Enum.KeyCode.V: {
+                                Paste();
+                                return;
+                            }
+                            case Enum.KeyCode.D: {
+                                Duplicate();
+                                return;
+                            }
+                            case Enum.KeyCode.X: {
+                                Cut();
+                                return;
+                            }
+                        }
+
+                        switch (input.UserInputType) {
+                            case Enum.UserInputType.MouseButton1: {
+                                setNodeSelectionPosition(undefined);
+                                UnbindMovingConnection(true);
+                                DisableDropdown();
+                                return;
+                            }
+                            case Enum.UserInputType.MouseButton2: {
+                                setNodeSelectionPosition(undefined);
+                                DisableDropdown();
+                                return;
+                            }
+                            case Enum.UserInputType.MouseButton3: {
+                                setNodeSelectionPosition(undefined);
+                                startMoveCanvas();
+                                DisableDropdown();
+                                return;
+                            }
+                        }
+                    },
+
+                    InputEnded: (_, input: InputObject) => {
+                        switch (input.KeyCode) {
+                            case Enum.KeyCode.LeftControl: {
+                                SetIsHoldingControl(false);
+                                return;
+                            }
+                        }
+
+                        switch (input.UserInputType) {
+                            case Enum.UserInputType.MouseButton1: {
+                                SetDraggingNodeId(undefined);
+                                RunService.UnbindFromRenderStep("MoveNode");
+                                return;
+                            }
+                            case Enum.UserInputType.MouseButton3: {
+                                endMoveCanvas();
+                                return;
+                            }
+                        }
+                    },
+
+                    InputChanged: (_, input: InputObject) => {
+                        switch (input.UserInputType) {
+                            case Enum.UserInputType.MouseWheel: {
+                                updateZoom(input);
+                                return;
+                            }
+                        }
+                    },
                 }}
             />
         </>

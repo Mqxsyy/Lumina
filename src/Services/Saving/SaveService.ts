@@ -3,7 +3,7 @@ import { API_VERSION } from "API/ExportAPI";
 import { NodeFields } from "API/Fields/NodeFields";
 import { GetSavesFolder } from "API/FolderLocations";
 import { Node } from "API/Nodes/Node";
-import { GetAllSystems } from "Services/NodeSystemService";
+import { GetAllSystems, NodeSystemData } from "Services/NodeSystemService";
 import { GetAllNodes, GetNodeById, NodeConnectionIn } from "Services/NodesService";
 import {
     SaveData,
@@ -13,6 +13,7 @@ import {
     SerializedNode,
     SerializedSystem,
 } from "./SaveData";
+import { NodeSystem } from "API/NodeSystem";
 
 const savesFolder = GetSavesFolder();
 
@@ -26,39 +27,7 @@ export function SaveToFile() {
     const systems = GetAllSystems();
 
     systems.forEach((system) => {
-        const anchorPoint = system.data.anchorPoint;
-
-        const serializedSystem: SerializedSystem = {
-            systemName: system.data.systemName,
-            anchorPoint: { x: anchorPoint.X, y: anchorPoint.Y },
-            groups: {
-                spawn: [],
-                initialize: [],
-                update: [],
-                render: [],
-            },
-        };
-
-        const spawnNode = system.data.system.spawnNode;
-        if (spawnNode !== undefined) {
-            serializedSystem.groups.spawn.push(SerializeNode(spawnNode));
-        }
-
-        const initializeNodes = system.data.system.initializeNodes;
-        initializeNodes.forEach((node) => {
-            serializedSystem.groups.initialize.push(SerializeNode(node));
-        });
-
-        const updateNodes = system.data.system.updateNodes;
-        updateNodes.forEach((node) => {
-            serializedSystem.groups.update.push(SerializeNode(node));
-        });
-
-        const renderNode = system.data.system.renderNode;
-        if (renderNode !== undefined) {
-            serializedSystem.groups.render.push(SerializeNode(renderNode));
-        }
-
+        const serializedSystem = SerializeSystem(system.data);
         data.systems.push(serializedSystem);
     });
 
@@ -97,15 +66,52 @@ export function SaveToFile() {
     return container;
 }
 
-function SerializeNode(node: Node): SerializedNode {
+export function SerializeSystem(system: NodeSystemData, ignoreConnections = false) {
+    const anchorPoint = system.anchorPoint;
+
+    const serializedSystem: SerializedSystem = {
+        systemName: system.systemName,
+        anchorPoint: { x: anchorPoint.X, y: anchorPoint.Y },
+        groups: {
+            spawn: [],
+            initialize: [],
+            update: [],
+            render: [],
+        },
+    };
+
+    const spawnNode = system.system.spawnNode;
+    if (spawnNode !== undefined) {
+        serializedSystem.groups.spawn.push(SerializeNode(spawnNode, ignoreConnections));
+    }
+
+    const initializeNodes = system.system.initializeNodes;
+    initializeNodes.forEach((node) => {
+        serializedSystem.groups.initialize.push(SerializeNode(node, ignoreConnections));
+    });
+
+    const updateNodes = system.system.updateNodes;
+    updateNodes.forEach((node) => {
+        serializedSystem.groups.update.push(SerializeNode(node, ignoreConnections));
+    });
+
+    const renderNode = system.system.renderNode;
+    if (renderNode !== undefined) {
+        serializedSystem.groups.render.push(SerializeNode(renderNode, ignoreConnections));
+    }
+
+    return serializedSystem;
+}
+
+export function SerializeNode(node: Node, ignoreConnections = false): SerializedNode {
     const nodeData = GetNodeById(node.id)!.data;
 
     const serializedNode: SerializedNode = {
         nodeName: node.GetNodeName(),
-        fields: SerializeFields(node.nodeFields, nodeData.connectionsIn),
+        fields: SerializeFields(node.nodeFields, ignoreConnections ? undefined : nodeData.connectionsIn),
     };
 
-    if (nodeData.connectionsOut.size() !== 0) {
+    if (nodeData.connectionsOut.size() !== 0 && !ignoreConnections) {
         serializedNode.connections = [];
 
         nodeData.connectionsOut.forEach((connection) => {
@@ -116,7 +122,7 @@ function SerializeNode(node: Node): SerializedNode {
     return serializedNode;
 }
 
-function SerializeFields(fields: { [key: string]: NodeFields }, connectionsIn: NodeConnectionIn[]): SerializedField[] {
+function SerializeFields(fields: { [key: string]: NodeFields }, connectionsIn?: NodeConnectionIn[]): SerializedField[] {
     const serializedFields: SerializedField[] = [];
 
     for (const [key, value] of pairs(fields)) {
@@ -128,22 +134,24 @@ function SerializeFields(fields: { [key: string]: NodeFields }, connectionsIn: N
         serializedFields.push(serializedField);
     }
 
-    connectionsIn.forEach((connection) => {
-        for (const serializedField of serializedFields) {
-            if (serializedField.name === connection.fieldName) {
-                const serializedConnection: SerializedConnection = {
-                    id: connection.id,
-                };
+    if (connectionsIn !== undefined) {
+        connectionsIn.forEach((connection) => {
+            for (const serializedField of serializedFields) {
+                if (serializedField.name === connection.fieldName) {
+                    const serializedConnection: SerializedConnection = {
+                        id: connection.id,
+                    };
 
-                if (connection.valueName !== undefined) {
-                    serializedConnection.valueName = connection.valueName;
+                    if (connection.valueName !== undefined) {
+                        serializedConnection.valueName = connection.valueName;
+                    }
+
+                    serializedField.connection = serializedConnection;
+                    break;
                 }
-
-                serializedField.connection = serializedConnection;
-                break;
             }
-        }
-    });
+        });
+    }
 
     return serializedFields;
 }

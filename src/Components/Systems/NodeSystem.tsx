@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
-import { FastEvent } from "API/Bindables/FastEvent";
+import { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
 import { NodeGroups } from "API/NodeGroup";
 import { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
 import { TextInput } from "Components/Basic/TextInput";
@@ -17,6 +17,9 @@ import {
     SYSTEM_WIDTH,
 } from "../SizeConfig";
 import NodeGroup from "./NodeGroup";
+import { GetSelectedSystemId, SetSelectSystemId, selectedSystemIdChanged } from "Services/SelectionService";
+
+const SYSTEM_SELECT_TIME = 0.1;
 
 interface Props {
     anchorPoint: Vector2;
@@ -27,13 +30,18 @@ interface Props {
 }
 
 function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDestroyEvent }: Props) {
+    const [_, setForceRender] = useState(0);
     const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
     const mouseOffsetRef = useRef(new Vector2(0, 0));
+    const selectingSystemTimeRef = useRef(0);
+    const selectedSystemIdChangedConnectionRef = useRef<FastEventConnection>();
 
     const onMouseButton1Down = (element: TextButton) => {
         const mousePosition = GetMousePosition();
         mouseOffsetRef.current = element.AbsolutePosition.sub(mousePosition);
+
+        selectingSystemTimeRef.current = os.clock();
 
         RunService.BindToRenderStep("MoveSystem", Enum.RenderPriority.Input.Value, () => {
             const mousePosition = GetMousePositionOnCanvas();
@@ -50,6 +58,21 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
 
     const onMouseButton1Up = () => {
         RunService.UnbindFromRenderStep("MoveSystem");
+
+        if (os.clock() - selectingSystemTimeRef.current > SYSTEM_SELECT_TIME) return;
+
+        SetSelectSystemId(systemId);
+        setForceRender((prev) => prev + 1);
+
+        if (selectedSystemIdChangedConnectionRef.current !== undefined) return;
+
+        selectedSystemIdChangedConnectionRef.current = selectedSystemIdChanged.Connect((newSystemId) => {
+            if (newSystemId !== systemId) {
+                setForceRender((prev) => prev + 1);
+                selectedSystemIdChangedConnectionRef.current!.Disconnect();
+                selectedSystemIdChangedConnectionRef.current = undefined;
+            }
+        });
     };
 
     const onMouseButton2Down = () => {
@@ -127,6 +150,13 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
                     PaddingTop={new UDim(0, SYSTEM_BORDER_THICKNESS * zoomScale)}
                     PaddingBottom={new UDim(0, SYSTEM_BORDER_THICKNESS * zoomScale)}
                 />
+                {GetSelectedSystemId() === systemId && (
+                    <>
+                        <uicorner CornerRadius={new UDim(0, 5 * zoomScale)} />
+                        <uistroke Thickness={math.clamp(3 * zoomScale, 1, math.huge)} Color={StyleColors.Selection} />
+                    </>
+                )}
+
                 <Div>
                     <uistroke
                         Color={StyleColors.FullWhite}

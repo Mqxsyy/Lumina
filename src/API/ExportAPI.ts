@@ -1,6 +1,6 @@
 import { ReplicatedStorage } from "@rbxts/services";
 
-export const API_VERSION = 81;
+export const API_VERSION = 82;
 
 function GetAPIFolder() {
     let APIFolder = ReplicatedStorage.FindFirstChild("Lumina_API");
