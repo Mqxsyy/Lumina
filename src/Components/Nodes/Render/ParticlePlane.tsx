@@ -54,6 +54,7 @@ function ParticlePlane({ data }: { data: NodeData }) {
                         NodeFieldName={ParticlePlaneFieldNames.imageSize}
                         ValueLabels={["Width", "Height"]}
                         AllowNegatives={[false, false]}
+                        AllowConnections={[false, false]}
                     />
                     <NumberField
                         NodeId={data.node.id}

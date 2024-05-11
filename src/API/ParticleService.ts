@@ -1,6 +1,8 @@
 import { IdPool } from "./IdPool";
 import { DoubleSidedPlaneParticle, OneSidedPlaneParticle } from "./Nodes/Render/ParticlePlane";
 
+// OPTIMIZE: mem leak? array only continues to grow
+
 export enum ParticleTypes {
     OneSidedPlane = 1,
     DoubleSidedPlane = 2,

@@ -1,10 +1,10 @@
-import { SetPosition } from "API/Nodes/Initialize/SetPosition";
+import { AddPosition } from "API/Nodes/Initialize/AddPosition";
 
-export function AutoGenSetPosition(node: SetPosition) {
-    const className = `SetPosition${node.id}`;
-    const varName = `SetPosition${node.id}`;
+export function AutoGenAddPosition(node: AddPosition) {
+    const className = `AddPosition${node.id}`;
+    const varName = `AddPosition${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetPosition").SetPosition \n`;
+    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "AddPosition").AddPosition \n`;
     src += `local ${varName} = ${className}.new() \n`;
 
     if (node.nodeFields.position.boundNodeX !== undefined) {

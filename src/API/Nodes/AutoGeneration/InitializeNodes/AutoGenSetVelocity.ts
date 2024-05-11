@@ -6,9 +6,31 @@ export function AutoGenSetVelocity(node: SetVelocity) {
 
     let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetVelocity").SetVelocity \n`;
     src += `local ${varName} = ${className}.new() \n`;
-    const vec3 = node.nodeFields.velocity.GetVector3();
-    src += `${varName}.nodeFields.velocity.SetVector3(${vec3.x},${vec3.y},${vec3.z}) \n`;
-    src += `nodeSystem:AddNode(${varName})`;
 
+    if (node.nodeFields.velocity.boundNodeX !== undefined) {
+        src += "\n";
+        src += node.nodeFields.velocity.boundNodeX.GetAutoGenerationCode(`${varName}.nodeFields.velocity.BindX(..)`);
+        src += "\n";
+    } else {
+        src += `${varName}.nodeFields.velocity.SetX(${node.nodeFields.velocity.x}) \n`;
+    }
+
+    if (node.nodeFields.velocity.boundNodeY !== undefined) {
+        src += "\n";
+        src += node.nodeFields.velocity.boundNodeY.GetAutoGenerationCode(`${varName}.nodeFields.velocity.BindY(..)`);
+        src += "\n";
+    } else {
+        src += `${varName}.nodeFields.velocity.SetY(${node.nodeFields.velocity.y}) \n`;
+    }
+
+    if (node.nodeFields.velocity.boundNodeZ !== undefined) {
+        src += "\n";
+        src += node.nodeFields.velocity.boundNodeZ.GetAutoGenerationCode(`${varName}.nodeFields.velocity.BindZ(..)`);
+        src += "\n";
+    } else {
+        src += `${varName}.nodeFields.velocity.SetZ(${node.nodeFields.velocity.z}) \n`;
+    }
+
+    src += `nodeSystem:AddNode(${varName})`;
     return src;
 }

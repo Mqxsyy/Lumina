@@ -27,6 +27,7 @@ function RandomNumber({ data }: { data: NodeData }) {
                 NodeField={(data.node as RandomNumberAPI).nodeFields.range}
                 NodeFieldName={RandomNumberFieldNames.range}
                 ValueLabels={["Min", "Max"]}
+                AllowConnections={[false, false]}
             />
         </Node>
     );

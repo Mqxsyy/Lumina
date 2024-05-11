@@ -35,6 +35,14 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Set Position",
             create: () => CreateBarrel.CreateSetPosition(),
         },
+        [NameBarrel.AddPositionName]: {
+            name: "Add Position",
+            create: () => CreateBarrel.CreateAddPosition(),
+        },
+        [NameBarrel.SetPositionToParentName]: {
+            name: "Set Position To Parent",
+            create: () => CreateBarrel.CreateSetPositionToParent(),
+        },
         [NameBarrel.SetRotationZName]: {
             name: "Set Rotation Z",
             create: () => CreateBarrel.CreateSetRotationZ(),

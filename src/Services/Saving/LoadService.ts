@@ -66,6 +66,13 @@ export function LoadFromFile() {
     // floating nodes
     for (const node of data.floatingNodes) {
         const nodeCollectionEntry = CreateNode(node.nodeGroup, node.nodeName, node.fields);
+        if (nodeCollectionEntry === undefined) {
+            warn(
+                `Node ${node.nodeName} does not exist in group ${node.nodeGroup}. Save data may be outdated or corrupted.`,
+            );
+            continue;
+        }
+
         cachedNodes.push({ SerializedNode: node, NodeData: nodeCollectionEntry.data });
 
         UpdateNodeData(nodeCollectionEntry.data.node.id, (data) => {
@@ -147,6 +154,13 @@ export function CreateSystem(
 
         for (const node of nodes) {
             const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields);
+            if (nodeCollectionEntry === undefined) {
+                warn(
+                    `Node ${node.nodeName} does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`,
+                );
+                continue;
+            }
+
             cachedNodes.push({ SerializedNode: node, NodeData: nodeCollectionEntry.data });
 
             // OPTIMIZE: janky
@@ -175,7 +189,13 @@ export function CreateSystem(
     return [system, cachedNodes];
 }
 
-export function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeCollectionEntry {
+export function CreateNode(
+    group: NodeGroups,
+    nodeName: string,
+    fields: SerializedField[],
+): NodeCollectionEntry | undefined {
+    if (NodeList[group][nodeName] === undefined) return undefined;
+
     const node = NodeList[group][nodeName].create!() as NodeCollectionEntry;
 
     for (const field of fields) {

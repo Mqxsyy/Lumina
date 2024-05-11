@@ -1,4 +1,4 @@
-import { ServerStorage, Workspace } from "@rbxts/services";
+import { RunService, ServerStorage, Workspace } from "@rbxts/services";
 
 export function GetLiveParticlesFolder(): Folder {
     let liveParticlesFolder = Workspace.FindFirstChild("Lumina Particles");
@@ -11,9 +11,11 @@ export function GetLiveParticlesFolder(): Folder {
     return liveParticlesFolder as Folder;
 }
 
-const liveParticlesFolder = GetLiveParticlesFolder();
-if (liveParticlesFolder !== undefined) {
-    liveParticlesFolder.ClearAllChildren();
+if (!RunService.IsRunning()) {
+    const liveParticlesFolder = GetLiveParticlesFolder();
+    if (liveParticlesFolder !== undefined) {
+        liveParticlesFolder.ClearAllChildren();
+    }
 }
 
 export function GetPlaneParticlesFolder(): Folder {

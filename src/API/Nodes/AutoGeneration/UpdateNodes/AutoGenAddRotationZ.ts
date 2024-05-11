@@ -6,8 +6,17 @@ export function AutoGenAddRotationZ(node: AddRotationZ) {
 
     let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "AddRotationZ").AddRotationZ \n`;
     src += `local ${varName} = ${className}.new() \n`;
-    src += `${varName}.nodeFields.rotation.SetNumber(${node.nodeFields.rotation.GetNumber()}) \n`;
-    src += `nodeSystem:AddNode(${varName})`;
 
+    if (node.nodeFields.rotation.boundNode !== undefined) {
+        src += "\n";
+        src += node.nodeFields.rotation.boundNode.GetAutoGenerationCode(
+            `${varName}.nodeFields.rotation.BindNumber(..)`,
+        );
+        src += "\n";
+    } else {
+        src += `${varName}.nodeFields.rotation.SetNumber(${node.nodeFields.rotation.GetNumber()}) \n`;
+    }
+
+    src += `nodeSystem:AddNode(${varName})`;
     return src;
 }

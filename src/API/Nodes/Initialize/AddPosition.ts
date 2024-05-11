@@ -1,15 +1,15 @@
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetPosition } from "../AutoGeneration/InitializeNodes/AutoGenSetPosition";
+import { AutoGenAddPosition } from "../AutoGeneration/InitializeNodes/AutoGenAddPosition";
 import { InitializeNode } from "./InitializeNode";
 
-export const SetPositionName = "SetPosition";
-export const SetPositionFieldNames = {
+export const AddPositionName = "AddPosition";
+export const AddPositionFieldNames = {
     position: "position",
 };
 
-export class SetPosition extends InitializeNode {
+export class AddPosition extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields: {
         position: Vector3Field;
@@ -26,16 +26,16 @@ export class SetPosition extends InitializeNode {
     Initialize(id: number) {
         const vector3 = this.nodeFields.position.GetVector3();
         UpdateParticleData(id, (data) => {
-            data.particle.Position = new Vector3(vector3.x, vector3.y, vector3.z);
+            data.particle.Position = data.particle.Position.add(new Vector3(vector3.x, vector3.y, vector3.z));
             return data;
         });
     }
 
     GetNodeName(): string {
-        return SetPositionName;
+        return AddPositionName;
     }
 
     GetAutoGenerationCode() {
-        return AutoGenSetPosition(this);
+        return AutoGenAddPosition(this);
     }
 }

@@ -9,7 +9,7 @@ export function AutoGenSetLifetime(node: SetLifetime) {
 
     if (node.nodeFields.time.boundNode !== undefined) {
         src += "\n";
-        src += node.nodeFields.time.boundNode.GetAutoGenerationCode(`${varName}.nodeFields.time.BindValue(..)`);
+        src += node.nodeFields.time.boundNode.GetAutoGenerationCode(`${varName}.nodeFields.time.BindNumber(..)`);
         src += "\n";
     } else {
         src += `${varName}.nodeFields.time.SetNumber(${node.nodeFields.time.GetNumber()}) \n`;

@@ -38,6 +38,7 @@ export const ParticlePlaneName = "ParticlePlane";
 export const ParticlePlaneFieldNames = {
     orientation: "orientation",
     assetId: "assetId",
+    doubleSided: "doubleSided",
     imageSize: "imageSize",
     spriteSheetRows: "spriteSheetRows",
     spriteSheetColumns: "spriteSheetColumns",
@@ -240,22 +241,22 @@ export class ParticlePlane extends RenderNode {
         const imageId = `rbxassetid://${this.nodeFields.assetId.GetNumber()}`;
 
         // initialize particle
-        let particle: OneSidedPlaneParticle | DoubleSidedPlaneParticle;
+        let particlePlane: OneSidedPlaneParticle | DoubleSidedPlaneParticle;
         let data: ParticleData;
 
         if (!doubleSided) {
-            particle = this.objectPoolOneSided.GetItem() as OneSidedPlaneParticle;
-            particle.Front.ImageLabel.Image = imageId;
-            particle.CFrame = CFrameZero;
+            particlePlane = this.objectPoolOneSided.GetItem() as OneSidedPlaneParticle;
+            particlePlane.Front.ImageLabel.Image = imageId;
+            particlePlane.CFrame = CFrameZero;
 
-            data = CreateParticleData(ParticleTypes.OneSidedPlane, id, particle);
+            data = CreateParticleData(ParticleTypes.OneSidedPlane, id, particlePlane);
         } else {
-            particle = this.objectPoolDoubleSided.GetItem() as DoubleSidedPlaneParticle;
-            particle.Front.ImageLabel.Image = imageId;
-            (particle as DoubleSidedPlaneParticle).Back.ImageLabel.Image = imageId;
-            particle.CFrame = CFrameZero;
+            particlePlane = this.objectPoolDoubleSided.GetItem() as DoubleSidedPlaneParticle;
+            particlePlane.Front.ImageLabel.Image = imageId;
+            (particlePlane as DoubleSidedPlaneParticle).Back.ImageLabel.Image = imageId;
+            particlePlane.CFrame = CFrameZero;
 
-            data = CreateParticleData(ParticleTypes.DoubleSidedPlane, id, particle);
+            data = CreateParticleData(ParticleTypes.DoubleSidedPlane, id, particlePlane);
         }
 
         data.transparency = 0;
@@ -273,8 +274,7 @@ export class ParticlePlane extends RenderNode {
         });
 
         const orientation = this.nodeFields.orientation.GetOrientation();
-        const rotation = CheckOrientation(orientation, particle.CFrame.Position, id);
-        particle.CFrame = new CFrame(particle.Position).mul(rotation);
+        particlePlane.CFrame = CheckOrientation(orientation, particlePlane.CFrame.Position, id);
 
         UpdateParticleProperties(data);
 
@@ -287,12 +287,12 @@ export class ParticlePlane extends RenderNode {
 
             const rect = new Vector2(size.x / columns, size.y / rows);
 
-            particle.Front.ImageLabel.ImageRectSize = new Vector2(size.x / columns, size.y / rows);
-            particle.Front.ImageLabel.ImageRectOffset = Vector2.zero;
+            particlePlane.Front.ImageLabel.ImageRectSize = new Vector2(size.x / columns, size.y / rows);
+            particlePlane.Front.ImageLabel.ImageRectOffset = Vector2.zero;
 
             if (doubleSided) {
-                (particle as DoubleSidedPlaneParticle).Back.ImageLabel.ImageRectSize = rect;
-                (particle as DoubleSidedPlaneParticle).Back.ImageLabel.ImageRectOffset = Vector2.zero;
+                (particlePlane as DoubleSidedPlaneParticle).Back.ImageLabel.ImageRectSize = rect;
+                (particlePlane as DoubleSidedPlaneParticle).Back.ImageLabel.ImageRectOffset = Vector2.zero;
             }
         }
 
@@ -300,12 +300,12 @@ export class ParticlePlane extends RenderNode {
             id: id,
             aliveTime: 0,
             orientation: orientation,
-            basePart: particle,
+            basePart: particlePlane,
             updateNodes: updateNodes,
         };
 
         this.aliveParticles.push(aliveParticle);
-        this.aliveParticleBaseParts.push(particle);
+        this.aliveParticleBaseParts.push(particlePlane);
 
         if (this.updateLoop !== undefined) return;
 
@@ -317,16 +317,16 @@ export class ParticlePlane extends RenderNode {
             const diedParticlesCFrames: CFrame[] = [];
 
             for (let i = this.aliveParticles.size() - 1; i >= 0; i--) {
-                const particle = this.aliveParticles[i];
-                const particleData = GetParticleData(particle.id);
+                const selectedAliveParticle = this.aliveParticles[i];
+                const selectedAliveParticleData = GetParticleData(selectedAliveParticle.id);
 
                 // lifetime check
-                if (particle.aliveTime >= particleData.lifetime) {
+                if (selectedAliveParticle.aliveTime >= selectedAliveParticleData.lifetime) {
                     this.aliveParticles.remove(i);
-                    if (particleData.particleType === ParticleTypes.OneSidedPlane) {
-                        this.objectPoolOneSided.RemoveItem(particle.basePart);
-                    } else if (particleData.particleType === ParticleTypes.DoubleSidedPlane) {
-                        this.objectPoolDoubleSided.RemoveItem(particle.basePart);
+                    if (selectedAliveParticleData.particleType === ParticleTypes.OneSidedPlane) {
+                        this.objectPoolOneSided.RemoveItem(selectedAliveParticle.basePart);
+                    } else if (selectedAliveParticleData.particleType === ParticleTypes.DoubleSidedPlane) {
+                        this.objectPoolDoubleSided.RemoveItem(selectedAliveParticle.basePart);
                     }
 
                     diedParticles.push(this.aliveParticleBaseParts.remove(i)!);
@@ -340,22 +340,23 @@ export class ParticlePlane extends RenderNode {
                     continue;
                 }
 
-                particleData.aliveTimePercent = particle.aliveTime / particleData.lifetime;
+                selectedAliveParticleData.aliveTimePercent =
+                    selectedAliveParticle.aliveTime / selectedAliveParticleData.lifetime;
 
-                for (const updateNode of particle.updateNodes) {
-                    updateNode.Update(particle.id);
+                for (const updateNode of selectedAliveParticle.updateNodes) {
+                    updateNode.Update(selectedAliveParticle.id);
                 }
 
-                UpdateParticleProperties(particleData);
+                UpdateParticleProperties(selectedAliveParticleData);
 
                 // sprite sheet
                 if (this.nodeFields.spriteSheetFrameCount.GetNumber() >= 1) {
                     const currentFrame = math.floor(
-                        this.nodeFields.spriteSheetFrameCount.GetNumber() * particleData.aliveTimePercent,
+                        this.nodeFields.spriteSheetFrameCount.GetNumber() * selectedAliveParticleData.aliveTimePercent,
                     );
 
-                    if (particleData.spriteSheetFrame !== currentFrame) {
-                        particleData.spriteSheetFrame = currentFrame;
+                    if (selectedAliveParticleData.spriteSheetFrame !== currentFrame) {
+                        selectedAliveParticleData.spriteSheetFrame = currentFrame;
 
                         const row = math.floor(currentFrame / this.nodeFields.spriteSheetColumns.GetNumber());
                         const column = currentFrame % this.nodeFields.spriteSheetColumns.GetNumber();
@@ -367,27 +368,35 @@ export class ParticlePlane extends RenderNode {
                         );
 
                         const rect = new Vector2(uvOffset.X * size.x, uvOffset.Y * size.y);
-                        particleData.particle.Front.ImageLabel.ImageRectOffset = rect;
+                        selectedAliveParticleData.particle.Front.ImageLabel.ImageRectOffset = rect;
 
-                        if (particleData.particleType === ParticleTypes.DoubleSidedPlane) {
-                            (particleData.particle as DoubleSidedPlaneParticle).Back.ImageLabel.ImageRectOffset = rect;
+                        if (selectedAliveParticleData.particleType === ParticleTypes.DoubleSidedPlane) {
+                            (
+                                selectedAliveParticleData.particle as DoubleSidedPlaneParticle
+                            ).Back.ImageLabel.ImageRectOffset = rect;
                         }
                     }
                 }
 
                 let position;
-                if (particleData.velocity !== Vector3.zero) {
-                    position = particle.basePart.CFrame.Position.add(particleData.velocity.mul(dt));
+                if (selectedAliveParticleData.velocity !== Vector3.zero) {
+                    position = selectedAliveParticle.basePart.CFrame.Position.add(
+                        selectedAliveParticleData.velocity.mul(dt),
+                    );
                 }
 
                 let cframe;
                 if (position !== undefined) {
-                    cframe = CheckOrientation(particle.orientation, position, particle.id);
+                    cframe = CheckOrientation(selectedAliveParticle.orientation, position, selectedAliveParticle.id);
                 } else {
-                    cframe = CheckOrientation(particle.orientation, particle.basePart.Position, particle.id);
+                    cframe = CheckOrientation(
+                        selectedAliveParticle.orientation,
+                        selectedAliveParticle.basePart.Position,
+                        selectedAliveParticle.id,
+                    );
                 }
 
-                targetParticles.push(particle.basePart);
+                targetParticles.push(selectedAliveParticle.basePart);
 
                 if (cframe !== undefined) {
                     targetCFrames.push(cframe);
@@ -395,7 +404,7 @@ export class ParticlePlane extends RenderNode {
                     targetCFrames.push(new CFrame(position));
                 }
 
-                particle.aliveTime += dt;
+                selectedAliveParticle.aliveTime += dt;
             }
 
             Workspace.BulkMoveTo(targetParticles, targetCFrames, Enum.BulkMoveMode.FireCFrameChanged);

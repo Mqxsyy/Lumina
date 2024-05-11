@@ -17,11 +17,12 @@ import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
 import { LoadingFinished } from "Services/Saving/LoadService";
-import { SetSelectNodeId, SetIsHoldingControl } from "Services/SelectionService";
+import { SetSelectNodeId, SetIsHoldingControl, SetSelectSystemId } from "Services/SelectionService";
 import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 
 // TODO: add selecting, copy and paste, group selection moving, undo & redo
 // TODO: redeisgn UI to be more clean and minimalistic
+// TODO: in autogen make fields gen themselves
 
 // No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
 
@@ -175,7 +176,13 @@ export function App() {
                 ref={canvasRef}
             >
                 <CanvasBackground canvasSize={canvasDataRef.current.Size} />
-                <Div onMouseButton1Down={() => SetSelectNodeId(-1)} />
+                <Div
+                    onMouseButton1Down={() => {
+                        UnbindMovingConnection(true);
+                        SetSelectNodeId(-1);
+                        SetSelectSystemId(-1);
+                    }}
+                />
             </frame>
             {GetAllSystems().map((nodeSystem) => {
                 return nodeSystem.create(nodeSystem.data);
@@ -248,7 +255,6 @@ export function App() {
                         switch (input.UserInputType) {
                             case Enum.UserInputType.MouseButton1: {
                                 setNodeSelectionPosition(undefined);
-                                UnbindMovingConnection(true);
                                 DisableDropdown();
                                 return;
                             }
