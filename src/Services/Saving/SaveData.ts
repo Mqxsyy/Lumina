@@ -32,7 +32,7 @@ export interface SerializedFloatingNode extends SerializedNode {
 }
 
 export interface SerializedField {
-    connection?: SerializedConnection;
+    connections?: SerializedConnection[];
     name: string;
     data: {};
 }

@@ -4,6 +4,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
+import { GetNodeById } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
@@ -33,11 +34,16 @@ export default function NumberField({
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : prev + 1));
+            setForceRender((prev) => ++prev);
+        });
+
+        const connection2 = GetNodeById(NodeId)!.data.dataChanged.Connect(() => {
+            setForceRender((prev) => ++prev);
         });
 
         return () => {
             connection.Disconnect();
+            connection2.Disconnect();
         };
     }, []);
 

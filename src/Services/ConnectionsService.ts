@@ -6,8 +6,6 @@ import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { NodeData } from "./NodesService";
 
-// IMPORTANT: make connOut go to multiple connIn
-
 export interface ConnectionData {
     id: number;
     loadedId?: number;
@@ -105,12 +103,12 @@ export function UnbindMovingConnection(destroyConnection = false) {
 
     if (destroyConnection) {
         DestroyConnection(movingConnectionId);
+    } else {
+        UpdateConnectionData(movingConnectionId, (data) => {
+            data.endPos = undefined;
+            return data;
+        });
     }
-
-    UpdateConnectionData(movingConnectionId, (data) => {
-        data.endPos = undefined;
-        return data;
-    });
 
     movingConnectionId = -1;
 }

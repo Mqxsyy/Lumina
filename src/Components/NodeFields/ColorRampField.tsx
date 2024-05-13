@@ -22,13 +22,13 @@ export function ColorRampField({ Label, Ramp }: Props) {
         windowRef.current = GetWindow(Windows.ColorRamp)!;
 
         const fieldConnection = Ramp.FieldChanged.Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : prev + 1));
+            setForceRender((prev) => ++prev);
         });
 
         const pointConnections: RBXScriptConnection[] = [];
         Ramp.GetAllPoints().forEach((point) => {
             const connection = point.color.FieldChanged.Connect(() => {
-                setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+                setForceRender((prev) => ++prev);
             });
 
             pointConnections.push(connection);

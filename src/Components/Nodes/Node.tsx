@@ -67,13 +67,13 @@ function Node({
         if (os.clock() - selectingNodeTimeRef.current > NODE_SELECT_TIME) return;
 
         SetSelectNodeId(NodeId);
-        setForceRender((prev) => prev + 1);
+        setForceRender((prev) => ++prev);
 
         if (selectedNodeIdChangedConnectionRef.current !== undefined) return;
 
         selectedNodeIdChangedConnectionRef.current = selectedNodeIdChanged.Connect((newNodeId) => {
             if (newNodeId !== NodeId) {
-                setForceRender((prev) => prev + 1);
+                setForceRender((prev) => ++prev);
                 selectedNodeIdChangedConnectionRef.current!.Disconnect();
                 selectedNodeIdChangedConnectionRef.current = undefined;
             }
@@ -115,7 +115,7 @@ function Node({
     useEffect(() => {
         if (elementRef.current === undefined) return;
         SetNodeElement(NodeId, elementRef.current);
-        setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+        setForceRender((prev) => ++prev);
     }, [elementRef.current]);
 
     return (

@@ -81,47 +81,52 @@ export function LoadFromFile() {
         });
     }
 
-    // connections
-    for (const cachedNode of cachedNodes) {
-        if (cachedNode.SerializedNode.connections === undefined) continue;
-        if (cachedNode.SerializedNode.connections.size() === 0) continue;
+    task.wait(0.1); // OPTIMIZE: adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
 
-        for (const serializedConnection of cachedNode.SerializedNode.connections) {
+    // connections
+    for (const cachedNode1 of cachedNodes) {
+        if (cachedNode1.SerializedNode.connections === undefined) continue;
+        if (cachedNode1.SerializedNode.connections.size() === 0) continue;
+
+        for (const serializedConnection1 of cachedNode1.SerializedNode.connections) {
             for (const cachedNode2 of cachedNodes) {
                 for (const serializedField of cachedNode2.SerializedNode.fields) {
-                    if (serializedField.connection === undefined) continue;
-                    if (serializedField.connection.id !== serializedConnection.id) continue;
+                    if (serializedField.connections === undefined) continue;
 
-                    UpdateNodeData(cachedNode.NodeData.node.id, (data) => {
-                        const connection: NodeConnectionOut = {
-                            id: serializedConnection.id,
-                        };
+                    for (const serializedConnection2 of serializedField.connections) {
+                        if (serializedConnection1.id !== serializedConnection2.id) continue;
 
-                        if (data.loadedConnectionsOut === undefined) {
-                            data.loadedConnectionsOut = [];
-                        }
+                        UpdateNodeData(cachedNode1.NodeData.node.id, (data) => {
+                            const connection: NodeConnectionOut = {
+                                id: serializedConnection1.id,
+                            };
 
-                        data.loadedConnectionsOut.push(connection);
-                        return data;
-                    });
+                            if (data.loadedConnectionsOut === undefined) {
+                                data.loadedConnectionsOut = [];
+                            }
 
-                    UpdateNodeData(cachedNode2.NodeData.node.id, (data) => {
-                        const connection: NodeConnectionIn = {
-                            id: serializedConnection.id,
-                            fieldName: serializedField.name,
-                        };
+                            data.loadedConnectionsOut.push(connection);
+                            return data;
+                        });
 
-                        if (serializedField.connection!.valueName !== undefined) {
-                            connection.valueName = serializedField.connection!.valueName;
-                        }
+                        UpdateNodeData(cachedNode2.NodeData.node.id, (data) => {
+                            const connection: NodeConnectionIn = {
+                                id: serializedConnection2.id,
+                                fieldName: serializedField.name,
+                            };
 
-                        if (data.loadedConnectionsIn === undefined) {
-                            data.loadedConnectionsIn = [];
-                        }
+                            if (serializedConnection2.valueName !== undefined) {
+                                connection.valueName = serializedConnection2.valueName;
+                            }
 
-                        data.loadedConnectionsIn.push(connection);
-                        return data;
-                    });
+                            if (data.loadedConnectionsIn === undefined) {
+                                data.loadedConnectionsIn = [];
+                            }
+
+                            data.loadedConnectionsIn.push(connection);
+                            return data;
+                        });
+                    }
                 }
             }
         }

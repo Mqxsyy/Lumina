@@ -22,7 +22,7 @@ export function ColorPickerField({ Label, ColorPicker }: Props) {
         windowRef.current = GetWindow(Windows.ColorPicker)!;
 
         const connection = ColorPicker.FieldChanged.Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : prev + 1));
+            setForceRender((prev) => ++prev);
         });
 
         return () => connection.Disconnect();

@@ -13,7 +13,6 @@ import {
     SerializedNode,
     SerializedSystem,
 } from "./SaveData";
-import { NodeSystem } from "API/NodeSystem";
 
 const savesFolder = GetSavesFolder();
 
@@ -146,7 +145,11 @@ function SerializeFields(fields: { [key: string]: NodeFields }, connectionsIn?: 
                         serializedConnection.valueName = connection.valueName;
                     }
 
-                    serializedField.connection = serializedConnection;
+                    if (serializedField.connections === undefined) {
+                        serializedField.connections = [];
+                    }
+
+                    serializedField.connections.push(serializedConnection);
                     break;
                 }
             }

@@ -7,6 +7,7 @@ interface Props {
     Position?: UDim2;
     Size?: UDim2;
     ConnectionId?: number;
+    ConnectionIds?: number[];
     GetElementRef?: (element: ImageButton) => void;
     MouseButton1Down?: () => void;
     MouseButton1Up?: () => void;
@@ -18,6 +19,7 @@ export default function ConnectionPoint({
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromScale(1, 1),
     ConnectionId = undefined,
+    ConnectionIds = undefined,
     GetElementRef = undefined,
     MouseButton1Down = undefined,
     MouseButton1Up = undefined,
@@ -36,10 +38,11 @@ export default function ConnectionPoint({
 
     useEffect(() => {
         if (ConnectionId === undefined) return;
+        if (ConnectionIds === undefined) return;
         if (UpdateConnecton === undefined) return;
 
         UpdateConnecton(connectionPointRef.current!);
-    }, [connectionPointRef.current?.AbsolutePosition, ConnectionId]);
+    }, [connectionPointRef.current?.AbsolutePosition, ConnectionId, ConnectionIds]);
 
     return (
         <imagebutton
@@ -70,7 +73,7 @@ export default function ConnectionPoint({
             <uicorner CornerRadius={new UDim(2, 0)} />
             <uistroke Color={StyleColors.Highlight} Thickness={math.clamp(2 * zoomScale, 1, math.huge)} />
 
-            {ConnectionId !== undefined && (
+            {(ConnectionId !== undefined || ConnectionIds !== undefined) && (
                 <frame
                     AnchorPoint={new Vector2(0.5, 0.5)}
                     Position={UDim2.fromScale(0.5, 0.5)}

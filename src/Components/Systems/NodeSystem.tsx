@@ -62,13 +62,13 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
         if (os.clock() - selectingSystemTimeRef.current > SYSTEM_SELECT_TIME) return;
 
         SetSelectSystemId(systemId);
-        setForceRender((prev) => prev + 1);
+        setForceRender((prev) => ++prev);
 
         if (selectedSystemIdChangedConnectionRef.current !== undefined) return;
 
         selectedSystemIdChangedConnectionRef.current = selectedSystemIdChanged.Connect((newSystemId) => {
             if (newSystemId !== systemId) {
-                setForceRender((prev) => prev + 1);
+                setForceRender((prev) => ++prev);
                 selectedSystemIdChangedConnectionRef.current!.Disconnect();
                 selectedSystemIdChangedConnectionRef.current = undefined;
             }

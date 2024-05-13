@@ -88,7 +88,14 @@ export default function ConnectionPointIn({
         BindFunction(connectionData.fn, connectionData.startNode.node as LogicNode);
     };
 
+    const mouseButton1Down = () => {
+        if (connectionId === -1) return;
+        DestroyConnection(connectionId);
+    };
+
     const mouseButton1Up = () => {
+        if (connectionId !== -1) return;
+
         const movingConnectionId = GetMovingConnectionId();
         if (movingConnectionId === -1) return;
 
@@ -111,7 +118,7 @@ export default function ConnectionPointIn({
 
     useEffect(() => {
         const connection = node.elementLoaded.Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+            setForceRender((prev) => ++prev);
         });
 
         return () => {
@@ -192,6 +199,7 @@ export default function ConnectionPointIn({
             GetElementRef={(element) => {
                 elementRef.current = element;
             }}
+            MouseButton1Down={mouseButton1Down}
             MouseButton1Up={mouseButton1Up}
         />
     );

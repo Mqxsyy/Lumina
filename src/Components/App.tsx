@@ -20,9 +20,10 @@ import { LoadingFinished } from "Services/Saving/LoadService";
 import { SetSelectNodeId, SetIsHoldingControl, SetSelectSystemId } from "Services/SelectionService";
 import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 
-// TODO: add selecting, copy and paste, group selection moving, undo & redo
+// MAYBE-TODO: add undo & redo
 // TODO: redeisgn UI to be more clean and minimalistic
 // TODO: in autogen make fields gen themselves
+// OPTIMIZE: recheck all forceRenders, some may not be required because the app wasn't rerendering every 10 changes
 
 // No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
 
@@ -125,27 +126,27 @@ export function App() {
         });
 
         const canvasDataChangedConnection = CanvasDataChanged.Connect(() => {
-            setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+            setForceRender((prev) => ++prev);
         });
 
         const nodeSystemsChangedConnection = NodeSystemsChanged.Connect(() => {
-            setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+            setForceRender((prev) => ++prev);
         });
 
         const nodesChangedConnection = NodesChanged.Connect(() => {
-            setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+            setForceRender((prev) => ++prev);
         });
 
         const connectionsChangedConnection = ConnectionsChanged.Connect(() => {
-            setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+            setForceRender((prev) => ++prev);
         });
 
         const dropdownDataChangedConnection = DropdownDataChanged.Connect(() => {
-            setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+            setForceRender((prev) => ++prev);
         });
 
         const loadServiceConnection = LoadingFinished.Connect(() => {
-            setForceRender((prevValue) => (prevValue > 10 ? 0 : ++prevValue));
+            setForceRender((prev) => ++prev);
         });
 
         UpdateCanvasData((canvasData) => {

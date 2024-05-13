@@ -26,6 +26,7 @@ export interface NodeData {
     connectionsIn: NodeConnectionIn[];
     loadedConnectionsIn?: NodeConnectionIn[];
     node: Node;
+    dataChanged: FastEvent;
     onDestroy: FastEvent<[NodeData]>;
 }
 
@@ -54,6 +55,7 @@ export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
             connectionsOut: [],
             connectionsIn: [],
             node: api,
+            dataChanged: new FastEvent(),
             onDestroy: new FastEvent(),
         },
         elementLoaded: new FastEvent(),
@@ -70,6 +72,7 @@ export function UpdateNodeData(id: number, callback: (data: NodeData) => NodeDat
     const node = GetNodeById(id);
     if (node !== undefined) {
         node.data = callback(node.data);
+        node.data.dataChanged.Fire();
         NodesChanged.Fire();
         return;
     }

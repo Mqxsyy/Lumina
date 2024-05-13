@@ -17,7 +17,7 @@ export default function BooleanField({ NodeField, Label }: Props) {
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+            setForceRender((prev) => ++prev);
         });
 
         return () => {

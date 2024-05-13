@@ -60,7 +60,7 @@ function ColorRamp() {
             const newPoint = rampAPIRef.current.AddPoint(RoundDecimal(percentX, 0.01), new Vector3(0, 0, 1));
             selectedPointRef.current = newPoint;
 
-            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+            setForceRender((prev) => ++prev);
             return;
         }
 
@@ -69,7 +69,7 @@ function ColorRamp() {
 
     const selectPoint = (point: ColorPoint) => {
         selectedPointRef.current = point;
-        setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+        setForceRender((prev) => ++prev);
     };
 
     const updatePointTime = (id: number, time: number) => {
@@ -80,7 +80,7 @@ function ColorRamp() {
         }
 
         rampAPIRef.current.UpdatePointTime(id, time);
-        setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+        setForceRender((prev) => ++prev);
 
         return time;
     };
@@ -89,7 +89,7 @@ function ColorRamp() {
         if (rampAPIRef.current === undefined) return;
 
         rampAPIRef.current.RemovePoint(id);
-        setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+        setForceRender((prev) => ++prev);
     };
 
     const openColorPicker = () => {
@@ -104,7 +104,7 @@ function ColorRamp() {
             if (loadedRampAPI !== undefined) {
                 rampAPIRef.current = loadedRampAPI;
                 selectedPointRef.current = undefined;
-                setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+                setForceRender((prev) => ++prev);
             }
         });
 
@@ -120,12 +120,12 @@ function ColorRamp() {
         if (rampAPIRef.current !== undefined) {
             changedConnection = rampAPIRef.current.FieldChanged.Connect(() => {
                 connections.forEach((connection) => connection.Disconnect());
-                setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+                setForceRender((prev) => ++prev);
             });
 
             rampAPIRef.current.GetAllPoints().forEach((point) => {
                 const connection = point.color.FieldChanged.Connect(() => {
-                    setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+                    setForceRender((prev) => ++prev);
                 });
 
                 connections.push(connection);

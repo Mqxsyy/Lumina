@@ -88,7 +88,7 @@ function LineGraph() {
         if (graphAPIRef.current === undefined) return;
 
         selectedPointRef.current = graphAPIRef.current.GetAllPoints().find((point) => point.id === id);
-        setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+        setForceRender((prev) => ++prev);
     };
 
     const controlsTimeChanged = (time: number) => {
@@ -118,7 +118,7 @@ function LineGraph() {
             if (loadedGraphAPI !== undefined) {
                 graphAPIRef.current = loadedGraphAPI;
                 selectedPointRef.current = undefined;
-                setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+                setForceRender((prev) => ++prev);
             }
         });
 
@@ -145,7 +145,7 @@ function LineGraph() {
         if (graphAPIRef.current === undefined) return;
 
         const valuesChangedConnection = graphAPIRef.current.FieldChanged.Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+            setForceRender((prev) => ++prev);
         });
 
         return () => valuesChangedConnection.Disconnect();

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "@rbxts/react";
 import {
     CreateConnection,
     DestroyConnection,
+    GetMovingConnectionId,
     StartMovingConnection,
     UnbindMovingConnection,
 } from "Services/ConnectionsService";
@@ -26,7 +27,7 @@ export default function ConnectionPointOut({
     BindFunction,
 }: Props) {
     const [_, setForceRender] = useState(0);
-    const [connectionId, setConnectionId] = useState(-1);
+    const [connectionIds, setConnectionIds] = useState<number[]>([]);
     const elementRef = useRef<ImageButton>();
 
     const node = GetNodeById(NodeId)!;
@@ -37,7 +38,7 @@ export default function ConnectionPointOut({
         if (node.element === undefined) return;
 
         const connectionData = CreateConnection(nodeData, elementRef.current, BindFunction, loadedId);
-        setConnectionId(connectionData.id);
+        setConnectionIds((prev) => [...prev, connectionData.id]);
 
         UpdateNodeData(NodeId, (data) => {
             const connection: NodeConnectionOut = {
@@ -50,7 +51,7 @@ export default function ConnectionPointOut({
 
         const onDestroy = connectionData.onDestroy.Connect(() => {
             onDestroy.Disconnect();
-            setConnectionId(-1);
+            setConnectionIds((prev) => prev.filter((id) => id !== connectionData.id));
 
             if (GetNodeById(NodeId) === undefined) return;
 
@@ -68,19 +69,15 @@ export default function ConnectionPointOut({
     };
 
     const mouseButton1Down = () => {
-        if (connectionId === -1) {
-            const connectionData = createConnection()!;
-            StartMovingConnection(connectionData.id);
-            return;
-        }
+        if (GetMovingConnectionId() !== -1) return;
 
-        UnbindMovingConnection();
-        DestroyConnection(connectionId);
+        const connectionData = createConnection()!;
+        StartMovingConnection(connectionData.id);
     };
 
     useEffect(() => {
         const connection = node.elementLoaded.Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+            setForceRender((prev) => ++prev);
         });
 
         return () => {
@@ -94,9 +91,12 @@ export default function ConnectionPointOut({
 
             destroyConnection.Disconnect();
             destroyConnection = undefined;
-            if (connectionId !== -1) {
+            if (connectionIds.size() !== 0) {
                 UnbindMovingConnection();
-                DestroyConnection(connectionId);
+
+                for (const connectionId of connectionIds) {
+                    DestroyConnection(connectionId);
+                }
             }
         });
 
@@ -104,7 +104,7 @@ export default function ConnectionPointOut({
             if (destroyConnection === undefined) return;
             destroyConnection.Disconnect();
         };
-    }, [nodeData.onDestroy, connectionId]);
+    }, [nodeData.onDestroy, connectionIds]);
 
     useEffect(() => {
         if (elementRef.current === undefined) return;
@@ -128,7 +128,7 @@ export default function ConnectionPointOut({
             AnchorPoint={AnchorPoint}
             Position={Position}
             Size={Size}
-            ConnectionId={connectionId === -1 ? undefined : connectionId}
+            ConnectionIds={connectionIds.size() === 0 ? undefined : connectionIds}
             GetElementRef={(element) => {
                 elementRef.current = element;
             }}

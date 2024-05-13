@@ -1,6 +1,8 @@
-import React from "@rbxts/react";
+import React, { useEffect, useState } from "@rbxts/react";
 import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
+import { FastEvent } from "API/Bindables/FastEvent";
+import { Event } from "API/Bindables/Event";
 
 interface Props {
     AnchorPoint?: Vector2;

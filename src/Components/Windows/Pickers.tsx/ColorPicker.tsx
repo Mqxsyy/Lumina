@@ -259,13 +259,13 @@ function ColorPicker() {
         const loadedConnection = colorPickerAPILoaded.Connect(() => {
             if (loadedColorPickerAPI !== undefined) {
                 pickerAPIRef.current = loadedColorPickerAPI;
-                setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+                setForceRender((prev) => ++prev);
             }
         });
 
         window.current = GetWindow(Windows.ColorPicker);
         const resizeConnection = window.current!.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+            setForceRender((prev) => ++prev);
         });
 
         return () => {
@@ -278,7 +278,7 @@ function ColorPicker() {
         if (pickerAPIRef.current === undefined) return;
 
         const valuesChangedConnection = pickerAPIRef.current.FieldChanged.Connect(() => {
-            setForceRender((prev) => (prev > 10 ? 0 : ++prev));
+            setForceRender((prev) => ++prev);
         });
 
         return () => valuesChangedConnection.Disconnect();
