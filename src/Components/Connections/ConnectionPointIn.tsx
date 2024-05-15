@@ -164,10 +164,7 @@ export default function ConnectionPointIn({
 
                     for (const connection of GetAllConnections()) {
                         if (connection.data.loadedId === loadedConnection.id) {
-                            if (
-                                loadedConnection.fieldName === NodeFieldName &&
-                                loadedConnection.valueName === ValueName
-                            ) {
+                            if (loadedConnection.fieldName === NodeFieldName && loadedConnection.valueName === ValueName) {
                                 finishConnection(connection.data.id);
                                 nodeData.loadedConnectionsIn.remove(i);
                                 break;

@@ -121,6 +121,28 @@ export class Vector2Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
+    AutoGenerateField(fieldPath: string) {
+        let src = "";
+
+        if (this.boundNodeX !== undefined) {
+            src += "\n";
+            src += this.boundNodeX.GetAutoGenerationCode(`${fieldPath}.BindX(..)`);
+            src += "\n";
+        } else {
+            src += `${fieldPath}.SetX(${this.x}) \n`;
+        }
+
+        if (this.boundNodeY !== undefined) {
+            src += "\n";
+            src += this.boundNodeY.GetAutoGenerationCode(`${fieldPath}.BindY(..)`);
+            src += "\n";
+        } else {
+            src += `${fieldPath}.SetY(${this.y}) \n`;
+        }
+
+        return src;
+    }
+
     SerializeData() {
         return {
             x: this.x,

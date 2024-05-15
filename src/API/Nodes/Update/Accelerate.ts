@@ -1,9 +1,9 @@
 import { NumberField } from "API/Fields/NumberField";
-import { NodeGroups } from "API/NodeGroup";
-import { UpdateParticleData } from "API/ParticleService";
-import { UpdateNode } from "./UpdateNode";
 import { FrameRateMultiplier } from "API/Lib";
+import { NodeGroups } from "API/NodeGroup";
+import { ParticleData } from "API/ParticleService";
 import { AutoGenAccelerate } from "../AutoGeneration/UpdateNodes/AutoGenAccelerate";
+import { UpdateNode } from "./UpdateNode";
 
 export const AccelerateName = "Accelerate";
 export const AccelerateFieldNames = {
@@ -24,19 +24,15 @@ export class Accelerate extends UpdateNode {
         };
     }
 
-    Update(id: number) {
+    Update(data: ParticleData) {
         const acceleration = this.nodeFields.acceleration.GetNumber() * FrameRateMultiplier;
+        const oldVelocity = data.velocityNormal;
 
-        UpdateParticleData(id, (data) => {
-            const oldVelocity = data.velocity;
+        const x = oldVelocity.X + oldVelocity.X * acceleration;
+        const y = oldVelocity.Y + oldVelocity.Y * acceleration;
+        const z = oldVelocity.Z + oldVelocity.Z * acceleration;
 
-            const x = oldVelocity.X + oldVelocity.X * acceleration;
-            const y = oldVelocity.Y + oldVelocity.Y * acceleration;
-            const z = oldVelocity.Z + oldVelocity.Z * acceleration;
-
-            data.velocity = new Vector3(x, y, z);
-            return data;
-        });
+        data.velocityNormal = new Vector3(x, y, z);
     }
 
     GetNodeName(): string {

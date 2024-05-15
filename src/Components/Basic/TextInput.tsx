@@ -119,11 +119,7 @@ export function TextInput({
         <textbox
             AnchorPoint={AnchorPoint}
             Position={Position}
-            Size={
-                IsAffectedByZoom
-                    ? new UDim2(Size.X.Scale, Size.X.Offset, Size.Y.Scale, Size.Y.Offset * zoomScale)
-                    : Size
-            }
+            Size={IsAffectedByZoom ? new UDim2(Size.X.Scale, Size.X.Offset, Size.Y.Scale, Size.Y.Offset * zoomScale) : Size}
             BackgroundColor3={Disabled ? StyleColors.Disabled : StyleColors.Highlight}
             BackgroundTransparency={HideBackground ? 1 : 0}
             BorderSizePixel={0}

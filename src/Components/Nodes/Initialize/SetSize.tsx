@@ -1,5 +1,4 @@
 import React from "@rbxts/react";
-import { CapitalizeFirstLetter } from "API/Lib";
 import { SetSize as SetSizeAPI, SetSizeFieldNames } from "API/Nodes/Initialize/SetSize";
 import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, NodeData } from "Services/NodesService";
@@ -23,7 +22,7 @@ function SetSize({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as SetSizeAPI).nodeFields.size}
                 NodeFieldName={SetSizeFieldNames.size}
-                Label={CapitalizeFirstLetter(SetSizeFieldNames.size)}
+                Label="Size"
             />
         </Node>
     );

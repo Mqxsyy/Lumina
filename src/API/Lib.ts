@@ -1,5 +1,6 @@
 export const Rand = new Random(os.clock());
 export const FrameRateMultiplier = 0.0167;
+export const CFrameZero = new CFrame();
 
 export function RemapValue(value: number, oldMin: number, oldMax: number, newMin: number, newMax: number): number {
     if (value < oldMin || value > oldMax) {

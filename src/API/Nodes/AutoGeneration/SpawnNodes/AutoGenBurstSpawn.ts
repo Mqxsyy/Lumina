@@ -6,8 +6,9 @@ export function AutoGenBurstSpawn(node: BurstSpawn) {
 
     let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Spawn", "BurstSpawn").BurstSpawn \n`;
     src += `local ${varName} = ${className}.new() \n`;
-    src += `${varName}.nodeFields.amount.SetNumber(${node.nodeFields.amount.GetNumber()}) \n`;
-    src += `nodeSystem:AddNode(${varName})`;
 
+    src += node.nodeFields.amount.AutoGenerateField(`${varName}.nodeFields.amount`);
+
+    src += `nodeSystem:AddNode(${varName})`;
     return src;
 }

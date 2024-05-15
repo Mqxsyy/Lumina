@@ -26,11 +26,7 @@ export default function CheckBox({
         <Div
             AnchorPoint={AnchorPoint}
             Position={Position}
-            Size={
-                IsAffectedByZoom
-                    ? new UDim2(Size.X.Scale, Size.X.Offset * zoomScale, Size.Y.Scale, Size.Y.Offset * zoomScale)
-                    : Size
-            }
+            Size={IsAffectedByZoom ? new UDim2(Size.X.Scale, Size.X.Offset * zoomScale, Size.Y.Scale, Size.Y.Offset * zoomScale) : Size}
             BackgroundColor={StyleColors.Highlight}
             onMouseButton1Down={() => OnChecked(!IsChecked)}
         >
@@ -43,11 +39,7 @@ export default function CheckBox({
             />
 
             {IsChecked && (
-                <Div
-                    AnchorPoint={new Vector2(0.5, 0.5)}
-                    Position={UDim2.fromScale(0.5, 0.5)}
-                    BackgroundColor={StyleColors.Primary}
-                >
+                <Div AnchorPoint={new Vector2(0.5, 0.5)} Position={UDim2.fromScale(0.5, 0.5)} BackgroundColor={StyleColors.Primary}>
                     <uicorner CornerRadius={StyleProperties.CornerRadius} />
                 </Div>
             )}

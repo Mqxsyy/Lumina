@@ -1,8 +1,8 @@
 import { ColorField } from "API/Fields/ColorField";
-import { GetParticleData, UpdateParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetColor } from "../AutoGeneration/InitializeNodes/AutoGenSetColor";
 import { InitializeNode } from "./InitializeNode";
+import { ParticleData } from "API/ParticleService";
 
 export const SetColorName = "SetColor";
 export const SetColorFieldNames = {
@@ -23,11 +23,8 @@ export class SetColor extends InitializeNode {
         };
     }
 
-    Initialize(id: number) {
-        UpdateParticleData(id, (data) => {
-            data.color = this.nodeFields.color.GetColor();
-            return data;
-        });
+    Initialize(data: ParticleData) {
+        data.color = this.nodeFields.color.GetColor();
     }
 
     GetNodeName(): string {

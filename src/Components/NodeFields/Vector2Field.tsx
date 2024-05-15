@@ -57,11 +57,7 @@ export function Vector2Field({
                 {Label !== undefined && <uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />}
 
                 <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                    <uilistlayout
-                        FillDirection="Horizontal"
-                        VerticalAlignment={"Center"}
-                        Padding={new UDim(0, 10 * zoomScale)}
-                    />
+                    <uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
 
                     {AllowConnections[0] && (
                         <ConnectionPointIn
@@ -72,12 +68,7 @@ export function Vector2Field({
                             UnbindFunction={NodeField.UnbindX}
                         />
                     )}
-                    <BasicTextLabel
-                        Size={UDim2.fromOffset(0, 20)}
-                        AutomaticSize="X"
-                        Text={ValueLabels[0]}
-                        TextYAlignment="Bottom"
-                    />
+                    <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={ValueLabels[0]} TextYAlignment="Bottom" />
                     <NumberInput
                         AnchorPoint={new Vector2(1, 0)}
                         Position={UDim2.fromScale(1, 0)}
@@ -91,11 +82,7 @@ export function Vector2Field({
                     </NumberInput>
                 </Div>
                 <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                    <uilistlayout
-                        FillDirection="Horizontal"
-                        VerticalAlignment={"Center"}
-                        Padding={new UDim(0, 10 * zoomScale)}
-                    />
+                    <uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
 
                     {AllowConnections[1] && (
                         <ConnectionPointIn
@@ -106,12 +93,7 @@ export function Vector2Field({
                             UnbindFunction={NodeField.UnbindY}
                         />
                     )}
-                    <BasicTextLabel
-                        Size={UDim2.fromOffset(0, 20)}
-                        AutomaticSize="X"
-                        Text={ValueLabels[1]}
-                        TextYAlignment="Bottom"
-                    />
+                    <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={ValueLabels[1]} TextYAlignment="Bottom" />
                     <NumberInput
                         AnchorPoint={new Vector2(1, 0)}
                         Position={UDim2.fromScale(1, 0)}

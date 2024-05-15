@@ -49,11 +49,7 @@ export default function NumberField({
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-            <uilistlayout
-                FillDirection={"Horizontal"}
-                VerticalAlignment={"Center"}
-                Padding={new UDim(0, 10 * zoomScale)}
-            />
+            <uilistlayout FillDirection={"Horizontal"} VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
 
             {AllowConnection && (
                 <ConnectionPointIn

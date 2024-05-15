@@ -90,9 +90,7 @@ function Node({
 
     const getPosition = () => {
         const nodeHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
-        const offsetFromCenter = NodeAnchorPoint.mul(zoomScale).add(
-            new Vector2(NODE_WIDTH * 0.5 * zoomScale, nodeHeight * 0.5),
-        );
+        const offsetFromCenter = NodeAnchorPoint.mul(zoomScale).add(new Vector2(NODE_WIDTH * 0.5 * zoomScale, nodeHeight * 0.5));
         const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
         const position = canvasPosition.add(offsetFromCenter);
         return UDim2.fromOffset(position.X, position.Y);
@@ -155,11 +153,7 @@ function Node({
                 <uistroke Thickness={math.clamp(3 * zoomScale, 1, math.huge)} Color={StyleColors.Selection} />
             )}
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                <uilistlayout
-                    FillDirection={"Horizontal"}
-                    Padding={new UDim(0, 10 * zoomScale)}
-                    VerticalAlignment={"Center"}
-                />
+                <uilistlayout FillDirection={"Horizontal"} Padding={new UDim(0, 10 * zoomScale)} VerticalAlignment={"Center"} />
 
                 <BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={Name}>
                     <uiflexitem FlexMode={"Fill"} />

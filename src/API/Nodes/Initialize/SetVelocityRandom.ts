@@ -1,6 +1,6 @@
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
-import { UpdateParticleData } from "API/ParticleService";
+import { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetVelocityRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocityRandom";
 import { InitializeNode } from "./InitializeNode";
@@ -30,7 +30,7 @@ export class SetVelocityRandom extends InitializeNode {
         };
     }
 
-    Initialize(id: number) {
+    Initialize(data: ParticleData) {
         const xRange = this.nodeFields.rangeX.GetVector2();
         const x = RoundDecimal(Rand.NextNumber(xRange.x, xRange.y), 0.01);
 
@@ -40,10 +40,7 @@ export class SetVelocityRandom extends InitializeNode {
         const zRange = this.nodeFields.rangeZ.GetVector2();
         const z = RoundDecimal(Rand.NextNumber(zRange.x, zRange.y), 0.01);
 
-        UpdateParticleData(id, (data) => {
-            data.velocity = new Vector3(x, y, z);
-            return data;
-        });
+        data.velocityNormal = new Vector3(x, y, z);
     }
 
     GetNodeName(): string {

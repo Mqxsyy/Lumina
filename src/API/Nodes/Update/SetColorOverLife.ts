@@ -1,6 +1,6 @@
 import { ColorRampField } from "API/Fields/ColorRampField";
 import { NodeGroups } from "API/NodeGroup";
-import { GetParticleData, UpdateParticleData } from "API/ParticleService";
+import { ParticleData } from "API/ParticleService";
 import { AutoGenSetColorOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetColorOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -19,13 +19,9 @@ export class SetColorOverLife extends UpdateNode {
         super();
     }
 
-    Update(id: number) {
-        const particleData = GetParticleData(id);
-        const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
-        UpdateParticleData(id, (data) => {
-            data.color = this.nodeFields.ramp.GetColor(lifetime);
-            return data;
-        });
+    Update(data: ParticleData) {
+        const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
+        data.color = this.nodeFields.ramp.GetColor(lifetime);
     }
 
     GetNodeName(): string {

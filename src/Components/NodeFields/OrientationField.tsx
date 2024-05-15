@@ -16,7 +16,7 @@ export default function OrientationField({ NodeField, Label }: Props) {
     const [_, setForceRender] = useState(0);
 
     const zoomScale = GetZoomScale();
-    const elementRef = useRef<Frame>();
+    const elementRef = useRef<ImageButton>();
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
@@ -61,18 +61,15 @@ export default function OrientationField({ NodeField, Label }: Props) {
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-            <uilistlayout
-                FillDirection={"Horizontal"}
-                VerticalAlignment={"Center"}
-                Padding={new UDim(0, 10 * zoomScale)}
-            />
+            <uilistlayout FillDirection={"Horizontal"} VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
 
             <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
-            <Div
+            <imagebutton
                 Size={new UDim2(1, 0, 0, 20 * zoomScale)}
-                BackgroundColor={StyleColors.Highlight}
-                onMouseButton1Down={enableDropdown}
-                getFrame={(frame) => (elementRef.current = frame)}
+                BackgroundColor3={StyleColors.Highlight}
+                AutoButtonColor={false}
+                Event={{ MouseButton1Down: enableDropdown }}
+                ref={elementRef}
             >
                 <uipadding PaddingRight={new UDim(0, 4 * zoomScale)} PaddingTop={new UDim(0, 4 * zoomScale)} />
                 <uiflexitem FlexMode="Fill" />
@@ -84,7 +81,7 @@ export default function OrientationField({ NodeField, Label }: Props) {
                     TextXAlignment="Center"
                     TextYAlignment="Center"
                 />
-            </Div>
+            </imagebutton>
         </Div>
     );
 }

@@ -1,8 +1,5 @@
 import React from "@rbxts/react";
-import {
-    SetRotationZRandom as SetRotationZRandomAPI,
-    SetRotationZRandomFieldNames,
-} from "API/Nodes/Initialize/SetRotationZRandom";
+import { SetRotationZRandom as SetRotationZRandomAPI, SetRotationZRandomFieldNames } from "API/Nodes/Initialize/SetRotationZRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";

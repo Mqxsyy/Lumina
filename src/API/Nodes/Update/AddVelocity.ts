@@ -1,7 +1,7 @@
 import { Vector3Field } from "API/Fields/Vector3Field";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { UpdateParticleData } from "API/ParticleService";
+import { ParticleData } from "API/ParticleService";
 import { AutoGenAddVelocity } from "../AutoGeneration/UpdateNodes/AutoGenAddVelocity";
 import { UpdateNode } from "./UpdateNode";
 
@@ -24,19 +24,15 @@ export class AddVelocity extends UpdateNode {
         };
     }
 
-    Update(id: number) {
+    Update(data: ParticleData) {
         const acceleration = this.nodeFields.velocity.GetVector3();
+        const oldVelocity = data.velocityNormal;
 
-        UpdateParticleData(id, (data) => {
-            const oldVelocity = data.velocity;
+        const x = oldVelocity.X + acceleration.x * FrameRateMultiplier;
+        const y = oldVelocity.Y + acceleration.y * FrameRateMultiplier;
+        const z = oldVelocity.Z + acceleration.z * FrameRateMultiplier;
 
-            const x = oldVelocity.X + acceleration.x * FrameRateMultiplier;
-            const y = oldVelocity.Y + acceleration.y * FrameRateMultiplier;
-            const z = oldVelocity.Z + acceleration.z * FrameRateMultiplier;
-
-            data.velocity = new Vector3(x, y, z);
-            return data;
-        });
+        data.velocityNormal = new Vector3(x, y, z);
     }
 
     GetNodeName(): string {

@@ -42,6 +42,17 @@ export class NumberField extends NodeField {
         this.FieldChanged.Fire();
     };
 
+    AutoGenerateField(fieldPath: string) {
+        if (this.boundNode !== undefined) {
+            let src = "\n";
+            src += this.boundNode.GetAutoGenerationCode(`${fieldPath}.BindNumber(..)`);
+            src += "\n";
+            return src;
+        }
+
+        return `${fieldPath}.SetNumber(${this.number}) \n`;
+    }
+
     SerializeData() {
         return {
             number: this.number,

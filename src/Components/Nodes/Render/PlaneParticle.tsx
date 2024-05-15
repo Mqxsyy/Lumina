@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
-import { ParticlePlane as ParticlePlaneAPI, ParticlePlaneFieldNames } from "API/Nodes/Render/ParticlePlane";
+import { PlaneParticle as PlaneParticleAPI, PlaneParticleFieldNames } from "API/Nodes/Render/PlaneParticle";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import NumberField from "Components/NodeFields/NumberField";
@@ -11,35 +11,35 @@ import Node from "../Node";
 import OrientationField from "Components/NodeFields/OrientationField";
 import BooleanField from "Components/NodeFields/BooleanField";
 
-export function CreateParticlePlane() {
-    return AddNode(new ParticlePlaneAPI(500), (data: NodeData) => {
-        return <ParticlePlane key={`node_${data.node.id}`} data={data} />;
+export function CreatePlaneParticle() {
+    return AddNode(new PlaneParticleAPI(), (data: NodeData) => {
+        return <PlaneParticle key={`node_${data.node.id}`} data={data} />;
     });
 }
 
-function ParticlePlane({ data }: { data: NodeData }) {
+function PlaneParticle({ data }: { data: NodeData }) {
     const zoomScale = GetZoomScale();
 
     return (
         <Node
-            Name="Particle Plane"
+            Name="Plane Particle"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
             <OrientationField
-                NodeField={(data.node as ParticlePlaneAPI).nodeFields.orientation}
+                NodeField={(data.node as PlaneParticleAPI).nodeFields.orientation}
                 Label={"Orientation"}
             />
             <NumberField
                 NodeId={data.node.id}
-                NodeField={(data.node as ParticlePlaneAPI).nodeFields.assetId}
-                NodeFieldName={ParticlePlaneFieldNames.assetId}
-                Label={CapitalizeFirstLetter(ParticlePlaneFieldNames.assetId)}
+                NodeField={(data.node as PlaneParticleAPI).nodeFields.assetId}
+                NodeFieldName={PlaneParticleFieldNames.assetId}
+                Label={CapitalizeFirstLetter(PlaneParticleFieldNames.assetId)}
                 AllowNegative={false}
                 AllowConnection={false}
             />
-            <BooleanField NodeField={(data.node as ParticlePlaneAPI).nodeFields.doubleSided} Label={"DoubleSided"} />
+            <BooleanField NodeField={(data.node as PlaneParticleAPI).nodeFields.doubleSided} Label={"DoubleSided"} />
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                 <uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
 
@@ -50,32 +50,32 @@ function ParticlePlane({ data }: { data: NodeData }) {
 
                     <Vector2Field
                         NodeId={data.node.id}
-                        NodeField={(data.node as ParticlePlaneAPI).nodeFields.imageSize}
-                        NodeFieldName={ParticlePlaneFieldNames.imageSize}
+                        NodeField={(data.node as PlaneParticleAPI).nodeFields.imageSize}
+                        NodeFieldName={PlaneParticleFieldNames.imageSize}
                         ValueLabels={["Width", "Height"]}
                         AllowNegatives={[false, false]}
                         AllowConnections={[false, false]}
                     />
                     <NumberField
                         NodeId={data.node.id}
-                        NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetRows}
-                        NodeFieldName={ParticlePlaneFieldNames.spriteSheetRows}
+                        NodeField={(data.node as PlaneParticleAPI).nodeFields.spriteSheetRows}
+                        NodeFieldName={PlaneParticleFieldNames.spriteSheetRows}
                         Label={"Rows"}
                         AllowNegative={false}
                         AllowConnection={false}
                     />
                     <NumberField
                         NodeId={data.node.id}
-                        NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetColumns}
-                        NodeFieldName={ParticlePlaneFieldNames.spriteSheetColumns}
+                        NodeField={(data.node as PlaneParticleAPI).nodeFields.spriteSheetColumns}
+                        NodeFieldName={PlaneParticleFieldNames.spriteSheetColumns}
                         Label={"Columns"}
                         AllowNegative={false}
                         AllowConnection={false}
                     />
                     <NumberField
                         NodeId={data.node.id}
-                        NodeField={(data.node as ParticlePlaneAPI).nodeFields.spriteSheetFrameCount}
-                        NodeFieldName={ParticlePlaneFieldNames.spriteSheetFrameCount}
+                        NodeField={(data.node as PlaneParticleAPI).nodeFields.spriteSheetFrameCount}
+                        NodeFieldName={PlaneParticleFieldNames.spriteSheetFrameCount}
                         Label={"Frame Count"}
                         AllowNegative={false}
                         AllowConnection={false}

@@ -1,5 +1,6 @@
+import { ParticleData } from "API/ParticleService";
 import { Node } from "../Node";
 
 export abstract class InitializeNode extends Node {
-    abstract Initialize(id: number): void;
+    abstract Initialize(data: ParticleData): void;
 }

@@ -39,6 +39,10 @@ export class BooleanField extends NodeField {
         this.FieldChanged.Fire();
     };
 
+    AutoGenerateField(fieldPath: string) {
+        return `${fieldPath}.SetBoolean(${this.boolean}) \n`;
+    }
+
     SerializeData() {
         return {
             boolean: this.boolean,

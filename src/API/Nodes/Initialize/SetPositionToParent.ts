@@ -1,6 +1,6 @@
 import { RunService } from "@rbxts/services";
 import { Vector3Field } from "API/Fields/Vector3Field";
-import { UpdateParticleData } from "API/ParticleService";
+import { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetPositionToParent } from "../AutoGeneration/InitializeNodes/AutoGenSetPositionToParent";
 import { InitializeNode } from "./InitializeNode";
@@ -24,15 +24,12 @@ export class SetPositionToParent extends InitializeNode {
         };
     }
 
-    Initialize(id: number) {
+    Initialize(data: ParticleData) {
         if (!RunService.IsRunning()) return;
         if (this.parent === undefined) return;
 
-        UpdateParticleData(id, (data) => {
-            const pos = this.parent!.Position;
-            data.particle.Position = new Vector3(pos.X, pos.Y, pos.Z);
-            return data;
-        });
+        const pos = this.parent!.Position;
+        data.particle.Position = new Vector3(pos.X, pos.Y, pos.Z);
     }
 
     GetNodeName(): string {

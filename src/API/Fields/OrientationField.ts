@@ -42,6 +42,10 @@ export class OrientationField extends NodeField {
         this.FieldChanged.Fire();
     };
 
+    AutoGenerateField(fieldPath: string) {
+        return `${fieldPath}.SetOrientation(${this.orientation}) \n`;
+    }
+
     SerializeData() {
         return {
             orientation: this.orientation,

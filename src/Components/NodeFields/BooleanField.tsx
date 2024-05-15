@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "@rbxts/react";
 import { BooleanField as BooleanFieldAPI } from "API/Fields/BooleanField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import CheckBox from "Components/Basic/CheckBox";
-import Div from "Components/Div";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
@@ -26,7 +25,7 @@ export default function BooleanField({ NodeField, Label }: Props) {
     }, []);
 
     return (
-        <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+        <imagebutton Size={UDim2.fromScale(1, 0)} Transparency={1} AutoButtonColor={false} AutomaticSize="Y">
             <uilistlayout
                 FillDirection={"Horizontal"}
                 VerticalAlignment={"Center"}
@@ -39,6 +38,6 @@ export default function BooleanField({ NodeField, Label }: Props) {
                 IsChecked={NodeField.GetBoolean()}
                 OnChecked={(newValue) => NodeField.SetBoolean(newValue)}
             />
-        </Div>
+        </imagebutton>
     );
 }

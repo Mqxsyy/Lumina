@@ -2,6 +2,8 @@ import { IdPool } from "API/IdPool";
 import { LerpNumber } from "API/Lib";
 import { NodeField } from "./NodeField";
 
+// BUG: attempt to index nil with 'time' | line 104 ; selection broke, couldn't use node, probs data broke?
+
 export interface GraphPoint {
     id: number;
     canEditTime: boolean;
@@ -69,11 +71,7 @@ export class LineGraphField extends NodeField {
             lastPoint = point;
         }
 
-        return LerpNumber(
-            lastPoint.value,
-            this.endPoint.value,
-            (t - lastPoint.time) / (this.endPoint.time - lastPoint.time),
-        );
+        return LerpNumber(lastPoint.value, this.endPoint.value, (t - lastPoint.time) / (this.endPoint.time - lastPoint.time));
     }
 
     AddPoint(time: number, value: number) {
@@ -110,6 +108,18 @@ export class LineGraphField extends NodeField {
     RemovePoint(id: number) {
         delete this.graphPoints[this.graphPoints.findIndex((point) => point.id === id)];
         this.FieldChanged.Fire();
+    }
+
+    AutoGenerateField(fieldPath: string) {
+        let src = `${fieldPath}.startPoint.value = ${this.startPoint.value} \n`;
+        src += `${fieldPath}.endPoint.value = ${this.endPoint.value} \n`;
+
+        const graphPoints = this.GetPoints();
+        for (const point of graphPoints) {
+            src += `${fieldPath}:AddPoint(${point.time}, ${point.value}) \n`;
+        }
+
+        return src;
     }
 
     SerializeData() {

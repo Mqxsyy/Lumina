@@ -35,18 +35,10 @@ export function ColorPickerField({ Label, ColorPicker }: Props) {
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-            <uilistlayout
-                FillDirection="Horizontal"
-                VerticalAlignment={"Center"}
-                Padding={new UDim(0, 10 * zoomScale)}
-            />
+            <uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
 
             <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} />
-            <Div
-                Size={new UDim2(1, 0, 0, 20 * zoomScale)}
-                BackgroundColor={ColorPicker.GetColor()}
-                onMouseButton1Down={OnMouseButton1Down}
-            >
+            <Div Size={new UDim2(1, 0, 0, 20 * zoomScale)} BackgroundColor={ColorPicker.GetColor()} onMouseButton1Down={OnMouseButton1Down}>
                 <uicorner CornerRadius={StyleProperties.CornerRadius} />
                 <uiflexitem FlexMode="Fill" />
             </Div>

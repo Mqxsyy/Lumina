@@ -43,11 +43,7 @@ export function BasicTextLabel({
         <textlabel
             AnchorPoint={AnchorPoint}
             Position={Position}
-            Size={
-                IsAffectedByZoom
-                    ? new UDim2(Size.X.Scale, Size.X.Offset, Size.Y.Scale, Size.Y.Offset * zoomScale)
-                    : Size
-            }
+            Size={IsAffectedByZoom ? new UDim2(Size.X.Scale, Size.X.Offset, Size.Y.Scale, Size.Y.Offset * zoomScale) : Size}
             AutomaticSize={AutomaticSize}
             BackgroundTransparency={1}
             BorderSizePixel={0}

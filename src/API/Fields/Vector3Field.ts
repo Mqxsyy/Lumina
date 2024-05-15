@@ -159,6 +159,36 @@ export class Vector3Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
+    AutoGenerateField(fieldPath: string) {
+        let src = "";
+
+        if (this.boundNodeX !== undefined) {
+            src += "\n";
+            src += this.boundNodeX.GetAutoGenerationCode(`${fieldPath}.BindX(..)`);
+            src += "\n";
+        } else {
+            src += `${fieldPath}.SetX(${this.x}) \n`;
+        }
+
+        if (this.boundNodeY !== undefined) {
+            src += "\n";
+            src += this.boundNodeY.GetAutoGenerationCode(`${fieldPath}.BindY(..)`);
+            src += "\n";
+        } else {
+            src += `${fieldPath}.SetY(${this.y}) \n`;
+        }
+
+        if (this.boundNodeZ !== undefined) {
+            src += "\n";
+            src += this.boundNodeZ.GetAutoGenerationCode(`${fieldPath}.BindZ(..)`);
+            src += "\n";
+        } else {
+            src += `${fieldPath}.SetZ(${this.z}) \n`;
+        }
+
+        return src;
+    }
+
     SerializeData() {
         return {
             x: this.x,

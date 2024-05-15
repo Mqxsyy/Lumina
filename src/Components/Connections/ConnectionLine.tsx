@@ -28,9 +28,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
         const canvasPositionUDim2 = canvasData.current.Position;
         const canvasPosition = new Vector2(canvasPositionUDim2.X.Offset, canvasPositionUDim2.Y.Offset);
 
-        const startPoint1 = data.startElement.AbsolutePosition.add(data.startElement.AbsoluteSize.div(2)).sub(
-            canvasPosition,
-        );
+        const startPoint1 = data.startElement.AbsolutePosition.add(data.startElement.AbsoluteSize.div(2)).sub(canvasPosition);
 
         const endPoint1 =
             data.endElement === undefined
@@ -71,19 +69,12 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
             rotation: 0,
         } as LineSegment;
         setEndSegment(endSegment);
-    }, [
-        data.startElement.AbsolutePosition,
-        data.endPos,
-        data.endElement?.AbsolutePosition,
-        canvasData.current.Position,
-    ]);
+    }, [data.startElement.AbsolutePosition, data.endPos, data.endElement?.AbsolutePosition, canvasData.current.Position]);
 
     return (
         <>
             <frame
-                AnchorPoint={
-                    startSegment.position.X < endSegment.position.X ? new Vector2(0, 0.5) : new Vector2(1, 0.5)
-                }
+                AnchorPoint={startSegment.position.X < endSegment.position.X ? new Vector2(0, 0.5) : new Vector2(1, 0.5)}
                 Position={UDim2.fromOffset(startSegment.position.X, startSegment.position.Y)}
                 Rotation={startSegment.rotation}
                 Size={UDim2.fromOffset(startSegment.length + 1, math.clamp(3 * zoomScale, 1, math.huge))}
@@ -109,9 +100,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 <uicorner CornerRadius={new UDim(1, 10)} />
             </frame>
             <frame
-                AnchorPoint={
-                    startSegment.position.X < endSegment.position.X ? new Vector2(1, 0.5) : new Vector2(0, 0.5)
-                }
+                AnchorPoint={startSegment.position.X < endSegment.position.X ? new Vector2(1, 0.5) : new Vector2(0, 0.5)}
                 Position={UDim2.fromOffset(endSegment.position.X, endSegment.position.Y)}
                 Rotation={endSegment.rotation}
                 Size={UDim2.fromOffset(endSegment.length + 1, math.clamp(3 * zoomScale, 1, math.huge))}

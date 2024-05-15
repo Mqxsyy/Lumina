@@ -1,20 +1,20 @@
-import { ParticlePlane } from "API/Nodes/Render/ParticlePlane";
+import { PlaneParticle } from "API/Nodes/Render/PlaneParticle";
 
-export function AutogenParticlePlane(node: ParticlePlane) {
-    const className = `Lifetime${node.id}`;
-    const varName = `lifetime${node.id}`;
+export function AutogenPlaneParticle(node: PlaneParticle) {
+    const className = `PlaneParticle${node.id}`;
+    const varName = `planeParticle${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Render", "ParticlePlane").ParticlePlane \n`;
+    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Render", "PlaneParticle").PlaneParticle \n`;
     src += `local ${varName} = ${className}.new() \n`;
 
-    src += `${varName}.nodeFields.orientation.SetOrientation(${node.nodeFields.orientation.GetOrientation()}) \n`;
-    src += `${varName}.nodeFields.assetId.SetNumber(${node.nodeFields.assetId.GetNumber()}) \n`;
-    src += `${varName}.nodeFields.imageSize.SetVector2(${node.nodeFields.imageSize.GetX()}, ${node.nodeFields.imageSize.GetY()}) \n`;
-    src += `${varName}.nodeFields.spriteSheetRows.SetNumber(${node.nodeFields.spriteSheetRows.GetNumber()}) \n`;
-    src += `${varName}.nodeFields.spriteSheetColumns.SetNumber(${node.nodeFields.spriteSheetColumns.GetNumber()}) \n`;
-    src += `${varName}.nodeFields.spriteSheetFrameCount.SetNumber(${node.nodeFields.spriteSheetFrameCount.GetNumber()}) \n`;
+    src += node.nodeFields.orientation.AutoGenerateField(`${varName}.nodeFields.orientation`);
+    src += node.nodeFields.assetId.AutoGenerateField(`${varName}.nodeFields.assetId`);
+    src += node.nodeFields.doubleSided.AutoGenerateField(`${varName}.nodeFields.doubleSided`);
+    src += node.nodeFields.imageSize.AutoGenerateField(`${varName}.nodeFields.imageSize`);
+    src += node.nodeFields.spriteSheetRows.AutoGenerateField(`${varName}.nodeFields.spriteSheetRows`);
+    src += node.nodeFields.spriteSheetColumns.AutoGenerateField(`${varName}.nodeFields.spriteSheetColumns`);
+    src += node.nodeFields.spriteSheetFrameCount.AutoGenerateField(`${varName}.nodeFields.spriteSheetFrameCount`);
 
     src += `nodeSystem:AddNode(${varName})`;
-
     return src;
 }

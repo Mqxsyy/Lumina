@@ -7,15 +7,7 @@ export function AutoGenSetTransparency(node: SetTransparency) {
     let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetTransparency").SetTransparency \n`;
     src += `local ${varName} = ${className}.new() \n`;
 
-    if (node.nodeFields.transparency.boundNode !== undefined) {
-        src += "\n";
-        src += node.nodeFields.transparency.boundNode.GetAutoGenerationCode(
-            `${varName}.nodeFields.transparency.BindNumber(..)`,
-        );
-        src += "\n";
-    } else {
-        src += `${varName}.nodeFields.transparency.SetNumber(${node.nodeFields.transparency.GetNumber()}) \n`;
-    }
+    src += node.nodeFields.transparency.AutoGenerateField(`${varName}.nodeFields.transparency`);
 
     src += `nodeSystem:AddNode(${varName})`;
     return src;

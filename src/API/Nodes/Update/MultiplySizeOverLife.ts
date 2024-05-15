@@ -1,6 +1,6 @@
 import { LineGraphField } from "API/Fields/LineGraphField";
 import { NodeGroups } from "API/NodeGroup";
-import { GetParticleData } from "API/ParticleService";
+import { ParticleData } from "API/ParticleService";
 import { AutoGenMultiplySizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenMultiplySizeOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -19,15 +19,15 @@ export class MultiplySizeOverLife extends UpdateNode {
         super();
     }
 
-    Update(id: number) {
-        const particleData = GetParticleData(id);
-        const lifetime = (os.clock() - particleData.spawnTime) / particleData.lifetime;
+    Update(data: ParticleData) {
+        const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
         const muliplier = this.nodeFields.graph.GetNumber(lifetime) - 1;
 
-        const x = particleData.sizeNormal.X * muliplier;
-        const y = particleData.sizeNormal.Y * muliplier;
+        const x = data.sizeNormal.X * muliplier;
+        const y = data.sizeNormal.Y * muliplier;
+        const z = data.sizeNormal.Z * muliplier;
 
-        particleData.sizeMultiplier = new Vector3(x, y, 0);
+        data.sizeMultiplier = new Vector3(x, y, z);
     }
 
     GetNodeName(): string {

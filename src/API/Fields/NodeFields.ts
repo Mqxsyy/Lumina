@@ -6,6 +6,7 @@ import { NumberField } from "./NumberField";
 import { OrientationField } from "./OrientationField";
 import { Vector2Field } from "./Vector2Field";
 import { Vector3Field } from "./Vector3Field";
+import { ShapeField } from "./ShapeField";
 
 export type NodeFields =
     | NumberField
@@ -13,6 +14,7 @@ export type NodeFields =
     | Vector2Field
     | Vector3Field
     | OrientationField
+    | ShapeField
     | ColorField
     | LineGraphField
     | ColorRampField;

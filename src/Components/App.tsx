@@ -2,8 +2,11 @@ import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";
+import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { DisableDropdown, DropdownDataChanged, GetDropdownData } from "Services/DropdownService";
+import { LoadingFinished } from "Services/Saving/LoadService";
+import { SetIsHoldingControl, SetSelectNodeId, SetSelectSystemId } from "Services/SelectionService";
 import { StyleColors } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas, WidgetSizeChanged } from "Windows/MainWindow";
 import { GetWindow, Windows } from "Windows/WindowSevice";
@@ -16,14 +19,12 @@ import Dropdown from "./Basic/Dropdown";
 import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
-import { LoadingFinished } from "Services/Saving/LoadService";
-import { SetSelectNodeId, SetIsHoldingControl, SetSelectSystemId } from "Services/SelectionService";
-import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 
 // MAYBE-TODO: add undo & redo
 // TODO: redeisgn UI to be more clean and minimalistic
 // TODO: in autogen make fields gen themselves
 // OPTIMIZE: recheck all forceRenders, some may not be required because the app wasn't rerendering every 10 changes
+// OPTIMIZE: use ParallelLuau
 
 // No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
 
@@ -43,9 +44,7 @@ export function App() {
         const widgetSize = GetWindow(Windows.Lumina)!.AbsoluteSize.mul(0.5);
 
         const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
-        const mouseOffset = mousePosition
-            .sub(canvasDataRef.current.Position)
-            .add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
+        const mouseOffset = mousePosition.sub(canvasDataRef.current.Position).add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
 
         RunService.BindToRenderStep("MoveCanvas", Enum.RenderPriority.Input.Value, () => moveCanvas(mouseOffset));
     };
@@ -82,10 +81,7 @@ export function App() {
         const delta = newMousePosition.sub(mousePosition);
 
         UpdateCanvasData((canvasData) => {
-            canvasData.Position = UDim2.fromOffset(
-                canvasData.Position.X.Offset - delta.X,
-                canvasData.Position.Y.Offset - delta.Y,
-            );
+            canvasData.Position = UDim2.fromOffset(canvasData.Position.X.Offset - delta.X, canvasData.Position.Y.Offset - delta.Y);
 
             canvasData.Size = UDim2.fromOffset(widgetSize.X, widgetSize.Y).add(
                 UDim2.fromOffset(

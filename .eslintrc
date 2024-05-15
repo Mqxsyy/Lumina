@@ -9,18 +9,16 @@
     },
     "ignorePatterns": ["/out"],
     "plugins": ["@typescript-eslint", "roblox-ts", "prettier"],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:roblox-ts/recommended",
-        "plugin:prettier/recommended"
-    ],
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:roblox-ts/recommended", "plugin:prettier/recommended"],
     "rules": {
         "prettier/prettier": [
             "warn",
             {
-                "endOfLine": "auto",
-                "useTabs": false
+                "printWidth": 140,
+                "useTabs": false,
+                "tabWidth": 4,
+                "trailingComma": "all",
+                "endOfLine": "auto"
             }
         ]
     }

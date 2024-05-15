@@ -1,5 +1,5 @@
 import { NumberField } from "API/Fields/NumberField";
-import { GetParticleData, UpdateParticleData } from "API/ParticleService";
+import { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetRotationZ } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZ";
 import { InitializeNode } from "./InitializeNode";
@@ -23,11 +23,8 @@ export class SetRotationZ extends InitializeNode {
         };
     }
 
-    Initialize(id: number) {
-        UpdateParticleData(id, (data) => {
-            data.rotation = new Vector3(data.rotation.X, data.rotation.Y, this.nodeFields.rotation.GetNumber());
-            return data;
-        });
+    Initialize(data: ParticleData) {
+        data.rotation = new Vector3(data.rotation.X, data.rotation.Y, this.nodeFields.rotation.GetNumber());
     }
 
     GetNodeName(): string {

@@ -1,7 +1,7 @@
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { FrameRateMultiplier, Rand, RoundDecimal } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { GetParticleData, UpdateParticleData } from "API/ParticleService";
+import { ParticleData } from "API/ParticleService";
 import { AutoGenAddRotationZRandom } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZRandom";
 import { UpdateNode } from "./UpdateNode";
 
@@ -26,18 +26,15 @@ export class AddRotationZRandom extends UpdateNode {
         };
     }
 
-    Update(id: number) {
-        let zAddition = this.storedValues.get(id);
+    Update(data: ParticleData) {
+        let zAddition = this.storedValues.get(data.particleId);
         if (zAddition === undefined) {
             const range = this.nodeFields.range.GetVector2();
             zAddition = RoundDecimal(Rand.NextNumber(range.x, range.y) * FrameRateMultiplier, 0.01);
-            this.storedValues.set(id, zAddition);
+            this.storedValues.set(data.particleId, zAddition);
         }
 
-        UpdateParticleData(id, (data) => {
-            data.rotation = new Vector3(data.rotation.X, data.rotation.Y, data.rotation.Z + zAddition);
-            return data;
-        });
+        data.rotation = new Vector3(data.rotation.X, data.rotation.Y, data.rotation.Z + zAddition);
     }
 
     GetNodeName(): string {

@@ -3,7 +3,7 @@ import { SetPosition } from "API/Nodes/Initialize/SetPosition";
 import { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
 import { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
 import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
-import { CreateParticlePlane } from "Components/Nodes/Render/ParticlePlane";
+import { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 import { CreateConstantSpawn } from "Components/Nodes/Spawn/ConstantSpawn";
 import { CreateSetVelocity } from "Lists/NodeListCreateBarrel";
 import { CreateEmptySystem } from "./CreateEmptySystem";
@@ -36,7 +36,7 @@ export function CreateBasicSystem() {
             systemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocity.data.node.id);
         });
 
-        const particlePlane = CreateParticlePlane();
+        const particlePlane = CreatePlaneParticle();
         particlePlane.elementLoaded.Connect(() => {
             systemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
         });

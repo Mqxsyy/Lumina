@@ -43,13 +43,17 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Set Position To Parent",
             create: () => CreateBarrel.CreateSetPositionToParent(),
         },
+        [NameBarrel.SetRotationXYZName]: {
+            name: "Set Rotation XYZ",
+            create: () => CreateBarrel.CreateSetRotationXYZ(),
+        },
         [NameBarrel.SetRotationZName]: {
             name: "Set Rotation Z",
             create: () => CreateBarrel.CreateSetRotationZ(),
         },
         [NameBarrel.SetRotationZRandomName]: {
             name: "Set Rotation Z Random",
-            create: () => CreateBarrel.CreateRotationZRandom(),
+            create: () => CreateBarrel.CreateSetRotationZ(),
         },
         [NameBarrel.SetSizeName]: {
             name: "Set Size",
@@ -58,6 +62,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         [NameBarrel.SetSizeRandomName]: {
             name: "Set Size Random",
             create: () => CreateBarrel.CreateSetSizeRandom(),
+        },
+        [NameBarrel.SetSizeXYZName]: {
+            name: "Set Size XYZ",
+            create: () => CreateBarrel.CreateSetSizeXYZ(),
         },
         [NameBarrel.SetTransparencyName]: {
             name: "Set Transparency",
@@ -73,6 +81,14 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         },
     },
     [NodeGroups.Update]: {
+        [NameBarrel.AddRotationXYZName]: {
+            name: "Add Rotation XYZ",
+            create: () => CreateBarrel.CreateAddRotationXYZ(),
+        },
+        [NameBarrel.AddRotationXYZRandomName]: {
+            name: "Add Rotation XYZ Random",
+            create: () => CreateBarrel.CreateAddRotationXYZRandom(),
+        },
         [NameBarrel.AddRotationZName]: {
             name: "Add Rotation Z",
             create: () => CreateBarrel.CreateAddRotationZ(),
@@ -84,6 +100,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         [NameBarrel.DragName]: {
             name: "Drag",
             create: () => CreateBarrel.CreateDrag(),
+        },
+        [NameBarrel.MultiplyVelocityOverLifeName]: {
+            name: "Multiply Velocity Over Life",
+            create: () => CreateBarrel.CreateMultiplyVelocityOverLife(),
         },
         [NameBarrel.MultiplySizeOverLifeName]: {
             name: "Multiply Size Over Life",
@@ -111,9 +131,13 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         },
     },
     [NodeGroups.Render]: {
-        [NameBarrel.ParticlePlaneName]: {
-            name: "Plane",
-            create: () => CreateBarrel.CreateParticlePlane(),
+        [NameBarrel.PlaneParticleName]: {
+            name: "Plane Particle",
+            create: () => CreateBarrel.CreatePlaneParticle(),
+        },
+        [NameBarrel.VolumetricParticleName]: {
+            name: "Volumetric Particle",
+            create: () => CreateBarrel.CreateVolumetricParticle(),
         },
     },
     [NodeGroups.Logic]: {

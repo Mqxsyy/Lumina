@@ -3,7 +3,7 @@ import { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
 import { SetPosition } from "API/Nodes/Initialize/SetPosition";
 import { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
 import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
-import { CreateParticlePlane } from "Components/Nodes/Render/ParticlePlane";
+import { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 import { CreateBurstSpawn } from "Components/Nodes/Spawn/BurstSpawn";
 import { CreateSetLifetimeRandom, CreateSetVelocityRandom } from "Lists/NodeListCreateBarrel";
 import { CreateEmptySystem } from "./CreateEmptySystem";
@@ -39,7 +39,7 @@ export function CreateBurstSystem() {
             systemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.data.node.id);
         });
 
-        const particlePlane = CreateParticlePlane();
+        const particlePlane = CreatePlaneParticle();
         particlePlane.elementLoaded.Connect(() => {
             systemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
         });

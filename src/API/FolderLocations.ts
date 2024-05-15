@@ -31,6 +31,19 @@ export function GetPlaneParticlesFolder(): Folder {
     return planeParticlesFolder as Folder;
 }
 
+export function GetVolumetricParticlesFolder(): Folder {
+    const liveParticlesFolder = GetLiveParticlesFolder();
+
+    let volumetricParticlesFolder = liveParticlesFolder.FindFirstChild("Volumetric Particles");
+    if (volumetricParticlesFolder === undefined) {
+        volumetricParticlesFolder = new Instance("Folder");
+        volumetricParticlesFolder.Name = "Volumetric Particles";
+        volumetricParticlesFolder.Parent = liveParticlesFolder;
+    }
+
+    return volumetricParticlesFolder as Folder;
+}
+
 // let livePlanarParticlesFolder = StarterGui.FindFirstChild("Lumina Planar Particles");
 // if (livePlanarParticlesFolder === undefined) {
 // 	livePlanarParticlesFolder = new Instance("ScreenGui");

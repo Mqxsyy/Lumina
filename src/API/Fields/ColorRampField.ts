@@ -122,6 +122,21 @@ export class ColorRampField extends NodeField {
         this.FieldChanged.Fire();
     }
 
+    AutoGenerateField(fieldPath: string) {
+        const startPoint = this.startPoint.color;
+        let src = `${fieldPath}.startPoint.color.SetHSV(${startPoint.hue}, ${startPoint.saturation}, ${startPoint.value}) \n`;
+
+        const endPoint = this.endPoint.color;
+        src += `${fieldPath}.endPoint.color.SetHSV(${endPoint.hue}, ${endPoint.saturation}, ${endPoint.value}) \n`;
+
+        const rampPoints = this.GetPoints();
+        for (const point of rampPoints) {
+            src += `${fieldPath}:AddPoint(${point.time}, Vector3.new(${point.color.hue}, ${point.color.saturation}, ${point.color.value})) \n`;
+        }
+
+        return src;
+    }
+
     SerializeData() {
         return {
             startPoint: {

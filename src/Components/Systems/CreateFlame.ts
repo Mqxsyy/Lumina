@@ -5,7 +5,7 @@ import { SetPosition } from "API/Nodes/Initialize/SetPosition";
 import { SetRotationZRandom } from "API/Nodes/Initialize/SetRotationZRandom";
 import { SetSizeRandom } from "API/Nodes/Initialize/SetSizeRandom";
 import { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
-import { ParticlePlane } from "API/Nodes/Render/ParticlePlane";
+import { PlaneParticle } from "API/Nodes/Render/PlaneParticle";
 import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
 import { AddRotationZRandom } from "API/Nodes/Update/AddRotationZRandom";
 import { Drag } from "API/Nodes/Update/Drag";
@@ -14,7 +14,7 @@ import { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
 import { SetTransparencyOverLife } from "API/Nodes/Update/SetTransparencyOverLife";
 import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 import { CreateSetRotationZRandom } from "Components/Nodes/Initialize/SetRotationZRandom";
-import { CreateParticlePlane } from "Components/Nodes/Render/ParticlePlane";
+import { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 import { CreateConstantSpawn } from "Components/Nodes/Spawn/ConstantSpawn";
 import {
     CreateAddRotationZRandom,
@@ -127,12 +127,12 @@ export function CreateFlameSystem() {
         });
 
         // rend
-        const particlePlane = CreateParticlePlane();
-        (particlePlane.data.node as ParticlePlane).nodeFields.assetId.SetNumber(14151781963);
-        (particlePlane.data.node as ParticlePlane).nodeFields.imageSize.SetVector2(1024, 1024);
-        (particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetRows.SetNumber(4);
-        (particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetColumns.SetNumber(4);
-        (particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetFrameCount.SetNumber(16);
+        const particlePlane = CreatePlaneParticle();
+        (particlePlane.data.node as PlaneParticle).nodeFields.assetId.SetNumber(14151781963);
+        (particlePlane.data.node as PlaneParticle).nodeFields.imageSize.SetVector2(1024, 1024);
+        (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetRows.SetNumber(4);
+        (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetColumns.SetNumber(4);
+        (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetFrameCount.SetNumber(16);
         particlePlane.elementLoaded.Connect(() => {
             flameSystemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
         });
@@ -224,12 +224,12 @@ export function CreateFlameSystem() {
         });
 
         //rend
-        const particlePlane = CreateParticlePlane();
-        (particlePlane.data.node as ParticlePlane).nodeFields.assetId.SetNumber(14151754389);
-        (particlePlane.data.node as ParticlePlane).nodeFields.imageSize.SetVector2(1024, 1024);
-        (particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetRows.SetNumber(4);
-        (particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetColumns.SetNumber(4);
-        (particlePlane.data.node as ParticlePlane).nodeFields.spriteSheetFrameCount.SetNumber(16);
+        const particlePlane = CreatePlaneParticle();
+        (particlePlane.data.node as PlaneParticle).nodeFields.assetId.SetNumber(14151754389);
+        (particlePlane.data.node as PlaneParticle).nodeFields.imageSize.SetVector2(1024, 1024);
+        (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetRows.SetNumber(4);
+        (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetColumns.SetNumber(4);
+        (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetFrameCount.SetNumber(16);
         particlePlane.elementLoaded.Connect(() => {
             smokeSystemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
         });

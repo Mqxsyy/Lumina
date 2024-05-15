@@ -5,6 +5,8 @@ import { NodeGroups } from "API/NodeGroup";
 import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
 import { LogicNode } from "./LogicNode";
 
+// TODO: add controls when to randomize
+
 export const RandomNumberName = "RandomNumber";
 export const RandomNumberFieldNames = {
     range: "range",

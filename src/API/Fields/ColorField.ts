@@ -45,6 +45,10 @@ export class ColorField extends NodeField {
         this.FieldChanged.Fire();
     };
 
+    AutoGenerateField(fieldPath: string) {
+        return `${fieldPath}.SetHSV(${this.hue}, ${this.saturation}, ${this.value}) \n`;
+    }
+
     SerializeData() {
         return {
             hue: this.hue,

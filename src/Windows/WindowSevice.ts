@@ -29,7 +29,7 @@ const windows = {
     },
     [Windows.RequestUpdate]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
-        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 300, 150, 200, 100),
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 150, 400, 150),
     },
 };
 
