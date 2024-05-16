@@ -26,11 +26,7 @@ export default function BooleanField({ NodeField, Label }: Props) {
 
     return (
         <imagebutton Size={UDim2.fromScale(1, 0)} Transparency={1} AutoButtonColor={false} AutomaticSize="Y">
-            <uilistlayout
-                FillDirection={"Horizontal"}
-                VerticalAlignment={"Center"}
-                Padding={new UDim(0, 10 * zoomScale)}
-            />
+            <uilistlayout FillDirection={"Horizontal"} VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
 
             <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
             <CheckBox

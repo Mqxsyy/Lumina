@@ -226,8 +226,7 @@ function LineGraph() {
 
                 const position = UDim2.fromOffset(
                     positionPercent.X * windowSize.X,
-                    positionPercent.Y * windowSize.Y -
-                        RemapValue(maxValue - point.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
+                    positionPercent.Y * windowSize.Y - RemapValue(maxValue - point.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
                 );
 
                 if (index === 0 || index === graphAPIRef.current!.GetAllPoints().size() - 1) {
@@ -313,17 +312,10 @@ function LineGraph() {
                         Padding={new UDim(0, 10)}
                     />
 
-                    <BasicTextLabel
-                        Size={new UDim2(0.25, 0, 0, 20)}
-                        TextXAlignment={"Right"}
-                        Text="Time"
-                        IsAffectedByZoom={false}
-                    />
+                    <BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Time" IsAffectedByZoom={false} />
                     <NumberInput
                         Size={new UDim2(0.75, 0, 0, 20)}
-                        Text={
-                            selectedPointRef.current === undefined ? "" : () => tostring(selectedPointRef.current!.time)
-                        }
+                        Text={selectedPointRef.current === undefined ? "" : () => tostring(selectedPointRef.current!.time)}
                         NumberChanged={controlsTimeChanged}
                         Disabled={selectedPointRef.current === undefined || !selectedPointRef.current.canEditTime}
                         IsAffectedByZoom={false}
@@ -338,19 +330,10 @@ function LineGraph() {
                         Padding={new UDim(0, 10)}
                     />
 
-                    <BasicTextLabel
-                        Size={new UDim2(0.25, 0, 0, 20)}
-                        TextXAlignment={"Right"}
-                        Text="Value"
-                        IsAffectedByZoom={false}
-                    />
+                    <BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Value" IsAffectedByZoom={false} />
                     <NumberInput
                         Size={new UDim2(0.75, 0, 0, 20)}
-                        Text={
-                            selectedPointRef.current === undefined
-                                ? ""
-                                : () => tostring(selectedPointRef.current!.value)
-                        }
+                        Text={selectedPointRef.current === undefined ? "" : () => tostring(selectedPointRef.current!.value)}
                         NumberChanged={controlsValueChanged}
                         Disabled={selectedPointRef.current === undefined}
                         IsAffectedByZoom={false}

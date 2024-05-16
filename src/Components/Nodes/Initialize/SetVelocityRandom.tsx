@@ -1,9 +1,5 @@
 import React from "@rbxts/react";
-import { CapitalizeFirstLetter } from "API/Lib";
-import {
-    SetVelocityRandom as SetVelocityRandomAPI,
-    SetVelocityRandomFieldNames,
-} from "API/Nodes/Initialize/SetVelocityRandom";
+import { SetVelocityRandom as SetVelocityRandomAPI, SetVelocityRandomFieldNames } from "API/Nodes/Initialize/SetVelocityRandom";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";

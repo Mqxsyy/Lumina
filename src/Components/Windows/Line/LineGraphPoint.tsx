@@ -48,11 +48,7 @@ export default function LineGraphPoint({ Id, Position, OnSelect, UpdatePoint, Re
             ImageTransparency={1}
             AutoButtonColor={false}
         >
-            <Div
-                onMouseButton1Down={onMouseButton1Down}
-                onMouseButton1Up={onMouseButton1Up}
-                onMouseButton2Up={onMouseButton2Up}
-            />
+            <Div onMouseButton1Down={onMouseButton1Down} onMouseButton1Up={onMouseButton1Up} onMouseButton2Up={onMouseButton2Up} />
             <Div
                 AnchorPoint={new Vector2(0.5, 0.5)}
                 Position={UDim2.fromScale(0.5, 0.5)}

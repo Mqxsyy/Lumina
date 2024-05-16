@@ -73,11 +73,7 @@ export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, Re
             ImageTransparency={1}
             AutoButtonColor={false}
         >
-            <Div
-                onMouseButton1Down={onMouseButton1Down}
-                onMouseButton1Up={onMouseButton1Up}
-                onMouseButton2Down={onMouseButton2Down}
-            />
+            <Div onMouseButton1Down={onMouseButton1Down} onMouseButton1Up={onMouseButton1Up} onMouseButton2Down={onMouseButton2Down} />
             <imagelabel
                 AnchorPoint={new Vector2(0.5, 0)}
                 Position={UDim2.fromScale(0.5, 0)}

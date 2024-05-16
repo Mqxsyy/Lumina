@@ -1,8 +1,7 @@
 import React from "@rbxts/react";
-import { Vector3Field } from "Components/NodeFields/Vector3Field";
+import { SetPositionToParent as SetPositionToParentAPI } from "API/Nodes/Initialize/SetPositionToParent";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
-import { SetPositionToParent as SetPositionToParentAPI } from "API/Nodes/Initialize/SetPositionToParent";
 
 export function CreateSetPositionToParent() {
     return AddNode(new SetPositionToParentAPI(), (data: NodeData) => {

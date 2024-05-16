@@ -46,12 +46,7 @@ export function GetSystemById(id: number) {
     return NodeSystemCollection.find((system) => system.data.id === id);
 }
 
-export function AddSystem(
-    system: NodeSystem,
-    systemName: string,
-    create: (data: NodeSystemData) => React.Element,
-    position?: Vector2,
-) {
+export function AddSystem(system: NodeSystem, systemName: string, create: (data: NodeSystemData) => React.Element, position?: Vector2) {
     const collectionEntry: NodeSystemCollectioEntry = {
         data: {
             id: GetNextSystemId(),

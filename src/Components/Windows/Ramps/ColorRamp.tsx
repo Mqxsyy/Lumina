@@ -150,9 +150,7 @@ function ColorRamp() {
                 BackgroundColor={StyleColors.FullWhite}
                 onMouseButton1Down={onClick}
             >
-                <uigradient
-                    Color={rampAPIRef.current === undefined ? placeholderGradient : rampAPIRef.current.GetGradient()}
-                />
+                <uigradient Color={rampAPIRef.current === undefined ? placeholderGradient : rampAPIRef.current.GetGradient()} />
 
                 {rampAPIRef.current?.GetAllPoints().map((point, _) => {
                     return (
@@ -166,11 +164,7 @@ function ColorRamp() {
                     );
                 })}
             </Div>
-            <Div
-                Position={UDim2.fromScale(0, 0.7)}
-                Size={UDim2.fromScale(1, 0.3)}
-                BackgroundColor={StyleColors.Primary}
-            >
+            <Div Position={UDim2.fromScale(0, 0.7)} Size={UDim2.fromScale(1, 0.3)} BackgroundColor={StyleColors.Primary}>
                 <uilistlayout FillDirection={Enum.FillDirection.Horizontal} Padding={new UDim(0, 10)} />
 
                 <Div Size={UDim2.fromScale(0.5, 1)}>
@@ -181,12 +175,7 @@ function ColorRamp() {
                         Padding={new UDim(0, 10)}
                     />
 
-                    <BasicTextLabel
-                        Size={new UDim2(0.4, 0, 0, 20)}
-                        Text={"Time:"}
-                        TextXAlignment={"Right"}
-                        IsAffectedByZoom={false}
-                    />
+                    <BasicTextLabel Size={new UDim2(0.4, 0, 0, 20)} Text={"Time:"} TextXAlignment={"Right"} IsAffectedByZoom={false} />
                     {selectedPointRef.current !== undefined ? (
                         <NumberInput
                             Size={new UDim2(0.4, 0, 0, 20)}

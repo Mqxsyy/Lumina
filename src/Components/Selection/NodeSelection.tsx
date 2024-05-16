@@ -75,23 +75,12 @@ export function NodeSelection({ Position, ToggleSelection }: Props) {
 
                     <NodeSearchInput TextChanged={textChanged} />
 
-                    <frame
-                        Size={new UDim2(0.9, 0, 0, DIVIDER_SIZE_Y)}
-                        BackgroundColor3={StyleColors.White}
-                        Transparency={0.5}
-                    />
+                    <frame Size={new UDim2(0.9, 0, 0, DIVIDER_SIZE_Y)} BackgroundColor3={StyleColors.White} Transparency={0.5} />
 
                     {/* For some reason ternary doesn't want to work in this case */}
                     {searchedSelection.size() > 0 && (
                         <Div
-                            Size={
-                                new UDim2(
-                                    1,
-                                    0,
-                                    0,
-                                    searchedSelection.size() < 8 ? searchedSelection.size() * 30 + 1 : 8 * 30 + 1,
-                                )
-                            }
+                            Size={new UDim2(1, 0, 0, searchedSelection.size() < 8 ? searchedSelection.size() * 30 + 1 : 8 * 30 + 1)}
                             BackgroundColor={StyleColors.Primary}
                         >
                             <uicorner CornerRadius={StyleProperties.CornerRadius} />
@@ -125,11 +114,7 @@ export function NodeSelection({ Position, ToggleSelection }: Props) {
 
                     {displayDefaultCategories && (
                         <Div Size={new UDim2(1, 0, 0, 6 * 30 - 5)}>
-                            <uilistlayout
-                                FillDirection={"Vertical"}
-                                HorizontalAlignment={"Left"}
-                                Padding={new UDim(0, 5)}
-                            />
+                            <uilistlayout FillDirection={"Vertical"} HorizontalAlignment={"Left"} Padding={new UDim(0, 5)} />
 
                             <NodeCategorySelectionButton
                                 Text="Systems"

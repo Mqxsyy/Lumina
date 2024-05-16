@@ -5,14 +5,7 @@ import { GetSavesFolder } from "API/FolderLocations";
 import { Node } from "API/Nodes/Node";
 import { GetAllSystems, NodeSystemData } from "Services/NodeSystemService";
 import { GetAllNodes, GetNodeById, NodeConnectionIn } from "Services/NodesService";
-import {
-    SaveData,
-    SerializedConnection,
-    SerializedField,
-    SerializedFloatingNode,
-    SerializedNode,
-    SerializedSystem,
-} from "./SaveData";
+import { SaveData, SerializedConnection, SerializedField, SerializedFloatingNode, SerializedNode, SerializedSystem } from "./SaveData";
 
 const savesFolder = GetSavesFolder();
 
@@ -31,9 +24,7 @@ export function SaveToFile() {
     });
 
     const allNodes = GetAllNodes();
-    const floatingNodes = allNodes.filter(
-        (collectionEnrty) => collectionEnrty.data.node.connectedSystemId === undefined,
-    );
+    const floatingNodes = allNodes.filter((collectionEnrty) => collectionEnrty.data.node.connectedSystemId === undefined);
 
     floatingNodes.forEach((collectionEntry) => {
         const node = collectionEntry.data.node;

@@ -3,13 +3,13 @@ import { CapitalizeFirstLetter } from "API/Lib";
 import { PlaneParticle as PlaneParticleAPI, PlaneParticleFieldNames } from "API/Nodes/Render/PlaneParticle";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
+import BooleanField from "Components/NodeFields/BooleanField";
 import NumberField from "Components/NodeFields/NumberField";
+import OrientationField from "Components/NodeFields/OrientationField";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
-import OrientationField from "Components/NodeFields/OrientationField";
-import BooleanField from "Components/NodeFields/BooleanField";
 
 export function CreatePlaneParticle() {
     return AddNode(new PlaneParticleAPI(), (data: NodeData) => {
@@ -27,10 +27,7 @@ function PlaneParticle({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <OrientationField
-                NodeField={(data.node as PlaneParticleAPI).nodeFields.orientation}
-                Label={"Orientation"}
-            />
+            <OrientationField NodeField={(data.node as PlaneParticleAPI).nodeFields.orientation} Label={"Orientation"} />
             <NumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as PlaneParticleAPI).nodeFields.assetId}

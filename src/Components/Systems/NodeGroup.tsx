@@ -118,10 +118,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 
                 <Div Size={UDim2.fromScale(1, 0)} AutomaticSize={"Y"}>
                     <uicorner CornerRadius={new UDim(0, 5 * zoomScale)} />
-                    <uilistlayout
-                        Padding={new UDim(0, GROUP_LIST_PADDING * zoomScale)}
-                        HorizontalAlignment={"Center"}
-                    />
+                    <uilistlayout Padding={new UDim(0, GROUP_LIST_PADDING * zoomScale)} HorizontalAlignment={"Center"} />
                     <uistroke
                         Color={StyleColors.FullWhite}
                         Thickness={math.clamp(GROUP_BORDER_THICKNESS * zoomScale, 0.5, math.huge)}
@@ -130,10 +127,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
                         <uigradient
                             Rotation={90}
                             Color={
-                                new ColorSequence([
-                                    new ColorSequenceKeypoint(0, GradientStart),
-                                    new ColorSequenceKeypoint(1, GradientEnd),
-                                ])
+                                new ColorSequence([new ColorSequenceKeypoint(0, GradientStart), new ColorSequenceKeypoint(1, GradientEnd)])
                             }
                         />
                     </uistroke>

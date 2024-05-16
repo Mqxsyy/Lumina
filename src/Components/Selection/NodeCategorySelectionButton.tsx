@@ -13,13 +13,7 @@ interface Props {
     ExposeUnhover: (fn: () => void) => void;
 }
 
-export function NodeCategorySelectionButton({
-    Text,
-    NodeCategory,
-    CategoryUnhoverFunctions,
-    ToggleSelection,
-    ExposeUnhover,
-}: Props) {
+export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhoverFunctions, ToggleSelection, ExposeUnhover }: Props) {
     const [hovering, setHovering] = useState(false);
     const [nodes, setNodes] = useState([] as SelectionEntry[]);
 

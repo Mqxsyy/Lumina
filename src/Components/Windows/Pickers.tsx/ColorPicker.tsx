@@ -71,11 +71,7 @@ function ColorPicker() {
         if (pickerAPIRef.current === undefined) return "FFFFFF";
 
         const color = pickerAPIRef.current.GetColor();
-        const roundedColor = Color3.fromRGB(
-            math.round(color.R * 255),
-            math.round(color.G * 255),
-            math.round(color.B * 255),
-        );
+        const roundedColor = Color3.fromRGB(math.round(color.R * 255), math.round(color.G * 255), math.round(color.B * 255));
 
         return roundedColor.ToHex();
     };
@@ -410,9 +406,7 @@ function ColorPicker() {
                 </Div>
                 <Div
                     Size={new UDim2(0.2, -10, 1, 0)}
-                    BackgroundColor={
-                        pickerAPIRef.current === undefined ? StyleColors.FullWhite : pickerAPIRef.current.GetColor()
-                    }
+                    BackgroundColor={pickerAPIRef.current === undefined ? StyleColors.FullWhite : pickerAPIRef.current.GetColor()}
                 />
             </Div>
         </Div>

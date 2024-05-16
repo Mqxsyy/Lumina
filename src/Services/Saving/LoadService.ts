@@ -3,13 +3,7 @@ import { API_VERSION } from "API/ExportAPI";
 import { NodeGroups } from "API/NodeGroup";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { NodeList } from "Lists/NodeList";
-import {
-    NodeCollectionEntry,
-    NodeConnectionIn,
-    NodeConnectionOut,
-    NodeData,
-    UpdateNodeData,
-} from "Services/NodesService";
+import { NodeCollectionEntry, NodeConnectionIn, NodeConnectionOut, NodeData, UpdateNodeData } from "Services/NodesService";
 import { SaveData, SerializedField, SerializedNode, SerializedSystem } from "./SaveData";
 import { FastEvent } from "API/Bindables/FastEvent";
 
@@ -67,9 +61,7 @@ export function LoadFromFile() {
     for (const node of data.floatingNodes) {
         const nodeCollectionEntry = CreateNode(node.nodeGroup, node.nodeName, node.fields);
         if (nodeCollectionEntry === undefined) {
-            warn(
-                `Node ${node.nodeName} does not exist in group ${node.nodeGroup}. Save data may be outdated or corrupted.`,
-            );
+            warn(`Node ${node.nodeName} does not exist in group ${node.nodeGroup}. Save data may be outdated or corrupted.`);
             continue;
         }
 
@@ -136,9 +128,7 @@ export function LoadFromFile() {
     LoadingFinished.Fire();
 }
 
-export function CreateSystem(
-    system: SerializedSystem,
-): [SerializedSystem, { SerializedNode: SerializedNode; NodeData: NodeData }[]] {
+export function CreateSystem(system: SerializedSystem): [SerializedSystem, { SerializedNode: SerializedNode; NodeData: NodeData }[]] {
     const cachedNodes = [];
 
     const anchorPoint = new Vector2(system.anchorPoint.x, system.anchorPoint.y);
@@ -160,9 +150,7 @@ export function CreateSystem(
         for (const node of nodes) {
             const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields);
             if (nodeCollectionEntry === undefined) {
-                warn(
-                    `Node ${node.nodeName} does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`,
-                );
+                warn(`Node ${node.nodeName} does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`);
                 continue;
             }
 
@@ -194,11 +182,7 @@ export function CreateSystem(
     return [system, cachedNodes];
 }
 
-export function CreateNode(
-    group: NodeGroups,
-    nodeName: string,
-    fields: SerializedField[],
-): NodeCollectionEntry | undefined {
+export function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeCollectionEntry | undefined {
     if (NodeList[group][nodeName] === undefined) return undefined;
 
     const node = NodeList[group][nodeName].create!() as NodeCollectionEntry;

@@ -9,13 +9,7 @@ import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import { GetSystemById, NodeSystemData, RemoveNodeSystem, UpdateSystemData } from "../../Services/NodeSystemService";
 import Div from "../Div";
-import {
-    SYSTEM_BORDER_THICKNESS,
-    SYSTEM_HEADER_HEIGHT,
-    SYSTEM_LIST_PADDING,
-    SYSTEM_PADDING,
-    SYSTEM_WIDTH,
-} from "../SizeConfig";
+import { SYSTEM_BORDER_THICKNESS, SYSTEM_HEADER_HEIGHT, SYSTEM_LIST_PADDING, SYSTEM_PADDING, SYSTEM_WIDTH } from "../SizeConfig";
 import NodeGroup from "./NodeGroup";
 import { GetSelectedSystemId, SetSelectSystemId, selectedSystemIdChanged } from "Services/SelectionService";
 
@@ -180,10 +174,7 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
                         PaddingRight={new UDim(0, SYSTEM_PADDING * zoomScale)}
                         PaddingTop={new UDim(0, SYSTEM_PADDING * zoomScale)}
                     />
-                    <uilistlayout
-                        Padding={new UDim(0, 1 + SYSTEM_LIST_PADDING * zoomScale)}
-                        HorizontalAlignment={"Center"}
-                    />
+                    <uilistlayout Padding={new UDim(0, 1 + SYSTEM_LIST_PADDING * zoomScale)} HorizontalAlignment={"Center"} />
 
                     {useMemo(
                         () => (

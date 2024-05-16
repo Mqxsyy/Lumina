@@ -22,7 +22,6 @@ import { NodeSelection } from "./Selection/NodeSelection";
 
 // MAYBE-TODO: add undo & redo
 // TODO: redeisgn UI to be more clean and minimalistic
-// TODO: in autogen make fields gen themselves
 // OPTIMIZE: recheck all forceRenders, some may not be required because the app wasn't rerendering every 10 changes
 // OPTIMIZE: use ParallelLuau
 
