@@ -4,11 +4,13 @@ export const CFrameZero = new CFrame();
 
 export function RemapValue(value: number, oldMin: number, oldMax: number, newMin: number, newMax: number): number {
     if (value < oldMin || value > oldMax) {
-        error(`Input value is outside the specified range
-            Input: ${value},
-            RangeOld: ${oldMin} - ${oldMax} 
-            RangeNew: ${newMin} - ${newMax}
-        `);
+        let errorString = "";
+        errorString += "Input value is outside the specified range\n";
+        errorString += `Input: ${value}\n`;
+        errorString += `RangeOld: ${oldMin} - ${oldMax}\n`;
+        errorString += `RangeNew: ${newMin} - ${newMax}\n`;
+
+        error(errorString);
     }
 
     const rangeFactor = (newMax - newMin) / (oldMax - oldMin);
