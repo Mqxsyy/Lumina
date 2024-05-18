@@ -1,4 +1,4 @@
-import { NumberField } from "API/Fields/NumberField";
+import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { FrameRateMultiplier, LerpNumber } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { AutoGenDrag } from "../AutoGeneration/UpdateNodes/AutoGenDrag";
@@ -13,19 +13,19 @@ export const DragFieldNames = {
 export class Drag extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
     nodeFields: {
-        drag: NumberField;
+        drag: ConnectableNumberField;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            drag: new NumberField(0),
+            drag: new ConnectableNumberField(0),
         };
     }
 
     Update(data: ParticleData) {
-        const drag = this.nodeFields.drag.GetNumber() * FrameRateMultiplier;
+        const drag = this.nodeFields.drag.GetNumber(data) * FrameRateMultiplier;
         const oldVelocity = data.velocityNormal;
 
         let [x, y, z] = [0, 0, 0];

@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { SetVelocityRandom as SetVelocityRandomAPI, SetVelocityRandomFieldNames } from "API/Nodes/Initialize/SetVelocityRandom";
-import { Vector2Field } from "Components/NodeFields/Vector2Field";
+import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -18,21 +18,21 @@ function SetVelocityRandom({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <Vector2Field
+            <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeX}
                 NodeFieldName={SetVelocityRandomFieldNames.rangeX}
                 Label={"Range X"}
                 ValueLabels={["Min", "Max"]}
             />
-            <Vector2Field
+            <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeY}
                 NodeFieldName={SetVelocityRandomFieldNames.rangeY}
                 Label={"Range Y"}
                 ValueLabels={["Min", "Max"]}
             />
-            <Vector2Field
+            <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetVelocityRandomAPI).nodeFields.rangeZ}
                 NodeFieldName={SetVelocityRandomFieldNames.rangeZ}

@@ -1,5 +1,5 @@
 import { RunService, Workspace } from "@rbxts/services";
-import { ShapeField, Shapes } from "API/Fields/ShapeField";
+import { VolumetricParticleShapeField, VolumetricParticleShapes } from "API/Fields/VolumetricParticleShapeField";
 import { GetVolumetricParticlesFolder } from "API/FolderLocations";
 import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
@@ -7,6 +7,7 @@ import { CreateParticleData, GetNextParticleId, ParticleData, ParticleTypes } fr
 import { InitializeNode } from "../Initialize/InitializeNode";
 import { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
+import { AutoGenVolumetricParticle } from "../AutoGeneration/RenderNodes/AutoGenVolumetricParticle";
 
 export const VolumetricParticleName = "VolumetricParticle";
 export const VolumetricParticleFieldNames = {
@@ -59,7 +60,7 @@ function UpdateParticleProperties(data: ParticleData) {
 export class VolumetricParticle extends RenderNode {
     nodeGroup = NodeGroups.Render;
     nodeFields = {
-        shape: new ShapeField(Shapes.Cube),
+        shape: new VolumetricParticleShapeField(VolumetricParticleShapes.Cube),
     };
 
     objectPool: ObjectPool;
@@ -79,11 +80,11 @@ export class VolumetricParticle extends RenderNode {
         particle.CFrame = DEAD_PARTICLES_CFRAME;
 
         const shape = this.nodeFields.shape.GetShape();
-        if (shape === Shapes.Cube) {
+        if (shape === VolumetricParticleShapes.Cube) {
             if (particle.Shape !== Enum.PartType.Block) {
                 particle.Shape = Enum.PartType.Block;
             }
-        } else if (shape === Shapes.Sphere) {
+        } else if (shape === VolumetricParticleShapes.Sphere) {
             if (particle.Shape !== Enum.PartType.Ball) {
                 particle.Shape = Enum.PartType.Ball;
             }
@@ -178,6 +179,6 @@ export class VolumetricParticle extends RenderNode {
     }
 
     GetAutoGenerationCode() {
-        return "";
+        return AutoGenVolumetricParticle(this);
     }
 }

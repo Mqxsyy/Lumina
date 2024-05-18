@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { AddPosition as AddPositionAPI, AddPositionFieldNames } from "API/Nodes/Initialize/AddPosition";
-import { Vector3Field } from "Components/NodeFields/Vector3Field";
+import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -18,7 +18,7 @@ function AddPosition({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <Vector3Field
+            <ConnectableVector3Field
                 NodeId={data.node.id}
                 NodeField={(data.node as AddPositionAPI).nodeFields.position}
                 NodeFieldName={AddPositionFieldNames.position}

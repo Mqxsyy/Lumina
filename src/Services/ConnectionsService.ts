@@ -6,6 +6,8 @@ import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { NodeData } from "./NodesService";
 
+// BUG: creating a loop with connections makes it full crash (inf loop)
+
 export interface ConnectionData {
     id: number;
     loadedId?: number;
@@ -13,7 +15,6 @@ export interface ConnectionData {
     startElement: ImageButton;
     endPos?: Vector2;
     endElement?: ImageButton;
-    fn: () => number;
     onDestroy: Event;
 }
 
@@ -41,14 +42,13 @@ export function GetConnectionById(id: number) {
     return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
-export function CreateConnection(startNode: NodeData, startElement: ImageButton, fn: () => number, loadedId?: number) {
+export function CreateConnection(startNode: NodeData, startElement: ImageButton, loadedId?: number) {
     const connection: ConnectionCollectionEntry = {
         data: {
             id: idPool.GetNextId(),
             loadedId,
             startNode,
             startElement,
-            fn,
             onDestroy: new Event(),
         },
         create: CreateConnectionLine,

@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { SetLifetime as SetLifetimeAPI, SetLifetimeFieldNames } from "API/Nodes/Initialize/SetLifetime";
-import NumberField from "Components/NodeFields/NumberField";
+import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -19,7 +19,7 @@ function SetLifetime({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <NumberField
+            <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as SetLifetimeAPI).nodeFields.time}
                 NodeFieldName={SetLifetimeFieldNames.time}

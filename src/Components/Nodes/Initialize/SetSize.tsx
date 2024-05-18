@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { SetSize as SetSizeAPI, SetSizeFieldNames } from "API/Nodes/Initialize/SetSize";
-import NumberField from "Components/NodeFields/NumberField";
+import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -18,7 +18,7 @@ function SetSize({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <NumberField
+            <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as SetSizeAPI).nodeFields.size}
                 NodeFieldName={SetSizeFieldNames.size}

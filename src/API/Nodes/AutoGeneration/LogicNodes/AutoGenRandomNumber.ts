@@ -8,7 +8,7 @@ export function AutoGenRandomNumber(node: RandomNumber, wrapper: string) {
     src += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "RandomNumber").RandomNumber \n`;
     src += `local ${varName} = ${className}.new() \n`;
 
-    src += node.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.min`);
+    src += node.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`);
 
     src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
     return src;

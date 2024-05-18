@@ -1,5 +1,5 @@
 import React from "@rbxts/react";
-import { Vector3Field } from "Components/NodeFields/Vector3Field";
+import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 import { SetRotationXYZ as SetRotationXYZAPI, SetRotationXYZFieldNames } from "API/Nodes/Initialize/SetRotationXYZ";
@@ -18,7 +18,7 @@ function SetRotationXYZ({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <Vector3Field
+            <ConnectableVector3Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetRotationXYZAPI).nodeFields.rotation}
                 NodeFieldName={SetRotationXYZFieldNames.rotation}

@@ -1,15 +1,15 @@
 import { NodeField } from "./NodeField";
 
-export enum Shapes {
+export enum VolumetricParticleShapes {
     Cube = 1,
     Sphere = 2,
 }
 
-function GetShapeName(shape: Shapes) {
+function GetShapeName(shape: VolumetricParticleShapes) {
     switch (shape) {
-        case Shapes.Cube:
+        case VolumetricParticleShapes.Cube:
             return "Cube";
-        case Shapes.Sphere:
+        case VolumetricParticleShapes.Sphere:
             return "Sphere";
     }
 }
@@ -18,10 +18,10 @@ interface SerializedData {
     shape: number;
 }
 
-export class ShapeField extends NodeField {
-    shape: Shapes;
+export class VolumetricParticleShapeField extends NodeField {
+    shape: VolumetricParticleShapes;
 
-    constructor(shape: Shapes) {
+    constructor(shape: VolumetricParticleShapes) {
         super();
         this.shape = shape;
     }

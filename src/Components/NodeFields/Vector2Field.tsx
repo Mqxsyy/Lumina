@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "@rbxts/react";
 import { Vector2Field as Vector2FieldAPI } from "API/Fields/Vector2Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
-import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
 import { GetNodeById } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
@@ -10,24 +9,14 @@ import { GetZoomScale } from "ZoomScale";
 interface Props {
     NodeId: number;
     NodeField: Vector2FieldAPI;
-    NodeFieldName: string;
 
     Label?: string;
     ValueLabels?: [string, string];
 
     AllowNegatives?: [boolean, boolean];
-    AllowConnections?: [boolean, boolean];
 }
 
-export function Vector2Field({
-    NodeField,
-    NodeId,
-    NodeFieldName,
-    Label = undefined,
-    ValueLabels = ["X", "Y"],
-    AllowNegatives = [true, true],
-    AllowConnections = [true, true],
-}: Props) {
+export function Vector2Field({ NodeField, NodeId, Label = undefined, ValueLabels = ["X", "Y"], AllowNegatives = [true, true] }: Props) {
     const [_, setForceRender] = useState(0);
 
     const zoomScale = GetZoomScale();
@@ -59,15 +48,6 @@ export function Vector2Field({
                 <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                     <uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
 
-                    {AllowConnections[0] && (
-                        <ConnectionPointIn
-                            NodeId={NodeId}
-                            NodeFieldName={NodeFieldName}
-                            ValueName={"X"}
-                            BindFunction={NodeField.BindX}
-                            UnbindFunction={NodeField.UnbindX}
-                        />
-                    )}
                     <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={ValueLabels[0]} TextYAlignment="Bottom" />
                     <NumberInput
                         AnchorPoint={new Vector2(1, 0)}
@@ -75,7 +55,6 @@ export function Vector2Field({
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetX())}
                         AllowNegative={AllowNegatives[0]}
-                        Disabled={NodeField.boundNodeX !== undefined}
                         NumberChanged={NodeField.SetX}
                     >
                         <uiflexitem FlexMode={"Fill"} />
@@ -84,15 +63,6 @@ export function Vector2Field({
                 <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                     <uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
 
-                    {AllowConnections[1] && (
-                        <ConnectionPointIn
-                            NodeId={NodeId}
-                            NodeFieldName={NodeFieldName}
-                            ValueName={"Y"}
-                            BindFunction={NodeField.BindY}
-                            UnbindFunction={NodeField.UnbindY}
-                        />
-                    )}
                     <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={ValueLabels[1]} TextYAlignment="Bottom" />
                     <NumberInput
                         AnchorPoint={new Vector2(1, 0)}
@@ -100,7 +70,6 @@ export function Vector2Field({
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetY())}
                         AllowNegative={AllowNegatives[1]}
-                        Disabled={NodeField.boundNodeY !== undefined}
                         NumberChanged={NodeField.SetY}
                     >
                         <uiflexitem FlexMode={"Fill"} />

@@ -1,4 +1,4 @@
-import { NumberField } from "API/Fields/NumberField";
+import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetSize } from "../AutoGeneration/InitializeNodes/AutoGenSetSize";
@@ -12,19 +12,19 @@ export const SetSizeFieldNames = {
 export class SetSize extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields: {
-        size: NumberField;
+        size: ConnectableNumberField;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            size: new NumberField(1),
+            size: new ConnectableNumberField(1),
         };
     }
 
     Initialize(data: ParticleData) {
-        const size = this.nodeFields.size.GetNumber();
+        const size = this.nodeFields.size.GetNumber(data);
         data.sizeNormal = new Vector3(size, size, size);
     }
 

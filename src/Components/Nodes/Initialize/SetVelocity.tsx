@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { SetVelocity as SetVelocityAPI, SetVelocityFieldNames } from "API/Nodes/Initialize/SetVelocity";
-import { Vector3Field } from "Components/NodeFields/Vector3Field";
+import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -18,7 +18,7 @@ function SetVelocity({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <Vector3Field
+            <ConnectableVector3Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetVelocityAPI).nodeFields.velocity}
                 NodeFieldName={SetVelocityFieldNames.velocity}

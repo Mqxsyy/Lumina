@@ -10,7 +10,6 @@ import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
-
 export function CreatePlaneParticle() {
     return AddNode(new PlaneParticleAPI(), (data: NodeData) => {
         return <PlaneParticle key={`node_${data.node.id}`} data={data} />;
@@ -31,10 +30,8 @@ function PlaneParticle({ data }: { data: NodeData }) {
             <NumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as PlaneParticleAPI).nodeFields.assetId}
-                NodeFieldName={PlaneParticleFieldNames.assetId}
                 Label={CapitalizeFirstLetter(PlaneParticleFieldNames.assetId)}
                 AllowNegative={false}
-                AllowConnection={false}
             />
             <BooleanField NodeField={(data.node as PlaneParticleAPI).nodeFields.doubleSided} Label={"DoubleSided"} />
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
@@ -48,34 +45,26 @@ function PlaneParticle({ data }: { data: NodeData }) {
                     <Vector2Field
                         NodeId={data.node.id}
                         NodeField={(data.node as PlaneParticleAPI).nodeFields.imageSize}
-                        NodeFieldName={PlaneParticleFieldNames.imageSize}
                         ValueLabels={["Width", "Height"]}
                         AllowNegatives={[false, false]}
-                        AllowConnections={[false, false]}
                     />
                     <NumberField
                         NodeId={data.node.id}
                         NodeField={(data.node as PlaneParticleAPI).nodeFields.spriteSheetRows}
-                        NodeFieldName={PlaneParticleFieldNames.spriteSheetRows}
                         Label={"Rows"}
                         AllowNegative={false}
-                        AllowConnection={false}
                     />
                     <NumberField
                         NodeId={data.node.id}
                         NodeField={(data.node as PlaneParticleAPI).nodeFields.spriteSheetColumns}
-                        NodeFieldName={PlaneParticleFieldNames.spriteSheetColumns}
                         Label={"Columns"}
                         AllowNegative={false}
-                        AllowConnection={false}
                     />
                     <NumberField
                         NodeId={data.node.id}
                         NodeField={(data.node as PlaneParticleAPI).nodeFields.spriteSheetFrameCount}
-                        NodeFieldName={PlaneParticleFieldNames.spriteSheetFrameCount}
                         Label={"Frame Count"}
                         AllowNegative={false}
-                        AllowConnection={false}
                     />
                 </Div>
             </Div>

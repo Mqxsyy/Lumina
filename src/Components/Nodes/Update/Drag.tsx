@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { Drag as DragAPI, DragFieldNames } from "API/Nodes/Update/Drag";
-import NumberField from "Components/NodeFields/NumberField";
+import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -19,7 +19,7 @@ function Drag({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <NumberField
+            <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as DragAPI).nodeFields.drag}
                 NodeFieldName={DragFieldNames.drag}

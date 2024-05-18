@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { SetRotationZRandom as SetRotationZRandomAPI, SetRotationZRandomFieldNames } from "API/Nodes/Initialize/SetRotationZRandom";
-import { Vector2Field } from "Components/NodeFields/Vector2Field";
+import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import { AddNode, NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -18,7 +18,7 @@ function SetRotationZRandom({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <Vector2Field
+            <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetRotationZRandomAPI).nodeFields.range}
                 NodeFieldName={SetRotationZRandomFieldNames.range}

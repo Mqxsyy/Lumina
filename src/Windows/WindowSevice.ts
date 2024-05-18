@@ -2,10 +2,11 @@ import { Event } from "API/Bindables/Event";
 
 export enum Windows {
     Lumina = "Lumina",
-    ValueGraph = "Value Graph",
-    ColorPicker = "Color Picker",
-    ColorRamp = "Color Ramp",
+    ValueGraph = "Lumina Value Graph",
+    ColorPicker = "Lumina Color Picker",
+    ColorRamp = "Lumina Color Ramp",
     RequestUpdate = "Lumina Update Checker",
+    UpdateLog = "Lumina Update Log",
 }
 
 export const OnWinowLoaded = new Event<[Windows]>();
@@ -30,6 +31,10 @@ const windows = {
     [Windows.RequestUpdate]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
         Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 150, 400, 150),
+    },
+    [Windows.UpdateLog]: {
+        Widget: undefined as DockWidgetPluginGui | undefined,
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 600, 400, 200),
     },
 };
 

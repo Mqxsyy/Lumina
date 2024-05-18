@@ -1,5 +1,5 @@
 import { ParticleData } from "API/ParticleService";
-import { NumberField } from "../../Fields/NumberField";
+import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetEmission } from "../AutoGeneration/InitializeNodes/AutoGenSetEmission";
 import { InitializeNode } from "./InitializeNode";
@@ -12,19 +12,19 @@ export const SetEmissionFieldNames = {
 export class SetEmission extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields: {
-        emission: NumberField;
+        emission: ConnectableNumberField;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            emission: new NumberField(1),
+            emission: new ConnectableNumberField(1),
         };
     }
 
     Initialize(data: ParticleData) {
-        data.emission = this.nodeFields.emission.GetNumber();
+        data.emission = this.nodeFields.emission.GetNumber(data);
     }
 
     GetNodeName(): string {

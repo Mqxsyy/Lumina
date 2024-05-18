@@ -1,4 +1,3 @@
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
 interface SerializedData {
@@ -13,15 +12,7 @@ export interface SimpleVector2 {
 
 export class Vector2Field extends NodeField {
     x: number;
-    boundNodeX: undefined | LogicNode;
-    private boundFunctionX: undefined | (() => number);
-
     y: number;
-    boundNodeY: undefined | LogicNode;
-    private boundFunctionY: undefined | (() => number);
-
-    boundNode: undefined | LogicNode;
-    private boundFunction: undefined | (() => SimpleVector2);
 
     constructor(x: number, y: number) {
         super();
@@ -31,10 +22,6 @@ export class Vector2Field extends NodeField {
     }
 
     GetVector2(): SimpleVector2 {
-        if (this.boundFunction !== undefined) {
-            return this.boundFunction();
-        }
-
         const x = this.GetX();
         const y = this.GetY();
 
@@ -42,25 +29,14 @@ export class Vector2Field extends NodeField {
     }
 
     GetX = () => {
-        if (this.boundFunctionX !== undefined) {
-            return this.boundFunctionX();
-        }
-
         return this.x;
     };
 
     GetY = () => {
-        if (this.boundFunctionY !== undefined) {
-            return this.boundFunctionY();
-        }
-
         return this.y;
     };
 
     SetVector2 = (x: number, y: number) => {
-        this.boundFunction = undefined;
-        this.boundNode = undefined;
-
         this.SetX(x, true);
         this.SetY(y, true);
 
@@ -69,76 +45,21 @@ export class Vector2Field extends NodeField {
 
     SetX = (x: number, ignoreFieldChange: boolean = false) => {
         this.x = x;
-        this.boundFunctionX = undefined;
-        this.boundNodeX = undefined;
 
-        if (!ignoreFieldChange) return;
+        if (ignoreFieldChange) return;
         this.FieldChanged.Fire();
     };
 
     SetY = (y: number, ignoreFieldChange: boolean = false) => {
         this.y = y;
-        this.boundFunctionY = undefined;
-        this.boundNodeY = undefined;
 
-        if (!ignoreFieldChange) return;
-        this.FieldChanged.Fire();
-    };
-
-    BindVector2 = (boundFunction: (() => SimpleVector2) | undefined, boundNode: LogicNode | undefined) => {
-        this.boundFunction = boundFunction;
-        this.boundNode = boundNode;
-        this.FieldChanged.Fire();
-    };
-
-    UnbindVector2 = () => {
-        this.boundFunction = undefined;
-        this.boundNode = undefined;
-        this.FieldChanged.Fire();
-    };
-
-    BindX = (boundFunction: () => number, boundNode: LogicNode) => {
-        this.boundFunctionX = boundFunction;
-        this.boundNodeX = boundNode;
-        this.FieldChanged.Fire();
-    };
-
-    UnbindX = () => {
-        this.boundFunctionX = undefined;
-        this.boundNodeX = undefined;
-        this.FieldChanged.Fire();
-    };
-
-    BindY = (boundFunction: undefined | (() => number), boundNode: LogicNode | undefined) => {
-        this.boundFunctionY = boundFunction;
-        this.boundNodeY = boundNode;
-        this.FieldChanged.Fire();
-    };
-
-    UnbindY = () => {
-        this.boundFunctionY = undefined;
-        this.boundNodeY = undefined;
+        if (ignoreFieldChange) return;
         this.FieldChanged.Fire();
     };
 
     AutoGenerateField(fieldPath: string) {
-        let src = "";
-
-        if (this.boundNodeX !== undefined) {
-            src += "\n";
-            src += this.boundNodeX.GetAutoGenerationCode(`${fieldPath}.BindX(..)`);
-            src += "\n";
-        } else {
-            src += `${fieldPath}.SetX(${this.x}) \n`;
-        }
-
-        if (this.boundNodeY !== undefined) {
-            src += "\n";
-            src += this.boundNodeY.GetAutoGenerationCode(`${fieldPath}.BindY(..)`);
-            src += "\n";
-        } else {
-            src += `${fieldPath}.SetY(${this.y}) \n`;
-        }
+        let src = `${fieldPath}.SetX(${this.x}) \n`;
+        src += `${fieldPath}.SetY(${this.y}) \n`;
 
         return src;
     }
@@ -150,7 +71,7 @@ export class Vector2Field extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
+    ReadSerializedData(data: SerializedData) {
         const serializedData = data as SerializedData;
         this.SetVector2(serializedData.x, serializedData.y);
     }

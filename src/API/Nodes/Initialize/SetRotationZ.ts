@@ -1,4 +1,4 @@
-import { NumberField } from "API/Fields/NumberField";
+import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetRotationZ } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZ";
@@ -12,19 +12,19 @@ export const SetRotationZFieldNames = {
 export class SetRotationZ extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields: {
-        rotation: NumberField;
+        rotation: ConnectableNumberField;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            rotation: new NumberField(0),
+            rotation: new ConnectableNumberField(0),
         };
     }
 
     Initialize(data: ParticleData) {
-        data.rotation = new Vector3(data.rotation.X, data.rotation.Y, this.nodeFields.rotation.GetNumber());
+        data.rotation = new Vector3(data.rotation.X, data.rotation.Y, this.nodeFields.rotation.GetNumber(data));
     }
 
     GetNodeName(): string {

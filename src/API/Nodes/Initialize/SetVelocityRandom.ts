@@ -1,4 +1,4 @@
-import { Vector2Field } from "API/Fields/Vector2Field";
+import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
@@ -15,29 +15,29 @@ export const SetVelocityRandomFieldNames = {
 export class SetVelocityRandom extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields: {
-        rangeX: Vector2Field;
-        rangeY: Vector2Field;
-        rangeZ: Vector2Field;
+        rangeX: ConnectableVector2Field;
+        rangeY: ConnectableVector2Field;
+        rangeZ: ConnectableVector2Field;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            rangeX: new Vector2Field(0, 0),
-            rangeY: new Vector2Field(0, 0),
-            rangeZ: new Vector2Field(0, 0),
+            rangeX: new ConnectableVector2Field(0, 0),
+            rangeY: new ConnectableVector2Field(0, 0),
+            rangeZ: new ConnectableVector2Field(0, 0),
         };
     }
 
     Initialize(data: ParticleData) {
-        const xRange = this.nodeFields.rangeX.GetVector2();
+        const xRange = this.nodeFields.rangeX.GetVector2(data);
         const x = RoundDecimal(Rand.NextNumber(xRange.x, xRange.y), 0.01);
 
-        const yRange = this.nodeFields.rangeY.GetVector2();
+        const yRange = this.nodeFields.rangeY.GetVector2(data);
         const y = RoundDecimal(Rand.NextNumber(yRange.x, yRange.y), 0.01);
 
-        const zRange = this.nodeFields.rangeZ.GetVector2();
+        const zRange = this.nodeFields.rangeZ.GetVector2(data);
         const z = RoundDecimal(Rand.NextNumber(zRange.x, zRange.y), 0.01);
 
         data.velocityNormal = new Vector3(x, y, z);

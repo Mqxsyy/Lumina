@@ -1,4 +1,4 @@
-import { Vector2Field } from "API/Fields/Vector2Field";
+import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
@@ -13,19 +13,19 @@ export const SetRotationZRandomFieldNames = {
 export class SetRotationZRandom extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields: {
-        range: Vector2Field;
+        range: ConnectableVector2Field;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            range: new Vector2Field(0, 0),
+            range: new ConnectableVector2Field(0, 0),
         };
     }
 
     Initialize(data: ParticleData) {
-        const range = this.nodeFields.range.GetVector2();
+        const range = this.nodeFields.range.GetVector2(data);
         const zRotation = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
 
         data.rotation = new Vector3(data.rotation.X, data.rotation.Y, zRotation);

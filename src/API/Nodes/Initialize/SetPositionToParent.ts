@@ -1,5 +1,5 @@
 import { RunService } from "@rbxts/services";
-import { Vector3Field } from "API/Fields/Vector3Field";
+import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetPositionToParent } from "../AutoGeneration/InitializeNodes/AutoGenSetPositionToParent";
@@ -20,7 +20,7 @@ export class SetPositionToParent extends InitializeNode {
         this.parent = parent;
 
         this.nodeFields = {
-            position: new Vector3Field(0, 0, 0),
+            position: new ConnectableVector3Field(0, 0, 0),
         };
     }
 

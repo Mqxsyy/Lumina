@@ -1,4 +1,3 @@
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
 interface SerializedData {
@@ -7,8 +6,6 @@ interface SerializedData {
 
 export class NumberField extends NodeField {
     number: number;
-    boundNode: undefined | LogicNode;
-    private boundFunction: undefined | (() => number);
 
     constructor(number: number) {
         super();
@@ -16,40 +13,15 @@ export class NumberField extends NodeField {
     }
 
     GetNumber = () => {
-        if (this.boundFunction !== undefined) {
-            return this.boundFunction();
-        }
-
         return this.number;
     };
 
     SetNumber = (number: number) => {
         this.number = number;
-        this.boundFunction = undefined;
-        this.boundNode = undefined;
-        this.FieldChanged.Fire();
-    };
-
-    BindNumber = (boundFunction: () => number, boundNode: LogicNode) => {
-        this.boundFunction = boundFunction;
-        this.boundNode = boundNode;
-        this.FieldChanged.Fire();
-    };
-
-    UnbindNumber = () => {
-        this.boundFunction = undefined;
-        this.boundNode = undefined;
         this.FieldChanged.Fire();
     };
 
     AutoGenerateField(fieldPath: string) {
-        if (this.boundNode !== undefined) {
-            let src = "\n";
-            src += this.boundNode.GetAutoGenerationCode(`${fieldPath}.BindNumber(..)`);
-            src += "\n";
-            return src;
-        }
-
         return `${fieldPath}.SetNumber(${this.number}) \n`;
     }
 
@@ -59,7 +31,7 @@ export class NumberField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        this.SetNumber((data as SerializedData).number);
+    ReadSerializedData(data: SerializedData) {
+        this.SetNumber(data.number);
     }
 }

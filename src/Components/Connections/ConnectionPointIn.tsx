@@ -21,8 +21,8 @@ interface Props {
     NodeId: number;
     NodeFieldName: string;
     ValueName?: string;
-    BindFunction: (newValue: () => number, boundNode: LogicNode) => void;
-    UnbindFunction: () => void;
+    BindNode: (boundNode: LogicNode) => void;
+    UnbindNode: () => void;
 }
 
 export default function ConnectionPointIn({
@@ -31,9 +31,9 @@ export default function ConnectionPointIn({
     ValueName = undefined,
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
-    Size = UDim2.fromOffset(10 * GetZoomScale(), 10 * GetZoomScale()),
-    BindFunction,
-    UnbindFunction,
+    Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
+    BindNode,
+    UnbindNode,
 }: Props) {
     const [_, setForceRender] = useState(0);
     const [connectionId, setConnectionId] = useState(-1);
@@ -71,7 +71,7 @@ export default function ConnectionPointIn({
             destroyConnection.Disconnect();
 
             setConnectionId(-1);
-            UnbindFunction();
+            UnbindNode();
 
             if (GetNodeById(NodeId) === undefined) return;
 
@@ -85,7 +85,7 @@ export default function ConnectionPointIn({
             });
         });
 
-        BindFunction(connectionData.fn, connectionData.startNode.node as LogicNode);
+        BindNode(connectionData.startNode.node as LogicNode);
     };
 
     const mouseButton1Down = () => {
@@ -98,6 +98,9 @@ export default function ConnectionPointIn({
 
         const movingConnectionId = GetMovingConnectionId();
         if (movingConnectionId === -1) return;
+
+        const connectionData = GetConnectionById(movingConnectionId)!.data;
+        if (connectionData.startNode.node.id === NodeId) return;
 
         UnbindMovingConnection();
         finishConnection(movingConnectionId);

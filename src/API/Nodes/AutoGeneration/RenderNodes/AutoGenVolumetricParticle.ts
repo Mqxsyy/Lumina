@@ -1,6 +1,6 @@
 import { VolumetricParticle } from "API/Nodes/Render/VolumetricParticle";
 
-export function AutogenPlaneParticle(node: VolumetricParticle) {
+export function AutoGenVolumetricParticle(node: VolumetricParticle) {
     const className = `VolumetricParticle${node.id}`;
     const varName = `volumetricParticle${node.id}`;
 

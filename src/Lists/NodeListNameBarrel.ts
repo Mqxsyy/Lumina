@@ -10,6 +10,7 @@ export { SetLifetimeName } from "API/Nodes/Initialize/SetLifetime";
 export { SetLifetimeRandomName } from "API/Nodes/Initialize/SetLifetimeRandom";
 export { SetPositionName } from "API/Nodes/Initialize/SetPosition";
 export { SetPositionToParentName } from "API/Nodes/Initialize/SetPositionToParent";
+export { SetPositionByShapeName } from "API/Nodes/Initialize/SetPositionByShape";
 export { SetRotationXYZName } from "API/Nodes/Initialize/SetRotationXYZ";
 export { SetRotationZName } from "API/Nodes/Initialize/SetRotationZ";
 export { SetRotationZRandomName } from "API/Nodes/Initialize/SetRotationZRandom";
@@ -37,6 +38,19 @@ export { SetTransparencyOverLifeName } from "API/Nodes/Update/SetTransparencyOve
 // Render
 export { PlaneParticleName } from "API/Nodes/Render/PlaneParticle";
 export { VolumetricParticleName } from "API/Nodes/Render/VolumetricParticle";
+export { MeshParticleName } from "API/Nodes/Render/MeshParticle";
 
 // Logic
+export { NumberName } from "API/Nodes/Logic/Number";
+export { AddName } from "API/Nodes/Logic/Add";
+export { SubtractName } from "API/Nodes/Logic/Subtract";
+export { MultiplyName } from "API/Nodes/Logic/Multiply";
+export { DivideName } from "API/Nodes/Logic/Divide";
+export { SinName } from "API/Nodes/Logic/Sin";
+export { CosName } from "API/Nodes/Logic/Cos";
+export { TanName } from "API/Nodes/Logic/Tan";
+export { ClampName } from "API/Nodes/Logic/Clamp";
+export { RemapName } from "API/Nodes/Logic/Remap";
 export { RandomNumberName } from "API/Nodes/Logic/RandomNumber";
+export { TimeName } from "API/Nodes/Logic/Time";
+export { AliveTimeName } from "API/Nodes/Logic/Alivetime";

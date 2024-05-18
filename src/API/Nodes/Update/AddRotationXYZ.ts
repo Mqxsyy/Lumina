@@ -1,4 +1,4 @@
-import { Vector3Field } from "API/Fields/Vector3Field";
+import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { ParticleData } from "API/ParticleService";
@@ -13,19 +13,19 @@ export const AddRotationXYZFieldNames = {
 export class AddRotationXYZ extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
     nodeFields: {
-        rotation: Vector3Field;
+        rotation: ConnectableVector3Field;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            rotation: new Vector3Field(0, 0, 0),
+            rotation: new ConnectableVector3Field(0, 0, 0),
         };
     }
 
     Update(data: ParticleData) {
-        const addition = this.nodeFields.rotation.GetVector3();
+        const addition = this.nodeFields.rotation.GetVector3(data);
         const rotation = data.rotation;
 
         const x = rotation.X + addition.x * FrameRateMultiplier;

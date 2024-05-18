@@ -1,11 +1,11 @@
 import { HttpService } from "@rbxts/services";
 import { API_VERSION } from "API/ExportAPI";
-import { NodeFields } from "API/Fields/NodeFields";
 import { GetSavesFolder } from "API/FolderLocations";
 import { Node } from "API/Nodes/Node";
 import { GetAllSystems, NodeSystemData } from "Services/NodeSystemService";
 import { GetAllNodes, GetNodeById, NodeConnectionIn } from "Services/NodesService";
 import { SaveData, SerializedConnection, SerializedField, SerializedFloatingNode, SerializedNode, SerializedSystem } from "./SaveData";
+import { NodeField } from "API/Fields/NodeField";
 
 const savesFolder = GetSavesFolder();
 
@@ -112,7 +112,7 @@ export function SerializeNode(node: Node, ignoreConnections = false): Serialized
     return serializedNode;
 }
 
-function SerializeFields(fields: { [key: string]: NodeFields }, connectionsIn?: NodeConnectionIn[]): SerializedField[] {
+function SerializeFields(fields: { [key: string]: NodeField }, connectionsIn?: NodeConnectionIn[]): SerializedField[] {
     const serializedFields: SerializedField[] = [];
 
     for (const [key, value] of pairs(fields)) {

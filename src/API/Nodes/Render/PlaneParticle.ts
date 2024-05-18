@@ -6,9 +6,9 @@ import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetPlaneParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
 import { ObjectPool } from "API/ObjectPool";
-import { CreateParticleData, GetNextParticleId, GetParticleData, ParticleData, ParticleTypes } from "API/ParticleService";
+import { CreateParticleData, GetNextParticleId, ParticleData, ParticleTypes } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
-import { AutogenPlaneParticle } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
+import { AutoGenPlaneParticle } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
 import { InitializeNode } from "../Initialize/InitializeNode";
 import { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
@@ -351,7 +351,7 @@ export class PlaneParticle extends RenderNode {
     }
 
     GetAutoGenerationCode() {
-        return AutogenPlaneParticle(this);
+        return AutoGenPlaneParticle(this);
     }
 
     Destroy() {

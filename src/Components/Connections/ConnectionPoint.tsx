@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "@rbxts/react";
+import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
@@ -70,18 +71,27 @@ export default function ConnectionPoint({
                 },
             }}
         >
-            <uicorner CornerRadius={new UDim(2, 0)} />
-            <uistroke Color={StyleColors.Highlight} Thickness={math.clamp(2 * zoomScale, 1, math.huge)} />
+            <uipadding
+                PaddingLeft={new UDim(0, Size.Width.Offset * 0.25)}
+                PaddingRight={new UDim(0, Size.Width.Offset * 0.25)}
+                PaddingBottom={new UDim(0, Size.Width.Offset * 0.25)}
+                PaddingTop={new UDim(0, Size.Width.Offset * 0.25)}
+            />
+
+            <Div>
+                <uicorner CornerRadius={new UDim(2, 0)} />
+                <uistroke Color={StyleColors.Highlight} Thickness={math.clamp(2 * zoomScale, 1, math.huge)} />
+            </Div>
 
             {(ConnectionId !== undefined || ConnectionIds !== undefined) && (
-                <frame
+                <Div
                     AnchorPoint={new Vector2(0.5, 0.5)}
                     Position={UDim2.fromScale(0.5, 0.5)}
-                    Size={UDim2.fromOffset(Size.X.Offset - 4 * zoomScale, Size.Y.Offset - 4 * zoomScale)}
-                    BackgroundColor3={StyleColors.Highlight}
+                    Size={new UDim2(1, -4 * zoomScale, 1, -4 * zoomScale)}
+                    BackgroundColor={StyleColors.Highlight}
                 >
                     <uicorner CornerRadius={new UDim(2, 0)} />
-                </frame>
+                </Div>
             )}
         </imagebutton>
     );

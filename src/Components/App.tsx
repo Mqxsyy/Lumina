@@ -20,6 +20,9 @@ import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
 
+// IMPORTANT: fix auto gen + it's formatting with node chains
+// IMPORTANT: make vec3 and vec2 field collapsible
+
 // MAYBE-TODO: add undo & redo
 // TODO: redeisgn UI to be more clean and minimalistic
 // OPTIMIZE: recheck all forceRenders, some may not be required because the app wasn't rerendering every 10 changes

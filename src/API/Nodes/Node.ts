@@ -1,17 +1,12 @@
-import { NodeFields } from "API/Fields/NodeFields";
+import { NodeField } from "API/Fields/NodeField";
 import { NodeGroups } from "../NodeGroup";
 import { NodeIdPool } from "./NodeIdPool";
-
-export interface ParticleInitData {
-    lifetime?: number;
-    spawnPosition?: Vector3;
-}
 
 export abstract class Node {
     id: number;
 
     abstract nodeGroup: NodeGroups;
-    abstract nodeFields: { [key: string]: NodeFields };
+    abstract nodeFields: { [key: string]: NodeField };
     connectedSystemId?: number;
 
     constructor() {

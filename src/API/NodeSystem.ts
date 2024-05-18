@@ -1,4 +1,4 @@
-import { RunService } from "@rbxts/services";
+import { RunService, UserInputService } from "@rbxts/services";
 import { IdPool } from "./IdPool";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
 import { InitializeNode } from "./Nodes/Initialize/InitializeNode";

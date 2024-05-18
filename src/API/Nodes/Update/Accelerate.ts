@@ -1,4 +1,4 @@
-import { NumberField } from "API/Fields/NumberField";
+import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { ParticleData } from "API/ParticleService";
@@ -13,19 +13,19 @@ export const AccelerateFieldNames = {
 export class Accelerate extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
     nodeFields: {
-        acceleration: NumberField;
+        acceleration: ConnectableNumberField;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            acceleration: new NumberField(0),
+            acceleration: new ConnectableNumberField(0),
         };
     }
 
     Update(data: ParticleData) {
-        const acceleration = this.nodeFields.acceleration.GetNumber() * FrameRateMultiplier;
+        const acceleration = this.nodeFields.acceleration.GetNumber(data) * FrameRateMultiplier;
         const oldVelocity = data.velocityNormal;
 
         const x = oldVelocity.X + oldVelocity.X * acceleration;

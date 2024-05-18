@@ -16,15 +16,13 @@ interface Props {
     Position?: UDim2;
     Size?: UDim2;
     NodeId: number;
-    BindFunction: () => number;
 }
 
 export default function ConnectionPointOut({
     NodeId,
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
-    Size = UDim2.fromOffset(10 * GetZoomScale(), 10 * GetZoomScale()),
-    BindFunction,
+    Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
 }: Props) {
     const [_, setForceRender] = useState(0);
     const [connectionIds, setConnectionIds] = useState<number[]>([]);
@@ -37,7 +35,7 @@ export default function ConnectionPointOut({
         if (elementRef.current === undefined) return;
         if (node.element === undefined) return;
 
-        const connectionData = CreateConnection(nodeData, elementRef.current, BindFunction, loadedId);
+        const connectionData = CreateConnection(nodeData, elementRef.current, loadedId);
         setConnectionIds((prev) => [...prev, connectionData.id]);
 
         UpdateNodeData(NodeId, (data) => {
