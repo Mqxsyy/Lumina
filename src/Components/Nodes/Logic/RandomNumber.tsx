@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateRandomNumber() {
     return AddNode(new RandomNumberAPI(), (data: NodeData) => {
-        return <RandomNumber key={`node_${data.node.id}`} data={data} />;
+        return <RandomNumber key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

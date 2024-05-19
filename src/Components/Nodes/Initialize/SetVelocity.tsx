@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateSetVelocity() {
     return AddNode(new SetVelocityAPI(), (data: NodeData) => {
-        return <SetVelocity key={`node_${data.node.id}`} data={data} />;
+        return <SetVelocity key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

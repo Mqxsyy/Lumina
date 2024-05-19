@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateSetSizeRandom() {
     return AddNode(new SetSizeRandomAPI(), (data: NodeData) => {
-        return <SetSizeRandom key={`node_${data.node.id}`} data={data} />;
+        return <SetSizeRandom key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

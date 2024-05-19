@@ -6,14 +6,14 @@ import Node from "../Node";
 
 export function CreateVolumetricParticle() {
     return AddNode(new VolumetricParticleAPI(), (data: NodeData) => {
-        return <VolumetricParticle key={`node_${data.node.id}`} data={data} />;
+        return <VolumetricParticle key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 
 function VolumetricParticle({ data }: { data: NodeData }) {
     return (
         <Node
-            Name="Plane Particle"
+            Name="Volumetric Particle"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}

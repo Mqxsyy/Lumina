@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateNumber() {
     return AddNode(new NumberAPI(), (data: NodeData) => {
-        return <Number key={`node_${data.node.id}`} data={data} />;
+        return <Number key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

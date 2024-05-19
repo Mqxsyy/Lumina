@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateMultiplyVelocityOverLife() {
     return AddNode(new MultiplyVelocityOverLifeAPI(), (data: NodeData) => {
-        return <MultiplyVelocityOverLife key={`node_${data.node.id}`} data={data} />;
+        return <MultiplyVelocityOverLife key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

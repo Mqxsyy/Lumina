@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateSin() {
     return AddNode(new SinAPI(), (data: NodeData) => {
-        return <Sin key={`node_${data.node.id}`} data={data} />;
+        return <Sin key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

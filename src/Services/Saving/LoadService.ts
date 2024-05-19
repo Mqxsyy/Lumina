@@ -59,7 +59,7 @@ export function LoadFromFile() {
 
     // floating nodes
     for (const node of data.floatingNodes) {
-        const nodeCollectionEntry = CreateNode(node.nodeGroup, node.nodeName, node.fields);
+        const nodeCollectionEntry = CreateNode(node.nodeGroup, node.nodeName, node.fields, node.order);
         if (nodeCollectionEntry === undefined) {
             warn(`Node ${node.nodeName} does not exist in group ${node.nodeGroup}. Save data may be outdated or corrupted.`);
             continue;
@@ -148,7 +148,7 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
         }
 
         for (const node of nodes) {
-            const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields);
+            const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields, node.order);
             if (nodeCollectionEntry === undefined) {
                 warn(`Node ${node.nodeName} does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`);
                 continue;
@@ -182,7 +182,7 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
     return [system, cachedNodes];
 }
 
-export function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeCollectionEntry | undefined {
+export function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[], order: number): NodeCollectionEntry | undefined {
     if (NodeList[group][nodeName] === undefined) return undefined;
 
     const node = NodeList[group][nodeName].create!() as NodeCollectionEntry;
@@ -190,6 +190,8 @@ export function CreateNode(group: NodeGroups, nodeName: string, fields: Serializ
     for (const field of fields) {
         node.data.node.nodeFields[field.name].ReadSerializedData(field.data);
     }
+
+    node.data.order = order;
 
     return node;
 }

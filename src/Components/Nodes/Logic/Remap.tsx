@@ -8,7 +8,7 @@ import Node from "../Node";
 
 export function CreateRemap() {
     return AddNode(new RemapAPI(), (data: NodeData) => {
-        return <Remap key={`node_${data.node.id}`} data={data} />;
+        return <Remap key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

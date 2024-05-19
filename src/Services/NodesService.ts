@@ -25,6 +25,7 @@ export interface NodeData {
     loadedConnectionsOut?: NodeConnectionOut[];
     connectionsIn: NodeConnectionIn[];
     loadedConnectionsIn?: NodeConnectionIn[];
+    order: number;
     node: Node;
     dataChanged: FastEvent;
     onDestroy: FastEvent<[NodeData]>;
@@ -54,6 +55,7 @@ export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
             anchorPoint: GetMousePositionOnCanvas().div(GetZoomScale()),
             connectionsOut: [],
             connectionsIn: [],
+            order: -1,
             node: api,
             dataChanged: new FastEvent(),
             onDestroy: new FastEvent(),
@@ -84,10 +86,18 @@ export function SetNodeElement(id: number, element: ImageButton) {
     const node = GetNodeById(id);
 
     if (node !== undefined) {
-        if (node.element !== undefined) return;
+        if (node.element === element) return;
+        let firstLoad = false;
+
+        if (node.element === undefined) {
+            firstLoad = true;
+        }
 
         node.element = element;
-        node.elementLoaded.Fire();
+        if (firstLoad) {
+            node.elementLoaded.Fire();
+        }
+
         return;
     }
 

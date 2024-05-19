@@ -9,7 +9,7 @@ import Div from "Components/Div";
 
 export function CreateTime() {
     return AddNode(new TimeAPI(), (data: NodeData) => {
-        return <Time key={`node_${data.node.id}`} data={data} />;
+        return <Time key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

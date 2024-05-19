@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateSetVelocityRandom() {
     return AddNode(new SetVelocityRandomAPI(), (data: NodeData) => {
-        return <SetVelocityRandom key={`node_${data.node.id}`} data={data} />;
+        return <SetVelocityRandom key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

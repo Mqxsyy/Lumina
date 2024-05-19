@@ -6,7 +6,7 @@ import { SetRotationXYZ as SetRotationXYZAPI, SetRotationXYZFieldNames } from "A
 
 export function CreateSetRotationXYZ() {
     return AddNode(new SetRotationXYZAPI(), (data: NodeData) => {
-        return <SetRotationXYZ key={`node_${data.node.id}`} data={data} />;
+        return <SetRotationXYZ key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

@@ -9,7 +9,7 @@ import Div from "Components/Div";
 
 export function CreateAliveTime() {
     return AddNode(new AliveTimeAPI(), (data: NodeData) => {
-        return <AliveTime key={`node_${data.node.id}`} data={data} />;
+        return <AliveTime key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

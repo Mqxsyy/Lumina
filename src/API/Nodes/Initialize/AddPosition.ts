@@ -4,8 +4,6 @@ import { NodeGroups } from "../../NodeGroup";
 import { AutoGenAddPosition } from "../AutoGeneration/InitializeNodes/AutoGenAddPosition";
 import { InitializeNode } from "./InitializeNode";
 
-// IMPORTANT: Sometimes gets overriden by set position
-
 export const AddPositionName = "AddPosition";
 export const AddPositionFieldNames = {
     position: "position",

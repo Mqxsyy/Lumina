@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateSetSizeXYZ() {
     return AddNode(new SetSizeXYZAPI(), (data: NodeData) => {
-        return <SetSizeXYZ key={`node_${data.node.id}`} data={data} />;
+        return <SetSizeXYZ key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

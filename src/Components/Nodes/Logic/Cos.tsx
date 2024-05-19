@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateCos() {
     return AddNode(new CosAPI(), (data: NodeData) => {
-        return <Cos key={`node_${data.node.id}`} data={data} />;
+        return <Cos key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

@@ -90,7 +90,7 @@ function LocalSerializeSystem() {
 }
 
 function LocalLoadNode(serializedNode: SerializedFloatingNode) {
-    CreateNode(serializedNode.nodeGroup, serializedNode.nodeName, serializedNode.fields);
+    CreateNode(serializedNode.nodeGroup, serializedNode.nodeName, serializedNode.fields, serializedNode.order);
 }
 
 function LocalLoadSystem(serializedSystem: SerializedSystem) {

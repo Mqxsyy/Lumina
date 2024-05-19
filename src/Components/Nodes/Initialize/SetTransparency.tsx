@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateSetTransparency() {
     return AddNode(new SetTransparencyAPI(), (data: NodeData) => {
-        return <SetTransparency key={`node_${data.node.id}`} data={data} />;
+        return <SetTransparency key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

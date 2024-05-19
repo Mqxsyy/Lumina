@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateAccelerate() {
     return AddNode(new AccelerateAPI(), (data: NodeData) => {
-        return <Accelerate key={`node_${data.node.id}`} data={data} />;
+        return <Accelerate key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

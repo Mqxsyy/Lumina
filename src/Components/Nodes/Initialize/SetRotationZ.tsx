@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateSetRotationZ() {
     return AddNode(new SetRotationZAPI(), (data: NodeData) => {
-        return <SetRotationZ key={`node_${data.node.id}`} data={data} />;
+        return <SetRotationZ key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

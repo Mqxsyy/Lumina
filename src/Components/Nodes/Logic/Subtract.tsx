@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateSubtract() {
     return AddNode(new SubtractAPI(), (data: NodeData) => {
-        return <Subtract key={`node_${data.node.id}`} data={data} />;
+        return <Subtract key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

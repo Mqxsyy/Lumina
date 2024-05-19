@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateConstantSpawn() {
     return AddNode(new ConstantSpawnAPI(), (data: NodeData) => {
-        return <ConstantSpawn key={`node_${data.node.id}`} data={data} />;
+        return <ConstantSpawn key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

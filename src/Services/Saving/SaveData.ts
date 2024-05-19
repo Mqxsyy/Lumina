@@ -24,6 +24,7 @@ export interface SerializedNode {
     connections?: SerializedConnection[];
     nodeName: string;
     fields: SerializedField[];
+    order: number;
 }
 
 export interface SerializedFloatingNode extends SerializedNode {

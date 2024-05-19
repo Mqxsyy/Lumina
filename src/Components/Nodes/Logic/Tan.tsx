@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateTan() {
     return AddNode(new TanAPI(), (data: NodeData) => {
-        return <Tan key={`node_${data.node.id}`} data={data} />;
+        return <Tan key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

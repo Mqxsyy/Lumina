@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateAddRotationXYZRandom() {
     return AddNode(new AddRotationXYZRandomAPI(), (data: NodeData) => {
-        return <AddRotationXYZRandom key={`node_${data.node.id}`} data={data} />;
+        return <AddRotationXYZRandom key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

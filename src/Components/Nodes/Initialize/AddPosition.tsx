@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateAddPosition() {
     return AddNode(new AddPositionAPI(), (data: NodeData) => {
-        return <AddPosition key={`node_${data.node.id}`} data={data} />;
+        return <AddPosition key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

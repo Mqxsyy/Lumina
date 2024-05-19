@@ -7,7 +7,7 @@ import Node from "../Node";
 
 export function CreateDivide() {
     return AddNode(new DivideAPI(), (data: NodeData) => {
-        return <Divide key={`node_${data.node.id}`} data={data} />;
+        return <Divide key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

@@ -6,7 +6,7 @@ import Node from "../Node";
 
 export function CreateSetLifetimeRandom() {
     return AddNode(new SetLifetimeRandomAPI(), (data: NodeData) => {
-        return <SetLifetimeRandom key={`node_${data.node.id}`} data={data} />;
+        return <SetLifetimeRandom key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

@@ -8,7 +8,7 @@ import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector
 
 export function CreateClamp() {
     return AddNode(new ClampAPI(), (data: NodeData) => {
-        return <Clamp key={`node_${data.node.id}`} data={data} />;
+        return <Clamp key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 

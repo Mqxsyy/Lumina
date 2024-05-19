@@ -5,11 +5,13 @@ import { NodeSystem } from "API/NodeSystem";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetDraggingNodeId } from "Services/DraggingService";
 import { BindNodeGroupFunction, NodeSystemData, NodeSystemsChanged } from "Services/NodeSystemService";
-import { GetNodeById, NodeCollectionEntry, RemoveNode } from "Services/NodesService";
+import { GetNodeById, NodeCollectionEntry, RemoveNode, UpdateNodeData } from "Services/NodesService";
 import { StyleColors } from "Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
 import { GROUP_BORDER_THICKNESS, GROUP_HEADER_HEIGHT, GROUP_LIST_PADDING, GROUP_PADDING } from "../SizeConfig";
+import { RunService } from "@rbxts/services";
+import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 // TODO: add node reordering
 
@@ -23,15 +25,85 @@ interface Props {
 }
 
 function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, GradientStart, GradientEnd }: Props) {
-    const [childNodes, setChildNodes] = useState([] as NodeCollectionEntry[]);
+    const [childNodes, setChildNodes] = useState<NodeCollectionEntry[]>([]);
+    const childNodesRef = useRef<NodeCollectionEntry[]>([]);
+
     const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
     const nodeDestroyConnectionsRef = useRef<{ [key: number]: FastEventConnection }>({});
+    const nodePositionCheckerConnectionRef = useRef<RBXScriptConnection | undefined>(undefined);
+
+    const addToChildNodes = (node: NodeCollectionEntry) => {
+        setChildNodes((prev) => [...prev, node]);
+        childNodesRef.current.push(node);
+        updateChildNodesOrders();
+    };
+
+    const removeFromChildNodes = (id: number) => {
+        setChildNodes((prev) => prev.filter((n) => n.data.node.id !== id));
+        childNodesRef.current = childNodesRef.current.filter((n) => n.data.node.id !== id);
+        updateChildNodesOrders();
+    };
+
+    const swapChildNodes = (index1: number, id: number) => {
+        const index2 = childNodesRef.current.findIndex((n) => n.data.node.id === id)!;
+
+        const tempNode = childNodesRef.current[index2];
+
+        childNodesRef.current[index2] = childNodesRef.current[index1];
+        childNodesRef.current[index1] = tempNode;
+
+        setChildNodes([...childNodesRef.current]);
+        childNodesRef.current = [...childNodesRef.current];
+
+        updateChildNodesOrders();
+    };
+
+    const updateChildNodesOrders = () => {
+        for (let i = 0; i < childNodesRef.current.size(); i++) {
+            const node = childNodesRef.current[i];
+            UpdateNodeData(node.data.node.id, (data) => {
+                data.order = i;
+                return data;
+            });
+        }
+    };
 
     const onHover = () => {
         const draggingNodeId = GetDraggingNodeId();
         if (draggingNodeId !== undefined) {
             addChildNode(draggingNodeId);
+        }
+
+        if (nodePositionCheckerConnectionRef.current !== undefined) return;
+
+        nodePositionCheckerConnectionRef.current = RunService.RenderStepped.Connect(checkDraggingSorting);
+    };
+
+    const checkDraggingSorting = () => {
+        const draggingNodeId = GetDraggingNodeId();
+        if (draggingNodeId === undefined) return;
+
+        if (childNodesRef.current.findIndex((n) => n.data.node.id === draggingNodeId) === -1) return;
+
+        const draggingNode = GetNodeById(draggingNodeId)!;
+
+        const mousePosition = GetMousePosition();
+        for (let i = 0; i < childNodesRef.current.size(); i++) {
+            const targetNode = childNodesRef.current[i];
+
+            if (targetNode.data.node.id === draggingNodeId) continue;
+            const y = targetNode.element!.AbsolutePosition.Y + targetNode.element!.AbsoluteSize.Y * 0.5;
+
+            if (targetNode.element!.AbsolutePosition.Y < draggingNode.element!.AbsolutePosition.Y && mousePosition.Y < y) {
+                swapChildNodes(i, draggingNodeId);
+                return;
+            }
+
+            if (targetNode.element!.AbsolutePosition.Y > draggingNode.element!.AbsolutePosition.Y && mousePosition.Y > y) {
+                swapChildNodes(i, draggingNodeId);
+                return;
+            }
         }
     };
 
@@ -40,7 +112,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 
         if (node.data.node.nodeGroup !== NodeGroup) return;
 
-        setChildNodes((prev) => [...prev, node]);
+        addToChildNodes(node);
 
         node.data.node.ConnectToSystem(SystemId);
         SystemAPI.AddNode(node.data.node);
@@ -50,7 +122,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
             delete nodeDestroyConnectionsRef.current[id];
 
             SystemAPI.RemoveNode(nodeData.node);
-            setChildNodes((prev) => prev.filter((n) => n.data.node.id !== id));
+            removeFromChildNodes(id);
         });
 
         NodeSystemsChanged.Fire();
@@ -62,7 +134,8 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
             const node = childNodes.find((n) => n.data.node.id === nodeId);
 
             if (node !== undefined) {
-                setChildNodes((prev) => prev.filter((n) => n.data.node.id !== nodeId));
+                removeFromChildNodes(nodeId);
+
                 node.data.node.RemoveSystemConnection();
                 SystemAPI.RemoveNode(node.data.node);
 
@@ -71,6 +144,11 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
                     delete nodeDestroyConnectionsRef.current[nodeId];
                 }
             }
+        }
+
+        if (nodePositionCheckerConnectionRef.current !== undefined) {
+            nodePositionCheckerConnectionRef.current.Disconnect();
+            nodePositionCheckerConnectionRef.current = undefined;
         }
     };
 
@@ -140,7 +218,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 
                     <BasicTextLabel Size={new UDim2(1, 0, 0, GROUP_HEADER_HEIGHT)} Text={NodeGroups[NodeGroup]} />
                     <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                        <uilistlayout HorizontalAlignment={"Center"} Padding={new UDim(0, 5 * zoomScale)} />
+                        <uilistlayout HorizontalAlignment={"Center"} Padding={new UDim(0, 5 * zoomScale)} SortOrder={Enum.SortOrder.Name} />
                         {childNodes.map((node) => {
                             return node.create(node.data);
                         })}
