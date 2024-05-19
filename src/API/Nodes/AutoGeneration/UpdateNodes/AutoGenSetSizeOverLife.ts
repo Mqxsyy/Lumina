@@ -1,4 +1,4 @@
-import { SetSizeOverLife } from "API/Nodes/Update/SetSizeOverLife";
+import type { SetSizeOverLife } from "API/Nodes/Update/SetSizeOverLife";
 
 export function AutoGenSetSizeOverLife(node: SetSizeOverLife) {
     const className = `SetSizeOverLife${node.id}`;

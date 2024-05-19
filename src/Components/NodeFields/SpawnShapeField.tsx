@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
+import { SpawnShape, type SpawnShapeField as SpawnShapeFieldAPI } from "API/Fields/SpawnShapeField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import HighlightableTextButton from "Components/Basic/HighlightableTextButton";
 import Div from "Components/Div";
 import { EnableDropdown } from "Services/DropdownService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetZoomScale } from "ZoomScale";
-import { SpawnShape, SpawnShapeField as SpawnShapeFieldAPI } from "API/Fields/SpawnShapeField";
 
 interface Props {
     NodeField: SpawnShapeFieldAPI;
@@ -20,7 +20,7 @@ export default function SpawnShapeField({ NodeField, Label }: Props) {
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -36,6 +36,7 @@ export default function SpawnShapeField({ NodeField, Label }: Props) {
 
         EnableDropdown(posUDim2, elementRef.current.AbsoluteSize.X, [
             <HighlightableTextButton
+                key={0}
                 Size={UDim2.fromScale(1, 0)}
                 Text="Square"
                 OnClick={() => {
@@ -43,6 +44,7 @@ export default function SpawnShapeField({ NodeField, Label }: Props) {
                 }}
             />,
             <HighlightableTextButton
+                key={1}
                 Size={UDim2.fromScale(1, 0)}
                 Text="Cube"
                 OnClick={() => {
@@ -50,6 +52,7 @@ export default function SpawnShapeField({ NodeField, Label }: Props) {
                 }}
             />,
             <HighlightableTextButton
+                key={2}
                 Size={UDim2.fromScale(1, 0)}
                 Text="Ellipse"
                 OnClick={() => {
@@ -57,6 +60,7 @@ export default function SpawnShapeField({ NodeField, Label }: Props) {
                 }}
             />,
             <HighlightableTextButton
+                key={3}
                 Size={UDim2.fromScale(1, 0)}
                 Text="Sphere"
                 OnClick={() => {

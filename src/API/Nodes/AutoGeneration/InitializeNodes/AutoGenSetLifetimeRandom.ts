@@ -1,4 +1,4 @@
-import { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
+import type { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
 
 export function AutoGenSetLifetimeRandom(node: SetLifetimeRandom) {
     const className = `SetLifetimeRandom${node.id}`;

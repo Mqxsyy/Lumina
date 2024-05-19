@@ -2,7 +2,7 @@ import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { Drag as DragAPI, DragFieldNames } from "API/Nodes/Update/Drag";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateDrag() {

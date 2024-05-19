@@ -1,4 +1,4 @@
-import { SetSizeXYZ } from "API/Nodes/Initialize/SetSizeXYZ";
+import type { SetSizeXYZ } from "API/Nodes/Initialize/SetSizeXYZ";
 
 export function AutoGenSetSizeXYZ(node: SetSizeXYZ) {
     const className = `SetSizeXYZ${node.id}`;

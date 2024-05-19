@@ -1,4 +1,4 @@
-import { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
+import type { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
 
 export function AutoGenSetVelocityRandom(node: SetVelocityRandom) {
     const className = `SetVelocityRandom${node.id}`;

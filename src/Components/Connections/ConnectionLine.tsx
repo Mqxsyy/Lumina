@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { GetCanvasData } from "Services/CanvasService";
-import { ConnectionData } from "Services/ConnectionsService";
+import type { ConnectionData } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
@@ -32,7 +32,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
 
         const endPoint1 =
             data.endElement === undefined
-                ? data.endPos!
+                ? (data.endPos as Vector2)
                 : data.endElement.AbsolutePosition.add(data.endElement.AbsoluteSize.div(2)).sub(canvasPosition);
 
         const xDistance = endPoint1.X - startPoint1.X;

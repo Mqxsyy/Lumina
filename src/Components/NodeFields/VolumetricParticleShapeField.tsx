@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { VolumetricParticleShapeField as ShapeFieldAPI, VolumetricParticleShapes } from "API/Fields/VolumetricParticleShapeField";
+import { type VolumetricParticleShapeField as ShapeFieldAPI, VolumetricParticleShapes } from "API/Fields/VolumetricParticleShapeField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import HighlightableTextButton from "Components/Basic/HighlightableTextButton";
 import Div from "Components/Div";
@@ -20,7 +20,7 @@ export default function VolumetricParticleShapeField({ NodeField, Label }: Props
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -36,6 +36,7 @@ export default function VolumetricParticleShapeField({ NodeField, Label }: Props
 
         EnableDropdown(posUDim2, elementRef.current.AbsoluteSize.X, [
             <HighlightableTextButton
+                key={0}
                 Size={UDim2.fromScale(1, 0)}
                 Text="Cube"
                 OnClick={() => {
@@ -43,6 +44,7 @@ export default function VolumetricParticleShapeField({ NodeField, Label }: Props
                 }}
             />,
             <HighlightableTextButton
+                key={1}
                 Size={UDim2.fromScale(1, 0)}
                 Text="Sphere"
                 OnClick={() => {

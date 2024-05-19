@@ -35,5 +35,5 @@ export interface SerializedFloatingNode extends SerializedNode {
 export interface SerializedField {
     connections?: SerializedConnection[];
     name: string;
-    data: {};
+    data: unknown;
 }

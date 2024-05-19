@@ -4,7 +4,7 @@ import { Rand } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
 import { LogicNode } from "./LogicNode";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 
 // TODO: add controls when to randomize
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { ColorRampField as ColorRampFieldAPI } from "API/Fields/ColorRampField";
+import type { ColorRampField as ColorRampFieldAPI } from "API/Fields/ColorRampField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { LoadColorRampAPI } from "Components/Windows/Ramps/ColorRamp";
@@ -14,35 +14,36 @@ interface Props {
 
 export function ColorRampField({ Label, Ramp }: Props) {
     const [forceRender, setForceRender] = useState(0);
-    const windowRef = useRef<DockWidgetPluginGui>();
+    const windowRef = useRef(GetWindow(Windows.ColorRamp));
 
     const zoomScale = GetZoomScale();
 
     useEffect(() => {
-        windowRef.current = GetWindow(Windows.ColorRamp)!;
-
         const fieldConnection = Ramp.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         const pointConnections: RBXScriptConnection[] = [];
-        Ramp.GetAllPoints().forEach((point) => {
+
+        for (const point of Ramp.GetAllPoints()) {
             const connection = point.color.FieldChanged.Connect(() => {
-                setForceRender((prev) => ++prev);
+                setForceRender((prev) => prev + 1);
             });
 
             pointConnections.push(connection);
-        });
+        }
 
         return () => {
             fieldConnection.Disconnect();
-            pointConnections.forEach((connection) => connection.Disconnect());
+            for (const connection of pointConnections) {
+                connection.Disconnect();
+            }
         };
     }, [forceRender]);
 
     const OnMouseButton1Down = () => {
         LoadColorRampAPI(Ramp);
-        windowRef.current!.Enabled = !windowRef.current!.Enabled;
+        windowRef.current.Enabled = !windowRef.current.Enabled;
     };
 
     return (

@@ -1,4 +1,4 @@
-import { MultiplyVelocityOverLife } from "API/Nodes/Update/MultiplyVelocityOverLife";
+import type { MultiplyVelocityOverLife } from "API/Nodes/Update/MultiplyVelocityOverLife";
 
 export function AutoGenMultiplyVelocityOverLife(node: MultiplyVelocityOverLife) {
     const className = `MultiplyVelocityOverLife${node.id}`;

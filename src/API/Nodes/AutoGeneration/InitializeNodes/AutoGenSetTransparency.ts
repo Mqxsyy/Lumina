@@ -1,4 +1,4 @@
-import { SetTransparency } from "API/Nodes/Initialize/SetTransparency";
+import type { SetTransparency } from "API/Nodes/Initialize/SetTransparency";
 
 export function AutoGenSetTransparency(node: SetTransparency) {
     const className = `SetTransparency${node.id}`;

@@ -1,4 +1,4 @@
-import { BurstSpawn } from "API/Nodes/Spawn/BurstSpawn";
+import type { BurstSpawn } from "API/Nodes/Spawn/BurstSpawn";
 
 export function AutoGenBurstSpawn(node: BurstSpawn) {
     const className = `BurstSpawn${node.id}`;

@@ -2,7 +2,7 @@ import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import { LogicNode } from "./LogicNode";
 import { AutoGenAdd } from "../AutoGeneration/LogicNodes/AutoGenAdd";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 
 export const AddName = "Add";
 export const AddFieldNames = {

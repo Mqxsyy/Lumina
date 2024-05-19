@@ -49,7 +49,7 @@ export class VolumetricParticleShapeField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        this.SetShape((data as SerializedData).shape);
+    ReadSerializedData(data: SerializedData) {
+        this.SetShape(data.shape);
     }
 }

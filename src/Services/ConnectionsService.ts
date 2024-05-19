@@ -1,10 +1,10 @@
-import React from "@rbxts/react";
+import type React from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
-import { NodeData } from "./NodesService";
+import type { NodeData } from "./NodesService";
 
 // BUG: creating a loop with connections makes it full crash (inf loop)
 
@@ -18,7 +18,7 @@ export interface ConnectionData {
     onDestroy: Event;
 }
 
-interface ConnectionCollectionEntry {
+export interface ConnectionCollectionEntry {
     data: ConnectionData;
     create: (props: ConnectionData) => React.Element;
 }
@@ -63,7 +63,7 @@ export function CreateConnection(startNode: NodeData, startElement: ImageButton,
 export function UpdateConnectionData(id: number, fn: (data: ConnectionData) => ConnectionData) {
     const connection = GetConnectionById(id);
     if (connection === undefined) {
-        warn(`Failed to update connection data. Id not found`);
+        warn("Failed to update connection data. Id not found");
         return;
     }
 
@@ -74,13 +74,13 @@ export function UpdateConnectionData(id: number, fn: (data: ConnectionData) => C
 export function DestroyConnection(id: number) {
     const index = ConnectionCollection.findIndex((connection) => connection.data.id === id);
     if (index !== -1) {
-        const connection = ConnectionCollection.remove(index);
-        connection!.data.onDestroy.Fire();
+        const connection = ConnectionCollection.remove(index) as ConnectionCollectionEntry;
+        connection.data.onDestroy.Fire();
         ConnectionsChanged.Fire();
         return;
     }
 
-    warn(`Failed to delete connection. Id not found`);
+    warn("Failed to delete connection. Id not found");
 }
 
 export function StartMovingConnection(id: number) {

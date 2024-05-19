@@ -1,7 +1,7 @@
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
-import { ParticleData } from "API/ParticleService";
-import { NumberField } from "./NumberField";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { ParticleData } from "API/ParticleService";
 import { NodeField } from "./NodeField";
+import { NumberField } from "./NumberField";
 
 interface SerializedData {
     number: number;
@@ -22,7 +22,7 @@ export class ConnectableNumberField extends NodeField {
 
     GetNumber = (data: ParticleData) => {
         if (this.connectedNode !== undefined) {
-            return this.connectedNode.Calculate(data)! as number;
+            return this.connectedNode.Calculate(data) as number;
         }
 
         return this.numberField.GetNumber();

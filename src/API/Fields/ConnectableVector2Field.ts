@@ -1,7 +1,7 @@
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { ParticleData } from "API/ParticleService";
 import { NodeField } from "./NodeField";
-import { ParticleData } from "API/ParticleService";
-import { SimpleVector2, Vector2Field } from "./Vector2Field";
+import { type SimpleVector2, Vector2Field } from "./Vector2Field";
 
 interface SerializedData {
     x: number;
@@ -32,7 +32,7 @@ export class ConnectableVector2Field extends NodeField {
 
     GetX = (data: ParticleData) => {
         if (this.connectedNodeX !== undefined) {
-            return this.connectedNodeX.Calculate(data)! as number;
+            return this.connectedNodeX.Calculate(data) as number;
         }
 
         return this.vector2Field.GetX();
@@ -44,7 +44,7 @@ export class ConnectableVector2Field extends NodeField {
 
     GetY = (data: ParticleData) => {
         if (this.connectedNodeY !== undefined) {
-            return this.connectedNodeY.Calculate(data)! as number;
+            return this.connectedNodeY.Calculate(data) as number;
         }
 
         return this.vector2Field.GetY();
@@ -57,7 +57,7 @@ export class ConnectableVector2Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    SetX = (x: number, ignoreFieldChange: boolean = false) => {
+    SetX = (x: number, ignoreFieldChange = false) => {
         this.vector2Field.SetX(x);
         this.connectedNodeX = undefined;
 
@@ -65,7 +65,7 @@ export class ConnectableVector2Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    SetY = (y: number, ignoreFieldChange: boolean = false) => {
+    SetY = (y: number, ignoreFieldChange = false) => {
         this.vector2Field.SetY(y);
         this.connectedNodeY = undefined;
 

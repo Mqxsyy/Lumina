@@ -1,4 +1,4 @@
-import { Cos } from "API/Nodes/Logic/Cos";
+import type { Cos } from "API/Nodes/Logic/Cos";
 
 export function AutoGenCos(node: Cos, wrapper: string) {
     const className = `Cos${node.id}`;
@@ -10,6 +10,6 @@ export function AutoGenCos(node: Cos, wrapper: string) {
 
     src += node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }

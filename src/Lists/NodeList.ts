@@ -1,5 +1,5 @@
 import { NodeGroups } from "API/NodeGroup";
-import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
+import type { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import * as CreateBarrel from "./NodeListCreateBarrel";
 import * as NameBarrel from "./NodeListNameBarrel";
 

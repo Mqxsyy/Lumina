@@ -1,20 +1,20 @@
 import React from "@rbxts/react";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
-import { Number as NumberAPI, NumberFieldNames } from "API/Nodes/Logic/Number";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import { NumberInput as NumberInputAPI, NumberInputFieldNames } from "API/Nodes/Logic/Number";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
-export function CreateNumber() {
-    return AddNode(new NumberAPI(), (data: NodeData) => {
-        return <Number key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+export function CreateNumberInput() {
+    return AddNode(new NumberInputAPI(), (data: NodeData) => {
+        return <NumberInput key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 
-function Number({ data }: { data: NodeData }) {
+function NumberInput({ data }: { data: NodeData }) {
     return (
         <Node
-            Name="Number"
+            Name="Number Input"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
@@ -22,8 +22,8 @@ function Number({ data }: { data: NodeData }) {
         >
             <ConnectableNumberField
                 NodeId={data.node.id}
-                NodeField={(data.node as NumberAPI).nodeFields.input}
-                NodeFieldName={NumberFieldNames.input}
+                NodeField={(data.node as NumberInputAPI).nodeFields.input}
+                NodeFieldName={NumberInputFieldNames.input}
                 Label="Input"
                 AllowNegative={true}
             />

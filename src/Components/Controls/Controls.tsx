@@ -16,16 +16,17 @@ const BUTTON_HEIGHT = 25;
 function Controls() {
     const Start = () => {
         const nodeSystems = GetAllSystems();
-        nodeSystems.forEach((nodeSystem) => {
+
+        for (const nodeSystem of nodeSystems) {
             nodeSystem.data.system.Run();
-        });
+        }
     };
 
     const Stop = () => {
         const nodeSystems = GetAllSystems();
-        nodeSystems.forEach((nodeSystem) => {
+        for (const nodeSystem of nodeSystems) {
             nodeSystem.data.system.Stop();
-        });
+        }
     };
 
     const Export = () => {
@@ -48,9 +49,9 @@ function Controls() {
             folder.Name = "VFX Container";
             folder.Parent = exportsFolder;
 
-            exportedFiles.forEach((file) => {
+            for (const file of exportedFiles) {
                 file.Parent = folder;
-            });
+            }
 
             saveData.Parent = folder;
         }

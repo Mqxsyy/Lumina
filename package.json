@@ -1,18 +1,14 @@
 {
 	"description": "",
 	"scripts": {
-		"build": "rbxtsc build && rojo build --plugin Lumina.rbxmx"
+		"build": "rbxtsc build && rojo build --plugin Lumina.rbxmx",
+		"lint": "npx @biomejs/biome lint ./src",
+		"format": "npx @biomejs/biome format ./src"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "1.7.3",
 		"@rbxts/compiler-types": "^2.2.0-types.0",
 		"@rbxts/types": "^1.0.774",
-		"@typescript-eslint/eslint-plugin": "^6.17.0",
-		"@typescript-eslint/parser": "^6.17.0",
-		"eslint": "^8.56.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-prettier": "^5.1.2",
-		"eslint-plugin-roblox-ts": "^0.0.36",
-		"prettier": "^3.1.1",
 		"roblox-ts": "^2.3.0-dev-3a89c93",
 		"typescript": "^5.3.3"
 	},

@@ -7,7 +7,7 @@ let draggingNodeId: number | undefined;
 
 export function SetDraggingNodeId(id: number | undefined) {
     if (id === undefined && draggingNodeId !== undefined) {
-        NodeDraggingEnded.Fire(draggingNodeId!);
+        NodeDraggingEnded.Fire(draggingNodeId);
     }
 
     draggingNodeId = id;

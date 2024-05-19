@@ -1,6 +1,6 @@
 import { ColorRampField } from "API/Fields/ColorRampField";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { AutoGenSetColorOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetColorOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -14,10 +14,6 @@ export class SetColorOverLife extends UpdateNode {
     nodeFields = {
         ramp: new ColorRampField(),
     };
-
-    constructor() {
-        super();
-    }
 
     Update(data: ParticleData) {
         const lifetime = (os.clock() - data.spawnTime) / data.lifetime;

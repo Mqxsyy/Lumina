@@ -1,7 +1,7 @@
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { AutoGenAddVelocity } from "../AutoGeneration/UpdateNodes/AutoGenAddVelocity";
 import { UpdateNode } from "./UpdateNode";
 

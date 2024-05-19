@@ -52,7 +52,7 @@ export class OrientationField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
+    ReadSerializedData(data: SerializedData) {
         this.SetOrientation((data as SerializedData).orientation);
     }
 }

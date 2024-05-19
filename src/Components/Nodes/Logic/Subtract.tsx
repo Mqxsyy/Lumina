@@ -1,8 +1,8 @@
 import React from "@rbxts/react";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Subtract as SubtractAPI, SubtractFieldNames } from "API/Nodes/Logic/Subtract";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSubtract() {

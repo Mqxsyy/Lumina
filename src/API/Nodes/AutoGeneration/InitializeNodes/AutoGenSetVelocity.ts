@@ -1,4 +1,4 @@
-import { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
+import type { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
 
 export function AutoGenSetVelocity(node: SetVelocity) {
     const className = `SetVelocity${node.id}`;

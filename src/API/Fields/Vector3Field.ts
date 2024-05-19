@@ -53,21 +53,21 @@ export class Vector3Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    SetX = (x: number, ignoreFieldChange: boolean = false) => {
+    SetX = (x: number, ignoreFieldChange = false) => {
         this.x = x;
 
         if (!ignoreFieldChange) return;
         this.FieldChanged.Fire();
     };
 
-    SetY = (y: number, ignoreFieldChange: boolean = false) => {
+    SetY = (y: number, ignoreFieldChange = false) => {
         this.y = y;
 
         if (!ignoreFieldChange) return;
         this.FieldChanged.Fire();
     };
 
-    SetZ = (z: number, ignoreFieldChange: boolean = false) => {
+    SetZ = (z: number, ignoreFieldChange = false) => {
         this.z = z;
 
         if (!ignoreFieldChange) return;

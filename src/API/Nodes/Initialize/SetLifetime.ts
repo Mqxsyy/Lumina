@@ -1,4 +1,4 @@
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetLifetime } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetime";

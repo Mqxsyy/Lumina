@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
-import { FastEventConnection } from "API/Bindables/FastEvent";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { FastEventConnection } from "API/Bindables/FastEvent";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
 import Div from "Components/Div";
 import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
-import { GetNodeById, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, type NodeCollectionEntry, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
 import { GetSelectedNodeId, SetSelectNodeId, selectedNodeIdChanged } from "Services/SelectionService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
@@ -51,7 +51,7 @@ function Node({
         selectingNodeTimeRef.current = os.clock();
 
         RunService.BindToRenderStep("MoveNode", 110, () => {
-            const nodeData = GetNodeById(NodeId)!;
+            const nodeData = GetNodeById(NodeId) as NodeCollectionEntry;
             const newAnchorPosition = GetMousePositionOnCanvas().add(mouseOffsetRef.current).div(zoomScale);
 
             if (nodeData.data.anchorPoint !== newAnchorPosition) {
@@ -67,14 +67,14 @@ function Node({
         if (os.clock() - selectingNodeTimeRef.current > NODE_SELECT_TIME) return;
 
         SetSelectNodeId(NodeId);
-        setForceRender((prev) => ++prev);
+        setForceRender((prev) => prev + 1);
 
         if (selectedNodeIdChangedConnectionRef.current !== undefined) return;
 
         selectedNodeIdChangedConnectionRef.current = selectedNodeIdChanged.Connect((newNodeId) => {
             if (newNodeId !== NodeId) {
-                setForceRender((prev) => ++prev);
-                selectedNodeIdChangedConnectionRef.current!.Disconnect();
+                setForceRender((prev) => prev + 1);
+                (selectedNodeIdChangedConnectionRef.current as FastEventConnection).Disconnect();
                 selectedNodeIdChangedConnectionRef.current = undefined;
             }
         });
@@ -113,7 +113,7 @@ function Node({
     useEffect(() => {
         if (elementRef.current === undefined) return;
         SetNodeElement(NodeId, elementRef.current);
-        setForceRender((prev) => ++prev);
+        setForceRender((prev) => prev + 1);
     }, [elementRef.current]);
 
     return (

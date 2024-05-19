@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { AddRotationXYZ as AddRotationXYZAPI, AddRotationXYZFieldNames } from "API/Nodes/Update/AddRotationXYZ";
 import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateAddRotationXYZ() {

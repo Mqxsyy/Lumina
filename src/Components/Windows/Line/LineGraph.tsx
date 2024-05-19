@@ -1,7 +1,7 @@
 import React, { StrictMode, useEffect, useRef, useState } from "@rbxts/react";
 import { createRoot } from "@rbxts/react-roblox";
 import { Event } from "API/Bindables/Event";
-import { GraphPoint, LineGraphField } from "API/Fields/LineGraphField";
+import type { GraphPoint, LineGraphField } from "API/Fields/LineGraphField";
 import { FixFloatingPointError, RemapValue, RoundDecimal } from "API/Lib";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
@@ -16,7 +16,7 @@ const DOUBLE_CLICK_TIME = 0.25;
 const BOTTOM_SIZE = 50;
 
 export function InitializeLineGraph() {
-    const window = GetWindow(Windows.ValueGraph)!;
+    const window = GetWindow(Windows.ValueGraph);
     const root = createRoot(window);
     root.render(
         <StrictMode>
@@ -46,7 +46,7 @@ function LineGraph() {
     const selectedPointRef = useRef(undefined as GraphPoint | undefined);
 
     const getPointPositionPercent = () => {
-        const window = GetWindow(Windows.ValueGraph)!;
+        const window = GetWindow(Windows.ValueGraph);
         const mousePosition = window.GetRelativeMousePosition();
 
         const percentX = (mousePosition.X - window.AbsoluteSize.X * 0.1) / (window.AbsoluteSize.X * 0.8);
@@ -68,7 +68,7 @@ function LineGraph() {
     };
 
     const removePoint = (id: number) => {
-        graphAPIRef.current!.RemovePoint(id);
+        (graphAPIRef.current as LineGraphField).RemovePoint(id);
     };
 
     const onBackgroundClick = () => {
@@ -76,7 +76,7 @@ function LineGraph() {
             const [time, valuePercent] = getPointPositionPercent();
             const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
 
-            const newPoint = graphAPIRef.current!.AddPoint(time, value);
+            const newPoint = (graphAPIRef.current as LineGraphField).AddPoint(time, value);
             selectPoint(newPoint.id);
             return;
         }
@@ -88,29 +88,33 @@ function LineGraph() {
         if (graphAPIRef.current === undefined) return;
 
         selectedPointRef.current = graphAPIRef.current.GetAllPoints().find((point) => point.id === id);
-        setForceRender((prev) => ++prev);
+        setForceRender((prev) => prev + 1);
     };
 
     const controlsTimeChanged = (time: number) => {
         if (graphAPIRef.current === undefined || selectedPointRef.current === undefined) return;
-        if (time > 1) {
-            time = 1;
+
+        let validatedTime = time;
+        if (validatedTime > 1) {
+            validatedTime = 1;
         }
 
         const clampedTime = math.clamp(time, 0, maxValue);
-        graphAPIRef.current.UpdatePoint(selectedPointRef.current!.id, clampedTime, selectedPointRef.current!.value);
+        graphAPIRef.current.UpdatePoint(selectedPointRef.current.id, clampedTime, selectedPointRef.current.value);
 
-        return time;
+        return validatedTime;
     };
 
     const controlsValueChanged = (value: number) => {
         if (graphAPIRef.current === undefined || selectedPointRef.current === undefined) return;
-        if (value > maxValue) {
-            value = maxValue;
+
+        let validatedValue = value;
+        if (validatedValue > maxValue) {
+            validatedValue = maxValue;
         }
 
-        graphAPIRef.current.UpdatePoint(selectedPointRef.current!.id, selectedPointRef.current!.time, value);
-        return value;
+        graphAPIRef.current.UpdatePoint(selectedPointRef.current.id, selectedPointRef.current.time, validatedValue);
+        return validatedValue;
     };
 
     useEffect(() => {
@@ -118,7 +122,7 @@ function LineGraph() {
             if (loadedGraphAPI !== undefined) {
                 graphAPIRef.current = loadedGraphAPI;
                 selectedPointRef.current = undefined;
-                setForceRender((prev) => ++prev);
+                setForceRender((prev) => prev + 1);
             }
         });
 
@@ -145,7 +149,7 @@ function LineGraph() {
         if (graphAPIRef.current === undefined) return;
 
         const valuesChangedConnection = graphAPIRef.current.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => valuesChangedConnection.Disconnect();
@@ -229,10 +233,10 @@ function LineGraph() {
                     positionPercent.Y * windowSize.Y - RemapValue(maxValue - point.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
                 );
 
-                if (index === 0 || index === graphAPIRef.current!.GetAllPoints().size() - 1) {
+                if (index === 0 || index === (graphAPIRef.current as LineGraphField).GetAllPoints().size() - 1) {
                     return (
                         <LineGraphPoint
-                            key={"endpoint_" + point.id}
+                            key={`endpoint_${point.id}`}
                             Id={point.id}
                             Position={position}
                             OnSelect={selectPoint}
@@ -243,7 +247,7 @@ function LineGraph() {
 
                 return (
                     <LineGraphPoint
-                        key={"point_" + point.id}
+                        key={`point_${point.id}`}
                         Id={point.id}
                         Position={position}
                         OnSelect={selectPoint}
@@ -253,8 +257,8 @@ function LineGraph() {
                 );
             })}
             {/* Lines */}
-            {graphAPIRef.current?.GetAllPoints().map((_, index) => {
-                const allPoints = graphAPIRef.current!.GetAllPoints();
+            {graphAPIRef.current?.GetAllPoints().map((point, index) => {
+                const allPoints = (graphAPIRef.current as LineGraphField).GetAllPoints();
 
                 if (index === allPoints.size() - 1) return;
 
@@ -285,7 +289,7 @@ function LineGraph() {
 
                 return (
                     <Div
-                        key={"Line_" + index}
+                        key={`Line_${point.id}`}
                         AnchorPoint={new Vector2(0.5, 0.5)}
                         Position={UDim2.fromOffset(position.X, position.Y)}
                         Size={UDim2.fromOffset(length, 2)}
@@ -315,7 +319,7 @@ function LineGraph() {
                     <BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Time" IsAffectedByZoom={false} />
                     <NumberInput
                         Size={new UDim2(0.75, 0, 0, 20)}
-                        Text={selectedPointRef.current === undefined ? "" : () => tostring(selectedPointRef.current!.time)}
+                        Text={selectedPointRef.current === undefined ? "" : () => tostring((selectedPointRef.current as GraphPoint).time)}
                         NumberChanged={controlsTimeChanged}
                         Disabled={selectedPointRef.current === undefined || !selectedPointRef.current.canEditTime}
                         IsAffectedByZoom={false}
@@ -333,7 +337,7 @@ function LineGraph() {
                     <BasicTextLabel Size={new UDim2(0.25, 0, 0, 20)} TextXAlignment={"Right"} Text="Value" IsAffectedByZoom={false} />
                     <NumberInput
                         Size={new UDim2(0.75, 0, 0, 20)}
-                        Text={selectedPointRef.current === undefined ? "" : () => tostring(selectedPointRef.current!.value)}
+                        Text={selectedPointRef.current === undefined ? "" : () => tostring((selectedPointRef.current as GraphPoint).value)}
                         NumberChanged={controlsValueChanged}
                         Disabled={selectedPointRef.current === undefined}
                         IsAffectedByZoom={false}

@@ -1,5 +1,3 @@
-import { Event } from "API/Bindables/Event";
-
 export enum Windows {
     Lumina = "Lumina",
     ValueGraph = "Lumina Value Graph",
@@ -9,9 +7,12 @@ export enum Windows {
     UpdateLog = "Lumina Update Log",
 }
 
-export const OnWinowLoaded = new Event<[Windows]>();
+interface Window {
+    Widget: DockWidgetPluginGui | undefined;
+    Info: DockWidgetPluginGuiInfo;
+}
 
-const windows = {
+const windows: { [key in Windows]: Window } = {
     [Windows.Lumina]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
         Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 800, 600, 200, 150),
@@ -40,14 +41,15 @@ const windows = {
 
 export function InitializeWindows(plugin: Plugin) {
     for (const [key, value] of pairs(windows)) {
-        windows[key].Widget = plugin.CreateDockWidgetPluginGui(key, value.Info);
-        windows[key].Widget!.Name = key;
-        windows[key].Widget!.Title = key;
-        windows[key].Widget!.Enabled = false;
-        OnWinowLoaded.Fire(key);
+        const widget = plugin.CreateDockWidgetPluginGui(key, value.Info);
+        widget.Name = key;
+        widget.Title = key;
+        widget.Enabled = false;
+
+        windows[key].Widget = widget;
     }
 }
 
 export function GetWindow(window: Windows) {
-    return windows[window].Widget;
+    return windows[window].Widget as DockWidgetPluginGui;
 }

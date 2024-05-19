@@ -1,6 +1,6 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { AutoGenSin } from "../AutoGeneration/LogicNodes/AutoGenSin";
 import { LogicNode } from "./LogicNode";
 

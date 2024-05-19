@@ -1,4 +1,4 @@
-import { PlaneParticle } from "API/Nodes/Render/PlaneParticle";
+import type { PlaneParticle } from "API/Nodes/Render/PlaneParticle";
 
 export function AutoGenPlaneParticle(node: PlaneParticle) {
     const className = `PlaneParticle${node.id}`;

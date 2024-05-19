@@ -1,5 +1,5 @@
-import { NodeField } from "API/Fields/NodeField";
-import { NodeGroups } from "../NodeGroup";
+import type { NodeField } from "API/Fields/NodeField";
+import type { NodeGroups } from "../NodeGroup";
 import { NodeIdPool } from "./NodeIdPool";
 
 export abstract class Node {

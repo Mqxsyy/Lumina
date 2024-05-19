@@ -1,8 +1,8 @@
 import React from "@rbxts/react";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Divide as DivideAPI, DivideFieldNames } from "API/Nodes/Logic/Divide";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateDivide() {

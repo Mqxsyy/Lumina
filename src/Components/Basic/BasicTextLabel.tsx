@@ -1,4 +1,4 @@
-import React from "@rbxts/react";
+import React, { type PropsWithChildren } from "@rbxts/react";
 import { StyleColors, StyleText } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
@@ -36,7 +36,7 @@ export function BasicTextLabel({
     ZIndex = 1,
     IsAffectedByZoom = true,
     children,
-}: React.PropsWithChildren<Props>) {
+}: PropsWithChildren<Props>) {
     const zoomScale = GetZoomScale();
 
     return (

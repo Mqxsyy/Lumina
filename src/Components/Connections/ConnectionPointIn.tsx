@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { FastEventConnection } from "API/Bindables/FastEvent";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import {
-    ConnectionData,
+    type ConnectionCollectionEntry,
+    type ConnectionData,
     DestroyConnection,
     GetAllConnections,
     GetConnectionById,
@@ -9,10 +11,9 @@ import {
     UnbindMovingConnection,
     UpdateConnectionData,
 } from "Services/ConnectionsService";
-import { GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, type NodeCollectionEntry, type NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import ConnectionPoint from "./ConnectionPoint";
-import { FastEventConnection } from "API/Bindables/FastEvent";
 
 interface Props {
     AnchorPoint?: Vector2;
@@ -40,7 +41,7 @@ export default function ConnectionPointIn({
     const elementRef = useRef<ImageButton>();
     const isLoadingConnectionsRef = useRef(false);
 
-    const node = GetNodeById(NodeId)!;
+    const node = GetNodeById(NodeId) as NodeCollectionEntry;
     const nodeData = node.data;
 
     const finishConnection = (id: number) => {
@@ -65,7 +66,7 @@ export default function ConnectionPointIn({
             return data;
         });
 
-        const connectionData = GetConnectionById(id)!.data;
+        const connectionData = (GetConnectionById(id) as ConnectionCollectionEntry).data;
 
         const destroyConnection = connectionData.onDestroy.Connect(() => {
             destroyConnection.Disconnect();
@@ -99,7 +100,7 @@ export default function ConnectionPointIn({
         const movingConnectionId = GetMovingConnectionId();
         if (movingConnectionId === -1) return;
 
-        const connectionData = GetConnectionById(movingConnectionId)!.data;
+        const connectionData = (GetConnectionById(movingConnectionId) as ConnectionCollectionEntry).data;
         if (connectionData.startNode.node.id === NodeId) return;
 
         UnbindMovingConnection();
@@ -121,7 +122,7 @@ export default function ConnectionPointIn({
 
     useEffect(() => {
         const connection = node.elementLoaded.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -182,7 +183,7 @@ export default function ConnectionPointIn({
             }
 
             if (attempts >= maxAttempts) {
-                warn("Failed to load connection for node: " + nodeData.node.GetNodeName());
+                warn(`Failed to load connection for node: ${nodeData.node.GetNodeName()}`);
             }
 
             nodeData.loadedConnectionsIn = undefined;

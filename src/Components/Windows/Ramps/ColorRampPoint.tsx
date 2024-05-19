@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
-import { ColorPoint } from "API/Fields/ColorRampField";
+import type { ColorPoint } from "API/Fields/ColorRampField";
 import { RoundDecimal } from "API/Lib";
 import Div from "Components/Div";
 import { GetWindow, Windows } from "Windows/WindowSevice";
@@ -18,14 +18,14 @@ interface Props {
 export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, RemovePoint }: Props) {
     const lastClickTime = useRef(0);
     const isMovingRef = useRef(false);
-    const colorWindow = useRef<DockWidgetPluginGui>();
+    const colorWindow = useRef(GetWindow(Windows.ColorPicker));
 
     const onMouseButton1Down = () => {
         SetSelectedPoint(Point);
 
         if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
             LoadColorPickerAPI(Point.color);
-            colorWindow.current!.Enabled = true;
+            colorWindow.current.Enabled = true;
             return;
         }
 
@@ -36,7 +36,7 @@ export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, Re
             if (!isMovingRef.current) return;
 
             RunService.BindToRenderStep("MoveColorRampPoint", Enum.RenderPriority.Input.Value, () => {
-                const window = GetWindow(Windows.ColorRamp)!;
+                const window = GetWindow(Windows.ColorRamp);
                 const mousePosition = window.GetRelativeMousePosition();
 
                 const padding = window.AbsoluteSize.X * 0.1;
@@ -59,10 +59,6 @@ export default function ColorRampPoint({ Point, SetSelectedPoint, UpdateTime, Re
         if (RemovePoint === undefined) return;
         RemovePoint(Point.id);
     };
-
-    useEffect(() => {
-        colorWindow.current = GetWindow(Windows.ColorPicker);
-    }, []);
 
     return (
         <imagebutton

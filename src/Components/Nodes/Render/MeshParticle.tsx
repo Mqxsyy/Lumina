@@ -4,7 +4,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import NumberField from "Components/NodeFields/NumberField";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
 

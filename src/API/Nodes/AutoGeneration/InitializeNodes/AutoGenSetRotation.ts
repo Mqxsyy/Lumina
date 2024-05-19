@@ -1,4 +1,4 @@
-import { SetRotationXYZ } from "API/Nodes/Initialize/SetRotationXYZ";
+import type { SetRotationXYZ } from "API/Nodes/Initialize/SetRotationXYZ";
 
 export function AutoGenSetRotationXYZ(node: SetRotationXYZ) {
     const className = `SetRotationXYZ${node.id}`;

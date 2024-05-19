@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { SetPositionToParent as SetPositionToParentAPI } from "API/Nodes/Initialize/SetPositionToParent";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetPositionToParent() {

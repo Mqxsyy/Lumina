@@ -1,11 +1,11 @@
 import { HttpService } from "@rbxts/services";
 import { API_VERSION } from "API/ExportAPI";
+import type { NodeField } from "API/Fields/NodeField";
 import { GetSavesFolder } from "API/FolderLocations";
-import { Node } from "API/Nodes/Node";
-import { GetAllSystems, NodeSystemData } from "Services/NodeSystemService";
-import { GetAllNodes, GetNodeById, NodeConnectionIn } from "Services/NodesService";
-import { SaveData, SerializedConnection, SerializedField, SerializedFloatingNode, SerializedNode, SerializedSystem } from "./SaveData";
-import { NodeField } from "API/Fields/NodeField";
+import type { Node } from "API/Nodes/Node";
+import { GetAllSystems, type NodeSystemData } from "Services/NodeSystemService";
+import { GetAllNodes, GetNodeById, type NodeConnectionIn } from "Services/NodesService";
+import type { SaveData, SerializedConnection, SerializedField, SerializedFloatingNode, SerializedNode, SerializedSystem } from "./SaveData";
 
 const savesFolder = GetSavesFolder();
 
@@ -18,15 +18,15 @@ export function SaveToFile() {
 
     const systems = GetAllSystems();
 
-    systems.forEach((system) => {
+    for (const system of systems) {
         const serializedSystem = SerializeSystem(system.data);
         data.systems.push(serializedSystem);
-    });
+    }
 
     const allNodes = GetAllNodes();
     const floatingNodes = allNodes.filter((collectionEnrty) => collectionEnrty.data.node.connectedSystemId === undefined);
 
-    floatingNodes.forEach((collectionEntry) => {
+    for (const collectionEntry of floatingNodes) {
         const node = collectionEntry.data.node;
         const anchorPoint = collectionEntry.data.anchorPoint;
 
@@ -37,9 +37,9 @@ export function SaveToFile() {
         };
 
         data.floatingNodes.push(serializedNode);
-    });
+    }
 
-    let container;
+    let container: ModuleScript | StringValue;
     const stringData = HttpService.JSONEncode(data);
 
     if (stringData.size() > 200000) {
@@ -76,14 +76,14 @@ export function SerializeSystem(system: NodeSystemData, ignoreConnections = fals
     }
 
     const initializeNodes = system.system.initializeNodes;
-    initializeNodes.forEach((node) => {
+    for (const node of initializeNodes) {
         serializedSystem.groups.initialize.push(SerializeNode(node, ignoreConnections));
-    });
+    }
 
     const updateNodes = system.system.updateNodes;
-    updateNodes.forEach((node) => {
+    for (const node of updateNodes) {
         serializedSystem.groups.update.push(SerializeNode(node, ignoreConnections));
-    });
+    }
 
     const renderNode = system.system.renderNode;
     if (renderNode !== undefined) {
@@ -94,7 +94,10 @@ export function SerializeSystem(system: NodeSystemData, ignoreConnections = fals
 }
 
 export function SerializeNode(node: Node, ignoreConnections = false): SerializedNode {
-    const nodeData = GetNodeById(node.id)!.data;
+    const collectionEntry = GetNodeById(node.id);
+    if (collectionEntry === undefined) return error("Node not found");
+
+    const nodeData = collectionEntry.data;
 
     const serializedNode: SerializedNode = {
         nodeName: node.GetNodeName(),
@@ -105,9 +108,9 @@ export function SerializeNode(node: Node, ignoreConnections = false): Serialized
     if (nodeData.connectionsOut.size() !== 0 && !ignoreConnections) {
         serializedNode.connections = [];
 
-        nodeData.connectionsOut.forEach((connection) => {
-            serializedNode.connections!.push({ id: connection.id });
-        });
+        for (const connection of nodeData.connectionsOut) {
+            serializedNode.connections.push({ id: connection.id });
+        }
     }
 
     return serializedNode;
@@ -126,7 +129,7 @@ function SerializeFields(fields: { [key: string]: NodeField }, connectionsIn?: N
     }
 
     if (connectionsIn !== undefined) {
-        connectionsIn.forEach((connection) => {
+        for (const connection of connectionsIn) {
             for (const serializedField of serializedFields) {
                 if (serializedField.name === connection.fieldName) {
                     const serializedConnection: SerializedConnection = {
@@ -145,7 +148,7 @@ function SerializeFields(fields: { [key: string]: NodeField }, connectionsIn?: N
                     break;
                 }
             }
-        });
+        }
     }
 
     return serializedFields;

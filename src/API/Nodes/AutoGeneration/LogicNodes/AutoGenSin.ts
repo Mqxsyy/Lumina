@@ -1,4 +1,4 @@
-import { Sin } from "API/Nodes/Logic/Sin";
+import type { Sin } from "API/Nodes/Logic/Sin";
 
 export function AutoGenSin(node: Sin, wrapper: string) {
     const className = `Sin${node.id}`;
@@ -10,6 +10,6 @@ export function AutoGenSin(node: Sin, wrapper: string) {
 
     src += node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }

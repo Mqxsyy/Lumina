@@ -1,4 +1,4 @@
-import { SetTransparencyOverLife } from "API/Nodes/Update/SetTransparencyOverLife";
+import type { SetTransparencyOverLife } from "API/Nodes/Update/SetTransparencyOverLife";
 
 export function AutoGenTransparencyOverLife(node: SetTransparencyOverLife) {
     const className = `SetTransparencyOverLife${node.id}`;

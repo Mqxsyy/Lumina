@@ -1,4 +1,4 @@
-import { Clamp } from "API/Nodes/Logic/Clamp";
+import type { Clamp } from "API/Nodes/Logic/Clamp";
 
 export function AutoGenClamp(node: Clamp, wrapper: string) {
     const className = `Clamp${node.id}`;
@@ -11,6 +11,6 @@ export function AutoGenClamp(node: Clamp, wrapper: string) {
     src += node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`);
     src += node.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }

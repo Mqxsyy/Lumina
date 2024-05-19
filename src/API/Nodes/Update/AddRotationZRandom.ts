@@ -1,7 +1,7 @@
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { FrameRateMultiplier, Rand, RoundDecimal } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { AutoGenAddRotationZRandom } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZRandom";
 import { UpdateNode } from "./UpdateNode";
 

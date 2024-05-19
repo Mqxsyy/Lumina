@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { VolumetricParticle as VolumetricParticleAPI } from "API/Nodes/Render/VolumetricParticle";
 import VolumetricParticleShapeField from "Components/NodeFields/VolumetricParticleShapeField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateVolumetricParticle() {

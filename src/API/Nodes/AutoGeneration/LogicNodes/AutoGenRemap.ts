@@ -1,4 +1,4 @@
-import { Remap } from "API/Nodes/Logic/Remap";
+import type { Remap } from "API/Nodes/Logic/Remap";
 
 export function AutoGenRemap(node: Remap, wrapper: string) {
     const className = `Remap${node.id}`;
@@ -12,6 +12,6 @@ export function AutoGenRemap(node: Remap, wrapper: string) {
     src += node.nodeFields.oldRange.AutoGenerateField(`${varName}.nodeFields.oldRange`);
     src += node.nodeFields.newRange.AutoGenerateField(`${varName}.nodeFields.newRange`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }

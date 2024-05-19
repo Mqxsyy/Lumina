@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { AddVelocity as AddVelocityAPI, AddVelocityFieldNames } from "API/Nodes/Update/AddVelocity";
 import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateAddVelocity() {

@@ -1,4 +1,4 @@
-import { SetPositionToParent } from "API/Nodes/Initialize/SetPositionToParent";
+import type { SetPositionToParent } from "API/Nodes/Initialize/SetPositionToParent";
 
 export function AutoGenSetPositionToParent(node: SetPositionToParent) {
     const className = `SetPositionToParent${node.id}`;

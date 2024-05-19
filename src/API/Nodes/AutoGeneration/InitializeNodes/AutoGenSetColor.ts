@@ -1,4 +1,4 @@
-import { SetColor } from "API/Nodes/Initialize/SetColor";
+import type { SetColor } from "API/Nodes/Initialize/SetColor";
 
 export function AutoGenSetColor(node: SetColor) {
     const className = `SetColor${node.id}`;

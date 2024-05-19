@@ -1,4 +1,4 @@
-import { Subtract } from "API/Nodes/Logic/Subtract";
+import type { Subtract } from "API/Nodes/Logic/Subtract";
 
 export function AutoGenSubtract(node: Subtract, wrapper: string) {
     const className = `Subtract${node.id}`;
@@ -11,6 +11,6 @@ export function AutoGenSubtract(node: Subtract, wrapper: string) {
     src += node.nodeFields.a.AutoGenerateField(`${varName}.nodeFields.a`);
     src += node.nodeFields.b.AutoGenerateField(`${varName}.nodeFields.b`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }

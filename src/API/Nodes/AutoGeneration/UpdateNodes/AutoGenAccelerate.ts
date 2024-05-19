@@ -1,4 +1,4 @@
-import { Accelerate } from "API/Nodes/Update/Accelerate";
+import type { Accelerate } from "API/Nodes/Update/Accelerate";
 
 export function AutoGenAccelerate(node: Accelerate) {
     const className = `Acceleration${node.id}`;

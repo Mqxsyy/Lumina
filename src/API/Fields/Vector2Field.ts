@@ -43,14 +43,14 @@ export class Vector2Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    SetX = (x: number, ignoreFieldChange: boolean = false) => {
+    SetX = (x: number, ignoreFieldChange = false) => {
         this.x = x;
 
         if (ignoreFieldChange) return;
         this.FieldChanged.Fire();
     };
 
-    SetY = (y: number, ignoreFieldChange: boolean = false) => {
+    SetY = (y: number, ignoreFieldChange = false) => {
         this.y = y;
 
         if (ignoreFieldChange) return;

@@ -1,8 +1,8 @@
 import React from "@rbxts/react";
 import { Add as AddAPI, AddFieldNames } from "API/Nodes/Logic/Add";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateAdd() {

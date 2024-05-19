@@ -1,4 +1,4 @@
-import { SetRotationZRandom } from "API/Nodes/Initialize/SetRotationZRandom";
+import type { SetRotationZRandom } from "API/Nodes/Initialize/SetRotationZRandom";
 
 export function AutoGenSetRotationZRandom(node: SetRotationZRandom) {
     const className = `SetRotationZRandom${node.id}`;

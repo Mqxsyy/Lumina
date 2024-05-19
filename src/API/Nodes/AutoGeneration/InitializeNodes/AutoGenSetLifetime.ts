@@ -1,4 +1,4 @@
-import { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
+import type { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
 
 export function AutoGenSetLifetime(node: SetLifetime) {
     const className = `SetLifetime${node.id}`;

@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { SetColorOverLife as ColorOverLifeAPI } from "API/Nodes/Update/SetColorOverLife";
 import { ColorRampField } from "Components/NodeFields/ColorRampField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetColorOverLife() {

@@ -1,4 +1,4 @@
-import { SetPosition } from "API/Nodes/Initialize/SetPosition";
+import type { SetPosition } from "API/Nodes/Initialize/SetPosition";
 
 export function AutoGenSetPosition(node: SetPosition) {
     const className = `SetPosition${node.id}`;

@@ -2,7 +2,7 @@ import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { RemapValue } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { AutoGenRemap } from "../AutoGeneration/LogicNodes/AutoGenRemap";
 import { LogicNode } from "./LogicNode";
 

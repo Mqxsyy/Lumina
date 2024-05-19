@@ -1,4 +1,4 @@
-import { MeshParticle } from "API/Nodes/Render/MeshParticle";
+import type { MeshParticle } from "API/Nodes/Render/MeshParticle";
 
 export function AutoGenMeshParticle(node: MeshParticle) {
     const className = `MeshParticle${node.id}`;

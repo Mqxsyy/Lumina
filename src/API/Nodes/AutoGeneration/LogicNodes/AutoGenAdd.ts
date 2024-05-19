@@ -1,4 +1,4 @@
-import { Add } from "API/Nodes/Logic/Add";
+import type { Add } from "API/Nodes/Logic/Add";
 
 export function AutoGenAdd(node: Add, wrapper: string) {
     const className = `Add${node.id}`;
@@ -11,6 +11,6 @@ export function AutoGenAdd(node: Add, wrapper: string) {
     src += node.nodeFields.a.AutoGenerateField(`${varName}.nodeFields.a`);
     src += node.nodeFields.b.AutoGenerateField(`${varName}.nodeFields.b`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }

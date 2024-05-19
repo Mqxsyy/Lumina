@@ -1,5 +1,5 @@
 import { ColorField } from "API/Fields/ColorField";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetColor } from "../AutoGeneration/InitializeNodes/AutoGenSetColor";
 import { InitializeNode } from "./InitializeNode";

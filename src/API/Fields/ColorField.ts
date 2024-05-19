@@ -57,8 +57,7 @@ export class ColorField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        const serializedData = data as SerializedColorField;
-        this.SetHSV(serializedData.hue, serializedData.saturation, serializedData.value);
+    ReadSerializedData(data: SerializedColorField) {
+        this.SetHSV(data.hue, data.saturation, data.value);
     }
 }

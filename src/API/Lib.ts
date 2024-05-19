@@ -27,11 +27,11 @@ export function RoundDecimal(x: number, decimal: number) {
     return FixFloatingPointError(math.round(x / decimal) * decimal);
 }
 
-export function FixFloatingPointError(value: number): number {
+export function FixFloatingPointError(value: number) {
     const shortened = string.format("%.3f", tostring(value));
-    return tonumber(shortened.gsub("%.?0+$", "")[0])!;
+    return tonumber(shortened.gsub("%.?0+$", "")[0]) as number;
 }
 
-export function CapitalizeFirstLetter(text: string): string {
+export function CapitalizeFirstLetter(text: string) {
     return text.gsub("^%l", string.upper)[0];
 }

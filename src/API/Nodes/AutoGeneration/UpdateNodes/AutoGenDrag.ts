@@ -1,4 +1,4 @@
-import { Drag } from "API/Nodes/Update/Drag";
+import type { Drag } from "API/Nodes/Update/Drag";
 
 export function AutoGenDrag(node: Drag) {
     const className = `Drag${node.id}`;

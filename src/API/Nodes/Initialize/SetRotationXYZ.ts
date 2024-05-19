@@ -1,5 +1,5 @@
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetRotationXYZ } from "../AutoGeneration/InitializeNodes/AutoGenSetRotation";
 import { InitializeNode } from "./InitializeNode";

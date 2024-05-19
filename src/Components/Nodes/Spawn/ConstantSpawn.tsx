@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { ConstantSpawn as ConstantSpawnAPI } from "API/Nodes/Spawn/ConstantSpawn";
 import NumberField from "Components/NodeFields/NumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateConstantSpawn() {
@@ -29,7 +29,12 @@ function ConstantSpawn({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <NumberField NodeId={id} NodeField={nodeFields.rate} Label={"Constant Spawn"} OverrideSetNumber={rateChanged} />
+            <NumberField
+                NodeId={id}
+                NodeField={nodeFields.rate}
+                Label={"Constant Spawn"}
+                OverrideSetNumber={rateChanged as (number: number) => undefined}
+            />
         </Node>
     );
 }

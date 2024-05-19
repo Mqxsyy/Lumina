@@ -1,10 +1,10 @@
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { FrameRateMultiplier, Rand, RoundDecimal } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { AutoGenAddRotationXYZRandom } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationXYZRandom";
 import { UpdateNode } from "./UpdateNode";
-import { SimpleVector3 } from "API/Fields/Vector3Field";
+import type { SimpleVector3 } from "API/Fields/Vector3Field";
 
 export const AddRotationXYZRandomName = "AddRotationXYZRandom";
 export const AddRotationXYZRandomFieldNames = {

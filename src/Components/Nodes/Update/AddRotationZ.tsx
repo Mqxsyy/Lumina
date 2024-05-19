@@ -2,7 +2,7 @@ import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { AddRotationZ as AddRotationZAPI, AddRotationZFieldNames } from "API/Nodes/Update/AddRotationZ";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateAddRotationZ() {

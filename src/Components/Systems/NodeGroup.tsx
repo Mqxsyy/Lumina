@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
+import { RunService } from "@rbxts/services";
+import type { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
 import { NodeGroups } from "API/NodeGroup";
-import { NodeSystem } from "API/NodeSystem";
+import type { NodeSystem } from "API/NodeSystem";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { GetDraggingNodeId } from "Services/DraggingService";
-import { BindNodeGroupFunction, NodeSystemData, NodeSystemsChanged } from "Services/NodeSystemService";
-import { GetNodeById, NodeCollectionEntry, RemoveNode, UpdateNodeData } from "Services/NodesService";
+import { BindNodeGroupFunction, type NodeSystemData, NodeSystemsChanged } from "Services/NodeSystemService";
+import { GetNodeById, type NodeCollectionEntry, RemoveNode, UpdateNodeData } from "Services/NodesService";
 import { StyleColors } from "Style";
+import { GetMousePosition } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
 import { GROUP_BORDER_THICKNESS, GROUP_HEADER_HEIGHT, GROUP_LIST_PADDING, GROUP_PADDING } from "../SizeConfig";
-import { RunService } from "@rbxts/services";
-import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 
 // TODO: add node reordering
 
@@ -30,7 +30,9 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 
     const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
-    const nodeDestroyConnectionsRef = useRef<{ [key: number]: FastEventConnection }>({});
+    const nodeDestroyConnectionsRef = useRef<{
+        [key: number]: FastEventConnection;
+    }>({});
     const nodePositionCheckerConnectionRef = useRef<RBXScriptConnection | undefined>(undefined);
 
     const addToChildNodes = (node: NodeCollectionEntry) => {
@@ -46,7 +48,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
     };
 
     const swapChildNodes = (index1: number, id: number) => {
-        const index2 = childNodesRef.current.findIndex((n) => n.data.node.id === id)!;
+        const index2 = childNodesRef.current.findIndex((n) => n.data.node.id === id);
 
         const tempNode = childNodesRef.current[index2];
 
@@ -86,21 +88,27 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 
         if (childNodesRef.current.findIndex((n) => n.data.node.id === draggingNodeId) === -1) return;
 
-        const draggingNode = GetNodeById(draggingNodeId)!;
+        const draggingNode = GetNodeById(draggingNodeId) as NodeCollectionEntry;
 
         const mousePosition = GetMousePosition();
         for (let i = 0; i < childNodesRef.current.size(); i++) {
             const targetNode = childNodesRef.current[i];
 
             if (targetNode.data.node.id === draggingNodeId) continue;
-            const y = targetNode.element!.AbsolutePosition.Y + targetNode.element!.AbsoluteSize.Y * 0.5;
+            const y = (targetNode.element as ImageButton).AbsolutePosition.Y + (targetNode.element as ImageButton).AbsoluteSize.Y * 0.5;
 
-            if (targetNode.element!.AbsolutePosition.Y < draggingNode.element!.AbsolutePosition.Y && mousePosition.Y < y) {
+            if (
+                (targetNode.element as ImageButton).AbsolutePosition.Y < (draggingNode.element as ImageButton).AbsolutePosition.Y &&
+                mousePosition.Y < y
+            ) {
                 swapChildNodes(i, draggingNodeId);
                 return;
             }
 
-            if (targetNode.element!.AbsolutePosition.Y > draggingNode.element!.AbsolutePosition.Y && mousePosition.Y > y) {
+            if (
+                (targetNode.element as ImageButton).AbsolutePosition.Y > (draggingNode.element as ImageButton).AbsolutePosition.Y &&
+                mousePosition.Y > y
+            ) {
                 swapChildNodes(i, draggingNodeId);
                 return;
             }
@@ -108,7 +116,8 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
     };
 
     const addChildNode = (id: number) => {
-        const node = GetNodeById(id)!;
+        const node = GetNodeById(id);
+        if (node === undefined) return;
 
         if (node.data.node.nodeGroup !== NodeGroup) return;
 
@@ -173,9 +182,9 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
             if (destroyConnection === undefined) return;
             destroyConnection = destroyConnection.Disconnect();
 
-            childNodes.forEach((node) => {
-                RemoveNode(node.data.node.id);
-            });
+            for (const childNode of childNodes) {
+                RemoveNode(childNode.data.node.id);
+            }
         });
 
         return () => {

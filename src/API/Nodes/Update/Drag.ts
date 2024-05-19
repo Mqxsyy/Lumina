@@ -3,7 +3,7 @@ import { FrameRateMultiplier, LerpNumber } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { AutoGenDrag } from "../AutoGeneration/UpdateNodes/AutoGenDrag";
 import { UpdateNode } from "./UpdateNode";
-import { GetParticleData, ParticleData } from "API/ParticleService";
+import { GetParticleData, type ParticleData } from "API/ParticleService";
 
 export const DragName = "Drag";
 export const DragFieldNames = {

@@ -1,6 +1,6 @@
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetLifetimeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetimeRandom";
 import { InitializeNode } from "./InitializeNode";

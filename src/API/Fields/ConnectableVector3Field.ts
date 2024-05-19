@@ -1,7 +1,7 @@
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { ParticleData } from "API/ParticleService";
 import { NodeField } from "./NodeField";
-import { ParticleData } from "API/ParticleService";
-import { SimpleVector3, Vector3Field } from "./Vector3Field";
+import { type SimpleVector3, Vector3Field } from "./Vector3Field";
 
 interface SerializedData {
     x: number;
@@ -34,7 +34,7 @@ export class ConnectableVector3Field extends NodeField {
 
     GetX = (data: ParticleData) => {
         if (this.connectedNodeX !== undefined) {
-            return this.connectedNodeX.Calculate(data)! as number;
+            return this.connectedNodeX.Calculate(data) as number;
         }
 
         return this.vector3Field.GetX();
@@ -46,7 +46,7 @@ export class ConnectableVector3Field extends NodeField {
 
     GetY = (data: ParticleData) => {
         if (this.connectedNodeY !== undefined) {
-            return this.connectedNodeY.Calculate(data)! as number;
+            return this.connectedNodeY.Calculate(data) as number;
         }
 
         return this.vector3Field.GetY();
@@ -58,7 +58,7 @@ export class ConnectableVector3Field extends NodeField {
 
     GetZ = (data: ParticleData) => {
         if (this.connectedNodeZ !== undefined) {
-            return this.connectedNodeZ.Calculate(data)! as number;
+            return this.connectedNodeZ.Calculate(data) as number;
         }
 
         return this.vector3Field.GetZ();
@@ -72,7 +72,7 @@ export class ConnectableVector3Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    SetX = (x: number, ignoreFieldChange: boolean = false) => {
+    SetX = (x: number, ignoreFieldChange = false) => {
         this.vector3Field.SetX(x);
         this.connectedNodeX = undefined;
 
@@ -80,7 +80,7 @@ export class ConnectableVector3Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    SetY = (y: number, ignoreFieldChange: boolean = false) => {
+    SetY = (y: number, ignoreFieldChange = false) => {
         this.vector3Field.SetY(y);
         this.connectedNodeY = undefined;
 
@@ -88,7 +88,7 @@ export class ConnectableVector3Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    SetZ = (z: number, ignoreFieldChange: boolean = false) => {
+    SetZ = (z: number, ignoreFieldChange = false) => {
         this.vector3Field.SetZ(z);
         this.connectedNodeZ = undefined;
 

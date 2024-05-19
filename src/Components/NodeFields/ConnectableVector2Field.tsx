@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "@rbxts/react";
-import { ConnectableVector2Field as Vector2FieldAPI } from "API/Fields/ConnectableVector2Field";
+import type { ConnectableVector2Field as Vector2FieldAPI } from "API/Fields/ConnectableVector2Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
-import { GetNodeById } from "Services/NodesService";
+import { GetNodeById, type NodeCollectionEntry } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
@@ -32,11 +32,11 @@ export function ConnectableVector2Field({
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
-        const connection2 = GetNodeById(NodeId)!.data.dataChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+        const connection2 = (GetNodeById(NodeId) as NodeCollectionEntry).data.dataChanged.Connect(() => {
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -72,7 +72,7 @@ export function ConnectableVector2Field({
                         Text={() => NodeField.GetXAsText()}
                         AllowNegative={AllowNegatives[0]}
                         Disabled={NodeField.connectedNodeX !== undefined}
-                        NumberChanged={NodeField.SetX}
+                        NumberChanged={NodeField.SetX as (value: number) => undefined}
                     >
                         <uiflexitem FlexMode={"Fill"} />
                     </NumberInput>
@@ -95,7 +95,7 @@ export function ConnectableVector2Field({
                         Text={() => NodeField.GetYAsText()}
                         AllowNegative={AllowNegatives[1]}
                         Disabled={NodeField.connectedNodeY !== undefined}
-                        NumberChanged={NodeField.SetY}
+                        NumberChanged={NodeField.SetY as (value: number) => undefined}
                     >
                         <uiflexitem FlexMode={"Fill"} />
                     </NumberInput>

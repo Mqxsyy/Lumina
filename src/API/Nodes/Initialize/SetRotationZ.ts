@@ -1,5 +1,5 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetRotationZ } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZ";
 import { InitializeNode } from "./InitializeNode";

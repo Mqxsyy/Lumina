@@ -1,4 +1,4 @@
-import { SetEmission } from "API/Nodes/Initialize/SetEmission";
+import type { SetEmission } from "API/Nodes/Initialize/SetEmission";
 
 export function AutoGenSetEmission(node: SetEmission) {
     const className = `SetEmission${node.id}`;

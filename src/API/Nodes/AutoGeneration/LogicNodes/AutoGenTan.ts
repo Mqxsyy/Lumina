@@ -1,4 +1,4 @@
-import { Tan } from "API/Nodes/Logic/Tan";
+import type { Tan } from "API/Nodes/Logic/Tan";
 
 export function AutoGenTan(node: Tan, wrapper: string) {
     const className = `Tan${node.id}`;
@@ -10,6 +10,6 @@ export function AutoGenTan(node: Tan, wrapper: string) {
 
     src += node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }

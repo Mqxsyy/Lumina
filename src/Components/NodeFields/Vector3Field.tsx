@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "@rbxts/react";
-import { Vector3Field as Vector3FieldAPI } from "API/Fields/Vector3Field";
+import type { Vector3Field as Vector3FieldAPI } from "API/Fields/Vector3Field";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import Div from "Components/Div";
-import { GetNodeById } from "Services/NodesService";
+import { GetNodeById, type NodeCollectionEntry } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
@@ -21,11 +21,11 @@ export function Vector3Field({ NodeId, NodeField, Label = undefined, ValueLabels
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
-        const connection2 = GetNodeById(NodeId)!.data.dataChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+        const connection2 = (GetNodeById(NodeId) as NodeCollectionEntry).data.dataChanged.Connect(() => {
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -53,7 +53,7 @@ export function Vector3Field({ NodeId, NodeField, Label = undefined, ValueLabels
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetX())}
                         AllowNegative={true}
-                        NumberChanged={NodeField.SetX}
+                        NumberChanged={NodeField.SetX as (value: number) => undefined}
                     >
                         <uiflexitem FlexMode={"Fill"} />
                     </NumberInput>
@@ -68,7 +68,7 @@ export function Vector3Field({ NodeId, NodeField, Label = undefined, ValueLabels
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetY())}
                         AllowNegative={true}
-                        NumberChanged={NodeField.SetY}
+                        NumberChanged={NodeField.SetY as (value: number) => undefined}
                     >
                         <uiflexitem FlexMode={"Fill"} />
                     </NumberInput>
@@ -83,7 +83,7 @@ export function Vector3Field({ NodeId, NodeField, Label = undefined, ValueLabels
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => tostring(NodeField.GetZ())}
                         AllowNegative={true}
-                        NumberChanged={NodeField.SetZ}
+                        NumberChanged={NodeField.SetZ as (value: number) => undefined}
                     >
                         <uiflexitem FlexMode={"Fill"} />
                     </NumberInput>

@@ -3,11 +3,11 @@ import { VolumetricParticleShapeField, VolumetricParticleShapes } from "API/Fiel
 import { GetVolumetricParticlesFolder } from "API/FolderLocations";
 import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
-import { CreateParticleData, GetNextParticleId, ParticleData, ParticleTypes } from "API/ParticleService";
-import { InitializeNode } from "../Initialize/InitializeNode";
-import { UpdateNode } from "../Update/UpdateNode";
-import { RenderNode } from "./RenderNode";
+import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import { AutoGenVolumetricParticle } from "../AutoGeneration/RenderNodes/AutoGenVolumetricParticle";
+import type { InitializeNode } from "../Initialize/InitializeNode";
+import type { UpdateNode } from "../Update/UpdateNode";
+import { RenderNode } from "./RenderNode";
 
 export const VolumetricParticleName = "VolumetricParticle";
 export const VolumetricParticleFieldNames = {
@@ -92,13 +92,13 @@ export class VolumetricParticle extends RenderNode {
 
         const data = CreateParticleData(id, ParticleTypes.Cube, particle, updateNodes);
 
-        initializeNodes.forEach((node) => {
+        for (const node of initializeNodes) {
             node.Initialize(data);
-        });
+        }
 
-        updateNodes.forEach((node) => {
+        for (const node of updateNodes) {
             node.Update(data);
-        });
+        }
 
         if (data.rotation !== Vector3.zero) {
             const rot = data.rotation;
@@ -126,7 +126,9 @@ export class VolumetricParticle extends RenderNode {
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
                     if (this.aliveParticles.size() === 0) {
-                        this.updateLoop!.Disconnect();
+                        if (this.updateLoop === undefined) continue;
+
+                        this.updateLoop.Disconnect();
                         this.updateLoop = undefined;
                     }
 
@@ -167,9 +169,9 @@ export class VolumetricParticle extends RenderNode {
             this.updateLoop.Disconnect();
         }
 
-        this.aliveParticles.forEach((data) => {
+        for (const data of this.aliveParticles) {
             this.objectPool.RemoveItem(data.particle);
-        });
+        }
 
         this.objectPool.ClearStandby();
     }

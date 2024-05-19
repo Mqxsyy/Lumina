@@ -1,9 +1,9 @@
-import React from "@rbxts/react";
+import type React from "@rbxts/react";
 import { Event } from "API/Bindables/Event";
 import { FastEvent } from "API/Bindables/FastEvent";
 import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
-import { NodeSystem } from "API/NodeSystem";
+import type { NodeSystem } from "API/NodeSystem";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale } from "ZoomScale";
 
@@ -114,7 +114,7 @@ export function UpdateSystemData(id: number, callback: (data: NodeSystemData) =>
         return;
     }
 
-    warn(`Failed to update system data. Id not found`);
+    warn("Failed to update system data. Id not found");
 }
 
 export function RemoveNodeSystem(id: number) {
@@ -129,5 +129,5 @@ export function RemoveNodeSystem(id: number) {
         return;
     }
 
-    warn(`Failed to delete system. Id not found`);
+    warn("Failed to delete system. Id not found");
 }

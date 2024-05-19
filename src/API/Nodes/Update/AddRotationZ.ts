@@ -1,7 +1,7 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { AutoGenAddRotationZ } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZ";
 import { UpdateNode } from "./UpdateNode";
 

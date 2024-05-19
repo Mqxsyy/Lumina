@@ -1,5 +1,5 @@
 import { IdPool } from "./IdPool";
-import { UpdateNode } from "./Nodes/Update/UpdateNode";
+import type { UpdateNode } from "./Nodes/Update/UpdateNode";
 
 // OPTIMIZE: mem leak? array only continues to grow
 
@@ -46,7 +46,7 @@ export function CreateParticleData(
     particle: BasePart,
     updateNodes: UpdateNode[],
 ): ParticleData {
-    return (particleData[particleId] = {
+    particleData[particleId] = {
         particleId,
         particleType,
         particle,
@@ -63,7 +63,9 @@ export function CreateParticleData(
         transparency: 0,
         color: new Color3(1, 1, 1),
         updateNodes,
-    });
+    };
+
+    return particleData[particleId];
 }
 
 export function GetParticleData(id: number) {

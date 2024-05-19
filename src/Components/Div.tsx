@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "@rbxts/react";
+import React, { type PropsWithChildren, useEffect, useRef } from "@rbxts/react";
 
 interface Props {
     ElementName?: string;
@@ -43,7 +43,7 @@ export default function Div({
     onMouseButton3Up = undefined,
     getFrame = undefined,
     children,
-}: React.PropsWithChildren<Props>) {
+}: PropsWithChildren<Props>) {
     const frameRef = useRef<Frame>();
 
     useEffect(() => {

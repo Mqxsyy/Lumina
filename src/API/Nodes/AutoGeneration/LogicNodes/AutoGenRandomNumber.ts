@@ -1,4 +1,4 @@
-import { RandomNumber } from "API/Nodes/Logic/RandomNumber";
+import type { RandomNumber } from "API/Nodes/Logic/RandomNumber";
 
 export function AutoGenRandomNumber(node: RandomNumber, wrapper: string) {
     const className = `RandomNumber${node.id}`;
@@ -10,6 +10,6 @@ export function AutoGenRandomNumber(node: RandomNumber, wrapper: string) {
 
     src += node.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }

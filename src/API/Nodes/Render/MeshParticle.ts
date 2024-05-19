@@ -4,10 +4,10 @@ import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetMeshParticlesFolder } from "API/FolderLocations";
 import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
-import { CreateParticleData, GetNextParticleId, ParticleData, ParticleTypes } from "API/ParticleService";
+import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import { AutoGenMeshParticle } from "../AutoGeneration/RenderNodes/AutoGenMeshParticle";
-import { InitializeNode } from "../Initialize/InitializeNode";
-import { UpdateNode } from "../Update/UpdateNode";
+import type { InitializeNode } from "../Initialize/InitializeNode";
+import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
 export const MeshParticleName = "MeshParticle";
@@ -52,10 +52,10 @@ function CreateVolumetricParticle(): MeshParticlePart {
     base.Massless = true;
 
     const mesh = new Instance("SpecialMesh");
-    mesh.MeshId = "rbxassetid://" + DEFAULT_MESH_ID;
+    mesh.MeshId = `rbxassetid://${DEFAULT_MESH_ID}`;
     mesh.MeshType = Enum.MeshType.FileMesh;
     mesh.Scale = DEFAULT_SIZE;
-    mesh.TextureId = "rbxassetid://" + DEFAULT_TEXTURE_ID;
+    mesh.TextureId = `rbxassetid://${DEFAULT_TEXTURE_ID}`;
     mesh.VertexColor = DEFAULT_COLOR_VECTOR3;
     mesh.Parent = base;
 
@@ -107,7 +107,7 @@ export class MeshParticle extends RenderNode {
         const id = GetNextParticleId();
         const particle = this.objectPool.GetItem() as MeshParticlePart;
 
-        const meshId = "rbxassetid://" + this.nodeFields.meshId.GetNumber();
+        const meshId = `rbxassetid://${this.nodeFields.meshId.GetNumber()}`;
         if (particle.Mesh.MeshId !== meshId) {
             particle.Mesh.MeshId = meshId;
         }
@@ -116,13 +116,13 @@ export class MeshParticle extends RenderNode {
 
         const data = CreateParticleData(id, ParticleTypes.Cube, particle, updateNodes);
 
-        initializeNodes.forEach((node) => {
+        for (const node of initializeNodes) {
             node.Initialize(data);
-        });
+        }
 
-        updateNodes.forEach((node) => {
+        for (const node of updateNodes) {
             node.Update(data);
-        });
+        }
 
         if (data.rotation !== Vector3.zero) {
             const rot = data.rotation;
@@ -150,7 +150,9 @@ export class MeshParticle extends RenderNode {
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
                     if (this.aliveParticles.size() === 0) {
-                        this.updateLoop!.Disconnect();
+                        if (this.updateLoop === undefined) continue;
+
+                        this.updateLoop.Disconnect();
                         this.updateLoop = undefined;
                     }
 
@@ -191,9 +193,9 @@ export class MeshParticle extends RenderNode {
             this.updateLoop.Disconnect();
         }
 
-        this.aliveParticles.forEach((data) => {
+        for (const data of this.aliveParticles) {
             this.objectPool.RemoveItem(data.particle);
-        });
+        }
 
         this.objectPool.ClearStandby();
     }

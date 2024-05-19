@@ -1,8 +1,8 @@
 import React from "@rbxts/react";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Clamp as ClampAPI, ClampFieldNames } from "API/Nodes/Logic/Clamp";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 

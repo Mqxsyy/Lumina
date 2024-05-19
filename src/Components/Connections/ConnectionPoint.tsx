@@ -42,7 +42,7 @@ export default function ConnectionPoint({
         if (ConnectionIds === undefined) return;
         if (UpdateConnecton === undefined) return;
 
-        UpdateConnecton(connectionPointRef.current!);
+        UpdateConnecton(connectionPointRef.current as ImageButton);
     }, [connectionPointRef.current?.AbsolutePosition, ConnectionId, ConnectionIds]);
 
     return (

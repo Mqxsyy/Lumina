@@ -41,7 +41,7 @@ export { VolumetricParticleName } from "API/Nodes/Render/VolumetricParticle";
 export { MeshParticleName } from "API/Nodes/Render/MeshParticle";
 
 // Logic
-export { NumberName } from "API/Nodes/Logic/Number";
+export { NumberInputName as NumberName } from "API/Nodes/Logic/Number";
 export { AddName } from "API/Nodes/Logic/Add";
 export { SubtractName } from "API/Nodes/Logic/Subtract";
 export { MultiplyName } from "API/Nodes/Logic/Multiply";

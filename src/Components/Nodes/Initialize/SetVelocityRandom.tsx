@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { SetVelocityRandom as SetVelocityRandomAPI, SetVelocityRandomFieldNames } from "API/Nodes/Initialize/SetVelocityRandom";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetVelocityRandom() {

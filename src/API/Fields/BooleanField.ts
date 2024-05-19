@@ -1,5 +1,5 @@
 import { Event } from "API/Bindables/Event";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { NodeField } from "./NodeField";
 
 interface SerializedData {
@@ -49,7 +49,7 @@ export class BooleanField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
+    ReadSerializedData(data: SerializedData) {
         this.SetBoolean((data as SerializedData).boolean);
     }
 }

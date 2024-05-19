@@ -41,7 +41,7 @@ export { CreateVolumetricParticle } from "Components/Nodes/Render/VolumetricPart
 export { CreateMeshParticle } from "Components/Nodes/Render/MeshParticle";
 
 // Logic
-export { CreateNumber } from "Components/Nodes/Logic/Number";
+export { CreateNumberInput as CreateNumber } from "Components/Nodes/Logic/Number";
 export { CreateAdd } from "Components/Nodes/Logic/Add";
 export { CreateSubtract } from "Components/Nodes/Logic/Subtract";
 export { CreateMultiply } from "Components/Nodes/Logic/Multiply";

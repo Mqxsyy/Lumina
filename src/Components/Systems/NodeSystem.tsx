@@ -1,17 +1,23 @@
 import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
-import { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
+import type { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
 import { NodeGroups } from "API/NodeGroup";
-import { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
+import type { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
 import { TextInput } from "Components/Basic/TextInput";
+import { GetSelectedSystemId, SetSelectSystemId, selectedSystemIdChanged } from "Services/SelectionService";
 import { StyleColors } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
-import { GetSystemById, NodeSystemData, RemoveNodeSystem, UpdateSystemData } from "../../Services/NodeSystemService";
+import {
+    GetSystemById,
+    type NodeSystemCollectioEntry,
+    type NodeSystemData,
+    RemoveNodeSystem,
+    UpdateSystemData,
+} from "../../Services/NodeSystemService";
 import Div from "../Div";
 import { SYSTEM_BORDER_THICKNESS, SYSTEM_HEADER_HEIGHT, SYSTEM_LIST_PADDING, SYSTEM_PADDING, SYSTEM_WIDTH } from "../SizeConfig";
 import NodeGroup from "./NodeGroup";
-import { GetSelectedSystemId, SetSelectSystemId, selectedSystemIdChanged } from "Services/SelectionService";
 
 const SYSTEM_SELECT_TIME = 0.1;
 
@@ -56,14 +62,14 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
         if (os.clock() - selectingSystemTimeRef.current > SYSTEM_SELECT_TIME) return;
 
         SetSelectSystemId(systemId);
-        setForceRender((prev) => ++prev);
+        setForceRender((prev) => prev + 1);
 
         if (selectedSystemIdChangedConnectionRef.current !== undefined) return;
 
         selectedSystemIdChangedConnectionRef.current = selectedSystemIdChanged.Connect((newSystemId) => {
             if (newSystemId !== systemId) {
-                setForceRender((prev) => ++prev);
-                selectedSystemIdChangedConnectionRef.current!.Disconnect();
+                setForceRender((prev) => prev + 1);
+                (selectedSystemIdChangedConnectionRef.current as FastEventConnection).Disconnect();
                 selectedSystemIdChangedConnectionRef.current = undefined;
             }
         });
@@ -81,7 +87,7 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
     };
 
     const getSystemName = () => {
-        const data = GetSystemById(systemId)!;
+        const data = GetSystemById(systemId) as NodeSystemCollectioEntry;
         return data.data.systemName;
     };
 

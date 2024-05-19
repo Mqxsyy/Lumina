@@ -1,6 +1,6 @@
 import { LineGraphField } from "API/Fields/LineGraphField";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
 import { AutoGenTransparencyOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetTransparencyOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -14,10 +14,6 @@ export class SetTransparencyOverLife extends UpdateNode {
     nodeFields = {
         graph: new LineGraphField(),
     };
-
-    constructor() {
-        super();
-    }
 
     Update(data: ParticleData) {
         const lifetime = (os.clock() - data.spawnTime) / data.lifetime;

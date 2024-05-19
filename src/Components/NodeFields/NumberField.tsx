@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "@rbxts/react";
-import { NumberField as NumberFieldAPI } from "API/Fields/NumberField";
+import type { NumberField as NumberFieldAPI } from "API/Fields/NumberField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import Div from "Components/Div";
-import { GetNodeById } from "Services/NodesService";
+import { GetNodeById, type NodeCollectionEntry } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
     Label: string;
     AllowNegative?: boolean;
 
-    OverrideSetNumber?: (number: number) => void;
+    OverrideSetNumber?: (number: number) => undefined;
 }
 
 export default function NumberField({ NodeId, NodeField, Label, AllowNegative = false, OverrideSetNumber = undefined }: Props) {
@@ -23,11 +23,11 @@ export default function NumberField({ NodeId, NodeField, Label, AllowNegative = 
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
-        const connection2 = GetNodeById(NodeId)!.data.dataChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+        const connection2 = (GetNodeById(NodeId) as NodeCollectionEntry).data.dataChanged.Connect(() => {
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -47,7 +47,7 @@ export default function NumberField({ NodeId, NodeField, Label, AllowNegative = 
                 Size={new UDim2(1, 0, 0, 20)}
                 Text={() => tostring(NodeField.GetNumber())}
                 AllowNegative={AllowNegative}
-                NumberChanged={OverrideSetNumber || NodeField.SetNumber}
+                NumberChanged={OverrideSetNumber || (NodeField.SetNumber as (value: number) => undefined)}
             >
                 <uiflexitem FlexMode={"Fill"} />
             </NumberInput>

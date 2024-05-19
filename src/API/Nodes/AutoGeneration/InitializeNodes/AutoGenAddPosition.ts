@@ -1,4 +1,4 @@
-import { AddPosition } from "API/Nodes/Initialize/AddPosition";
+import type { AddPosition } from "API/Nodes/Initialize/AddPosition";
 
 export function AutoGenAddPosition(node: AddPosition) {
     const className = `AddPosition${node.id}`;

@@ -1,4 +1,4 @@
-import { SetSizeRandom } from "API/Nodes/Initialize/SetSizeRandom";
+import type { SetSizeRandom } from "API/Nodes/Initialize/SetSizeRandom";
 
 export function AutoGenSetSizeRandom(node: SetSizeRandom) {
     const className = `SetSizeRandom${node.id}`;

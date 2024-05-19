@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Time as TimeAPI } from "API/Nodes/Logic/Time";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 import Div from "Components/Div";
 

@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 import { SetRotationXYZ as SetRotationXYZAPI, SetRotationXYZFieldNames } from "API/Nodes/Initialize/SetRotationXYZ";
 

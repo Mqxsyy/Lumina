@@ -1,5 +1,7 @@
 import { GetAllSystems } from "Services/NodeSystemService";
-import { NodeSystem } from "./NodeSystem";
+import type { NodeSystem } from "./NodeSystem";
+import type { RenderNode } from "./Nodes/Render/RenderNode";
+import type { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 
 export default function ExportAsScript() {
     const convertedFiles: ModuleScript[] = [];
@@ -8,12 +10,12 @@ export default function ExportAsScript() {
         let passedChecks = true;
 
         if (system.data.system.spawnNode === undefined) {
-            warn(system.data.systemName + " is missing a spawn node.");
+            warn(`${system.data.systemName} is missing a spawn node.`);
             passedChecks = false;
         }
 
         if (system.data.system.renderNode === undefined) {
-            warn(system.data.systemName + " is missing a render node.");
+            warn(`${system.data.systemName} is missing a render node.`);
             passedChecks = false;
         }
 
@@ -47,20 +49,20 @@ function CreateScript(name: string, nodeSystem: NodeSystem) {
     src += 'local NodeSystem = TS.import(script, APIFolder, "NodeSystem").NodeSystem\n';
     src += "local nodeSystem = NodeSystem.new()\n\n";
 
-    src += nodeSystem.spawnNode!.GetAutoGenerationCode();
+    src += (nodeSystem.spawnNode as SpawnNode).GetAutoGenerationCode();
     src += "\n\n";
 
-    nodeSystem.initializeNodes.forEach((node) => {
+    for (const node of nodeSystem.initializeNodes) {
         src += node.GetAutoGenerationCode();
         src += "\n\n";
-    });
+    }
 
-    nodeSystem.updateNodes.forEach((node) => {
+    for (const node of nodeSystem.updateNodes) {
         src += node.GetAutoGenerationCode();
         src += "\n\n";
-    });
+    }
 
-    src += nodeSystem.renderNode!.GetAutoGenerationCode();
+    src += (nodeSystem.renderNode as RenderNode).GetAutoGenerationCode();
     src += "\n\n";
 
     src += "function VFXScript.Start()\n";

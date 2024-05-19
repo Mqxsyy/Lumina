@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "@rbxts/react";
-import { BooleanField as BooleanFieldAPI } from "API/Fields/BooleanField";
+import type { BooleanField as BooleanFieldAPI } from "API/Fields/BooleanField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import CheckBox from "Components/Basic/CheckBox";
 import { GetZoomScale } from "ZoomScale";
@@ -16,7 +16,7 @@ export default function BooleanField({ NodeField, Label }: Props) {
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {

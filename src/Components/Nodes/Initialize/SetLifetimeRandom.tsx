@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { SetLifetimeRandom as SetLifetimeRandomAPI, SetLifetimeRandomFieldNames } from "API/Nodes/Initialize/SetLifetimeRandom";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetLifetimeRandom() {

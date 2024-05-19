@@ -1,12 +1,14 @@
 import React from "@rbxts/react";
 import { MultiplyVelocityOverLife as MultiplyVelocityOverLifeAPI } from "API/Nodes/Update/MultiplyVelocityOverLife";
 import { LineGraphField } from "Components/NodeFields/LineGraphField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateMultiplyVelocityOverLife() {
     return AddNode(new MultiplyVelocityOverLifeAPI(), (data: NodeData) => {
-        return <MultiplyVelocityOverLife key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <MultiplyVelocityOverLife key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />
+        );
     });
 }
 

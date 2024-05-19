@@ -1,17 +1,17 @@
 import { NodeGroups } from "API/NodeGroup";
-import { SetEmission } from "API/Nodes/Initialize/SetEmission";
-import { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
-import { SetPosition } from "API/Nodes/Initialize/SetPosition";
-import { SetRotationZRandom } from "API/Nodes/Initialize/SetRotationZRandom";
-import { SetSizeRandom } from "API/Nodes/Initialize/SetSizeRandom";
-import { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
-import { PlaneParticle } from "API/Nodes/Render/PlaneParticle";
-import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
-import { AddRotationZRandom } from "API/Nodes/Update/AddRotationZRandom";
-import { Drag } from "API/Nodes/Update/Drag";
-import { MultiplySizeOverLife } from "API/Nodes/Update/MultiplySizeOverLife";
-import { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
-import { SetTransparencyOverLife } from "API/Nodes/Update/SetTransparencyOverLife";
+import type { SetEmission } from "API/Nodes/Initialize/SetEmission";
+import type { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
+import type { SetPosition } from "API/Nodes/Initialize/SetPosition";
+import type { SetRotationZRandom } from "API/Nodes/Initialize/SetRotationZRandom";
+import type { SetSizeRandom } from "API/Nodes/Initialize/SetSizeRandom";
+import type { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
+import type { PlaneParticle } from "API/Nodes/Render/PlaneParticle";
+import type { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
+import type { AddRotationZRandom } from "API/Nodes/Update/AddRotationZRandom";
+import type { Drag } from "API/Nodes/Update/Drag";
+import type { MultiplySizeOverLife } from "API/Nodes/Update/MultiplySizeOverLife";
+import type { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
+import type { SetTransparencyOverLife } from "API/Nodes/Update/SetTransparencyOverLife";
 import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 import { CreateSetRotationZRandom } from "Components/Nodes/Initialize/SetRotationZRandom";
 import { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
@@ -40,38 +40,38 @@ export function CreateFlameSystem() {
         const constantSpawn = CreateConstantSpawn();
         (constantSpawn.data.node as ConstantSpawn).nodeFields.rate.SetNumber(60);
         constantSpawn.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawn.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Spawn] as (id: number) => void)(constantSpawn.data.node.id);
         });
 
         // init
         const setLifetimeRandom = CreateSetLifetimeRandom();
         (setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.8, 1.2);
         setLifetimeRandom.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetimeRandom.data.node.id);
         });
 
         const setPosition = CreateSetPosition();
         (setPosition.data.node as SetPosition).nodeFields.position.SetY(5);
         setPosition.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setPosition.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setPosition.data.node.id);
         });
 
         const setSizeRandom = CreateSetSizeRandom();
         (setSizeRandom.data.node as SetSizeRandom).nodeFields.range.SetVector2(1, 2);
         setSizeRandom.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setSizeRandom.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setSizeRandom.data.node.id);
         });
 
         const setEmission = CreateSetEmission();
         (setEmission.data.node as SetEmission).nodeFields.emission.SetNumber(5);
         setEmission.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setEmission.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setEmission.data.node.id);
         });
 
         const setRotationZRandom = CreateSetRotationZRandom();
         (setRotationZRandom.data.node as SetRotationZRandom).nodeFields.range.SetVector2(-360, 360);
         setRotationZRandom.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setRotationZRandom.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setRotationZRandom.data.node.id);
         });
 
         const setVelocityRandom = CreateSetVelocityRandom();
@@ -79,7 +79,7 @@ export function CreateFlameSystem() {
         (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(10, 15);
         (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-0.5, 0.5);
         setVelocityRandom.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setVelocityRandom.data.node.id);
         });
 
         // upd
@@ -90,7 +90,7 @@ export function CreateFlameSystem() {
         (setColorOverLife.data.node as SetColorOverLife).nodeFields.ramp.AddPoint(0.8, new Vector3(0, 1, 0.1));
         (setColorOverLife.data.node as SetColorOverLife).nodeFields.ramp.endPoint.color.SetHSV(0, 0, 0);
         setColorOverLife.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Update]!(setColorOverLife.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(setColorOverLife.data.node.id);
         });
 
         const multiplySizeOverLife = CreateMultiplySizeOverLife();
@@ -100,7 +100,7 @@ export function CreateFlameSystem() {
         (multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.5, 1.5);
         (multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.endPoint.value = 0.25;
         multiplySizeOverLife.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Update]!(multiplySizeOverLife.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(multiplySizeOverLife.data.node.id);
         });
 
         const setTransparencyOverLife = CreateSetTransparencyOverLife();
@@ -111,19 +111,19 @@ export function CreateFlameSystem() {
         (setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.85, 0.4);
         (setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.endPoint.value = 1;
         setTransparencyOverLife.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Update]!(setTransparencyOverLife.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(setTransparencyOverLife.data.node.id);
         });
 
         const drag = CreateDrag();
         (drag.data.node as Drag).nodeFields.drag.SetNumber(2);
         drag.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Update]!(drag.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(drag.data.node.id);
         });
 
         const addRotationZRandom = CreateAddRotationZRandom();
         (addRotationZRandom.data.node as AddRotationZRandom).nodeFields.range.SetVector2(-360, 360);
         addRotationZRandom.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Update]!(addRotationZRandom.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(addRotationZRandom.data.node.id);
         });
 
         // rend
@@ -134,7 +134,7 @@ export function CreateFlameSystem() {
         (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetColumns.SetNumber(4);
         (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetFrameCount.SetNumber(16);
         particlePlane.elementLoaded.Connect(() => {
-            flameSystemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
+            (flameSystemData.addToNodeGroup[NodeGroups.Render] as (id: number) => void)(particlePlane.data.node.id);
         });
     });
 
@@ -148,20 +148,20 @@ export function CreateFlameSystem() {
         const constantSpawn = CreateConstantSpawn();
         (constantSpawn.data.node as ConstantSpawn).nodeFields.rate.SetNumber(20);
         constantSpawn.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Spawn]!(constantSpawn.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Spawn] as (id: number) => void)(constantSpawn.data.node.id);
         });
 
         // init
         const setLifetimeRandom = CreateSetLifetimeRandom();
         (setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.75, 1.5);
         setLifetimeRandom.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetimeRandom.data.node.id);
         });
 
         const setPosition = CreateSetPosition();
         (setPosition.data.node as SetPosition).nodeFields.position.SetY(5);
         setPosition.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setPosition.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setPosition.data.node.id);
         });
 
         const setVelocityRandom = CreateSetVelocityRandom();
@@ -169,25 +169,25 @@ export function CreateFlameSystem() {
         (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(15, 20);
         (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-0.4, 0.4);
         setVelocityRandom.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setVelocityRandom.data.node.id);
         });
 
         const setRotationZRandom = CreateSetRotationZRandom();
         (setRotationZRandom.data.node as SetRotationZRandom).nodeFields.range.SetVector2(-360, 360);
         setRotationZRandom.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setRotationZRandom.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setRotationZRandom.data.node.id);
         });
 
         const setEmission = CreateSetEmission();
         (setEmission.data.node as SetEmission).nodeFields.emission.SetNumber(0);
         setEmission.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setEmission.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setEmission.data.node.id);
         });
 
         const setSizeRandom = CreateSetSizeRandom();
         (setSizeRandom.data.node as SetSizeRandom).nodeFields.range.SetVector2(1, 2);
         setSizeRandom.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Initialize]!(setSizeRandom.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setSizeRandom.data.node.id);
         });
 
         // upd
@@ -198,13 +198,13 @@ export function CreateFlameSystem() {
         (setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.AddPoint(0.75, 0.85);
         (setTransparencyOverLife.data.node as SetTransparencyOverLife).nodeFields.graph.endPoint.value = 1;
         setTransparencyOverLife.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Update]!(setTransparencyOverLife.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(setTransparencyOverLife.data.node.id);
         });
 
         const drag = CreateDrag();
         (drag.data.node as Drag).nodeFields.drag.SetNumber(2.5);
         drag.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Update]!(drag.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(drag.data.node.id);
         });
 
         const multiplySizeOverLife = CreateMultiplySizeOverLife();
@@ -214,13 +214,13 @@ export function CreateFlameSystem() {
         (multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.AddPoint(0.6, 1);
         (multiplySizeOverLife.data.node as MultiplySizeOverLife).nodeFields.graph.endPoint.value = 0.5;
         multiplySizeOverLife.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Update]!(multiplySizeOverLife.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(multiplySizeOverLife.data.node.id);
         });
 
         const addRotationZRandom = CreateAddRotationZRandom();
         (addRotationZRandom.data.node as AddRotationZRandom).nodeFields.range.SetVector2(-180, 180);
         addRotationZRandom.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Update]!(addRotationZRandom.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(addRotationZRandom.data.node.id);
         });
 
         //rend
@@ -231,7 +231,7 @@ export function CreateFlameSystem() {
         (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetColumns.SetNumber(4);
         (particlePlane.data.node as PlaneParticle).nodeFields.spriteSheetFrameCount.SetNumber(16);
         particlePlane.elementLoaded.Connect(() => {
-            smokeSystemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
+            (smokeSystemData.addToNodeGroup[NodeGroups.Render] as (id: number) => void)(particlePlane.data.node.id);
         });
     });
 

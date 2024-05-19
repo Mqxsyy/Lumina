@@ -1,15 +1,15 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
-import { AutoGenNumber } from "../AutoGeneration/LogicNodes/AutoGenNumber";
+import type { ParticleData } from "API/ParticleService";
+import { AutoGenNumberInput } from "../AutoGeneration/LogicNodes/AutoGenNumber";
 import { LogicNode } from "./LogicNode";
 
-export const NumberName = "Number";
-export const NumberFieldNames = {
+export const NumberInputName = "NumberInput";
+export const NumberInputFieldNames = {
     input: "input",
 };
 
-export class Number extends LogicNode {
+export class NumberInput extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
     nodeFields: {
         input: ConnectableNumberField;
@@ -28,10 +28,10 @@ export class Number extends LogicNode {
     };
 
     GetNodeName(): string {
-        return NumberName;
+        return NumberInputName;
     }
 
     GetAutoGenerationCode(wrapper: string) {
-        return AutoGenNumber(this, wrapper);
+        return AutoGenNumberInput(this, wrapper);
     }
 }

@@ -1,4 +1,4 @@
-import { MultiplySizeOverLife } from "API/Nodes/Update/MultiplySizeOverLife";
+import type { MultiplySizeOverLife } from "API/Nodes/Update/MultiplySizeOverLife";
 
 export function AutoGenMultiplySizeOverLife(node: MultiplySizeOverLife) {
     const className = `MultiplySizeOverLife${node.id}`;

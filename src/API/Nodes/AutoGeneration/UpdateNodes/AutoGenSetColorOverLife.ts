@@ -1,4 +1,4 @@
-import { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
+import type { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
 
 export function AutoGenSetColorOverLife(node: SetColorOverLife) {
     const className = `SetColorOverLife${node.id}`;

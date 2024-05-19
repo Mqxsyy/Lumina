@@ -1,6 +1,7 @@
 import { RunService } from "@rbxts/services";
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
-import { ParticleData } from "API/ParticleService";
+import type { NodeField } from "API/Fields/NodeField";
+import type { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetPositionToParent } from "../AutoGeneration/InitializeNodes/AutoGenSetPositionToParent";
 import { InitializeNode } from "./InitializeNode";
@@ -10,7 +11,7 @@ export const SetPositionToParentFieldNames = {};
 
 export class SetPositionToParent extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {};
+    nodeFields: { [key: string]: NodeField };
 
     parent?: BasePart;
 
@@ -28,7 +29,7 @@ export class SetPositionToParent extends InitializeNode {
         if (!RunService.IsRunning()) return;
         if (this.parent === undefined) return;
 
-        const pos = this.parent!.Position;
+        const pos = this.parent.Position;
         data.particle.Position = new Vector3(pos.X, pos.Y, pos.Z);
     }
 

@@ -1,4 +1,4 @@
-import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
+import type { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
 
 export function AutoGenConstantSpawn(node: ConstantSpawn) {
     const className = `ConstantSpawn${node.id}`;

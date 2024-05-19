@@ -1,5 +1,5 @@
 import { IdPool } from "API/IdPool";
-import { ColorField, SerializedColorField } from "./ColorField";
+import { ColorField, type SerializedColorField } from "./ColorField";
 import { NodeField } from "./NodeField";
 
 // BUG: last frame sometimes diff color (white?)
@@ -45,9 +45,9 @@ export class ColorRampField extends NodeField {
         const points = [];
 
         points.push(this.startPoint);
-        this.colorPoints.forEach((point) => {
+        for (const point of this.colorPoints) {
             points.push(point);
-        });
+        }
         points.push(this.endPoint);
 
         return points;
@@ -84,9 +84,9 @@ export class ColorRampField extends NodeField {
         const points = [];
 
         points.push(this.startPoint);
-        this.colorPoints.forEach((point) => {
+        for (const point of this.colorPoints) {
             points.push(point);
-        });
+        }
         points.push(this.endPoint);
 
         const keypoints = points.map((point) => new ColorSequenceKeypoint(point.time, point.color.GetColor()));
@@ -154,18 +154,16 @@ export class ColorRampField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        const serializedData = data as SerializedData;
+    ReadSerializedData(data: SerializedData) {
+        this.startPoint.time = data.startPoint.time;
+        this.startPoint.color.ReadSerializedData(data.startPoint.color);
 
-        this.startPoint.time = serializedData.startPoint.time;
-        this.startPoint.color.ReadSerializedData(serializedData.startPoint.color);
-
-        this.endPoint.time = serializedData.endPoint.time;
-        this.endPoint.color.ReadSerializedData(serializedData.endPoint.color);
+        this.endPoint.time = data.endPoint.time;
+        this.endPoint.color.ReadSerializedData(data.endPoint.color);
         this.FieldChanged.Fire();
 
-        serializedData.colorPoints.forEach((point) => {
+        for (const point of this.colorPoints) {
             this.AddPoint(point.time, new Vector3(point.color.hue, point.color.saturation, point.color.value));
-        });
+        }
     }
 }

@@ -1,15 +1,15 @@
-import { Number } from "API/Nodes/Logic/Number";
+import type { NumberInput } from "API/Nodes/Logic/Number";
 
-export function AutoGenNumber(node: Number, wrapper: string) {
-    const className = `Number${node.id}`;
-    const varName = `number${node.id}`;
+export function AutoGenNumberInput(node: NumberInput, wrapper: string) {
+    const className = `NumberInput${node.id}`;
+    const varName = `numberInput${node.id}`;
 
     let src = "\n";
-    src += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "Number").Number \n`;
+    src += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "NumberInput").NumberInput \n`;
     src += `local ${varName} = ${className}.new() \n`;
 
     src += node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`);
 
-    src += wrapper.gsub("%.%.", `${varName}.Calculate`)[0] + "\n";
+    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
     return src;
 }
