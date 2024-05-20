@@ -13,11 +13,6 @@ import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
-// TODO: add a way to pregen particles
-// BUG: Flipping the particle image with negative size not working properly, seems more like an engine bug than a bug with the code. on second thought was it ever possible to flip an image with negative size?
-// OPTIMIZE: switch base mesh to an actual plane mesh, might reduce the load on rendering
-// OPTIMIZE: if the above works out then maybe start using texture and UVs instead of surfaceGuis, would save A TON of memory
-
 const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 
 const DEFAULT_TEXTURE = "rbxassetid://7848741169";

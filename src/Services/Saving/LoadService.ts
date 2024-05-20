@@ -82,7 +82,7 @@ export function LoadFromFile() {
         });
     }
 
-    task.wait(0.1); // OPTIMIZE: adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
+    task.wait(0.1); // adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
 
     // connections
     for (const cachedNode1 of cachedNodes) {
@@ -165,7 +165,7 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
 
             cachedNodes.push({ SerializedNode: node, NodeData: nodeCollectionEntry.data });
 
-            // OPTIMIZE: janky
+            // janky
             if (systemData.addToNodeGroup[nodeGroup] === undefined) {
                 systemData.finishedBindingGroups.Connect(() => {
                     if (nodeCollectionEntry.element === undefined) {

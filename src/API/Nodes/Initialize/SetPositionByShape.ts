@@ -7,8 +7,6 @@ import type { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
 import { InitializeNode } from "./InitializeNode";
 
-// IMPORTANT: add other shapes
-
 export const SetPositionByShapeName = "SetPositionByShape";
 export const SetPositionByShapeFieldNames = {
     spawnShape: "spawnShape",

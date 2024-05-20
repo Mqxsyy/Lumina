@@ -1,8 +1,6 @@
 import { IdPool } from "./IdPool";
 import type { UpdateNode } from "./Nodes/Update/UpdateNode";
 
-// OPTIMIZE: mem leak? array only continues to grow
-
 export enum ParticleTypes {
     OneSidedPlane = 1,
     DoubleSidedPlane = 2,

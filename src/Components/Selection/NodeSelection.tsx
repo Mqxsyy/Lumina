@@ -9,10 +9,6 @@ import { NodeCategorySelectionButton } from "./NodeCategorySelectionButton";
 import { NodeSearchInput } from "./NodeSearchInput";
 import { NodeSelectionButton } from "./NodeSelectionButton";
 
-// TODO: display only currently usable nodes, ex. when update group is selected show only ones valid in update -> requires selecting to be a thing
-// TODO: add arrow navigation support
-// MAYBE-TODO: make this utilize dropdown service and highlightableButton
-
 const DIVIDER_SIZE_Y = 2;
 const SELECTION_WIDTH = 200;
 

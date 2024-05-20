@@ -7,8 +7,6 @@ import { InitializeColorRamp } from "Components/Windows/Ramps/ColorRamp";
 import { InitUI } from "UIHandler";
 import CheckForUpdates from "UpdateChecker/CheckForUpdates";
 
-// TODO: add button to reset all windows - simply reinitializing everything does not work. Alternatively just resetting studio works
-
 const toolbar = plugin.CreateToolbar("Lumina 0.0.3");
 
 // i guess I'll try to follow this versioning

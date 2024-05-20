@@ -5,8 +5,6 @@ import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 
-// IMPORTANT: Make update log accurate
-
 export default function ShowUpdateLog() {
     const window = GetWindow(Windows.UpdateLog);
     const root = createRoot(window);

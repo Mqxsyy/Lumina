@@ -2,8 +2,6 @@ import { IdPool } from "API/IdPool";
 import { LerpNumber } from "API/Lib";
 import { NodeField } from "./NodeField";
 
-// BUG: attempt to index nil with 'time' | line 104 ; selection broke, couldn't use node, probs data broke?
-
 export interface GraphPoint {
     id: number;
     canEditTime: boolean;

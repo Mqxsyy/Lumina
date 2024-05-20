@@ -11,9 +11,6 @@ import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import PickerCursor from "./PickerCursor";
 
-// TODO: add color saving & loading, palette creator
-// MAYBE-TODO: add support for HSV
-
 // colors are bloody awful to work with due to their loss of accuracy on conversion
 // also long ass file
 

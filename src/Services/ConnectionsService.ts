@@ -6,8 +6,6 @@ import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import type { NodeData } from "./NodesService";
 
-// BUG: creating a loop with connections makes it full crash (inf loop)
-
 export interface ConnectionData {
     id: number;
     loadedId?: number;

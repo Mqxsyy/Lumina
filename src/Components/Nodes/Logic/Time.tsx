@@ -1,11 +1,9 @@
 import React from "@rbxts/react";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Time as TimeAPI } from "API/Nodes/Logic/Time";
+import Div from "Components/Div";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
-import Div from "Components/Div";
-
-// BUG: needs children to move when canvas moves
 
 export function CreateTime() {
     return AddNode(new TimeAPI(), (data: NodeData) => {

@@ -2,8 +2,6 @@ import { IdPool } from "API/IdPool";
 import { ColorField, type SerializedColorField } from "./ColorField";
 import { NodeField } from "./NodeField";
 
-// BUG: last frame sometimes diff color (white?)
-
 export interface ColorPoint {
     id: number;
     canEditTime: boolean;

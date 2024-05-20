@@ -3,10 +3,8 @@ import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
-import { LogicNode } from "./LogicNode";
 import type { ParticleData } from "API/ParticleService";
-
-// TODO: add controls when to randomize
+import { LogicNode } from "./LogicNode";
 
 export const RandomNumberName = "RandomNumber";
 export const RandomNumberFieldNames = {

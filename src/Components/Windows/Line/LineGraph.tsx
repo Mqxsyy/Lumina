@@ -10,8 +10,6 @@ import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import LineGraphPoint from "./LineGraphPoint";
 
-// TODO: Add min value
-
 const DOUBLE_CLICK_TIME = 0.25;
 const BOTTOM_SIZE = 50;
 

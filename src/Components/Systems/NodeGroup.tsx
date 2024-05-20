@@ -13,8 +13,6 @@ import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
 import { GROUP_BORDER_THICKNESS, GROUP_HEADER_HEIGHT, GROUP_LIST_PADDING, GROUP_PADDING } from "../SizeConfig";
 
-// TODO: add node reordering
-
 interface Props {
     SystemId: number;
     SystemAPI: NodeSystem;

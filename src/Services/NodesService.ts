@@ -7,8 +7,6 @@ import type { RenderNode } from "API/Nodes/Render/RenderNode";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale } from "ZoomScale";
 
-// TODO: Add render order changing
-
 export interface NodeConnectionOut {
     id: number;
 }

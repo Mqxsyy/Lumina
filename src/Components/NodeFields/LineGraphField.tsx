@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "@rbxts/react";
+import React, { useRef } from "@rbxts/react";
 import type { LineGraphField as LineGraphFieldAPI } from "API/Fields/LineGraphField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
@@ -6,8 +6,6 @@ import { LoadGraph } from "Components/Windows/Line/LineGraph";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale } from "ZoomScale";
-
-// TODO: add mini visualization
 
 interface Props {
     Label: string;

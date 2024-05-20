@@ -1,11 +1,9 @@
 import React from "@rbxts/react";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { AliveTime as AliveTimeAPI } from "API/Nodes/Logic/Alivetime";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import Div from "Components/Div";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
-import Div from "Components/Div";
-
-// BUG: needs children to move when canvas moves
 
 export function CreateAliveTime() {
     return AddNode(new AliveTimeAPI(), (data: NodeData) => {

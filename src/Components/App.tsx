@@ -20,15 +20,7 @@ import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
 
-// IMPORTANT: fix auto gen + it's formatting with node chains
-// IMPORTANT: make vec3 and vec2 field collapsible
-
-// MAYBE-TODO: add undo & redo
-// TODO: redeisgn UI to be more clean and minimalistic
-// OPTIMIZE: recheck all forceRenders, some may not be required because the app wasn't rerendering every 10 changes
-// OPTIMIZE: use ParallelLuau
-
-// No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
+// yes it's bad architecture (the way it handles rerenders) but too late to change :p
 
 export function App() {
     const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.Lumina).AbsoluteSize);

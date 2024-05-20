@@ -1,4 +1,4 @@
-import { RunService, UserInputService } from "@rbxts/services";
+import { RunService } from "@rbxts/services";
 import { IdPool } from "./IdPool";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
 import type { InitializeNode } from "./Nodes/Initialize/InitializeNode";
@@ -8,9 +8,6 @@ import { BurstSpawnName } from "./Nodes/Spawn/BurstSpawn";
 import { ConstantSpawnName } from "./Nodes/Spawn/ConstantSpawn";
 import type { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 import type { UpdateNode } from "./Nodes/Update/UpdateNode";
-
-// TODO: split groups and make them connectable
-// OPTIMIZE: add culling?
 
 if (!RunService.IsStudio()) {
     print(
