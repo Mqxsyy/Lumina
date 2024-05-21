@@ -14,9 +14,17 @@ interface Props {
 
     Label?: string;
     ValueLabels?: [string, string, string];
+    AllowNegatives?: [boolean, boolean, boolean];
 }
 
-export function ConnectableVector3Field({ NodeId, NodeField, NodeFieldName, Label = undefined, ValueLabels = ["X", "Y", "Z"] }: Props) {
+export function ConnectableVector3Field({
+    NodeId,
+    NodeField,
+    NodeFieldName,
+    Label = undefined,
+    ValueLabels = ["X", "Y", "Z"],
+    AllowNegatives = [true, true, true],
+}: Props) {
     const [_, setForceRender] = useState(0);
 
     const zoomScale = GetZoomScale();
@@ -61,7 +69,7 @@ export function ConnectableVector3Field({ NodeId, NodeField, NodeFieldName, Labe
                         Position={UDim2.fromScale(1, 0)}
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => NodeField.GetXAsText()}
-                        AllowNegative={true}
+                        AllowNegative={AllowNegatives[0]}
                         Disabled={NodeField.connectedNodeX !== undefined}
                         NumberChanged={NodeField.SetX as (value: number) => undefined}
                     >
@@ -84,7 +92,7 @@ export function ConnectableVector3Field({ NodeId, NodeField, NodeFieldName, Labe
                         Position={UDim2.fromScale(1, 0)}
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => NodeField.GetYAsText()}
-                        AllowNegative={true}
+                        AllowNegative={AllowNegatives[1]}
                         Disabled={NodeField.connectedNodeY !== undefined}
                         NumberChanged={NodeField.SetY as (value: number) => undefined}
                     >
@@ -107,7 +115,7 @@ export function ConnectableVector3Field({ NodeId, NodeField, NodeFieldName, Labe
                         Position={UDim2.fromScale(1, 0)}
                         Size={new UDim2(1, 0, 0, 20)}
                         Text={() => NodeField.GetZAsText()}
-                        AllowNegative={true}
+                        AllowNegative={AllowNegatives[2]}
                         Disabled={NodeField.connectedNodeZ !== undefined}
                         NumberChanged={NodeField.SetZ as (value: number) => undefined}
                     >

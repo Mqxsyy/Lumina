@@ -14,7 +14,6 @@ interface Props {
 
     Label?: string;
     ValueLabels?: [string, string];
-
     AllowNegatives?: [boolean, boolean];
 }
 

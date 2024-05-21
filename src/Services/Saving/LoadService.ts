@@ -156,7 +156,10 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
             nodeGroup = NodeGroups.Render;
         }
 
-        for (const node of nodes) {
+        const sortedNodes = nodes.sort((a, b) => a.order >= b.order);
+        for (let i = 0; i < sortedNodes.size(); i++) {
+            const node = sortedNodes[i];
+
             const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields, node.order);
             if (nodeCollectionEntry === undefined) {
                 warn(`Node ${node.nodeName} does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`);

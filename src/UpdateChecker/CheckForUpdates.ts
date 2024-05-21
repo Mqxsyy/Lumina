@@ -15,8 +15,10 @@ export default function CheckForUpdates() {
     const res = HttpService.GetAsync("https://mqxsyy.github.io/Lumina/pluginVersion.json");
     const data = HttpService.JSONDecode(res) as Data;
 
-    if (data.version !== localPluginVersion) {
-        RequestUpdate();
+    if (data !== undefined) {
+        if (data.version !== localPluginVersion) {
+            RequestUpdate();
+        }
     }
 
     const pluginStore = DataStoreService.GetDataStore("LuminaPlugin");
@@ -26,8 +28,10 @@ export default function CheckForUpdates() {
     });
 
     if (success) {
-        if ((loadedData as Data).version !== localPluginVersion) {
-            ShowUpdateLog();
+        if (loadedData !== undefined) {
+            if ((loadedData as Data).version !== localPluginVersion) {
+                ShowUpdateLog();
+            }
         }
     }
 

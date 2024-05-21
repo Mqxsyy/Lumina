@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import Div from "Components/Div";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
@@ -30,17 +30,17 @@ export default function CheckBox({
             BackgroundColor={StyleColors.Highlight}
             onMouseButton1Down={() => OnChecked(!IsChecked)}
         >
-            <uicorner CornerRadius={StyleProperties.CornerRadius} />
+            <uicorner CornerRadius={new UDim(0, 10 * zoomScale)} />
             <uipadding
-                PaddingLeft={new UDim(0, math.clamp(2 * zoomScale, 1, math.huge))}
-                PaddingRight={new UDim(0, math.clamp(2 * zoomScale, 1, math.huge))}
-                PaddingTop={new UDim(0, math.clamp(2 * zoomScale, 1, math.huge))}
-                PaddingBottom={new UDim(0, math.clamp(2 * zoomScale, 1, math.huge))}
+                PaddingLeft={new UDim(0, math.clamp(3 * zoomScale, 1, math.huge))}
+                PaddingRight={new UDim(0, math.clamp(3 * zoomScale, 1, math.huge))}
+                PaddingTop={new UDim(0, math.clamp(3 * zoomScale, 1, math.huge))}
+                PaddingBottom={new UDim(0, math.clamp(3 * zoomScale, 1, math.huge))}
             />
 
             {IsChecked && (
                 <Div AnchorPoint={new Vector2(0.5, 0.5)} Position={UDim2.fromScale(0.5, 0.5)} BackgroundColor={StyleColors.Primary}>
-                    <uicorner CornerRadius={StyleProperties.CornerRadius} />
+                    <uicorner CornerRadius={new UDim(0, 10 * zoomScale)} />
                 </Div>
             )}
         </Div>
