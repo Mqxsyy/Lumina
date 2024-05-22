@@ -3,6 +3,7 @@
 ### [DevForum Post](https://devforum.roblox.com/t/lumina-a-custom-particle-system/2963557)<br/>
 ### [Documentation](https://mqxsyy.github.io/LuminaDocs/)
 ### [Trello](https://trello.com/b/HdIHbE2Q/main)
+### [Discord](https://discord.gg/pxdp5ANKUD)
 <br/>
 
 Compared to other engines such as Unity and Unreal, vfx creation in roblox is pretty limited, having only beams and an image based particle emitter. Everything else to do with VFX must be manually scripted.
