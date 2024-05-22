@@ -6,13 +6,14 @@ import { SpawnShape, SpawnShapeField } from "API/Fields/SpawnShapeField";
 import { Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import { NodeGroups } from "../../NodeGroup";
+import { AutoGenAddPositionFromShape } from "../AutoGeneration/InitializeNodes/AutoGenAddPositionFromShape";
 import { InitializeNode } from "./InitializeNode";
 
-export const SetPositionByShapeName = "SetPositionByShape";
-export const SetPositionByShapeFieldNames = {
+export const AddPositionFromShapeName = "AddPositionFromShape";
+export const AddPositionFromShapeFieldNames = {
     spawnShape: "spawnShape",
-    squareSize: "squareSize",
-    cubeSize: "cubeSize",
+    sizeVec2: "sizeVec2",
+    sizeVec3: "sizeVec3",
     filled: "filled",
     edgeWidth: "edgeWidth",
     rotation: "rotation",
@@ -104,12 +105,61 @@ function GetPositionCube(width: number, height: number, depth: number, edge: num
     return new Vector3(positionX, positionY, positionZ);
 }
 
-export class SetPositionByShape extends InitializeNode {
+function GetPositionEllipse(width: number, height: number, edgeWidth: number, filled: boolean) {
+    let adjustedWidth = width;
+    let adjustedHeight = height;
+
+    if (filled) {
+        adjustedWidth = Rand.NextNumber(0, width);
+        adjustedHeight = Rand.NextNumber(0, height);
+    }
+
+    if (!filled && edgeWidth !== 0) {
+        adjustedWidth = Rand.NextNumber(width, width + edgeWidth);
+        adjustedHeight = Rand.NextNumber(height, height + edgeWidth);
+    }
+
+    const theta = Rand.NextNumber(0, 1) * 2 * math.pi;
+
+    const x = adjustedWidth * 0.5 * math.cos(theta);
+    const y = adjustedHeight * 0.5 * math.sin(theta);
+
+    return new Vector3(x, 0, y);
+}
+
+function GetPositionSphere(width: number, height: number, depth: number, edgeWidth: number, filled: boolean) {
+    let adjustedWidth = width;
+    let adjustedHeight = height;
+    let adjustedDepth = depth;
+
+    if (filled) {
+        adjustedWidth = Rand.NextNumber(0, width);
+        adjustedHeight = Rand.NextNumber(0, height);
+        adjustedDepth = Rand.NextNumber(0, depth);
+    }
+
+    if (!filled && edgeWidth !== 0) {
+        adjustedWidth = Rand.NextNumber(width, width + edgeWidth);
+        adjustedHeight = Rand.NextNumber(height, height + edgeWidth);
+        adjustedDepth = Rand.NextNumber(depth, depth + edgeWidth);
+    }
+
+    const theta = Rand.NextNumber(0, 1) * 2 * math.pi;
+    const phi = Rand.NextNumber(0, 1) * math.pi;
+
+    const x = adjustedWidth * 0.5 * math.cos(theta) * math.sin(phi);
+    const y = adjustedHeight * 0.5 * math.sin(theta) * math.sin(phi);
+    const z = adjustedDepth * 0.5 * math.cos(phi);
+
+    return new Vector3(x, y, z);
+}
+
+export class AddPositionFromShape extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields: {
         spawnShape: SpawnShapeField;
-        squareSize: ConnectableVector2Field;
-        cubeSize: ConnectableVector3Field;
+        sizeVec2: ConnectableVector2Field;
+        sizeVec3: ConnectableVector3Field;
         filled: BooleanField;
         edgeWidth: ConnectableNumberField;
         rotation: ConnectableVector3Field;
@@ -120,8 +170,8 @@ export class SetPositionByShape extends InitializeNode {
 
         this.nodeFields = {
             spawnShape: new SpawnShapeField(SpawnShape.Square),
-            squareSize: new ConnectableVector2Field(2, 2),
-            cubeSize: new ConnectableVector3Field(2, 2, 2),
+            sizeVec2: new ConnectableVector2Field(2, 2),
+            sizeVec3: new ConnectableVector3Field(2, 2, 2),
             filled: new BooleanField(false),
             edgeWidth: new ConnectableNumberField(0),
             rotation: new ConnectableVector3Field(0, 0, 0),
@@ -129,44 +179,54 @@ export class SetPositionByShape extends InitializeNode {
     }
 
     Initialize(data: ParticleData) {
+        const rotation = this.nodeFields.rotation.GetVector3(data);
+        const rotationCF = CFrame.Angles(math.rad(rotation.x), math.rad(rotation.y), math.rad(rotation.z));
+        let position = Vector3.zero;
+
+        const filled = this.nodeFields.filled.GetBoolean();
+        const edgeWidth = this.nodeFields.edgeWidth.GetNumber(data);
+
         switch (this.nodeFields.spawnShape.GetSpawnShape()) {
             case SpawnShape.Square: {
-                const width = this.nodeFields.squareSize.GetX(data);
-                const height = this.nodeFields.squareSize.GetY(data);
-                const edgeWidth = this.nodeFields.edgeWidth.GetNumber(data);
-                const filled = this.nodeFields.filled.GetBoolean();
-                const position = GetPositionSquare(width, height, edgeWidth, filled);
-                const rotation = this.nodeFields.rotation.GetVector3(data);
+                const width = this.nodeFields.sizeVec2.GetX(data);
+                const height = this.nodeFields.sizeVec2.GetY(data);
 
-                data.particle.CFrame = CFrame.Angles(math.rad(rotation.x), math.rad(rotation.y), math.rad(rotation.z)).mul(
-                    new CFrame(position),
-                );
-
+                position = GetPositionSquare(width, height, edgeWidth, filled);
                 break;
             }
             case SpawnShape.Cube: {
-                const width = this.nodeFields.cubeSize.GetX(data);
-                const height = this.nodeFields.cubeSize.GetY(data);
-                const depth = this.nodeFields.cubeSize.GetZ(data);
-                const edgeWidth = this.nodeFields.edgeWidth.GetNumber(data);
-                const filled = this.nodeFields.filled.GetBoolean();
-                const position = GetPositionCube(width, height, depth, edgeWidth, filled);
-                const rotation = this.nodeFields.rotation.GetVector3(data);
+                const width = this.nodeFields.sizeVec3.GetX(data);
+                const height = this.nodeFields.sizeVec3.GetY(data);
+                const depth = this.nodeFields.sizeVec3.GetZ(data);
 
-                data.particle.CFrame = CFrame.Angles(math.rad(rotation.x), math.rad(rotation.y), math.rad(rotation.z)).mul(
-                    new CFrame(position),
-                );
+                position = GetPositionCube(width, height, depth, edgeWidth, filled);
+                break;
+            }
+            case SpawnShape.Ellipse: {
+                const width = this.nodeFields.sizeVec2.GetX(data);
+                const height = this.nodeFields.sizeVec2.GetY(data);
 
+                position = GetPositionEllipse(width, height, edgeWidth, filled);
+                break;
+            }
+            case SpawnShape.Sphere: {
+                const width = this.nodeFields.sizeVec3.GetX(data);
+                const height = this.nodeFields.sizeVec3.GetY(data);
+                const depth = this.nodeFields.sizeVec3.GetZ(data);
+
+                position = GetPositionSphere(width, height, depth, edgeWidth, filled);
                 break;
             }
         }
+
+        data.particle.CFrame = data.particle.CFrame.mul(rotationCF.mul(new CFrame(position)));
     }
 
     GetNodeName(): string {
-        return SetPositionByShapeName;
+        return AddPositionFromShapeName;
     }
 
     GetAutoGenerationCode() {
-        return "";
+        return AutoGenAddPositionFromShape(this);
     }
 }

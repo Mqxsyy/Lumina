@@ -10,7 +10,7 @@ export { CreateSetLifetimeRandom } from "Components/Nodes/Initialize/SetLifetime
 export { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 export { CreateAddPosition } from "Components/Nodes/Initialize/AddPosition";
 export { CreateSetPositionToParent } from "Components/Nodes/Initialize/SetPositionToParent";
-export { CreateSetPositionByShape } from "Components/Nodes/Initialize/SetPositionByShape";
+export { CreateAddPositionFromShape } from "Components/Nodes/Initialize/AddPositionFromShape";
 export { CreateSetRotationXYZ } from "Components/Nodes/Initialize/SetRotationXYZ";
 export { CreateSetRotationZ } from "Components/Nodes/Initialize/SetRotationZ";
 export { CreateSetRotationZRandom } from "Components/Nodes/Initialize/SetRotationZRandom";
@@ -41,7 +41,7 @@ export { CreateVolumetricParticle } from "Components/Nodes/Render/VolumetricPart
 export { CreateMeshParticle } from "Components/Nodes/Render/MeshParticle";
 
 // Logic
-export { CreateNumberInput as CreateNumber } from "Components/Nodes/Logic/Number";
+export { CreateNumberInput } from "Components/Nodes/Logic/Number";
 export { CreateAdd } from "Components/Nodes/Logic/Add";
 export { CreateSubtract } from "Components/Nodes/Logic/Subtract";
 export { CreateMultiply } from "Components/Nodes/Logic/Multiply";

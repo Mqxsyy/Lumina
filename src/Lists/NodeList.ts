@@ -43,9 +43,9 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Set Position To Parent",
             create: () => CreateBarrel.CreateSetPositionToParent(),
         },
-        [NameBarrel.SetPositionByShapeName]: {
-            name: "Set Position By Shape",
-            create: () => CreateBarrel.CreateSetPositionByShape(),
+        [NameBarrel.AddPositionFromShapeName]: {
+            name: "Add Position From Shape",
+            create: () => CreateBarrel.CreateAddPositionFromShape(),
         },
         [NameBarrel.SetRotationXYZName]: {
             name: "Set Rotation XYZ",
@@ -149,9 +149,9 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         },
     },
     [NodeGroups.Logic]: {
-        [NameBarrel.NumberName]: {
+        [NameBarrel.NumberInputName]: {
             name: "Number",
-            create: () => CreateBarrel.CreateNumber(),
+            create: () => CreateBarrel.CreateNumberInput(),
         },
         [NameBarrel.AddName]: {
             name: "Add",

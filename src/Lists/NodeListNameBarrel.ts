@@ -10,7 +10,7 @@ export { SetLifetimeName } from "API/Nodes/Initialize/SetLifetime";
 export { SetLifetimeRandomName } from "API/Nodes/Initialize/SetLifetimeRandom";
 export { SetPositionName } from "API/Nodes/Initialize/SetPosition";
 export { SetPositionToParentName } from "API/Nodes/Initialize/SetPositionToParent";
-export { SetPositionByShapeName } from "API/Nodes/Initialize/SetPositionByShape";
+export { AddPositionFromShapeName } from "API/Nodes/Initialize/AddPositionFromShape";
 export { SetRotationXYZName } from "API/Nodes/Initialize/SetRotationXYZ";
 export { SetRotationZName } from "API/Nodes/Initialize/SetRotationZ";
 export { SetRotationZRandomName } from "API/Nodes/Initialize/SetRotationZRandom";
@@ -41,7 +41,7 @@ export { VolumetricParticleName } from "API/Nodes/Render/VolumetricParticle";
 export { MeshParticleName } from "API/Nodes/Render/MeshParticle";
 
 // Logic
-export { NumberInputName as NumberName } from "API/Nodes/Logic/Number";
+export { NumberInputName } from "API/Nodes/Logic/Number";
 export { AddName } from "API/Nodes/Logic/Add";
 export { SubtractName } from "API/Nodes/Logic/Subtract";
 export { MultiplyName } from "API/Nodes/Logic/Multiply";
