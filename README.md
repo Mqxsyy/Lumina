@@ -13,7 +13,7 @@ The aim of this project is to improve vfx creation in roblox by making a much mo
 
 ### Disclaimer:
 
-Currently this is just a PROTOTYPE and an attempt to recreate the default particle emitter. This means that it's not yet meant to be actually used as a replacement to default particle emitters and that it lacks all of the features that would make it a better version of the default particle emitter.
+This is currently heavily work in progress, I do not recommend using this in production since everything is still subject to change.
 <br> <br>
 It may also be buggy and due to reasons the text inputs are scuffed.
 <br> <br>
