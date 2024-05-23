@@ -4,11 +4,13 @@ export const CFrameZero = new CFrame();
 
 export function RemapValue(value: number, oldMin: number, oldMax: number, newMin: number, newMax: number): number {
     if (value < oldMin || value > oldMax) {
-        error(`Input value is outside the specified range
-            Input: ${value},
-            RangeOld: ${oldMin} - ${oldMax} 
-            RangeNew: ${newMin} - ${newMax}
-        `);
+        let errorString = "";
+        errorString += "Input value is outside the specified range\n";
+        errorString += `Input: ${value}\n`;
+        errorString += `RangeOld: ${oldMin} - ${oldMax}\n`;
+        errorString += `RangeNew: ${newMin} - ${newMax}\n`;
+
+        error(errorString);
     }
 
     const rangeFactor = (newMax - newMin) / (oldMax - oldMin);
@@ -25,11 +27,21 @@ export function RoundDecimal(x: number, decimal: number) {
     return FixFloatingPointError(math.round(x / decimal) * decimal);
 }
 
-export function FixFloatingPointError(value: number): number {
+export function FixFloatingPointError(value: number) {
     const shortened = string.format("%.3f", tostring(value));
-    return tonumber(shortened.gsub("%.?0+$", "")[0])!;
+    return tonumber(shortened.gsub("%.?0+$", "")[0]) as number;
 }
 
-export function CapitalizeFirstLetter(text: string): string {
+export function CapitalizeFirstLetter(text: string) {
     return text.gsub("^%l", string.upper)[0];
+}
+
+export function LowerFirstLetter(text: string) {
+    return text.gsub("^%l", string.lower)[0];
+}
+
+export function ArraySwap(arr: unknown[], index1: number, index2: number) {
+    const temp = arr[index1];
+    arr[index1] = arr[index2];
+    arr[index2] = temp;
 }

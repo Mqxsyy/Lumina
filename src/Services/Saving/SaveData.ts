@@ -24,6 +24,7 @@ export interface SerializedNode {
     connections?: SerializedConnection[];
     nodeName: string;
     fields: SerializedField[];
+    order: number;
 }
 
 export interface SerializedFloatingNode extends SerializedNode {
@@ -34,5 +35,5 @@ export interface SerializedFloatingNode extends SerializedNode {
 export interface SerializedField {
     connections?: SerializedConnection[];
     name: string;
-    data: {};
+    data: unknown;
 }

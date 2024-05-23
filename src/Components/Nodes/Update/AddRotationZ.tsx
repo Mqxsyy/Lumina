@@ -1,13 +1,13 @@
 import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { AddRotationZ as AddRotationZAPI, AddRotationZFieldNames } from "API/Nodes/Update/AddRotationZ";
-import NumberField from "Components/NodeFields/NumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateAddRotationZ() {
     return AddNode(new AddRotationZAPI(), (data: NodeData) => {
-        return <AddRotationZ key={`node_${data.node.id}`} data={data} />;
+        return <AddRotationZ key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 
@@ -19,7 +19,7 @@ function AddRotationZ({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <NumberField
+            <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as AddRotationZAPI).nodeFields.rotation}
                 NodeFieldName={AddRotationZFieldNames.rotation}

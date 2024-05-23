@@ -16,7 +16,7 @@ export function NodeSearchInput({ TextChanged }: Props) {
                 TextXAlignment={Enum.TextXAlignment.Center}
                 ClearTextOnFocus={false}
                 AutoFocus={true}
-                TextChanged={TextChanged}
+                TextChanged={TextChanged as (text: string) => undefined}
                 IsAffectedByZoom={false}
             />
         </Div>

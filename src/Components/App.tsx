@@ -20,15 +20,10 @@ import Controls from "./Controls/Controls";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
 
-// MAYBE-TODO: add undo & redo
-// TODO: redeisgn UI to be more clean and minimalistic
-// OPTIMIZE: recheck all forceRenders, some may not be required because the app wasn't rerendering every 10 changes
-// OPTIMIZE: use ParallelLuau
-
-// No wonder i have such rendering lag, i'm re-rendering everything from the root every frame, why didn't i just re-render the things that changed?probs cause many things can depend on a single value and it's easier to re-render everything than to keep track of what depends on what
+// yes it's bad architecture (the way it handles rerenders) but too late to change :p
 
 export function App() {
-    const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.Lumina)!.AbsoluteSize);
+    const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.Lumina).AbsoluteSize);
     const [zoomScale, setZoomScale] = useState(1);
     const [nodeSelectionPosition, setNodeSelectionPosition] = useState(undefined as UDim2 | undefined);
     const [_, setForceRender] = useState(0);
@@ -40,7 +35,7 @@ export function App() {
 
     const startMoveCanvas = () => {
         const mousePositionVec2 = GetMousePosition();
-        const widgetSize = GetWindow(Windows.Lumina)!.AbsoluteSize.mul(0.5);
+        const widgetSize = GetWindow(Windows.Lumina).AbsoluteSize.mul(0.5);
 
         const mousePosition = UDim2.fromOffset(mousePositionVec2.X, mousePositionVec2.Y);
         const mouseOffset = mousePosition.sub(canvasDataRef.current.Position).add(UDim2.fromOffset(widgetSize.X, widgetSize.Y));
@@ -121,27 +116,27 @@ export function App() {
         });
 
         const canvasDataChangedConnection = CanvasDataChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         const nodeSystemsChangedConnection = NodeSystemsChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         const nodesChangedConnection = NodesChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         const connectionsChangedConnection = ConnectionsChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         const dropdownDataChangedConnection = DropdownDataChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         const loadServiceConnection = LoadingFinished.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         UpdateCanvasData((canvasData) => {

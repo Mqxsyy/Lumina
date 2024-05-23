@@ -6,15 +6,13 @@ import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetPlaneParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
 import { ObjectPool } from "API/ObjectPool";
-import { CreateParticleData, GetNextParticleId, GetParticleData, ParticleData, ParticleTypes } from "API/ParticleService";
+import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutogenPlaneParticle } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
-import { InitializeNode } from "../Initialize/InitializeNode";
-import { UpdateNode } from "../Update/UpdateNode";
+import { AutoGenPlaneParticle } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
+import type { InitializeNode } from "../Initialize/InitializeNode";
+import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
-
-// TODO: add a way to pregen particles
-// BUG: Flipping the particle image with negative size not working properly, seems more like an engine bug than a bug with the code. on second thought was it ever possible to flip an image with negative size?
 
 const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 
@@ -120,7 +118,7 @@ function CreateDoubleSidedParticle(): DoubleSidedPlaneParticle {
 function CheckOrientation(orientation: Orientation, position: Vector3, data: ParticleData): CFrame {
     switch (orientation) {
         case Orientation.FacingCamera: {
-            return CFrame.lookAt(position, game.Workspace.CurrentCamera!.CFrame.Position).mul(
+            return CFrame.lookAt(position, (game.Workspace.CurrentCamera as Camera).CFrame.Position).mul(
                 CFrame.Angles(0, 0, math.rad(data.rotation.Z)),
             );
         }
@@ -130,7 +128,7 @@ function CheckOrientation(orientation: Orientation, position: Vector3, data: Par
 
             // math :O
             // kinda maybe understand it, took around 3 hours to get working
-            const cameraPosition = game.Workspace.CurrentCamera!.CFrame.Position;
+            const cameraPosition = (game.Workspace.CurrentCamera as Camera).CFrame.Position;
             const cameraToPosition = cameraPosition.sub(position);
             const cameraDirection = cameraToPosition.sub(velocity.mul(cameraToPosition.Dot(velocity) / velocity.Dot(velocity))).Unit;
 
@@ -222,13 +220,13 @@ export class PlaneParticle extends RenderNode {
             data = CreateParticleData(id, ParticleTypes.DoubleSidedPlane, particle, updateNodes);
         }
 
-        initializeNodes.forEach((node) => {
+        for (const node of initializeNodes) {
             node.Initialize(data);
-        });
+        }
 
-        updateNodes.forEach((node) => {
+        for (const node of updateNodes) {
             node.Update(data);
-        });
+        }
 
         const orientation = this.nodeFields.orientation.GetOrientation();
         particle.CFrame = CheckOrientation(orientation, particle.CFrame.Position, data);
@@ -277,7 +275,9 @@ export class PlaneParticle extends RenderNode {
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
                     if (this.aliveParticles.size() === 0) {
-                        this.updateLoop!.Disconnect();
+                        if (this.updateLoop === undefined) continue;
+
+                        this.updateLoop.Disconnect();
                         this.updateLoop = undefined;
                     }
 
@@ -318,13 +318,13 @@ export class PlaneParticle extends RenderNode {
                     }
                 }
 
-                let position;
+                let position: Vector3 | undefined;
                 if (aliveParticleData.velocityNormal !== Vector3.zero) {
                     const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
                     position = aliveParticleData.particle.Position.add(velocity.mul(dt));
                 }
 
-                let cframe;
+                let cframe: CFrame;
                 if (position !== undefined) {
                     cframe = CheckOrientation(orientation, position, aliveParticleData);
                 } else {
@@ -350,8 +350,8 @@ export class PlaneParticle extends RenderNode {
         return PlaneParticleName;
     }
 
-    GetAutoGenerationCode() {
-        return AutogenPlaneParticle(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenPlaneParticle(this, src);
     }
 
     Destroy() {
@@ -359,9 +359,9 @@ export class PlaneParticle extends RenderNode {
             this.updateLoop.Disconnect();
         }
 
-        this.aliveParticles.forEach((data) => {
+        for (const data of this.aliveParticles) {
             this.objectPoolOneSided.RemoveItem(data.particle);
-        });
+        }
 
         this.objectPoolOneSided.ClearStandby();
     }

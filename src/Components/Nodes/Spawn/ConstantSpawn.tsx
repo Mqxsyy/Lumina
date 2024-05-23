@@ -1,13 +1,12 @@
 import React from "@rbxts/react";
-import { CapitalizeFirstLetter } from "API/Lib";
-import { ConstantSpawn as ConstantSpawnAPI, ConstantSpawnFieldNames } from "API/Nodes/Spawn/ConstantSpawn";
+import { ConstantSpawn as ConstantSpawnAPI } from "API/Nodes/Spawn/ConstantSpawn";
 import NumberField from "Components/NodeFields/NumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateConstantSpawn() {
     return AddNode(new ConstantSpawnAPI(), (data: NodeData) => {
-        return <ConstantSpawn key={`node_${data.node.id}`} data={data} />;
+        return <ConstantSpawn key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 
@@ -33,10 +32,8 @@ function ConstantSpawn({ data }: { data: NodeData }) {
             <NumberField
                 NodeId={id}
                 NodeField={nodeFields.rate}
-                NodeFieldName={ConstantSpawnFieldNames.rate}
-                Label={CapitalizeFirstLetter(ConstantSpawnFieldNames.rate)}
-                AllowConnection={false}
-                OverrideSetNumber={rateChanged}
+                Label={"Constant Spawn"}
+                OverrideSetNumber={rateChanged as (number: number) => undefined}
             />
         </Node>
     );

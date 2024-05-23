@@ -1,7 +1,8 @@
-import { Vector3Field } from "API/Fields/Vector3Field";
+import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenAddVelocity } from "../AutoGeneration/UpdateNodes/AutoGenAddVelocity";
 import { UpdateNode } from "./UpdateNode";
 
@@ -13,19 +14,19 @@ export const AddVelocityFieldNames = {
 export class AddVelocity extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
     nodeFields: {
-        velocity: Vector3Field;
+        velocity: ConnectableVector3Field;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            velocity: new Vector3Field(0, 0, 0),
+            velocity: new ConnectableVector3Field(0, 0, 0),
         };
     }
 
     Update(data: ParticleData) {
-        const acceleration = this.nodeFields.velocity.GetVector3();
+        const acceleration = this.nodeFields.velocity.GetVector3(data);
         const oldVelocity = data.velocityNormal;
 
         const x = oldVelocity.X + acceleration.x * FrameRateMultiplier;
@@ -39,7 +40,7 @@ export class AddVelocity extends UpdateNode {
         return AddVelocityName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenAddVelocity(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenAddVelocity(this, src);
     }
 }

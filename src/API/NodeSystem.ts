@@ -1,16 +1,13 @@
 import { RunService } from "@rbxts/services";
 import { IdPool } from "./IdPool";
 import { NodeGroup, NodeGroups } from "./NodeGroup";
-import { InitializeNode } from "./Nodes/Initialize/InitializeNode";
-import { Node } from "./Nodes/Node";
-import { RenderNode } from "./Nodes/Render/RenderNode";
+import type { InitializeNode } from "./Nodes/Initialize/InitializeNode";
+import type { Node } from "./Nodes/Node";
+import type { RenderNode } from "./Nodes/Render/RenderNode";
 import { BurstSpawnName } from "./Nodes/Spawn/BurstSpawn";
 import { ConstantSpawnName } from "./Nodes/Spawn/ConstantSpawn";
-import { SpawnNode } from "./Nodes/Spawn/SpawnNode";
-import { UpdateNode } from "./Nodes/Update/UpdateNode";
-
-// TODO: split groups and make them connectable
-// OPTIMIZE: add culling?
+import type { SpawnNode } from "./Nodes/Spawn/SpawnNode";
+import type { UpdateNode } from "./Nodes/Update/UpdateNode";
 
 if (!RunService.IsStudio()) {
     print(
@@ -83,7 +80,7 @@ export class NodeSystem {
                 this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
                     passedTime += dt;
 
-                    const interval = 1 / this.spawnNode!.GetValue();
+                    const interval = 1 / (this.spawnNode as SpawnNode).GetValue();
                     while (passedTime >= interval) {
                         this.SpawnParticle();
                         passedTime -= interval;
@@ -107,7 +104,7 @@ export class NodeSystem {
 
     private SpawnParticle() {
         task.spawn(() => {
-            this.renderNode!.Render(this.initializeNodes, this.updateNodes);
+            (this.renderNode as RenderNode).Render(this.initializeNodes, this.updateNodes);
         });
     }
 

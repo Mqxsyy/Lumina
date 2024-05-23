@@ -1,9 +1,9 @@
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale } from "ZoomScale";
-import { GetSystemById, RemoveNodeSystem } from "./NodeSystemService";
-import { GetNodeById, RemoveNode } from "./NodesService";
+import { GetSystemById, type NodeSystemCollectioEntry, RemoveNodeSystem } from "./NodeSystemService";
+import { GetNodeById, type NodeCollectionEntry, RemoveNode } from "./NodesService";
 import { CreateNode, CreateSystem } from "./Saving/LoadService";
-import { SerializedFloatingNode, SerializedSystem } from "./Saving/SaveData";
+import type { SerializedFloatingNode, SerializedSystem } from "./Saving/SaveData";
 import { SerializeNode, SerializeSystem } from "./Saving/SaveService";
 import { GetIsHoldingControl, GetSelectedNodeId, GetSelectedSystemId } from "./SelectionService";
 
@@ -75,7 +75,7 @@ export function Cut() {
 }
 
 function LocalSerializeNode() {
-    const data = GetNodeById(GetSelectedNodeId())!.data;
+    const data = (GetNodeById(GetSelectedNodeId()) as NodeCollectionEntry).data;
 
     return {
         ...SerializeNode(data.node, true),
@@ -85,12 +85,12 @@ function LocalSerializeNode() {
 }
 
 function LocalSerializeSystem() {
-    const data = GetSystemById(GetSelectedSystemId())!.data;
+    const data = (GetSystemById(GetSelectedSystemId()) as NodeSystemCollectioEntry).data;
     return SerializeSystem(data);
 }
 
 function LocalLoadNode(serializedNode: SerializedFloatingNode) {
-    CreateNode(serializedNode.nodeGroup, serializedNode.nodeName, serializedNode.fields);
+    CreateNode(serializedNode.nodeGroup, serializedNode.nodeName, serializedNode.fields, serializedNode.order);
 }
 
 function LocalLoadSystem(serializedSystem: SerializedSystem) {

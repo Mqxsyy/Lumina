@@ -11,7 +11,6 @@ export const ZoomScaleConstraint = {
 
 export function GetZoomScale(): number {
     return zoomScale;
-    // return 1;
 }
 
 export function UpdateZoomScale(value: number) {

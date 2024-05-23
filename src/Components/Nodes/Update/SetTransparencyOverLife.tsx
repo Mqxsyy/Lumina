@@ -1,12 +1,14 @@
 import React, { useRef } from "@rbxts/react";
 import { SetTransparencyOverLife as TransparencyOverLifeAPI } from "API/Nodes/Update/SetTransparencyOverLife";
 import { LineGraphField } from "Components/NodeFields/LineGraphField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetTransparencyOverLife() {
     return AddNode(new TransparencyOverLifeAPI(), (data: NodeData) => {
-        return <SetTransparencyOverLife key={`node_${data.node.id}`} data={data} />;
+        return (
+            <SetTransparencyOverLife key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />
+        );
     });
 }
 

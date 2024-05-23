@@ -1,14 +1,15 @@
-import { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
+import type { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetVelocity(node: SetVelocity) {
+export function AutoGenSetVelocity(node: SetVelocity, src: Src) {
     const className = `SetVelocity${node.id}`;
     const varName = `setVelocity${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetVelocity").SetVelocity \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetVelocity").SetVelocity \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.velocity.AutoGenerateField(`${varName}.nodeFields.velocity`);
+    node.nodeFields.velocity.AutoGenerateField(`${varName}.nodeFields.velocity`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

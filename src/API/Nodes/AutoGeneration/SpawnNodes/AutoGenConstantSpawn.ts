@@ -1,14 +1,15 @@
-import { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
+import type { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenConstantSpawn(node: ConstantSpawn) {
+export function AutoGenConstantSpawn(node: ConstantSpawn, src: Src) {
     const className = `ConstantSpawn${node.id}`;
     const varName = `constantSpawn${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Spawn", "ConstantSpawn").ConstantSpawn \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Spawn", "ConstantSpawn").ConstantSpawn \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += `${varName}.nodeFields.rate.SetNumber(${node.nodeFields.rate.GetNumber()}) \n`;
+    node.nodeFields.rate.AutoGenerateField(`${varName}.nodeFields.rate`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

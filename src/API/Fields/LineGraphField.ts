@@ -1,8 +1,7 @@
 import { IdPool } from "API/IdPool";
 import { LerpNumber } from "API/Lib";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
-
-// BUG: attempt to index nil with 'time' | line 104 ; selection broke, couldn't use node, probs data broke?
 
 export interface GraphPoint {
     id: number;
@@ -45,9 +44,9 @@ export class LineGraphField extends NodeField {
         const points = [];
 
         points.push(this.startPoint);
-        this.graphPoints.forEach((point) => {
+        for (const point of this.graphPoints) {
             points.push(point);
-        });
+        }
         points.push(this.endPoint);
 
         return points;
@@ -110,16 +109,14 @@ export class LineGraphField extends NodeField {
         this.FieldChanged.Fire();
     }
 
-    AutoGenerateField(fieldPath: string) {
-        let src = `${fieldPath}.startPoint.value = ${this.startPoint.value} \n`;
-        src += `${fieldPath}.endPoint.value = ${this.endPoint.value} \n`;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.startPoint.value = ${this.startPoint.value} \n`;
+        src.value += `${fieldPath}.endPoint.value = ${this.endPoint.value} \n`;
 
         const graphPoints = this.GetPoints();
         for (const point of graphPoints) {
-            src += `${fieldPath}:AddPoint(${point.time}, ${point.value}) \n`;
+            src.value += `${fieldPath}:AddPoint(${point.time}, ${point.value}) \n`;
         }
-
-        return src;
     }
 
     SerializeData() {
@@ -139,19 +136,17 @@ export class LineGraphField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        const serializedData = data as SerializedData;
+    ReadSerializedData(data: SerializedData) {
+        this.startPoint.time = data.startPoint.time;
+        this.startPoint.value = data.startPoint.value;
 
-        this.startPoint.time = serializedData.startPoint.time;
-        this.startPoint.value = serializedData.startPoint.value;
-
-        this.endPoint.time = serializedData.endPoint.time;
-        this.endPoint.value = serializedData.endPoint.value;
+        this.endPoint.time = data.endPoint.time;
+        this.endPoint.value = data.endPoint.value;
         this.FieldChanged.Fire();
 
-        serializedData.graphPoints.forEach((point) => {
+        for (const point of data.graphPoints) {
             this.AddPoint(point.time, point.value);
-        });
+        }
     }
 
     private UpdatePointValues(point: GraphPoint, time: number, value: number) {

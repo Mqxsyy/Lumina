@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { FastEventConnection } from "API/Bindables/FastEvent";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import {
-    ConnectionData,
+    type ConnectionCollectionEntry,
+    type ConnectionData,
     DestroyConnection,
     GetAllConnections,
     GetConnectionById,
@@ -9,10 +11,9 @@ import {
     UnbindMovingConnection,
     UpdateConnectionData,
 } from "Services/ConnectionsService";
-import { GetNodeById, NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, type NodeCollectionEntry, type NodeConnectionIn, UpdateNodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import ConnectionPoint from "./ConnectionPoint";
-import { FastEventConnection } from "API/Bindables/FastEvent";
 
 interface Props {
     AnchorPoint?: Vector2;
@@ -21,8 +22,8 @@ interface Props {
     NodeId: number;
     NodeFieldName: string;
     ValueName?: string;
-    BindFunction: (newValue: () => number, boundNode: LogicNode) => void;
-    UnbindFunction: () => void;
+    BindNode: (boundNode: LogicNode) => void;
+    UnbindNode: () => void;
 }
 
 export default function ConnectionPointIn({
@@ -31,16 +32,16 @@ export default function ConnectionPointIn({
     ValueName = undefined,
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
-    Size = UDim2.fromOffset(10 * GetZoomScale(), 10 * GetZoomScale()),
-    BindFunction,
-    UnbindFunction,
+    Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
+    BindNode,
+    UnbindNode,
 }: Props) {
     const [_, setForceRender] = useState(0);
     const [connectionId, setConnectionId] = useState(-1);
     const elementRef = useRef<ImageButton>();
     const isLoadingConnectionsRef = useRef(false);
 
-    const node = GetNodeById(NodeId)!;
+    const node = GetNodeById(NodeId) as NodeCollectionEntry;
     const nodeData = node.data;
 
     const finishConnection = (id: number) => {
@@ -65,13 +66,13 @@ export default function ConnectionPointIn({
             return data;
         });
 
-        const connectionData = GetConnectionById(id)!.data;
+        const connectionData = (GetConnectionById(id) as ConnectionCollectionEntry).data;
 
         const destroyConnection = connectionData.onDestroy.Connect(() => {
             destroyConnection.Disconnect();
 
             setConnectionId(-1);
-            UnbindFunction();
+            UnbindNode();
 
             if (GetNodeById(NodeId) === undefined) return;
 
@@ -85,7 +86,7 @@ export default function ConnectionPointIn({
             });
         });
 
-        BindFunction(connectionData.fn, connectionData.startNode.node as LogicNode);
+        BindNode(connectionData.startNode.node as LogicNode);
     };
 
     const mouseButton1Down = () => {
@@ -98,6 +99,9 @@ export default function ConnectionPointIn({
 
         const movingConnectionId = GetMovingConnectionId();
         if (movingConnectionId === -1) return;
+
+        const connectionData = (GetConnectionById(movingConnectionId) as ConnectionCollectionEntry).data;
+        if (connectionData.startNode.node.id === NodeId) return;
 
         UnbindMovingConnection();
         finishConnection(movingConnectionId);
@@ -118,7 +122,7 @@ export default function ConnectionPointIn({
 
     useEffect(() => {
         const connection = node.elementLoaded.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -179,7 +183,7 @@ export default function ConnectionPointIn({
             }
 
             if (attempts >= maxAttempts) {
-                warn("Failed to load connection for node: " + nodeData.node.GetNodeName());
+                warn(`Failed to load connection for node: ${nodeData.node.GetNodeName()}`);
             }
 
             nodeData.loadedConnectionsIn = undefined;

@@ -1,13 +1,13 @@
 import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { BurstSpawn as BurstSpawnAPI, BurstSpawnFieldNames } from "API/Nodes/Spawn/BurstSpawn";
-import NumberField from "Components/NodeFields/NumberField";
-import { AddNode, NodeData } from "Services/NodesService";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
+import NumberField from "Components/NodeFields/NumberField";
 
 export function CreateBurstSpawn() {
     return AddNode(new BurstSpawnAPI(), (data: NodeData) => {
-        return <BurstSpawn key={`node_${data.node.id}`} data={data} />;
+        return <BurstSpawn key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 
@@ -22,9 +22,7 @@ function BurstSpawn({ data }: { data: NodeData }) {
             <NumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as BurstSpawnAPI).nodeFields.amount}
-                NodeFieldName={BurstSpawnFieldNames.amount}
                 Label={CapitalizeFirstLetter(BurstSpawnFieldNames.amount)}
-                AllowConnection={false}
             />
         </Node>
     );

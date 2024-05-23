@@ -1,14 +1,15 @@
-import { SetPosition } from "API/Nodes/Initialize/SetPosition";
+import type { SetPosition } from "API/Nodes/Initialize/SetPosition";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetPosition(node: SetPosition) {
+export function AutoGenSetPosition(node: SetPosition, src: Src) {
     const className = `SetPosition${node.id}`;
     const varName = `setPosition${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetPosition").SetPosition \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetPosition").SetPosition \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.position.AutoGenerateField(`${varName}.nodeFields.position`);
+    node.nodeFields.position.AutoGenerateField(`${varName}.nodeFields.position`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

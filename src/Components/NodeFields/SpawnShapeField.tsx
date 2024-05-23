@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { ShapeField as ShapeFieldAPI, Shapes } from "API/Fields/ShapeField";
+import { SpawnShape, type SpawnShapeField as SpawnShapeFieldAPI } from "API/Fields/SpawnShapeField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import HighlightableTextButton from "Components/Basic/HighlightableTextButton";
 import Div from "Components/Div";
@@ -8,11 +8,11 @@ import { StyleColors, StyleProperties } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
-    NodeField: ShapeFieldAPI;
+    NodeField: SpawnShapeFieldAPI;
     Label: string;
 }
 
-export default function ShapeField({ NodeField, Label }: Props) {
+export default function SpawnShapeField({ NodeField, Label }: Props) {
     const [_, setForceRender] = useState(0);
 
     const zoomScale = GetZoomScale();
@@ -20,7 +20,7 @@ export default function ShapeField({ NodeField, Label }: Props) {
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -36,17 +36,35 @@ export default function ShapeField({ NodeField, Label }: Props) {
 
         EnableDropdown(posUDim2, elementRef.current.AbsoluteSize.X, [
             <HighlightableTextButton
+                key={0}
                 Size={UDim2.fromScale(1, 0)}
-                Text="Cube"
+                Text="Square"
                 OnClick={() => {
-                    NodeField.SetShape(Shapes.Cube);
+                    NodeField.SetSpawnShape(SpawnShape.Square);
                 }}
             />,
             <HighlightableTextButton
+                key={1}
+                Size={UDim2.fromScale(1, 0)}
+                Text="Cube"
+                OnClick={() => {
+                    NodeField.SetSpawnShape(SpawnShape.Cube);
+                }}
+            />,
+            <HighlightableTextButton
+                key={2}
+                Size={UDim2.fromScale(1, 0)}
+                Text="Ellipse"
+                OnClick={() => {
+                    NodeField.SetSpawnShape(SpawnShape.Ellipse);
+                }}
+            />,
+            <HighlightableTextButton
+                key={3}
                 Size={UDim2.fromScale(1, 0)}
                 Text="Sphere"
                 OnClick={() => {
-                    NodeField.SetShape(Shapes.Sphere);
+                    NodeField.SetSpawnShape(SpawnShape.Sphere);
                 }}
             />,
         ]);
@@ -69,7 +87,7 @@ export default function ShapeField({ NodeField, Label }: Props) {
                 <uicorner CornerRadius={StyleProperties.CornerRadius} />
 
                 <BasicTextLabel
-                    Text={NodeField.GetShapeName()}
+                    Text={NodeField.GetSpawnShapeName()}
                     TextColor={StyleColors.TextDark}
                     TextXAlignment="Center"
                     TextYAlignment="Center"

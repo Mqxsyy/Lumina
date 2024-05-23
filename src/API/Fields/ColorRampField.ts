@@ -1,8 +1,7 @@
 import { IdPool } from "API/IdPool";
-import { ColorField, SerializedColorField } from "./ColorField";
+import type { Src } from "API/VFXScriptCreator";
+import { ColorField, type SerializedColorField } from "./ColorField";
 import { NodeField } from "./NodeField";
-
-// BUG: last frame sometimes diff color (white?)
 
 export interface ColorPoint {
     id: number;
@@ -45,9 +44,9 @@ export class ColorRampField extends NodeField {
         const points = [];
 
         points.push(this.startPoint);
-        this.colorPoints.forEach((point) => {
+        for (const point of this.colorPoints) {
             points.push(point);
-        });
+        }
         points.push(this.endPoint);
 
         return points;
@@ -84,9 +83,9 @@ export class ColorRampField extends NodeField {
         const points = [];
 
         points.push(this.startPoint);
-        this.colorPoints.forEach((point) => {
+        for (const point of this.colorPoints) {
             points.push(point);
-        });
+        }
         points.push(this.endPoint);
 
         const keypoints = points.map((point) => new ColorSequenceKeypoint(point.time, point.color.GetColor()));
@@ -122,19 +121,17 @@ export class ColorRampField extends NodeField {
         this.FieldChanged.Fire();
     }
 
-    AutoGenerateField(fieldPath: string) {
+    AutoGenerateField(fieldPath: string, src: Src) {
         const startPoint = this.startPoint.color;
-        let src = `${fieldPath}.startPoint.color.SetHSV(${startPoint.hue}, ${startPoint.saturation}, ${startPoint.value}) \n`;
+        src.value += `${fieldPath}.startPoint.color.SetHSV(${startPoint.hue}, ${startPoint.saturation}, ${startPoint.value}) \n`;
 
         const endPoint = this.endPoint.color;
-        src += `${fieldPath}.endPoint.color.SetHSV(${endPoint.hue}, ${endPoint.saturation}, ${endPoint.value}) \n`;
+        src.value += `${fieldPath}.endPoint.color.SetHSV(${endPoint.hue}, ${endPoint.saturation}, ${endPoint.value}) \n`;
 
         const rampPoints = this.GetPoints();
         for (const point of rampPoints) {
-            src += `${fieldPath}:AddPoint(${point.time}, Vector3.new(${point.color.hue}, ${point.color.saturation}, ${point.color.value})) \n`;
+            src.value += `${fieldPath}:AddPoint(${point.time}, Vector3.new(${point.color.hue}, ${point.color.saturation}, ${point.color.value})) \n`;
         }
-
-        return src;
     }
 
     SerializeData() {
@@ -154,18 +151,16 @@ export class ColorRampField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        const serializedData = data as SerializedData;
+    ReadSerializedData(data: SerializedData) {
+        this.startPoint.time = data.startPoint.time;
+        this.startPoint.color.ReadSerializedData(data.startPoint.color);
 
-        this.startPoint.time = serializedData.startPoint.time;
-        this.startPoint.color.ReadSerializedData(serializedData.startPoint.color);
-
-        this.endPoint.time = serializedData.endPoint.time;
-        this.endPoint.color.ReadSerializedData(serializedData.endPoint.color);
+        this.endPoint.time = data.endPoint.time;
+        this.endPoint.color.ReadSerializedData(data.endPoint.color);
         this.FieldChanged.Fire();
 
-        serializedData.colorPoints.forEach((point) => {
+        for (const point of this.colorPoints) {
             this.AddPoint(point.time, new Vector3(point.color.hue, point.color.saturation, point.color.value));
-        });
+        }
     }
 }

@@ -1,5 +1,5 @@
-import { NodeSystemCollectioEntry } from "Services/NodeSystemService";
-import { NodeCollectionEntry } from "Services/NodesService";
+import type { NodeSystemCollectioEntry } from "Services/NodeSystemService";
+import type { NodeCollectionEntry } from "Services/NodesService";
 
 export interface SelectionEntry {
     name: string;

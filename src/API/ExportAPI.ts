@@ -1,6 +1,6 @@
 import { ReplicatedStorage } from "@rbxts/services";
 
-export const API_VERSION = 91;
+export const API_VERSION = 93;
 
 function GetAPIFolder() {
     let APIFolder = ReplicatedStorage.FindFirstChild("Lumina_API");
@@ -15,22 +15,23 @@ function GetAPIFolder() {
 function CreateAPI() {
     const apiFolder = GetAPIFolder();
 
-    for (const child of apiFolder!.GetChildren()) {
+    for (const child of apiFolder.GetChildren()) {
         if (child.Name === "API_VERSION") continue;
         child.Destroy();
     }
 
-    const API = script.Parent!.Clone();
+    const API = (script.Parent as Instance).Clone();
     API.Parent = apiFolder;
-    API.FindFirstChild("Readme")!.Parent = apiFolder;
+    (API.FindFirstChild("Readme") as Instance).Parent = apiFolder;
 
-    const include = script.Parent!.Parent!.FindFirstChild("include")!.Clone();
+    // HAHAHAHA typescript + Biome formatter is *lovely*
+    const include = (((script.Parent as Instance).Parent as Instance).FindFirstChild("include") as Instance).Clone();
     include.Parent = apiFolder;
 }
 
 export default function ExportAPI() {
     const apiFolder = GetAPIFolder();
-    const previousVersion = apiFolder!.FindFirstChild("API_VERSION") as NumberValue | undefined;
+    const previousVersion = (apiFolder as Instance).FindFirstChild("API_VERSION") as NumberValue | undefined;
 
     if (previousVersion !== undefined) {
         if (previousVersion.Value === API_VERSION) return;

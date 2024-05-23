@@ -10,6 +10,7 @@ export { CreateSetLifetimeRandom } from "Components/Nodes/Initialize/SetLifetime
 export { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 export { CreateAddPosition } from "Components/Nodes/Initialize/AddPosition";
 export { CreateSetPositionToParent } from "Components/Nodes/Initialize/SetPositionToParent";
+export { CreateAddPositionFromShape } from "Components/Nodes/Initialize/AddPositionFromShape";
 export { CreateSetRotationXYZ } from "Components/Nodes/Initialize/SetRotationXYZ";
 export { CreateSetRotationZ } from "Components/Nodes/Initialize/SetRotationZ";
 export { CreateSetRotationZRandom } from "Components/Nodes/Initialize/SetRotationZRandom";
@@ -37,6 +38,19 @@ export { CreateAddVelocity } from "Components/Nodes/Update/AddVelocity";
 // Render
 export { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 export { CreateVolumetricParticle } from "Components/Nodes/Render/VolumetricParticle";
+export { CreateMeshParticle } from "Components/Nodes/Render/MeshParticle";
 
 // Logic
+export { CreateNumberOut as CreateNumberInput } from "Components/Nodes/Logic/NumberOut";
+export { CreateAdd } from "Components/Nodes/Logic/Add";
+export { CreateSubtract } from "Components/Nodes/Logic/Subtract";
+export { CreateMultiply } from "Components/Nodes/Logic/Multiply";
+export { CreateDivide } from "Components/Nodes/Logic/Divide";
+export { CreateSin } from "Components/Nodes/Logic/Sin";
+export { CreateCos } from "Components/Nodes/Logic/Cos";
+export { CreateTan } from "Components/Nodes/Logic/Tan";
+export { CreateClamp } from "Components/Nodes/Logic/Clamp";
+export { CreateRemap } from "Components/Nodes/Logic/Remap";
 export { CreateRandomNumber } from "Components/Nodes/Logic/RandomNumber";
+export { CreateTime } from "Components/Nodes/Logic/Time";
+export { CreateAliveTime } from "Components/Nodes/Logic/AliveTime";

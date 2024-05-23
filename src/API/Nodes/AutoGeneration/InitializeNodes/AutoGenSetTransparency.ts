@@ -1,14 +1,15 @@
-import { SetTransparency } from "API/Nodes/Initialize/SetTransparency";
+import type { SetTransparency } from "API/Nodes/Initialize/SetTransparency";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetTransparency(node: SetTransparency) {
+export function AutoGenSetTransparency(node: SetTransparency, src: Src) {
     const className = `SetTransparency${node.id}`;
     const varName = `setTransparency${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetTransparency").SetTransparency \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetTransparency").SetTransparency \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.transparency.AutoGenerateField(`${varName}.nodeFields.transparency`);
+    node.nodeFields.transparency.AutoGenerateField(`${varName}.nodeFields.transparency`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

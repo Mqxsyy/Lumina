@@ -1,6 +1,8 @@
 import { RunService } from "@rbxts/services";
-import { Vector3Field } from "API/Fields/Vector3Field";
-import { ParticleData } from "API/ParticleService";
+import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
+import type { NodeField } from "API/Fields/NodeField";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetPositionToParent } from "../AutoGeneration/InitializeNodes/AutoGenSetPositionToParent";
 import { InitializeNode } from "./InitializeNode";
@@ -10,7 +12,7 @@ export const SetPositionToParentFieldNames = {};
 
 export class SetPositionToParent extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {};
+    nodeFields: { [key: string]: NodeField };
 
     parent?: BasePart;
 
@@ -20,7 +22,7 @@ export class SetPositionToParent extends InitializeNode {
         this.parent = parent;
 
         this.nodeFields = {
-            position: new Vector3Field(0, 0, 0),
+            position: new ConnectableVector3Field(0, 0, 0),
         };
     }
 
@@ -28,7 +30,7 @@ export class SetPositionToParent extends InitializeNode {
         if (!RunService.IsRunning()) return;
         if (this.parent === undefined) return;
 
-        const pos = this.parent!.Position;
+        const pos = this.parent.Position;
         data.particle.Position = new Vector3(pos.X, pos.Y, pos.Z);
     }
 
@@ -36,7 +38,7 @@ export class SetPositionToParent extends InitializeNode {
         return SetPositionToParentName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetPositionToParent(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetPositionToParent(this, src);
     }
 }

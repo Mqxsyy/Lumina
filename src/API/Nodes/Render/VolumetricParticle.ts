@@ -1,11 +1,14 @@
 import { RunService, Workspace } from "@rbxts/services";
-import { ShapeField, Shapes } from "API/Fields/ShapeField";
+import { VolumetricParticleShapeField, VolumetricParticleShapes } from "API/Fields/VolumetricParticleShapeField";
 import { GetVolumetricParticlesFolder } from "API/FolderLocations";
+import { CFrameZero } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
-import { CreateParticleData, GetNextParticleId, ParticleData, ParticleTypes } from "API/ParticleService";
-import { InitializeNode } from "../Initialize/InitializeNode";
-import { UpdateNode } from "../Update/UpdateNode";
+import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
+import { AutoGenVolumetricParticle } from "../AutoGeneration/RenderNodes/AutoGenVolumetricParticle";
+import type { InitializeNode } from "../Initialize/InitializeNode";
+import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
 export const VolumetricParticleName = "VolumetricParticle";
@@ -59,7 +62,7 @@ function UpdateParticleProperties(data: ParticleData) {
 export class VolumetricParticle extends RenderNode {
     nodeGroup = NodeGroups.Render;
     nodeFields = {
-        shape: new ShapeField(Shapes.Cube),
+        shape: new VolumetricParticleShapeField(VolumetricParticleShapes.Cube),
     };
 
     objectPool: ObjectPool;
@@ -76,14 +79,14 @@ export class VolumetricParticle extends RenderNode {
     Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
         const id = GetNextParticleId();
         const particle = this.objectPool.GetItem() as Part;
-        particle.CFrame = DEAD_PARTICLES_CFRAME;
+        particle.CFrame = CFrameZero;
 
         const shape = this.nodeFields.shape.GetShape();
-        if (shape === Shapes.Cube) {
+        if (shape === VolumetricParticleShapes.Cube) {
             if (particle.Shape !== Enum.PartType.Block) {
                 particle.Shape = Enum.PartType.Block;
             }
-        } else if (shape === Shapes.Sphere) {
+        } else if (shape === VolumetricParticleShapes.Sphere) {
             if (particle.Shape !== Enum.PartType.Ball) {
                 particle.Shape = Enum.PartType.Ball;
             }
@@ -91,13 +94,13 @@ export class VolumetricParticle extends RenderNode {
 
         const data = CreateParticleData(id, ParticleTypes.Cube, particle, updateNodes);
 
-        initializeNodes.forEach((node) => {
+        for (const node of initializeNodes) {
             node.Initialize(data);
-        });
+        }
 
-        updateNodes.forEach((node) => {
+        for (const node of updateNodes) {
             node.Update(data);
-        });
+        }
 
         if (data.rotation !== Vector3.zero) {
             const rot = data.rotation;
@@ -125,7 +128,9 @@ export class VolumetricParticle extends RenderNode {
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
                     if (this.aliveParticles.size() === 0) {
-                        this.updateLoop!.Disconnect();
+                        if (this.updateLoop === undefined) continue;
+
+                        this.updateLoop.Disconnect();
                         this.updateLoop = undefined;
                     }
 
@@ -166,9 +171,9 @@ export class VolumetricParticle extends RenderNode {
             this.updateLoop.Disconnect();
         }
 
-        this.aliveParticles.forEach((data) => {
+        for (const data of this.aliveParticles) {
             this.objectPool.RemoveItem(data.particle);
-        });
+        }
 
         this.objectPool.ClearStandby();
     }
@@ -177,7 +182,7 @@ export class VolumetricParticle extends RenderNode {
         return VolumetricParticleName;
     }
 
-    GetAutoGenerationCode() {
-        return "";
+    GetAutoGenerationCode(src: Src) {
+        AutoGenVolumetricParticle(this, src);
     }
 }

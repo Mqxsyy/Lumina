@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
-import { FastEventConnection } from "API/Bindables/FastEvent";
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { FastEventConnection } from "API/Bindables/FastEvent";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
 import Div from "Components/Div";
 import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
-import { GetNodeById, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, type NodeCollectionEntry, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
 import { GetSelectedNodeId, SetSelectNodeId, selectedNodeIdChanged } from "Services/SelectionService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
@@ -18,19 +18,19 @@ const NODE_SELECT_TIME = 0.1;
 
 interface Props {
     Name: string;
+    Width?: number;
     NodeId: number;
     NodeAnchorPoint: Vector2;
     IsConnectedToSystem: boolean;
-    ConnectionFunction?: () => number;
     ConnectioNode?: LogicNode;
 }
 
 function Node({
     Name,
+    Width = NODE_WIDTH,
     NodeId,
     NodeAnchorPoint,
     IsConnectedToSystem,
-    ConnectionFunction = undefined,
     ConnectioNode = undefined,
     children,
 }: React.PropsWithChildren<Props>) {
@@ -51,7 +51,7 @@ function Node({
         selectingNodeTimeRef.current = os.clock();
 
         RunService.BindToRenderStep("MoveNode", 110, () => {
-            const nodeData = GetNodeById(NodeId)!;
+            const nodeData = GetNodeById(NodeId) as NodeCollectionEntry;
             const newAnchorPosition = GetMousePositionOnCanvas().add(mouseOffsetRef.current).div(zoomScale);
 
             if (nodeData.data.anchorPoint !== newAnchorPosition) {
@@ -67,14 +67,14 @@ function Node({
         if (os.clock() - selectingNodeTimeRef.current > NODE_SELECT_TIME) return;
 
         SetSelectNodeId(NodeId);
-        setForceRender((prev) => ++prev);
+        setForceRender((prev) => prev + 1);
 
         if (selectedNodeIdChangedConnectionRef.current !== undefined) return;
 
         selectedNodeIdChangedConnectionRef.current = selectedNodeIdChanged.Connect((newNodeId) => {
             if (newNodeId !== NodeId) {
-                setForceRender((prev) => ++prev);
-                selectedNodeIdChangedConnectionRef.current!.Disconnect();
+                setForceRender((prev) => prev + 1);
+                (selectedNodeIdChangedConnectionRef.current as FastEventConnection).Disconnect();
                 selectedNodeIdChangedConnectionRef.current = undefined;
             }
         });
@@ -90,7 +90,7 @@ function Node({
 
     const getPosition = () => {
         const nodeHeight = elementRef.current === undefined ? 0 : elementRef.current.AbsoluteSize.Y;
-        const offsetFromCenter = NodeAnchorPoint.mul(zoomScale).add(new Vector2(NODE_WIDTH * 0.5 * zoomScale, nodeHeight * 0.5));
+        const offsetFromCenter = NodeAnchorPoint.mul(zoomScale).add(new Vector2(Width * 0.5 * zoomScale, nodeHeight * 0.5));
         const canvasPosition = new Vector2(canvasData.current.Position.X.Offset, canvasData.current.Position.Y.Offset);
         const position = canvasPosition.add(offsetFromCenter);
         return UDim2.fromOffset(position.X, position.Y);
@@ -113,12 +113,12 @@ function Node({
     useEffect(() => {
         if (elementRef.current === undefined) return;
         SetNodeElement(NodeId, elementRef.current);
-        setForceRender((prev) => ++prev);
+        setForceRender((prev) => prev + 1);
     }, [elementRef.current]);
 
     return (
         <imagebutton
-            Size={UDim2.fromOffset(NODE_WIDTH * zoomScale, 0)}
+            Size={UDim2.fromOffset(Width * zoomScale, 0)}
             AutomaticSize={"Y"}
             AnchorPoint={new Vector2(0.5, 0.5)}
             Position={IsConnectedToSystem ? UDim2.fromScale(0, 0) : getPosition()}
@@ -158,9 +158,7 @@ function Node({
                 <BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={Name}>
                     <uiflexitem FlexMode={"Fill"} />
                 </BasicTextLabel>
-                {ConnectionFunction !== undefined && ConnectioNode !== undefined && (
-                    <ConnectionPointOut NodeId={NodeId} BindFunction={ConnectionFunction} />
-                )}
+                {ConnectioNode !== undefined && <ConnectionPointOut NodeId={NodeId} />}
             </Div>
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                 <uilistlayout Padding={new UDim(0, 5 * zoomScale)} />

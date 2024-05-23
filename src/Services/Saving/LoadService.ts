@@ -1,11 +1,17 @@
 import { HttpService } from "@rbxts/services";
+import { FastEvent } from "API/Bindables/FastEvent";
 import { API_VERSION } from "API/ExportAPI";
 import { NodeGroups } from "API/NodeGroup";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { NodeList } from "Lists/NodeList";
-import { NodeCollectionEntry, NodeConnectionIn, NodeConnectionOut, NodeData, UpdateNodeData } from "Services/NodesService";
-import { SaveData, SerializedField, SerializedNode, SerializedSystem } from "./SaveData";
-import { FastEvent } from "API/Bindables/FastEvent";
+import {
+    type NodeCollectionEntry,
+    type NodeConnectionIn,
+    type NodeConnectionOut,
+    type NodeData,
+    UpdateNodeData,
+} from "Services/NodesService";
+import type { SaveData, SerializedField, SerializedNode, SerializedSystem } from "./SaveData";
 
 const Selection = game.GetService("Selection");
 let mismatchLoadTime = 0;
@@ -32,11 +38,17 @@ export function LoadFromFile() {
         return;
     }
 
-    let data;
-    if (selectedInstance.IsA("ModuleScript")) {
-        data = HttpService.JSONDecode((selectedInstance as ModuleScript).Source) as SaveData;
-    } else {
-        data = HttpService.JSONDecode((selectedInstance as StringValue).Value) as SaveData;
+    let data: SaveData;
+
+    try {
+        if (selectedInstance.IsA("ModuleScript")) {
+            data = HttpService.JSONDecode((selectedInstance as ModuleScript).Source) as SaveData;
+        } else {
+            data = HttpService.JSONDecode((selectedInstance as StringValue).Value) as SaveData;
+        }
+    } catch {
+        warn("The file you are trying to load is not in a valid JSON format.");
+        return;
     }
 
     if (data.version !== API_VERSION && os.clock() - mismatchLoadTime > MISMATCH_LOAD_TIMEFRAME) {
@@ -53,13 +65,16 @@ export function LoadFromFile() {
 
     // systems
     for (const system of data.systems) {
-        const [newSystem, systemCachedNodes] = CreateSystem(system);
-        systemCachedNodes.forEach((cachedNode) => cachedNodes.push(cachedNode));
+        const [_, systemCachedNodes] = CreateSystem(system);
+
+        for (const cahcedNode of systemCachedNodes) {
+            cachedNodes.push(cahcedNode);
+        }
     }
 
     // floating nodes
     for (const node of data.floatingNodes) {
-        const nodeCollectionEntry = CreateNode(node.nodeGroup, node.nodeName, node.fields);
+        const nodeCollectionEntry = CreateNode(node.nodeGroup, node.nodeName, node.fields, node.order);
         if (nodeCollectionEntry === undefined) {
             warn(`Node ${node.nodeName} does not exist in group ${node.nodeGroup}. Save data may be outdated or corrupted.`);
             continue;
@@ -73,7 +88,7 @@ export function LoadFromFile() {
         });
     }
 
-    task.wait(0.1); // OPTIMIZE: adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
+    task.wait(0.1); // adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
 
     // connections
     for (const cachedNode1 of cachedNodes) {
@@ -147,8 +162,16 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
             nodeGroup = NodeGroups.Render;
         }
 
-        for (const node of nodes) {
-            const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields);
+        const sortedNodes = nodes.sort((a, b) => {
+            if (a.order === undefined) return false; // backwards compatibility
+            if (b.order === undefined) return false; // backwards compatibility
+            return a.order >= b.order;
+        });
+
+        for (let i = 0; i < sortedNodes.size(); i++) {
+            const node = sortedNodes[i];
+
+            const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields, node.order);
             if (nodeCollectionEntry === undefined) {
                 warn(`Node ${node.nodeName} does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`);
                 continue;
@@ -156,24 +179,24 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
 
             cachedNodes.push({ SerializedNode: node, NodeData: nodeCollectionEntry.data });
 
-            // OPTIMIZE: janky
+            // janky
             if (systemData.addToNodeGroup[nodeGroup] === undefined) {
                 systemData.finishedBindingGroups.Connect(() => {
                     if (nodeCollectionEntry.element === undefined) {
                         nodeCollectionEntry.elementLoaded.Connect(() => {
-                            systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
+                            (systemData.addToNodeGroup[nodeGroup] as (id: number) => void)(nodeCollectionEntry.data.node.id);
                         });
                     } else {
-                        systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
+                        (systemData.addToNodeGroup[nodeGroup] as (id: number) => void)(nodeCollectionEntry.data.node.id);
                     }
                 });
             } else {
                 if (nodeCollectionEntry.element === undefined) {
                     nodeCollectionEntry.elementLoaded.Connect(() => {
-                        systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
+                        (systemData.addToNodeGroup[nodeGroup] as (id: number) => void)(nodeCollectionEntry.data.node.id);
                     });
                 } else {
-                    systemData.addToNodeGroup[nodeGroup]!(nodeCollectionEntry.data.node.id);
+                    (systemData.addToNodeGroup[nodeGroup] as (id: number) => void)(nodeCollectionEntry.data.node.id);
                 }
             }
         }
@@ -182,14 +205,16 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
     return [system, cachedNodes];
 }
 
-export function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[]): NodeCollectionEntry | undefined {
+export function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[], order: number): NodeCollectionEntry | undefined {
     if (NodeList[group][nodeName] === undefined) return undefined;
 
-    const node = NodeList[group][nodeName].create!() as NodeCollectionEntry;
+    const node = (NodeList[group][nodeName].create as () => NodeCollectionEntry)();
 
     for (const field of fields) {
         node.data.node.nodeFields[field.name].ReadSerializedData(field.data);
     }
+
+    node.data.order = order;
 
     return node;
 }

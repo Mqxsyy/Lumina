@@ -2,7 +2,7 @@ import React, { StrictMode, useEffect, useRef, useState } from "@rbxts/react";
 import { createRoot } from "@rbxts/react-roblox";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
-import { ColorField } from "API/Fields/ColorField";
+import type { ColorField } from "API/Fields/ColorField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import { TextInput } from "Components/Basic/TextInput";
@@ -11,14 +11,11 @@ import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 import PickerCursor from "./PickerCursor";
 
-// TODO: add color saving & loading, palette creator
-// MAYBE-TODO: add support for HSV
-
 // colors are bloody awful to work with due to their loss of accuracy on conversion
 // also long ass file
 
 export function InitializeColorPicker() {
-    const window = GetWindow(Windows.ColorPicker)!;
+    const window = GetWindow(Windows.ColorPicker);
     const root = createRoot(window);
     root.render(
         <StrictMode>
@@ -140,7 +137,7 @@ function ColorPicker() {
         RunService.BindToRenderStep("ColorPickerCursor2", Enum.RenderPriority.Input.Value, () => {
             if (pickerAPIRef.current === undefined || window.current === undefined) return;
 
-            const mousePosition = window.current!.GetRelativeMousePosition();
+            const mousePosition = window.current.GetRelativeMousePosition();
 
             const marginLeft = 1;
             const marginRight = 4;
@@ -255,13 +252,13 @@ function ColorPicker() {
         const loadedConnection = colorPickerAPILoaded.Connect(() => {
             if (loadedColorPickerAPI !== undefined) {
                 pickerAPIRef.current = loadedColorPickerAPI;
-                setForceRender((prev) => ++prev);
+                setForceRender((prev) => prev + 1);
             }
         });
 
         window.current = GetWindow(Windows.ColorPicker);
-        const resizeConnection = window.current!.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
-            setForceRender((prev) => ++prev);
+        const resizeConnection = window.current.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -274,7 +271,7 @@ function ColorPicker() {
         if (pickerAPIRef.current === undefined) return;
 
         const valuesChangedConnection = pickerAPIRef.current.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => valuesChangedConnection.Disconnect();

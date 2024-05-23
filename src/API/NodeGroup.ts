@@ -1,11 +1,11 @@
-import { Node } from "./Nodes/Node";
+import type { Node } from "./Nodes/Node";
 
 export enum NodeGroups {
-    Spawn,
-    Initialize,
-    Update,
-    Render,
-    Logic,
+    Spawn = 0,
+    Initialize = 1,
+    Update = 2,
+    Render = 3,
+    Logic = 4,
 }
 
 export class NodeGroup<T extends Node> {

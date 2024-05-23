@@ -1,5 +1,6 @@
 import { NumberField } from "API/Fields/NumberField";
 import { NodeGroups } from "API/NodeGroup";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenBurstSpawn } from "../AutoGeneration/SpawnNodes/AutoGenBurstSpawn";
 import { SpawnNode } from "./SpawnNode";
 
@@ -30,7 +31,7 @@ export class BurstSpawn extends SpawnNode {
         return this.nodeFields.amount.GetNumber();
     };
 
-    GetAutoGenerationCode() {
-        return AutoGenBurstSpawn(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenBurstSpawn(this, src);
     }
 }

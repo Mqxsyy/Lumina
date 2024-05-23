@@ -1,43 +1,42 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
+import type { FastEventConnection } from "API/Bindables/FastEvent";
 import {
+    type ConnectionData,
     CreateConnection,
     DestroyConnection,
     GetMovingConnectionId,
     StartMovingConnection,
     UnbindMovingConnection,
 } from "Services/ConnectionsService";
-import { GetNodeById, NodeConnectionOut, UpdateNodeData } from "Services/NodesService";
+import { GetNodeById, type NodeCollectionEntry, type NodeConnectionOut, UpdateNodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import ConnectionPoint from "./ConnectionPoint";
-import { FastEventConnection } from "API/Bindables/FastEvent";
 
 interface Props {
     AnchorPoint?: Vector2;
     Position?: UDim2;
     Size?: UDim2;
     NodeId: number;
-    BindFunction: () => number;
 }
 
 export default function ConnectionPointOut({
     NodeId,
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
-    Size = UDim2.fromOffset(10 * GetZoomScale(), 10 * GetZoomScale()),
-    BindFunction,
+    Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
 }: Props) {
     const [_, setForceRender] = useState(0);
     const [connectionIds, setConnectionIds] = useState<number[]>([]);
     const elementRef = useRef<ImageButton>();
 
-    const node = GetNodeById(NodeId)!;
+    const node = GetNodeById(NodeId) as NodeCollectionEntry;
     const nodeData = node.data;
 
     const createConnection = (loadedId?: number) => {
         if (elementRef.current === undefined) return;
         if (node.element === undefined) return;
 
-        const connectionData = CreateConnection(nodeData, elementRef.current, BindFunction, loadedId);
+        const connectionData = CreateConnection(nodeData, elementRef.current, loadedId);
         setConnectionIds((prev) => [...prev, connectionData.id]);
 
         UpdateNodeData(NodeId, (data) => {
@@ -71,13 +70,13 @@ export default function ConnectionPointOut({
     const mouseButton1Down = () => {
         if (GetMovingConnectionId() !== -1) return;
 
-        const connectionData = createConnection()!;
+        const connectionData = createConnection() as ConnectionData;
         StartMovingConnection(connectionData.id);
     };
 
     useEffect(() => {
         const connection = node.elementLoaded.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => {
@@ -113,9 +112,9 @@ export default function ConnectionPointOut({
         if (nodeData.loadedConnectionsOut === undefined) return;
         if (nodeData.loadedConnectionsOut.size() === 0) return;
 
-        nodeData.loadedConnectionsOut.forEach((connection) => {
+        for (const connection of nodeData.loadedConnectionsOut) {
             createConnection(connection.id);
-        });
+        }
 
         UpdateNodeData(NodeId, (data) => {
             data.loadedConnectionsOut = undefined;

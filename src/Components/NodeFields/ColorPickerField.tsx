@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { ColorField } from "API/Fields/ColorField";
+import type { ColorField } from "API/Fields/ColorField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { LoadColorPickerAPI } from "Components/Windows/Pickers.tsx/ColorPicker";
@@ -13,23 +13,21 @@ interface Props {
 }
 
 export function ColorPickerField({ Label, ColorPicker }: Props) {
-    const windowRef = useRef<DockWidgetPluginGui>();
+    const windowRef = useRef(GetWindow(Windows.ColorPicker));
     const [_, setForceRender] = useState(0);
 
     const zoomScale = GetZoomScale();
 
     useEffect(() => {
-        windowRef.current = GetWindow(Windows.ColorPicker)!;
-
         const connection = ColorPicker.FieldChanged.Connect(() => {
-            setForceRender((prev) => ++prev);
+            setForceRender((prev) => prev + 1);
         });
 
         return () => connection.Disconnect();
     }, []);
 
     const OnMouseButton1Down = () => {
-        windowRef.current!.Enabled = !windowRef.current!.Enabled;
+        windowRef.current.Enabled = !windowRef.current.Enabled;
         LoadColorPickerAPI(ColorPicker);
     };
 

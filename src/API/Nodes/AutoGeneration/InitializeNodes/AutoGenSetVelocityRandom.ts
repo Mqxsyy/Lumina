@@ -1,16 +1,17 @@
-import { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
+import type { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetVelocityRandom(node: SetVelocityRandom) {
+export function AutoGenSetVelocityRandom(node: SetVelocityRandom, src: Src) {
     const className = `SetVelocityRandom${node.id}`;
     const varName = `setVelocityRandom${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetVelocityRandom").SetVelocityRandom \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetVelocityRandom").SetVelocityRandom \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.rangeX.AutoGenerateField(`${varName}.nodeFields.rangeX`);
-    src += node.nodeFields.rangeY.AutoGenerateField(`${varName}.nodeFields.rangeY`);
-    src += node.nodeFields.rangeZ.AutoGenerateField(`${varName}.nodeFields.rangeZ`);
+    node.nodeFields.rangeX.AutoGenerateField(`${varName}.nodeFields.rangeX`, src);
+    node.nodeFields.rangeY.AutoGenerateField(`${varName}.nodeFields.rangeY`, src);
+    node.nodeFields.rangeZ.AutoGenerateField(`${varName}.nodeFields.rangeZ`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

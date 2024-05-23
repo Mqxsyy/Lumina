@@ -44,16 +44,18 @@ export function GetVolumetricParticlesFolder(): Folder {
     return volumetricParticlesFolder as Folder;
 }
 
-// let livePlanarParticlesFolder = StarterGui.FindFirstChild("Lumina Planar Particles");
-// if (livePlanarParticlesFolder === undefined) {
-// 	livePlanarParticlesFolder = new Instance("ScreenGui");
-// 	livePlanarParticlesFolder.Name = "Lumina Planar Particles";
-// 	livePlanarParticlesFolder.Parent = StarterGui;
-// }
+export function GetMeshParticlesFolder(): Folder {
+    const liveParticlesFolder = GetLiveParticlesFolder();
 
-// export function GetLivePlanarParticlesFolder(): ScreenGui {
-// 	return livePlanarParticlesFolder as ScreenGui;
-// }
+    let meshParticlesFolder = liveParticlesFolder.FindFirstChild("Mesh Particles");
+    if (meshParticlesFolder === undefined) {
+        meshParticlesFolder = new Instance("Folder");
+        meshParticlesFolder.Name = "Mesh Particles";
+        meshParticlesFolder.Parent = liveParticlesFolder;
+    }
+
+    return meshParticlesFolder as Folder;
+}
 
 export function GetExportsFolder(): Folder {
     let exportsFolder = ServerStorage.FindFirstChild("Lumina Exports");

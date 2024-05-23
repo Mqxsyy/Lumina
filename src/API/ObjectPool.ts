@@ -33,11 +33,11 @@ export class ObjectPool {
         const index = this.activeItems.findIndex((item) => item === targetItem);
 
         if (index === -1) {
-            error(targetItem + " not found in " + this.activeItems);
+            error(`${targetItem} not found in ${this.activeItems}`);
         }
 
         const item = this.activeItems.remove(index);
-        this.standbyItems.push(item!);
+        this.standbyItems.push(item as Instance);
     }
 
     ClearStandby() {

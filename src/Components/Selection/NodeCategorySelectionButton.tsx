@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
+import type { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { StyleColors, StyleProperties } from "Style";
 import Div from "../Div";
@@ -21,7 +21,7 @@ export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhove
     const isHoveringSelectionRef = useRef(false);
 
     const onHoverButton = () => {
-        CategoryUnhoverFunctions.forEach((fn) => fn()); // OPTIMIZE: may not be required anymore
+        for (const fn of CategoryUnhoverFunctions) fn();
 
         isHoveringButtonRef.current = true;
         setHovering(true);
@@ -96,12 +96,13 @@ export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhove
                             MouseLeave: onUnhoverSelection,
                         }}
                     >
-                        <uilistlayout FillDirection={"Vertical"} Padding={new UDim(0, 5)} />
+                        <uilistlayout FillDirection={"Vertical"} Padding={new UDim(0, 5)} SortOrder={"Name"} />
                         <uipadding PaddingRight={new UDim(0, nodes.size() > 8 ? 6 : 0)} />
 
                         {nodes.map((node) => {
                             return (
                                 <NodeSelectionButton
+                                    key={node.name}
                                     ElementName={node.name}
                                     Text={node.name}
                                     ToggleSelection={ToggleSelection}

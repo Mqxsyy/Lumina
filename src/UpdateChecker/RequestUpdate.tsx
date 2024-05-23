@@ -6,7 +6,7 @@ import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
 
 export default function RequestUpdate() {
-    const window = GetWindow(Windows.RequestUpdate)!;
+    const window = GetWindow(Windows.RequestUpdate);
     const root = createRoot(window);
 
     root.render(

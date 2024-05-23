@@ -1,6 +1,7 @@
 import { LineGraphField } from "API/Fields/LineGraphField";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenSetSizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetSizeOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -15,10 +16,6 @@ export class SetSizeOverLife extends UpdateNode {
         graph: new LineGraphField(),
     };
 
-    constructor() {
-        super();
-    }
-
     Update(data: ParticleData) {
         const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
         const size = this.nodeFields.graph.GetNumber(lifetime);
@@ -32,7 +29,7 @@ export class SetSizeOverLife extends UpdateNode {
         return SetSizeOverLifeName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetSizeOverLife(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetSizeOverLife(this, src);
     }
 }

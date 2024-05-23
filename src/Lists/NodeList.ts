@@ -1,5 +1,5 @@
 import { NodeGroups } from "API/NodeGroup";
-import { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
+import type { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
 import * as CreateBarrel from "./NodeListCreateBarrel";
 import * as NameBarrel from "./NodeListNameBarrel";
 
@@ -42,6 +42,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         [NameBarrel.SetPositionToParentName]: {
             name: "Set Position To Parent",
             create: () => CreateBarrel.CreateSetPositionToParent(),
+        },
+        [NameBarrel.AddPositionFromShapeName]: {
+            name: "Add Position From Shape",
+            create: () => CreateBarrel.CreateAddPositionFromShape(),
         },
         [NameBarrel.SetRotationXYZName]: {
             name: "Set Rotation XYZ",
@@ -139,11 +143,63 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Volumetric Particle",
             create: () => CreateBarrel.CreateVolumetricParticle(),
         },
+        [NameBarrel.MeshParticleName]: {
+            name: "Mesh Particle",
+            create: () => CreateBarrel.CreateMeshParticle(),
+        },
     },
     [NodeGroups.Logic]: {
+        [NameBarrel.NumberInputName]: {
+            name: "Number Out",
+            create: () => CreateBarrel.CreateNumberInput(),
+        },
+        [NameBarrel.AddName]: {
+            name: "Add",
+            create: () => CreateBarrel.CreateAdd(),
+        },
+        [NameBarrel.SubtractName]: {
+            name: "Subtract",
+            create: () => CreateBarrel.CreateSubtract(),
+        },
+        [NameBarrel.MultiplyName]: {
+            name: "Multiply",
+            create: () => CreateBarrel.CreateMultiply(),
+        },
+        [NameBarrel.DivideName]: {
+            name: "Divide",
+            create: () => CreateBarrel.CreateDivide(),
+        },
+        [NameBarrel.SinName]: {
+            name: "Sin",
+            create: () => CreateBarrel.CreateSin(),
+        },
+        [NameBarrel.CosName]: {
+            name: "Cos",
+            create: () => CreateBarrel.CreateCos(),
+        },
+        [NameBarrel.TanName]: {
+            name: "Tan",
+            create: () => CreateBarrel.CreateTan(),
+        },
+        [NameBarrel.ClampName]: {
+            name: "Clamp",
+            create: () => CreateBarrel.CreateClamp(),
+        },
+        [NameBarrel.RemapName]: {
+            name: "Remap",
+            create: () => CreateBarrel.CreateRemap(),
+        },
         [NameBarrel.RandomNumberName]: {
             name: "Random Number",
             create: () => CreateBarrel.CreateRandomNumber(),
+        },
+        [NameBarrel.TimeName]: {
+            name: "Time",
+            create: () => CreateBarrel.CreateTime(),
+        },
+        [NameBarrel.AliveTimeName]: {
+            name: "Alive Time",
+            create: () => CreateBarrel.CreateAliveTime(),
         },
     },
 };

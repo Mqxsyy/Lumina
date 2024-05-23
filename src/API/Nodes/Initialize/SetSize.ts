@@ -1,5 +1,6 @@
-import { NumberField } from "API/Fields/NumberField";
-import { ParticleData } from "API/ParticleService";
+import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetSize } from "../AutoGeneration/InitializeNodes/AutoGenSetSize";
 import { InitializeNode } from "./InitializeNode";
@@ -12,19 +13,19 @@ export const SetSizeFieldNames = {
 export class SetSize extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields: {
-        size: NumberField;
+        size: ConnectableNumberField;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            size: new NumberField(1),
+            size: new ConnectableNumberField(1),
         };
     }
 
     Initialize(data: ParticleData) {
-        const size = this.nodeFields.size.GetNumber();
+        const size = this.nodeFields.size.GetNumber(data);
         data.sizeNormal = new Vector3(size, size, size);
     }
 
@@ -32,7 +33,7 @@ export class SetSize extends InitializeNode {
         return SetSizeName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetSize(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetSize(this, src);
     }
 }

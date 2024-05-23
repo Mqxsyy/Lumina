@@ -1,9 +1,10 @@
-import { NumberField } from "API/Fields/NumberField";
-import { FrameRateMultiplier, LerpNumber } from "API/Lib";
+import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
+import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenDrag } from "../AutoGeneration/UpdateNodes/AutoGenDrag";
 import { UpdateNode } from "./UpdateNode";
-import { GetParticleData, ParticleData } from "API/ParticleService";
 
 export const DragName = "Drag";
 export const DragFieldNames = {
@@ -13,19 +14,19 @@ export const DragFieldNames = {
 export class Drag extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
     nodeFields: {
-        drag: NumberField;
+        drag: ConnectableNumberField;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            drag: new NumberField(0),
+            drag: new ConnectableNumberField(0),
         };
     }
 
     Update(data: ParticleData) {
-        const drag = this.nodeFields.drag.GetNumber() * FrameRateMultiplier;
+        const drag = this.nodeFields.drag.GetNumber(data) * FrameRateMultiplier;
         const oldVelocity = data.velocityNormal;
 
         let [x, y, z] = [0, 0, 0];
@@ -55,7 +56,7 @@ export class Drag extends UpdateNode {
         return DragName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenDrag(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenDrag(this, src);
     }
 }

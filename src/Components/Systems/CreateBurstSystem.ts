@@ -1,7 +1,7 @@
 import { NodeGroups } from "API/NodeGroup";
-import { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
-import { SetPosition } from "API/Nodes/Initialize/SetPosition";
-import { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
+import type { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
+import type { SetPosition } from "API/Nodes/Initialize/SetPosition";
+import type { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
 import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 import { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 import { CreateBurstSpawn } from "Components/Nodes/Spawn/BurstSpawn";
@@ -16,19 +16,19 @@ export function CreateBurstSystem() {
     systemData.finishedBindingGroups.Connect(() => {
         const burstSpawn = CreateBurstSpawn();
         burstSpawn.elementLoaded.Connect(() => {
-            systemData.addToNodeGroup[NodeGroups.Spawn]!(burstSpawn.data.node.id);
+            (systemData.addToNodeGroup[NodeGroups.Spawn] as (id: number) => void)(burstSpawn.data.node.id);
         });
 
         const setLifetimeRandom = CreateSetLifetimeRandom();
         (setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.4, 0.8);
         setLifetimeRandom.elementLoaded.Connect(() => {
-            systemData.addToNodeGroup[NodeGroups.Initialize]!(setLifetimeRandom.data.node.id);
+            (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetimeRandom.data.node.id);
         });
 
         const positionNode = CreateSetPosition();
         (positionNode.data.node as SetPosition).nodeFields.position.SetY(5);
         positionNode.elementLoaded.Connect(() => {
-            systemData.addToNodeGroup[NodeGroups.Initialize]!(positionNode.data.node.id);
+            (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(positionNode.data.node.id);
         });
 
         const setVelocityRandom = CreateSetVelocityRandom();
@@ -36,12 +36,12 @@ export function CreateBurstSystem() {
         (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(-5, 5);
         (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-5, 5);
         setVelocityRandom.elementLoaded.Connect(() => {
-            systemData.addToNodeGroup[NodeGroups.Initialize]!(setVelocityRandom.data.node.id);
+            (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setVelocityRandom.data.node.id);
         });
 
         const particlePlane = CreatePlaneParticle();
         particlePlane.elementLoaded.Connect(() => {
-            systemData.addToNodeGroup[NodeGroups.Render]!(particlePlane.data.node.id);
+            (systemData.addToNodeGroup[NodeGroups.Render] as (id: number) => void)(particlePlane.data.node.id);
         });
     });
 

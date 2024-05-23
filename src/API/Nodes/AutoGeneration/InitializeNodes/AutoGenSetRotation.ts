@@ -1,14 +1,15 @@
-import { SetRotationXYZ } from "API/Nodes/Initialize/SetRotationXYZ";
+import type { SetRotationXYZ } from "API/Nodes/Initialize/SetRotationXYZ";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetRotationXYZ(node: SetRotationXYZ) {
+export function AutoGenSetRotationXYZ(node: SetRotationXYZ, src: Src) {
     const className = `SetRotationXYZ${node.id}`;
     const varName = `setRotationXYZ${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetRotationXYZ").SetRotationXYZ \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetRotationXYZ").SetRotationXYZ \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.rotation.AutoGenerateField(`${varName}.nodeFields.rotation`);
+    node.nodeFields.rotation.AutoGenerateField(`${varName}.nodeFields.rotation`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

@@ -1,6 +1,7 @@
 import { LineGraphField } from "API/Fields/LineGraphField";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenMultiplySizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenMultiplySizeOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -14,10 +15,6 @@ export class MultiplySizeOverLife extends UpdateNode {
     nodeFields = {
         graph: new LineGraphField(),
     };
-
-    constructor() {
-        super();
-    }
 
     Update(data: ParticleData) {
         const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
@@ -34,7 +31,7 @@ export class MultiplySizeOverLife extends UpdateNode {
         return MultiplySizeOverLifeName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenMultiplySizeOverLife(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenMultiplySizeOverLife(this, src);
     }
 }

@@ -1,7 +1,8 @@
-import { NumberField } from "API/Fields/NumberField";
+import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { ParticleData } from "API/ParticleService";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenAccelerate } from "../AutoGeneration/UpdateNodes/AutoGenAccelerate";
 import { UpdateNode } from "./UpdateNode";
 
@@ -13,19 +14,19 @@ export const AccelerateFieldNames = {
 export class Accelerate extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
     nodeFields: {
-        acceleration: NumberField;
+        acceleration: ConnectableNumberField;
     };
 
     constructor() {
         super();
 
         this.nodeFields = {
-            acceleration: new NumberField(0),
+            acceleration: new ConnectableNumberField(0),
         };
     }
 
     Update(data: ParticleData) {
-        const acceleration = this.nodeFields.acceleration.GetNumber() * FrameRateMultiplier;
+        const acceleration = this.nodeFields.acceleration.GetNumber(data) * FrameRateMultiplier;
         const oldVelocity = data.velocityNormal;
 
         const x = oldVelocity.X + oldVelocity.X * acceleration;
@@ -39,7 +40,7 @@ export class Accelerate extends UpdateNode {
         return AccelerateName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenAccelerate(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenAccelerate(this, src);
     }
 }

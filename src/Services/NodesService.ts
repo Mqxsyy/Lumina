@@ -1,13 +1,11 @@
-import React from "@rbxts/react";
+import type React from "@rbxts/react";
 import { Event } from "API/Bindables/Event";
 import { FastEvent } from "API/Bindables/FastEvent";
 import { NodeGroups } from "API/NodeGroup";
-import { Node } from "API/Nodes/Node";
-import { RenderNode } from "API/Nodes/Render/RenderNode";
+import type { Node } from "API/Nodes/Node";
+import type { RenderNode } from "API/Nodes/Render/RenderNode";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale } from "ZoomScale";
-
-// TODO: Add render order changing
 
 export interface NodeConnectionOut {
     id: number;
@@ -25,6 +23,7 @@ export interface NodeData {
     loadedConnectionsOut?: NodeConnectionOut[];
     connectionsIn: NodeConnectionIn[];
     loadedConnectionsIn?: NodeConnectionIn[];
+    order: number;
     node: Node;
     dataChanged: FastEvent;
     onDestroy: FastEvent<[NodeData]>;
@@ -54,6 +53,7 @@ export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
             anchorPoint: GetMousePositionOnCanvas().div(GetZoomScale()),
             connectionsOut: [],
             connectionsIn: [],
+            order: -1,
             node: api,
             dataChanged: new FastEvent(),
             onDestroy: new FastEvent(),
@@ -84,10 +84,18 @@ export function SetNodeElement(id: number, element: ImageButton) {
     const node = GetNodeById(id);
 
     if (node !== undefined) {
-        if (node.element !== undefined) return;
+        if (node.element === element) return;
+        let firstLoad = false;
+
+        if (node.element === undefined) {
+            firstLoad = true;
+        }
 
         node.element = element;
-        node.elementLoaded.Fire();
+        if (firstLoad) {
+            node.elementLoaded.Fire();
+        }
+
         return;
     }
 
@@ -110,5 +118,5 @@ export function RemoveNode(id: number) {
         return;
     }
 
-    warn(`Failed to delete node. Id not found`);
+    warn("Failed to delete node. Id not found");
 }

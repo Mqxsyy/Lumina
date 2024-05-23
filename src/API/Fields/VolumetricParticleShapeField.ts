@@ -1,15 +1,16 @@
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
-export enum Shapes {
+export enum VolumetricParticleShapes {
     Cube = 1,
     Sphere = 2,
 }
 
-function GetShapeName(shape: Shapes) {
+function GetShapeName(shape: VolumetricParticleShapes) {
     switch (shape) {
-        case Shapes.Cube:
+        case VolumetricParticleShapes.Cube:
             return "Cube";
-        case Shapes.Sphere:
+        case VolumetricParticleShapes.Sphere:
             return "Sphere";
     }
 }
@@ -18,10 +19,10 @@ interface SerializedData {
     shape: number;
 }
 
-export class ShapeField extends NodeField {
-    shape: Shapes;
+export class VolumetricParticleShapeField extends NodeField {
+    shape: VolumetricParticleShapes;
 
-    constructor(shape: Shapes) {
+    constructor(shape: VolumetricParticleShapes) {
         super();
         this.shape = shape;
     }
@@ -39,8 +40,8 @@ export class ShapeField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        return `${fieldPath}.SetShape(${this.shape}) \n`;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.SetShape(${this.shape}) \n`;
     }
 
     SerializeData() {
@@ -49,7 +50,7 @@ export class ShapeField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        this.SetShape((data as SerializedData).shape);
+    ReadSerializedData(data: SerializedData) {
+        this.SetShape(data.shape);
     }
 }

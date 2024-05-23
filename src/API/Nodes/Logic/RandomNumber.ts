@@ -1,11 +1,11 @@
 import { BooleanField } from "API/Fields/BooleanField";
-import { Vector2Field } from "API/Fields/Vector2Field";
+import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { LogicNode } from "./LogicNode";
-
-// TODO: add controls when to randomize
 
 export const RandomNumberName = "RandomNumber";
 export const RandomNumberFieldNames = {
@@ -14,10 +14,10 @@ export const RandomNumberFieldNames = {
     randomizeOnce: "randomizeOnce",
 };
 
-export class RandomNumber extends LogicNode<number> {
+export class RandomNumber extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
     nodeFields: {
-        range: Vector2Field;
+        range: ConnectableVector2Field;
         isInt: BooleanField;
         randomizeOnce: BooleanField;
     };
@@ -26,14 +26,14 @@ export class RandomNumber extends LogicNode<number> {
         super();
 
         this.nodeFields = {
-            range: new Vector2Field(0, 0),
+            range: new ConnectableVector2Field(0, 0),
             isInt: new BooleanField(false),
             randomizeOnce: new BooleanField(false),
         };
     }
 
-    Calculate = () => {
-        const range = this.nodeFields.range.GetVector2();
+    Calculate = (data: ParticleData) => {
+        const range = this.nodeFields.range.GetVector2(data);
         let value = range.x + Rand.NextNumber() * (range.y - range.x);
 
         if (this.nodeFields.isInt.GetBoolean()) {
@@ -47,7 +47,7 @@ export class RandomNumber extends LogicNode<number> {
         return RandomNumberName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenRandomNumber(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenRandomNumber(this, src, wrapper);
     }
 }

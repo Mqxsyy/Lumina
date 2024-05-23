@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "@rbxts/react";
+import React, { type PropsWithChildren } from "@rbxts/react";
+import { useEffect, useRef } from "@rbxts/react";
 import { StyleColors, StyleProperties, StyleText } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
@@ -21,8 +22,8 @@ interface Props {
     IsAffectedByZoom?: boolean;
 
     Disabled?: boolean;
-    TextChanged?: (text: string) => string | void;
-    LostFocus?: (text: string) => string | void;
+    TextChanged?: (text: string) => string | undefined;
+    LostFocus?: (text: string) => string | undefined;
     GetRef?: (textBox: TextBox) => void;
 }
 
@@ -44,7 +45,7 @@ export function TextInput({
     LostFocus = undefined,
     GetRef = undefined,
     children,
-}: React.PropsWithChildren<Props>) {
+}: PropsWithChildren<Props>) {
     const textBoxRef = useRef<TextBox>();
     const textLabelRef = useRef<TextLabel>();
 
@@ -70,7 +71,7 @@ export function TextInput({
 
         if (!Disabled) {
             textChangedConnection = textBoxRef.current.GetPropertyChangedSignal("Text").Connect(() => {
-                let text = textBoxRef.current!.Text;
+                let text = (textBoxRef.current as TextBox).Text;
                 if (text === " ") {
                     text = "";
                 }
@@ -79,22 +80,22 @@ export function TextInput({
                     text = text.sub(2);
                 }
 
-                textLabelRef.current!.Text = text;
+                (textLabelRef.current as TextLabel).Text = text;
 
                 if (TextChanged === undefined) return;
 
-                const newText = TextChanged(textLabelRef.current!.Text);
-                if (newText !== undefined && newText !== textLabelRef.current!.Text) {
-                    textLabelRef.current!.Text = newText;
+                const newText = TextChanged((textLabelRef.current as TextLabel).Text);
+                if (newText !== undefined && newText !== (textLabelRef.current as TextLabel).Text) {
+                    (textLabelRef.current as TextLabel).Text = newText;
                 }
             });
 
             focusLostConnection = textBoxRef.current.FocusLost.Connect(() => {
                 if (LostFocus === undefined) return;
 
-                const newText = LostFocus(textBoxRef.current!.Text);
-                if (newText !== undefined && newText !== textBoxRef.current!.Text) {
-                    textBoxRef.current!.Text = newText;
+                const newText = LostFocus((textBoxRef.current as TextBox).Text);
+                if (newText !== undefined && newText !== (textBoxRef.current as TextBox).Text) {
+                    (textBoxRef.current as TextBox).Text = newText;
                 }
             });
         }

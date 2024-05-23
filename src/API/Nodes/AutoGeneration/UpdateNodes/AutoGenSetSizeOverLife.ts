@@ -1,14 +1,15 @@
-import { SetSizeOverLife } from "API/Nodes/Update/SetSizeOverLife";
+import type { SetSizeOverLife } from "API/Nodes/Update/SetSizeOverLife";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetSizeOverLife(node: SetSizeOverLife) {
+export function AutoGenSetSizeOverLife(node: SetSizeOverLife, src: Src) {
     const className = `SetSizeOverLife${node.id}`;
     const varName = `multiplySizeOverLife${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "SetSizeOverLife").SetSizeOverLife \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "SetSizeOverLife").SetSizeOverLife \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.graph.AutoGenerateField(`${varName}.nodeFields.graph`);
+    node.nodeFields.graph.AutoGenerateField(`${varName}.nodeFields.graph`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

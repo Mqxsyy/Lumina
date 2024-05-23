@@ -1,14 +1,15 @@
-import { SetColor } from "API/Nodes/Initialize/SetColor";
+import type { SetColor } from "API/Nodes/Initialize/SetColor";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetColor(node: SetColor) {
+export function AutoGenSetColor(node: SetColor, src: Src) {
     const className = `SetColor${node.id}`;
     const varName = `setColor${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetColor").SetColor \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetColor").SetColor \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.color.AutoGenerateField(`${varName}.nodeFields.color`);
+    node.nodeFields.color.AutoGenerateField(`${varName}.nodeFields.color`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

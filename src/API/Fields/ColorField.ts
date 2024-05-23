@@ -1,3 +1,4 @@
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
 export interface SerializedColorField {
@@ -45,8 +46,8 @@ export class ColorField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        return `${fieldPath}.SetHSV(${this.hue}, ${this.saturation}, ${this.value}) \n`;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.SetHSV(${this.hue}, ${this.saturation}, ${this.value}) \n`;
     }
 
     SerializeData() {
@@ -57,8 +58,7 @@ export class ColorField extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        const serializedData = data as SerializedColorField;
-        this.SetHSV(serializedData.hue, serializedData.saturation, serializedData.value);
+    ReadSerializedData(data: SerializedColorField) {
+        this.SetHSV(data.hue, data.saturation, data.value);
     }
 }

@@ -1,12 +1,12 @@
 import React from "@rbxts/react";
 import { SetLifetimeRandom as SetLifetimeRandomAPI, SetLifetimeRandomFieldNames } from "API/Nodes/Initialize/SetLifetimeRandom";
-import { Vector2Field } from "Components/NodeFields/Vector2Field";
-import { AddNode, NodeData } from "Services/NodesService";
+import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
+import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateSetLifetimeRandom() {
     return AddNode(new SetLifetimeRandomAPI(), (data: NodeData) => {
-        return <SetLifetimeRandom key={`node_${data.node.id}`} data={data} />;
+        return <SetLifetimeRandom key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
     });
 }
 
@@ -18,7 +18,7 @@ function SetLifetimeRandom({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <Vector2Field
+            <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as SetLifetimeRandomAPI).nodeFields.range}
                 NodeFieldName={SetLifetimeRandomFieldNames.range}

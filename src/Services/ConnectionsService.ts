@@ -1,10 +1,10 @@
-import React from "@rbxts/react";
+import type React from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
-import { NodeData } from "./NodesService";
+import type { NodeData } from "./NodesService";
 
 export interface ConnectionData {
     id: number;
@@ -13,11 +13,10 @@ export interface ConnectionData {
     startElement: ImageButton;
     endPos?: Vector2;
     endElement?: ImageButton;
-    fn: () => number;
     onDestroy: Event;
 }
 
-interface ConnectionCollectionEntry {
+export interface ConnectionCollectionEntry {
     data: ConnectionData;
     create: (props: ConnectionData) => React.Element;
 }
@@ -41,14 +40,13 @@ export function GetConnectionById(id: number) {
     return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
-export function CreateConnection(startNode: NodeData, startElement: ImageButton, fn: () => number, loadedId?: number) {
+export function CreateConnection(startNode: NodeData, startElement: ImageButton, loadedId?: number) {
     const connection: ConnectionCollectionEntry = {
         data: {
             id: idPool.GetNextId(),
             loadedId,
             startNode,
             startElement,
-            fn,
             onDestroy: new Event(),
         },
         create: CreateConnectionLine,
@@ -63,7 +61,7 @@ export function CreateConnection(startNode: NodeData, startElement: ImageButton,
 export function UpdateConnectionData(id: number, fn: (data: ConnectionData) => ConnectionData) {
     const connection = GetConnectionById(id);
     if (connection === undefined) {
-        warn(`Failed to update connection data. Id not found`);
+        warn("Failed to update connection data. Id not found");
         return;
     }
 
@@ -74,13 +72,13 @@ export function UpdateConnectionData(id: number, fn: (data: ConnectionData) => C
 export function DestroyConnection(id: number) {
     const index = ConnectionCollection.findIndex((connection) => connection.data.id === id);
     if (index !== -1) {
-        const connection = ConnectionCollection.remove(index);
-        connection!.data.onDestroy.Fire();
+        const connection = ConnectionCollection.remove(index) as ConnectionCollectionEntry;
+        connection.data.onDestroy.Fire();
         ConnectionsChanged.Fire();
         return;
     }
 
-    warn(`Failed to delete connection. Id not found`);
+    warn("Failed to delete connection. Id not found");
 }
 
 export function StartMovingConnection(id: number) {

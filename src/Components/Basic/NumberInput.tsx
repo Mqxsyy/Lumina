@@ -1,4 +1,4 @@
-import React from "@rbxts/react";
+import React, { type PropsWithChildren } from "@rbxts/react";
 import { StyleColors, StyleText } from "Style";
 import { TextInput } from "./TextInput";
 
@@ -19,7 +19,7 @@ interface Props {
 
     Disabled?: boolean;
 
-    NumberChanged?: (number: number) => void | number;
+    NumberChanged?: (number: number) => undefined | number;
 }
 
 export function NumberInput({
@@ -37,7 +37,7 @@ export function NumberInput({
     Disabled = false,
     NumberChanged = undefined,
     children,
-}: React.PropsWithChildren<Props>) {
+}: PropsWithChildren<Props>) {
     const validateNumber = (text: string) => {
         const number = tonumber(text);
 

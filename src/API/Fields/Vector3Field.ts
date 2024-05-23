@@ -1,4 +1,4 @@
-import { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
 interface SerializedData {
@@ -15,19 +15,8 @@ export interface SimpleVector3 {
 
 export class Vector3Field extends NodeField {
     x: number;
-    boundNodeX: undefined | LogicNode;
-    private boundFunctionX: undefined | (() => number);
-
     y: number;
-    boundNodeY: undefined | LogicNode;
-    private boundFunctionY: undefined | (() => number);
-
     z: number;
-    boundNodeZ: undefined | LogicNode;
-    private boundFunctionZ: undefined | (() => number);
-
-    boundNode: undefined | LogicNode;
-    private boundFunction: undefined | (() => SimpleVector3);
 
     constructor(x: number, y: number, z: number) {
         super();
@@ -38,10 +27,6 @@ export class Vector3Field extends NodeField {
     }
 
     GetVector3(): SimpleVector3 {
-        if (this.boundFunction !== undefined) {
-            return this.boundFunction();
-        }
-
         const x = this.GetX();
         const y = this.GetY();
         const z = this.GetZ();
@@ -50,33 +35,18 @@ export class Vector3Field extends NodeField {
     }
 
     GetX = () => {
-        if (this.boundFunctionX !== undefined) {
-            return this.boundFunctionX();
-        }
-
         return this.x;
     };
 
     GetY = () => {
-        if (this.boundFunctionY !== undefined) {
-            return this.boundFunctionY();
-        }
-
         return this.y;
     };
 
     GetZ = () => {
-        if (this.boundFunctionZ !== undefined) {
-            return this.boundFunctionZ();
-        }
-
         return this.z;
     };
 
     SetVector3 = (x: number, y: number, z: number) => {
-        this.boundFunction = undefined;
-        this.boundNode = undefined;
-
         this.SetX(x, true);
         this.SetY(y, true);
         this.SetZ(z, true);
@@ -84,109 +54,31 @@ export class Vector3Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    SetX = (x: number, ignoreFieldChange: boolean = false) => {
+    SetX = (x: number, ignoreFieldChange = false) => {
         this.x = x;
-        this.boundFunctionX = undefined;
-        this.boundNodeX = undefined;
 
         if (!ignoreFieldChange) return;
         this.FieldChanged.Fire();
     };
 
-    SetY = (y: number, ignoreFieldChange: boolean = false) => {
+    SetY = (y: number, ignoreFieldChange = false) => {
         this.y = y;
-        this.boundFunctionY = undefined;
-        this.boundNodeY = undefined;
 
         if (!ignoreFieldChange) return;
         this.FieldChanged.Fire();
     };
 
-    SetZ = (z: number, ignoreFieldChange: boolean = false) => {
+    SetZ = (z: number, ignoreFieldChange = false) => {
         this.z = z;
-        this.boundFunctionZ = undefined;
-        this.boundNodeZ = undefined;
 
         if (!ignoreFieldChange) return;
         this.FieldChanged.Fire();
     };
 
-    BindVector3 = (boundFunction: () => SimpleVector3, boundNode: LogicNode) => {
-        this.boundFunction = boundFunction;
-        this.boundNode = boundNode;
-        this.FieldChanged.Fire();
-    };
-
-    UnbindVector3 = () => {
-        this.boundFunction = undefined;
-        this.boundNode = undefined;
-        this.FieldChanged.Fire();
-    };
-
-    BindX = (boundFunction: () => number, boundNode: LogicNode) => {
-        this.boundFunctionX = boundFunction;
-        this.boundNodeX = boundNode;
-        this.FieldChanged.Fire();
-    };
-
-    UnbindX = () => {
-        this.boundFunctionX = undefined;
-        this.boundNodeX = undefined;
-        this.FieldChanged.Fire();
-    };
-
-    BindY = (boundFunction: () => number, boundNode: LogicNode) => {
-        this.boundFunctionY = boundFunction;
-        this.boundNodeY = boundNode;
-        this.FieldChanged.Fire();
-    };
-
-    UnbindY = () => {
-        this.boundFunctionY = undefined;
-        this.boundNodeY = undefined;
-        this.FieldChanged.Fire();
-    };
-
-    BindZ = (boundFunction: () => number, boundNode: LogicNode) => {
-        this.boundFunctionZ = boundFunction;
-        this.boundNodeZ = boundNode;
-        this.FieldChanged.Fire();
-    };
-
-    UnbindZ = () => {
-        this.boundFunctionZ = undefined;
-        this.boundNodeZ = undefined;
-        this.FieldChanged.Fire();
-    };
-
-    AutoGenerateField(fieldPath: string) {
-        let src = "";
-
-        if (this.boundNodeX !== undefined) {
-            src += "\n";
-            src += this.boundNodeX.GetAutoGenerationCode(`${fieldPath}.BindX(..)`);
-            src += "\n";
-        } else {
-            src += `${fieldPath}.SetX(${this.x}) \n`;
-        }
-
-        if (this.boundNodeY !== undefined) {
-            src += "\n";
-            src += this.boundNodeY.GetAutoGenerationCode(`${fieldPath}.BindY(..)`);
-            src += "\n";
-        } else {
-            src += `${fieldPath}.SetY(${this.y}) \n`;
-        }
-
-        if (this.boundNodeZ !== undefined) {
-            src += "\n";
-            src += this.boundNodeZ.GetAutoGenerationCode(`${fieldPath}.BindZ(..)`);
-            src += "\n";
-        } else {
-            src += `${fieldPath}.SetZ(${this.z}) \n`;
-        }
-
-        return src;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.SetX(${this.x}) \n`;
+        src.value += `${fieldPath}.SetY(${this.y}) \n`;
+        src.value += `${fieldPath}.SetZ(${this.z}) \n`;
     }
 
     SerializeData() {
@@ -197,8 +89,7 @@ export class Vector3Field extends NodeField {
         };
     }
 
-    ReadSerializedData(data: {}) {
-        const serializedData = data as SerializedData;
-        this.SetVector3(serializedData.x, serializedData.y, serializedData.z);
+    ReadSerializedData(data: SerializedData) {
+        this.SetVector3(data.x, data.y, data.z);
     }
 }
