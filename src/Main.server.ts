@@ -7,7 +7,7 @@ import { InitializeColorRamp } from "Components/Windows/Ramps/ColorRamp";
 import { InitUI } from "UIHandler";
 import CheckForUpdates from "UpdateChecker/CheckForUpdates";
 
-const toolbar = plugin.CreateToolbar("Lumina 0.0.3");
+const toolbar = plugin.CreateToolbar("Lumina 0.1.0");
 
 // i guess I'll try to follow this versioning
 // MAJOR.MINOR.PATCH

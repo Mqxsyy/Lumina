@@ -95,7 +95,7 @@ export default function ShowUpdateLog() {
                                     <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 5)} />
                                     <uipadding PaddingLeft={new UDim(0, 10)} />
 
-                                    <FeatureDetail Text="- NumberInput" />
+                                    <FeatureDetail Text="- NumberOut" />
                                     <FeatureDetail Text="- Add" />
                                     <FeatureDetail Text="- Subtract" />
                                     <FeatureDetail Text="- Multiply" />
