@@ -27,7 +27,6 @@ export default function CheckForUpdates() {
         return pluginStore.GetAsync(`User_${StudioService.GetUserId()}`);
     });
 
-    ShowUpdateLog();
     if (success) {
         if (loadedData !== undefined) {
             if ((loadedData as Data).version !== localPluginVersion) {

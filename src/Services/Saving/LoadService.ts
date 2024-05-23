@@ -156,7 +156,12 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
             nodeGroup = NodeGroups.Render;
         }
 
-        const sortedNodes = nodes.sort((a, b) => a.order >= b.order);
+        const sortedNodes = nodes.sort((a, b) => {
+            if (a.order === undefined) return false; // backwards compatibility
+            if (b.order === undefined) return false; // backwards compatibility
+            return a.order >= b.order;
+        });
+
         for (let i = 0; i < sortedNodes.size(); i++) {
             const node = sortedNodes[i];
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import type { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
+import { ArraySwap } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { NodeSystem } from "API/NodeSystem";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
@@ -13,6 +14,8 @@ import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
 import { GROUP_BORDER_THICKNESS, GROUP_HEADER_HEIGHT, GROUP_LIST_PADDING, GROUP_PADDING } from "../SizeConfig";
 
+const REORDER_COOLDOWN = 0.05;
+
 interface Props {
     SystemId: number;
     SystemAPI: NodeSystem;
@@ -23,40 +26,45 @@ interface Props {
 }
 
 function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, GradientStart, GradientEnd }: Props) {
-    const [childNodes, setChildNodes] = useState<NodeCollectionEntry[]>([]);
+    const [_, setForceRender] = useState(0);
+
+    const lastReorderTimeRef = useRef(0);
     const childNodesRef = useRef<NodeCollectionEntry[]>([]);
 
-    const [zoomScale, setZoomScale] = useState(GetZoomScale());
-
-    const nodeDestroyConnectionsRef = useRef<{
-        [key: number]: FastEventConnection;
-    }>({});
+    const nodeDestroyConnectionsRef = useRef<{ [key: number]: FastEventConnection }>({});
     const nodePositionCheckerConnectionRef = useRef<RBXScriptConnection | undefined>(undefined);
 
+    const zoomScale = GetZoomScale();
+
     const addToChildNodes = (node: NodeCollectionEntry) => {
-        setChildNodes((prev) => [...prev, node]);
         childNodesRef.current.push(node);
         updateChildNodesOrders();
+        setForceRender((prev) => prev + 1);
     };
 
     const removeFromChildNodes = (id: number) => {
-        setChildNodes((prev) => prev.filter((n) => n.data.node.id !== id));
         childNodesRef.current = childNodesRef.current.filter((n) => n.data.node.id !== id);
         updateChildNodesOrders();
+        setForceRender((prev) => prev + 1);
     };
 
-    const swapChildNodes = (index1: number, id: number) => {
-        const index2 = childNodesRef.current.findIndex((n) => n.data.node.id === id);
+    const swapChildNodes = (fromIndex: number, toIndex: number) => {
+        lastReorderTimeRef.current = os.clock();
 
-        const tempNode = childNodesRef.current[index2];
+        if (fromIndex < toIndex) {
+            for (let i = fromIndex; i < toIndex; i++) {
+                ArraySwap(childNodesRef.current, i, i + 1);
+            }
+        }
 
-        childNodesRef.current[index2] = childNodesRef.current[index1];
-        childNodesRef.current[index1] = tempNode;
-
-        setChildNodes([...childNodesRef.current]);
-        childNodesRef.current = [...childNodesRef.current];
+        if (fromIndex > toIndex) {
+            for (let i = fromIndex; i > toIndex; i--) {
+                ArraySwap(childNodesRef.current, i, i - 1);
+            }
+        }
 
         updateChildNodesOrders();
+        setForceRender((prev) => prev + 1);
     };
 
     const updateChildNodesOrders = () => {
@@ -86,28 +94,30 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 
         if (childNodesRef.current.findIndex((n) => n.data.node.id === draggingNodeId) === -1) return;
 
-        const draggingNode = GetNodeById(draggingNodeId) as NodeCollectionEntry;
+        if (os.clock() - lastReorderTimeRef.current < REORDER_COOLDOWN) return;
 
+        const draggingNode = GetNodeById(draggingNodeId) as NodeCollectionEntry;
         const mousePosition = GetMousePosition();
+
         for (let i = 0; i < childNodesRef.current.size(); i++) {
             const targetNode = childNodesRef.current[i];
 
             if (targetNode.data.node.id === draggingNodeId) continue;
-            const y = (targetNode.element as ImageButton).AbsolutePosition.Y + (targetNode.element as ImageButton).AbsoluteSize.Y * 0.5;
 
-            if (
-                (targetNode.element as ImageButton).AbsolutePosition.Y < (draggingNode.element as ImageButton).AbsolutePosition.Y &&
-                mousePosition.Y < y
-            ) {
-                swapChildNodes(i, draggingNodeId);
+            const targetPosY = (targetNode.element as ImageButton).AbsolutePosition.Y;
+            const draggingPosY = (draggingNode.element as ImageButton).AbsolutePosition.Y;
+
+            const yThreshold = targetPosY + (targetNode.element as ImageButton).AbsoluteSize.Y * 0.5;
+
+            if (targetPosY < draggingPosY && mousePosition.Y < yThreshold) {
+                const draggingIndex = childNodesRef.current.findIndex((n) => n.data.node.id === draggingNodeId);
+                swapChildNodes(draggingIndex, i);
                 return;
             }
 
-            if (
-                (targetNode.element as ImageButton).AbsolutePosition.Y > (draggingNode.element as ImageButton).AbsolutePosition.Y &&
-                mousePosition.Y > y
-            ) {
-                swapChildNodes(i, draggingNodeId);
+            if (targetPosY > draggingPosY && mousePosition.Y > yThreshold) {
+                const draggingIndex = childNodesRef.current.findIndex((n) => n.data.node.id === draggingNodeId);
+                swapChildNodes(draggingIndex, i);
                 return;
             }
         }
@@ -138,7 +148,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
     const onUnhover = () => {
         const nodeId = GetDraggingNodeId();
         if (nodeId !== undefined) {
-            const node = childNodes.find((n) => n.data.node.id === nodeId);
+            const node = childNodesRef.current.find((n) => n.data.node.id === nodeId);
 
             if (node !== undefined) {
                 removeFromChildNodes(nodeId);
@@ -160,8 +170,8 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
     };
 
     useEffect(() => {
-        const zoomChangedConnection = ZoomScaleChanged.Connect((newScale) => {
-            setZoomScale(newScale);
+        const zoomChangedConnection = ZoomScaleChanged.Connect(() => {
+            setForceRender((prev) => prev + 1);
         });
 
         BindNodeGroupFunction(SystemId, NodeGroup, addChildNode);
@@ -180,7 +190,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
             if (destroyConnection === undefined) return;
             destroyConnection = destroyConnection.Disconnect();
 
-            for (const childNode of childNodes) {
+            for (const childNode of childNodesRef.current) {
                 RemoveNode(childNode.data.node.id);
             }
         });
@@ -189,7 +199,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
             if (destroyConnection === undefined) return;
             destroyConnection = destroyConnection.Disconnect();
         };
-    }, [childNodes]);
+    }, [childNodesRef.current]);
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize={"Y"} onHover={onHover} onUnhover={onUnhover}>
@@ -226,7 +236,7 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
                     <BasicTextLabel Size={new UDim2(1, 0, 0, GROUP_HEADER_HEIGHT)} Text={NodeGroups[NodeGroup]} />
                     <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                         <uilistlayout HorizontalAlignment={"Center"} Padding={new UDim(0, 5 * zoomScale)} SortOrder={Enum.SortOrder.Name} />
-                        {childNodes.map((node) => {
+                        {childNodesRef.current.map((node) => {
                             return node.create(node.data);
                         })}
                     </Div>

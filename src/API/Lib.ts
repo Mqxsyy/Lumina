@@ -35,3 +35,9 @@ export function FixFloatingPointError(value: number) {
 export function CapitalizeFirstLetter(text: string) {
     return text.gsub("^%l", string.upper)[0];
 }
+
+export function ArraySwap(arr: unknown[], index1: number, index2: number) {
+    const temp = arr[index1];
+    arr[index1] = arr[index2];
+    arr[index2] = temp;
+}
