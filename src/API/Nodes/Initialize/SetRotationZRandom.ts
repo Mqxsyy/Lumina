@@ -1,6 +1,7 @@
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetRotationZRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZRandom";
 import { InitializeNode } from "./InitializeNode";
@@ -35,7 +36,7 @@ export class SetRotationZRandom extends InitializeNode {
         return SetRotationZRandomName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetRotationZRandom(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetRotationZRandom(this, src);
     }
 }

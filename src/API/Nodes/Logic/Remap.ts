@@ -3,6 +3,7 @@ import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { RemapValue } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenRemap } from "../AutoGeneration/LogicNodes/AutoGenRemap";
 import { LogicNode } from "./LogicNode";
 
@@ -43,7 +44,7 @@ export class Remap extends LogicNode {
         return RemapName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenRemap(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenRemap(this, src, wrapper);
     }
 }

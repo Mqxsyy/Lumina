@@ -2,6 +2,7 @@ import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenClamp } from "../AutoGeneration/LogicNodes/AutoGenClamp";
 import { LogicNode } from "./LogicNode";
 
@@ -38,7 +39,7 @@ export class Clamp extends LogicNode {
         return ClampName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenClamp(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenClamp(this, src, wrapper);
     }
 }

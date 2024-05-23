@@ -1,14 +1,15 @@
 import type { BurstSpawn } from "API/Nodes/Spawn/BurstSpawn";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenBurstSpawn(node: BurstSpawn) {
+export function AutoGenBurstSpawn(node: BurstSpawn, src: Src) {
     const className = `BurstSpawn${node.id}`;
     const varName = `burstSpawn${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Spawn", "BurstSpawn").BurstSpawn \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Spawn", "BurstSpawn").BurstSpawn \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.amount.AutoGenerateField(`${varName}.nodeFields.amount`);
+    node.nodeFields.amount.AutoGenerateField(`${varName}.nodeFields.amount`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

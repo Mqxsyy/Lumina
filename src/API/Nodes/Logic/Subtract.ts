@@ -1,6 +1,7 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenSubtract } from "../AutoGeneration/LogicNodes/AutoGenSubtract";
 import { LogicNode } from "./LogicNode";
 
@@ -37,7 +38,7 @@ export class Subtract extends LogicNode {
         return SubtractName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenSubtract(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenSubtract(this, src, wrapper);
     }
 }

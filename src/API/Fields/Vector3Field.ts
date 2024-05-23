@@ -1,3 +1,4 @@
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
 interface SerializedData {
@@ -74,12 +75,10 @@ export class Vector3Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        let src = `${fieldPath}.SetX(${this.x}) \n`;
-        src += `${fieldPath}.SetY(${this.y}) \n`;
-        src += `${fieldPath}.SetZ(${this.z}) \n`;
-
-        return src;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.SetX(${this.x}) \n`;
+        src.value += `${fieldPath}.SetY(${this.y}) \n`;
+        src.value += `${fieldPath}.SetZ(${this.z}) \n`;
     }
 
     SerializeData() {

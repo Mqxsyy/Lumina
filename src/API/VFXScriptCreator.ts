@@ -3,6 +3,10 @@ import type { NodeSystem } from "./NodeSystem";
 import type { RenderNode } from "./Nodes/Render/RenderNode";
 import type { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 
+export interface Src {
+    value: string;
+}
+
 export default function ExportAsScript() {
     const convertedFiles: ModuleScript[] = [];
 
@@ -33,48 +37,49 @@ function CreateScript(name: string, nodeSystem: NodeSystem) {
     const newScript = new Instance("ModuleScript");
     newScript.Name = name;
 
-    let src = "";
-    src += "--[[\n";
-    src += "    Auto generated script.\n";
-    src += "    Call .Start() to run the VFX.\n";
-    src += "    Call .Stop() to stop the VFX.\n";
-    src += "]]\n\n";
+    const src = { value: "" };
 
-    src += "local VFXScript = {}\n\n";
+    src.value += "--[[\n";
+    src.value += "    Auto generated script.\n";
+    src.value += "    Call .Start() to run the VFX.\n";
+    src.value += "    Call .Stop() to stop the VFX.\n";
+    src.value += "]]\n\n";
 
-    src += 'local ReplicatedStorage = game:GetService("ReplicatedStorage")\n';
-    src += "local APIFolder = ReplicatedStorage.Lumina_API.API\n";
-    src += "local TS = require(ReplicatedStorage.Lumina_API.include.RuntimeLib)\n\n";
+    src.value += "local VFXScript = {}\n\n";
 
-    src += 'local NodeSystem = TS.import(script, APIFolder, "NodeSystem").NodeSystem\n';
-    src += "local nodeSystem = NodeSystem.new()\n\n";
+    src.value += 'local ReplicatedStorage = game:GetService("ReplicatedStorage")\n';
+    src.value += "local APIFolder = ReplicatedStorage.Lumina_API.API\n";
+    src.value += "local TS = require(ReplicatedStorage.Lumina_API.include.RuntimeLib)\n\n";
 
-    src += (nodeSystem.spawnNode as SpawnNode).GetAutoGenerationCode();
-    src += "\n\n";
+    src.value += 'local NodeSystem = TS.import(script, APIFolder, "NodeSystem").NodeSystem\n';
+    src.value += "local nodeSystem = NodeSystem.new()\n\n";
+
+    (nodeSystem.spawnNode as SpawnNode).GetAutoGenerationCode(src);
+    src.value += "\n\n";
 
     for (const node of nodeSystem.initializeNodes) {
-        src += node.GetAutoGenerationCode();
-        src += "\n\n";
+        node.GetAutoGenerationCode(src);
+        src.value += "\n\n";
     }
 
     for (const node of nodeSystem.updateNodes) {
-        src += node.GetAutoGenerationCode();
-        src += "\n\n";
+        node.GetAutoGenerationCode(src);
+        src.value += "\n\n";
     }
 
-    src += (nodeSystem.renderNode as RenderNode).GetAutoGenerationCode();
-    src += "\n\n";
+    (nodeSystem.renderNode as RenderNode).GetAutoGenerationCode(src);
+    src.value += "\n\n";
 
-    src += "function VFXScript.Start()\n";
-    src += "    nodeSystem:Run()\n";
-    src += "end\n\n";
+    src.value += "function VFXScript.Start()\n";
+    src.value += "    nodeSystem:Run()\n";
+    src.value += "end\n\n";
 
-    src += "function VFXScript.Stop()\n";
-    src += "    nodeSystem:Stop()\n";
-    src += "end\n\n";
+    src.value += "function VFXScript.Stop()\n";
+    src.value += "    nodeSystem:Stop()\n";
+    src.value += "end\n\n";
 
-    src += "return VFXScript";
+    src.value += "return VFXScript";
 
-    newScript.Source = src;
+    newScript.Source = src.value;
     return newScript;
 }

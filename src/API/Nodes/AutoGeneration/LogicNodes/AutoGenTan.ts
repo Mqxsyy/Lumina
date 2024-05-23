@@ -1,15 +1,18 @@
 import type { Tan } from "API/Nodes/Logic/Tan";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenTan(node: Tan, wrapper: string) {
+export function AutoGenTan(node: Tan, src: Src, wrapper: string) {
     const className = `Tan${node.id}`;
     const varName = `tan${node.id}`;
 
-    let src = "\n";
-    src += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "Tan").Tan \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    if (string.match(src.value, className)[0] === undefined) {
+        src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "Tan").Tan \n`;
+        src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`);
+        node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
 
-    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
-    return src;
+        src.value += "\n";
+    }
+
+    src.value += `${wrapper.gsub("%.%.", `${varName}`)[0]}\n`;
 }

@@ -1,6 +1,7 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenMultiply } from "../AutoGeneration/LogicNodes/AutoGenMultiply";
 import { LogicNode } from "./LogicNode";
 
@@ -37,7 +38,7 @@ export class Multiply extends LogicNode {
         return MultiplyName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenMultiply(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenMultiply(this, src, wrapper);
     }
 }

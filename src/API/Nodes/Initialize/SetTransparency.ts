@@ -1,4 +1,5 @@
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetTransparency } from "../AutoGeneration/InitializeNodes/AutoGenSetTransparency";
@@ -31,7 +32,7 @@ export class SetTransparency extends InitializeNode {
         return SetTransparencyName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetTransparency(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetTransparency(this, src);
     }
 }

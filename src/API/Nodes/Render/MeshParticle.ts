@@ -2,9 +2,11 @@ import { RunService, Workspace } from "@rbxts/services";
 import { NumberField } from "API/Fields/NumberField";
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetMeshParticlesFolder } from "API/FolderLocations";
+import { CFrameZero } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenMeshParticle } from "../AutoGeneration/RenderNodes/AutoGenMeshParticle";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
@@ -112,7 +114,7 @@ export class MeshParticle extends RenderNode {
             particle.Mesh.MeshId = meshId;
         }
 
-        particle.CFrame = DEAD_PARTICLES_CFRAME;
+        particle.CFrame = CFrameZero;
 
         const data = CreateParticleData(id, ParticleTypes.Cube, particle, updateNodes);
 
@@ -204,7 +206,7 @@ export class MeshParticle extends RenderNode {
         return MeshParticleName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenMeshParticle(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenMeshParticle(this, src);
     }
 }

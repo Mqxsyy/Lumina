@@ -1,5 +1,6 @@
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 import { NumberField } from "./NumberField";
 
@@ -44,15 +45,13 @@ export class ConnectableNumberField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
+    AutoGenerateField(fieldPath: string, src: Src) {
         if (this.connectedNode !== undefined) {
-            let src = "\n";
-            src += this.connectedNode.GetAutoGenerationCode(`${fieldPath}.ConnectNode(..)`);
-            src += "\n";
-            return src;
+            this.connectedNode.GetAutoGenerationCode(src, `${fieldPath}.ConnectNode(..)`);
+            return;
         }
 
-        return `${fieldPath}.SetNumber(${this.numberField.GetNumber()}) \n`;
+        src.value += `${fieldPath}.SetNumber(${this.numberField.GetNumber()}) \n`;
     }
 
     SerializeData() {

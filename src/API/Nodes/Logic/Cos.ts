@@ -1,6 +1,7 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenCos } from "../AutoGeneration/LogicNodes/AutoGenCos";
 import { LogicNode } from "./LogicNode";
 
@@ -31,7 +32,7 @@ export class Cos extends LogicNode {
         return CosName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenCos(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenCos(this, src, wrapper);
     }
 }

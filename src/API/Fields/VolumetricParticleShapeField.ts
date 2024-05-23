@@ -1,3 +1,4 @@
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
 export enum VolumetricParticleShapes {
@@ -39,8 +40,8 @@ export class VolumetricParticleShapeField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        return `${fieldPath}.SetShape(${this.shape}) \n`;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.SetShape(${this.shape}) \n`;
     }
 
     SerializeData() {

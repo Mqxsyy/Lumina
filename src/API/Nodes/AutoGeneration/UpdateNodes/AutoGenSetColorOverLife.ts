@@ -1,14 +1,15 @@
 import type { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetColorOverLife(node: SetColorOverLife) {
+export function AutoGenSetColorOverLife(node: SetColorOverLife, src: Src) {
     const className = `SetColorOverLife${node.id}`;
     const varName = `setColorOverLife${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "SetColorOverLife").SetColorOverLife \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "SetColorOverLife").SetColorOverLife \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.ramp.AutoGenerateField(`${varName}.nodeFields.ramp`);
+    node.nodeFields.ramp.AutoGenerateField(`${varName}.nodeFields.ramp`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

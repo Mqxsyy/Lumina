@@ -1,5 +1,6 @@
 import { ColorField } from "API/Fields/ColorField";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetColor } from "../AutoGeneration/InitializeNodes/AutoGenSetColor";
 import { InitializeNode } from "./InitializeNode";
@@ -31,7 +32,7 @@ export class SetColor extends InitializeNode {
         return SetColorName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetColor(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetColor(this, src);
     }
 }

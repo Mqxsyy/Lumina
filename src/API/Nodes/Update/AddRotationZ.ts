@@ -2,6 +2,7 @@ import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenAddRotationZ } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZ";
 import { UpdateNode } from "./UpdateNode";
 
@@ -35,7 +36,7 @@ export class AddRotationZ extends UpdateNode {
         return AddRotationZName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenAddRotationZ(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenAddRotationZ(this, src);
     }
 }

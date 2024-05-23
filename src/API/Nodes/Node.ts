@@ -1,4 +1,5 @@
 import type { NodeField } from "API/Fields/NodeField";
+import type { Src } from "API/VFXScriptCreator";
 import type { NodeGroups } from "../NodeGroup";
 import { NodeIdPool } from "./NodeIdPool";
 
@@ -22,5 +23,5 @@ export abstract class Node {
     }
 
     abstract GetNodeName(): string;
-    abstract GetAutoGenerationCode(wrapper?: string): string;
+    abstract GetAutoGenerationCode(src: Src, wrapper?: string): void;
 }

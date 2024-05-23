@@ -1,5 +1,6 @@
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetSizeXYZ } from "../AutoGeneration/InitializeNodes/AutoGenSetSizeXYZ";
 import { InitializeNode } from "./InitializeNode";
@@ -32,7 +33,7 @@ export class SetSizeXYZ extends InitializeNode {
         return SetSizeXYZName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetSizeXYZ(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetSizeXYZ(this, src);
     }
 }

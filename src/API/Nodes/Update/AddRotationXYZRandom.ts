@@ -1,10 +1,11 @@
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
+import type { SimpleVector3 } from "API/Fields/Vector3Field";
 import { FrameRateMultiplier, Rand, RoundDecimal } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenAddRotationXYZRandom } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationXYZRandom";
 import { UpdateNode } from "./UpdateNode";
-import type { SimpleVector3 } from "API/Fields/Vector3Field";
 
 export const AddRotationXYZRandomName = "AddRotationXYZRandom";
 export const AddRotationXYZRandomFieldNames = {
@@ -55,7 +56,7 @@ export class AddRotationXYZRandom extends UpdateNode {
         return AddRotationXYZRandomName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenAddRotationXYZRandom(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenAddRotationXYZRandom(this, src);
     }
 }

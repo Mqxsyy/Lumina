@@ -7,6 +7,7 @@ import { GetPlaneParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenPlaneParticle } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
 import type { InitializeNode } from "../Initialize/InitializeNode";
@@ -349,8 +350,8 @@ export class PlaneParticle extends RenderNode {
         return PlaneParticleName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenPlaneParticle(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenPlaneParticle(this, src);
     }
 
     Destroy() {

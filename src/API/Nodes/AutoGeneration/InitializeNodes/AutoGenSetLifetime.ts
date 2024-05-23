@@ -1,14 +1,15 @@
 import type { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetLifetime(node: SetLifetime) {
+export function AutoGenSetLifetime(node: SetLifetime, src: Src) {
     const className = `SetLifetime${node.id}`;
     const varName = `setLifetime${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetLifetime").SetLifetime \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetLifetime").SetLifetime \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.time.AutoGenerateField(`${varName}.nodeFields.time`);
+    node.nodeFields.time.AutoGenerateField(`${varName}.nodeFields.time`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

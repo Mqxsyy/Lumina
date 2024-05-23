@@ -1,6 +1,7 @@
 import { ColorRampField } from "API/Fields/ColorRampField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenSetColorOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetColorOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -24,7 +25,7 @@ export class SetColorOverLife extends UpdateNode {
         return SetColorOverLifeName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetColorOverLife(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetColorOverLife(this, src);
     }
 }

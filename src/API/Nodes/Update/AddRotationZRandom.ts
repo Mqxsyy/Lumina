@@ -2,6 +2,7 @@ import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { FrameRateMultiplier, Rand, RoundDecimal } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenAddRotationZRandom } from "../AutoGeneration/UpdateNodes/AutoGenAddRotationZRandom";
 import { UpdateNode } from "./UpdateNode";
 
@@ -41,7 +42,7 @@ export class AddRotationZRandom extends UpdateNode {
         return AddRotationZRandomName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenAddRotationZRandom(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenAddRotationZRandom(this, src);
     }
 }

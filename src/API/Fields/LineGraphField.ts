@@ -1,5 +1,6 @@
 import { IdPool } from "API/IdPool";
 import { LerpNumber } from "API/Lib";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
 export interface GraphPoint {
@@ -108,16 +109,14 @@ export class LineGraphField extends NodeField {
         this.FieldChanged.Fire();
     }
 
-    AutoGenerateField(fieldPath: string) {
-        let src = `${fieldPath}.startPoint.value = ${this.startPoint.value} \n`;
-        src += `${fieldPath}.endPoint.value = ${this.endPoint.value} \n`;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.startPoint.value = ${this.startPoint.value} \n`;
+        src.value += `${fieldPath}.endPoint.value = ${this.endPoint.value} \n`;
 
         const graphPoints = this.GetPoints();
         for (const point of graphPoints) {
-            src += `${fieldPath}:AddPoint(${point.time}, ${point.value}) \n`;
+            src.value += `${fieldPath}:AddPoint(${point.time}, ${point.value}) \n`;
         }
-
-        return src;
     }
 
     SerializeData() {

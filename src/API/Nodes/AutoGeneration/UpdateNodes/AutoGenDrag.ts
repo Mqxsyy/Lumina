@@ -1,14 +1,15 @@
 import type { Drag } from "API/Nodes/Update/Drag";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenDrag(node: Drag) {
+export function AutoGenDrag(node: Drag, src: Src) {
     const className = `Drag${node.id}`;
     const varName = `drag${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "Drag").Drag \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "Drag").Drag \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.drag.AutoGenerateField(`${varName}.nodeFields.drag`);
+    node.nodeFields.drag.AutoGenerateField(`${varName}.nodeFields.drag`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

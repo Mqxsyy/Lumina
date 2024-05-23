@@ -1,9 +1,11 @@
 import { RunService, Workspace } from "@rbxts/services";
 import { VolumetricParticleShapeField, VolumetricParticleShapes } from "API/Fields/VolumetricParticleShapeField";
 import { GetVolumetricParticlesFolder } from "API/FolderLocations";
+import { CFrameZero } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenVolumetricParticle } from "../AutoGeneration/RenderNodes/AutoGenVolumetricParticle";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
@@ -77,7 +79,7 @@ export class VolumetricParticle extends RenderNode {
     Render = (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => {
         const id = GetNextParticleId();
         const particle = this.objectPool.GetItem() as Part;
-        particle.CFrame = DEAD_PARTICLES_CFRAME;
+        particle.CFrame = CFrameZero;
 
         const shape = this.nodeFields.shape.GetShape();
         if (shape === VolumetricParticleShapes.Cube) {
@@ -180,7 +182,7 @@ export class VolumetricParticle extends RenderNode {
         return VolumetricParticleName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenVolumetricParticle(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenVolumetricParticle(this, src);
     }
 }

@@ -1,14 +1,15 @@
 import type { MultiplyVelocityOverLife } from "API/Nodes/Update/MultiplyVelocityOverLife";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenMultiplyVelocityOverLife(node: MultiplyVelocityOverLife) {
+export function AutoGenMultiplyVelocityOverLife(node: MultiplyVelocityOverLife, src: Src) {
     const className = `MultiplyVelocityOverLife${node.id}`;
     const varName = `multiplyVelocityOverLife${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "MultiplyVelocityOverLife").MultiplyVelocityOverLife \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "MultiplyVelocityOverLife").MultiplyVelocityOverLife \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.graph.AutoGenerateField(`${varName}.nodeFields.graph`);
+    node.nodeFields.graph.AutoGenerateField(`${varName}.nodeFields.graph`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

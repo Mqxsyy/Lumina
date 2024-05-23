@@ -1,6 +1,7 @@
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetVelocityRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocityRandom";
 import { InitializeNode } from "./InitializeNode";
@@ -47,7 +48,7 @@ export class SetVelocityRandom extends InitializeNode {
         return SetVelocityRandomName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetVelocityRandom(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetVelocityRandom(this, src);
     }
 }

@@ -1,5 +1,6 @@
 import type { NodeField } from "API/Fields/NodeField";
 import { NodeGroups } from "API/NodeGroup";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenTime } from "../AutoGeneration/LogicNodes/AutoGenTime";
 import { LogicNode } from "./LogicNode";
 
@@ -23,7 +24,7 @@ export class Time extends LogicNode {
         return TimeName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenTime(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenTime(this, src, wrapper);
     }
 }

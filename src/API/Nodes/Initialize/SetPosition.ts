@@ -1,5 +1,6 @@
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetPosition } from "../AutoGeneration/InitializeNodes/AutoGenSetPosition";
 import { InitializeNode } from "./InitializeNode";
@@ -32,7 +33,7 @@ export class SetPosition extends InitializeNode {
         return SetPositionName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetPosition(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetPosition(this, src);
     }
 }

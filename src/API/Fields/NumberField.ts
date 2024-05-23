@@ -1,3 +1,4 @@
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
 interface SerializedData {
@@ -21,8 +22,8 @@ export class NumberField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        return `${fieldPath}.SetNumber(${this.number}) \n`;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.SetNumber(${this.number}) \n`;
     }
 
     SerializeData() {

@@ -2,6 +2,7 @@ import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenAccelerate } from "../AutoGeneration/UpdateNodes/AutoGenAccelerate";
 import { UpdateNode } from "./UpdateNode";
 
@@ -39,7 +40,7 @@ export class Accelerate extends UpdateNode {
         return AccelerateName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenAccelerate(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenAccelerate(this, src);
     }
 }

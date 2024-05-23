@@ -1,6 +1,7 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenDivide } from "../AutoGeneration/LogicNodes/AutoGenDivide";
 import { LogicNode } from "./LogicNode";
 
@@ -42,7 +43,7 @@ export class Divide extends LogicNode {
         return DivideName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenDivide(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenDivide(this, src, wrapper);
     }
 }

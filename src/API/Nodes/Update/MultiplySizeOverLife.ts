@@ -1,6 +1,7 @@
 import { LineGraphField } from "API/Fields/LineGraphField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenMultiplySizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenMultiplySizeOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -30,7 +31,7 @@ export class MultiplySizeOverLife extends UpdateNode {
         return MultiplySizeOverLifeName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenMultiplySizeOverLife(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenMultiplySizeOverLife(this, src);
     }
 }

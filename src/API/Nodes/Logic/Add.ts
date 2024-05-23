@@ -1,8 +1,9 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
-import { LogicNode } from "./LogicNode";
-import { AutoGenAdd } from "../AutoGeneration/LogicNodes/AutoGenAdd";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
+import { AutoGenAdd } from "../AutoGeneration/LogicNodes/AutoGenAdd";
+import { LogicNode } from "./LogicNode";
 
 export const AddName = "Add";
 export const AddFieldNames = {
@@ -37,7 +38,7 @@ export class Add extends LogicNode {
         return AddName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenAdd(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenAdd(this, src, wrapper);
     }
 }

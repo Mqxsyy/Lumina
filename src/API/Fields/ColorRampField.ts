@@ -1,4 +1,5 @@
 import { IdPool } from "API/IdPool";
+import type { Src } from "API/VFXScriptCreator";
 import { ColorField, type SerializedColorField } from "./ColorField";
 import { NodeField } from "./NodeField";
 
@@ -120,19 +121,17 @@ export class ColorRampField extends NodeField {
         this.FieldChanged.Fire();
     }
 
-    AutoGenerateField(fieldPath: string) {
+    AutoGenerateField(fieldPath: string, src: Src) {
         const startPoint = this.startPoint.color;
-        let src = `${fieldPath}.startPoint.color.SetHSV(${startPoint.hue}, ${startPoint.saturation}, ${startPoint.value}) \n`;
+        src.value += `${fieldPath}.startPoint.color.SetHSV(${startPoint.hue}, ${startPoint.saturation}, ${startPoint.value}) \n`;
 
         const endPoint = this.endPoint.color;
-        src += `${fieldPath}.endPoint.color.SetHSV(${endPoint.hue}, ${endPoint.saturation}, ${endPoint.value}) \n`;
+        src.value += `${fieldPath}.endPoint.color.SetHSV(${endPoint.hue}, ${endPoint.saturation}, ${endPoint.value}) \n`;
 
         const rampPoints = this.GetPoints();
         for (const point of rampPoints) {
-            src += `${fieldPath}:AddPoint(${point.time}, Vector3.new(${point.color.hue}, ${point.color.saturation}, ${point.color.value})) \n`;
+            src.value += `${fieldPath}:AddPoint(${point.time}, Vector3.new(${point.color.hue}, ${point.color.saturation}, ${point.color.value})) \n`;
         }
-
-        return src;
     }
 
     SerializeData() {

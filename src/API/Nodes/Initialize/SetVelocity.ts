@@ -1,5 +1,6 @@
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetVelocity } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocity";
 import { InitializeNode } from "./InitializeNode";
@@ -32,7 +33,7 @@ export class SetVelocity extends InitializeNode {
         return SetVelocityName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetVelocity(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetVelocity(this, src);
     }
 }

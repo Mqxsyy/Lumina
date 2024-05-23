@@ -1,6 +1,7 @@
 import { LineGraphField } from "API/Fields/LineGraphField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenMultiplyVelocityOverLife } from "../AutoGeneration/UpdateNodes/AutoGenMultiplyVelocityOverLife";
 import { UpdateNode } from "./UpdateNode";
 
@@ -25,7 +26,7 @@ export class MultiplyVelocityOverLife extends UpdateNode {
         return MultiplyVelocityOverLifeName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenMultiplyVelocityOverLife(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenMultiplyVelocityOverLife(this, src);
     }
 }

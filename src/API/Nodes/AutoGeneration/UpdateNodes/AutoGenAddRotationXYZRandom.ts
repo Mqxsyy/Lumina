@@ -1,16 +1,17 @@
 import type { AddRotationXYZRandom } from "API/Nodes/Update/AddRotationXYZRandom";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenAddRotationXYZRandom(node: AddRotationXYZRandom) {
+export function AutoGenAddRotationXYZRandom(node: AddRotationXYZRandom, src: Src) {
     const className = `AddRotationXYZRandom${node.id}`;
     const varName = `addRotationXYZRandom${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "AddRotationXYZRandom").AddRotationXYZRandom \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Update", "AddRotationXYZRandom").AddRotationXYZRandom \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.rangeX.AutoGenerateField(`${varName}.nodeFields.rangeX`);
-    src += node.nodeFields.rangeY.AutoGenerateField(`${varName}.nodeFields.rangeY`);
-    src += node.nodeFields.rangeZ.AutoGenerateField(`${varName}.nodeFields.rangeZ`);
+    node.nodeFields.rangeX.AutoGenerateField(`${varName}.nodeFields.rangeX`, src);
+    node.nodeFields.rangeY.AutoGenerateField(`${varName}.nodeFields.rangeY`, src);
+    node.nodeFields.rangeZ.AutoGenerateField(`${varName}.nodeFields.rangeZ`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

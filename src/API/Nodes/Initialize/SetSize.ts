@@ -1,5 +1,6 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetSize } from "../AutoGeneration/InitializeNodes/AutoGenSetSize";
 import { InitializeNode } from "./InitializeNode";
@@ -32,7 +33,7 @@ export class SetSize extends InitializeNode {
         return SetSizeName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetSize(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetSize(this, src);
     }
 }

@@ -39,10 +39,16 @@ export function LoadFromFile() {
     }
 
     let data: SaveData;
-    if (selectedInstance.IsA("ModuleScript")) {
-        data = HttpService.JSONDecode((selectedInstance as ModuleScript).Source) as SaveData;
-    } else {
-        data = HttpService.JSONDecode((selectedInstance as StringValue).Value) as SaveData;
+
+    try {
+        if (selectedInstance.IsA("ModuleScript")) {
+            data = HttpService.JSONDecode((selectedInstance as ModuleScript).Source) as SaveData;
+        } else {
+            data = HttpService.JSONDecode((selectedInstance as StringValue).Value) as SaveData;
+        }
+    } catch {
+        warn("The file you are trying to load is not in a valid JSON format.");
+        return;
     }
 
     if (data.version !== API_VERSION && os.clock() - mismatchLoadTime > MISMATCH_LOAD_TIMEFRAME) {

@@ -1,6 +1,7 @@
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetLifetimeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetimeRandom";
 import { InitializeNode } from "./InitializeNode";
@@ -35,7 +36,7 @@ export class SetLifetimeRandom extends InitializeNode {
         return SetLifetimeRandomName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetLifetimeRandom(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetLifetimeRandom(this, src);
     }
 }

@@ -4,6 +4,7 @@ import { Rand } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { LogicNode } from "./LogicNode";
 
 export const RandomNumberName = "RandomNumber";
@@ -46,7 +47,7 @@ export class RandomNumber extends LogicNode {
         return RandomNumberName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenRandomNumber(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenRandomNumber(this, src, wrapper);
     }
 }

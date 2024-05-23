@@ -5,6 +5,7 @@ import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import { SpawnShape, SpawnShapeField } from "API/Fields/SpawnShapeField";
 import { Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenAddPositionFromShape } from "../AutoGeneration/InitializeNodes/AutoGenAddPositionFromShape";
 import { InitializeNode } from "./InitializeNode";
@@ -226,7 +227,7 @@ export class AddPositionFromShape extends InitializeNode {
         return AddPositionFromShapeName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenAddPositionFromShape(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenAddPositionFromShape(this, src);
     }
 }

@@ -1,3 +1,4 @@
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
 export enum Orientation {
@@ -42,8 +43,8 @@ export class OrientationField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        return `${fieldPath}.SetOrientation(${this.orientation}) \n`;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.SetOrientation(${this.orientation}) \n`;
     }
 
     SerializeData() {

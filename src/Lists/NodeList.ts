@@ -150,7 +150,7 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
     },
     [NodeGroups.Logic]: {
         [NameBarrel.NumberInputName]: {
-            name: "Number",
+            name: "Number Out",
             create: () => CreateBarrel.CreateNumberInput(),
         },
         [NameBarrel.AddName]: {

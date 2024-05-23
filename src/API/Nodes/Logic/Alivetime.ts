@@ -1,6 +1,7 @@
 import type { NodeField } from "API/Fields/NodeField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenAliveTime } from "../AutoGeneration/LogicNodes/AutoGenAliveTime";
 import { LogicNode } from "./LogicNode";
 
@@ -24,7 +25,7 @@ export class AliveTime extends LogicNode {
         return AliveTimeName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenAliveTime(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenAliveTime(this, src, wrapper);
     }
 }

@@ -1,4 +1,5 @@
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetEmission } from "../AutoGeneration/InitializeNodes/AutoGenSetEmission";
@@ -31,7 +32,7 @@ export class SetEmission extends InitializeNode {
         return SetEmissionName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetEmission(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetEmission(this, src);
     }
 }

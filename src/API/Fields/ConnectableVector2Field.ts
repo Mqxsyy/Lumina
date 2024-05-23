@@ -1,5 +1,6 @@
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 import { type SimpleVector2, Vector2Field } from "./Vector2Field";
 
@@ -93,26 +94,18 @@ export class ConnectableVector2Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        let src = "";
-
+    AutoGenerateField(fieldPath: string, src: Src) {
         if (this.connectedNodeX !== undefined) {
-            src += "\n";
-            src += this.connectedNodeX.GetAutoGenerationCode(`${fieldPath}.ConnectX(..)`);
-            src += "\n";
+            this.connectedNodeX.GetAutoGenerationCode(src, `${fieldPath}.ConnectX(..)`);
         } else {
-            src += `${fieldPath}.SetX(${this.vector2Field.GetX()}) \n`;
+            src.value += `${fieldPath}.SetX(${this.vector2Field.GetX()}) \n`;
         }
 
         if (this.connectedNodeY !== undefined) {
-            src += "\n";
-            src += this.connectedNodeY.GetAutoGenerationCode(`${fieldPath}.ConnectY(..)`);
-            src += "\n";
+            this.connectedNodeY.GetAutoGenerationCode(src, `${fieldPath}.ConnectY(..)`);
         } else {
-            src += `${fieldPath}.SetY(${this.vector2Field.GetY()}) \n`;
+            src.value += `${fieldPath}.SetY(${this.vector2Field.GetY()}) \n`;
         }
-
-        return src;
     }
 
     SerializeData() {

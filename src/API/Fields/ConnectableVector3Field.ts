@@ -1,5 +1,6 @@
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 import { type SimpleVector3, Vector3Field } from "./Vector3Field";
 
@@ -126,34 +127,24 @@ export class ConnectableVector3Field extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        let src = "";
-
+    AutoGenerateField(fieldPath: string, src: Src) {
         if (this.connectedNodeX !== undefined) {
-            src += "\n";
-            src += this.connectedNodeX.GetAutoGenerationCode(`${fieldPath}.ConnectX(..)`);
-            src += "\n";
+            this.connectedNodeX.GetAutoGenerationCode(src, `${fieldPath}.ConnectX(..)`);
         } else {
-            src += `${fieldPath}.SetX(${this.vector3Field.GetX()}) \n`;
+            src.value += `${fieldPath}.SetX(${this.vector3Field.GetX()}) \n`;
         }
 
         if (this.connectedNodeY !== undefined) {
-            src += "\n";
-            src += this.connectedNodeY.GetAutoGenerationCode(`${fieldPath}.ConnectY(..)`);
-            src += "\n";
+            this.connectedNodeY.GetAutoGenerationCode(src, `${fieldPath}.ConnectY(..)`);
         } else {
-            src += `${fieldPath}.SetY(${this.vector3Field.GetY()}) \n`;
+            src.value += `${fieldPath}.SetY(${this.vector3Field.GetY()}) \n`;
         }
 
         if (this.connectedNodeZ !== undefined) {
-            src += "\n";
-            src += this.connectedNodeZ.GetAutoGenerationCode(`${fieldPath}.ConnectZ(..)`);
-            src += "\n";
+            this.connectedNodeZ.GetAutoGenerationCode(src, `${fieldPath}.ConnectZ(..)`);
         } else {
-            src += `${fieldPath}.SetZ(${this.vector3Field.GetZ()}) \n`;
+            src.value += `${fieldPath}.SetZ(${this.vector3Field.GetZ()}) \n`;
         }
-
-        return src;
     }
 
     SerializeData() {

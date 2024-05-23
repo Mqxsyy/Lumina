@@ -2,6 +2,7 @@ import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenAddVelocity } from "../AutoGeneration/UpdateNodes/AutoGenAddVelocity";
 import { UpdateNode } from "./UpdateNode";
 
@@ -39,7 +40,7 @@ export class AddVelocity extends UpdateNode {
         return AddVelocityName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenAddVelocity(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenAddVelocity(this, src);
     }
 }

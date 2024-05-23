@@ -1,6 +1,7 @@
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
 import { AutoGenSetSizeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetSizeRandom";
 import { InitializeNode } from "./InitializeNode";
@@ -34,7 +35,7 @@ export class SetSizeRandom extends InitializeNode {
         return SetSizeRandomName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenSetSizeRandom(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenSetSizeRandom(this, src);
     }
 }

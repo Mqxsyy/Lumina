@@ -1,9 +1,10 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
-import { FrameRateMultiplier, LerpNumber } from "API/Lib";
+import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
+import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenDrag } from "../AutoGeneration/UpdateNodes/AutoGenDrag";
 import { UpdateNode } from "./UpdateNode";
-import { GetParticleData, type ParticleData } from "API/ParticleService";
 
 export const DragName = "Drag";
 export const DragFieldNames = {
@@ -55,7 +56,7 @@ export class Drag extends UpdateNode {
         return DragName;
     }
 
-    GetAutoGenerationCode() {
-        return AutoGenDrag(this);
+    GetAutoGenerationCode(src: Src) {
+        AutoGenDrag(this, src);
     }
 }

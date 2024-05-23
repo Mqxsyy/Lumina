@@ -1,16 +1,19 @@
 import type { Subtract } from "API/Nodes/Logic/Subtract";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSubtract(node: Subtract, wrapper: string) {
+export function AutoGenSubtract(node: Subtract, src: Src, wrapper: string) {
     const className = `Subtract${node.id}`;
     const varName = `subtract${node.id}`;
 
-    let src = "\n";
-    src += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "Subtract").Subtract \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    if (string.match(src.value, className)[0] === undefined) {
+        src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "Subtract").Subtract \n`;
+        src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.a.AutoGenerateField(`${varName}.nodeFields.a`);
-    src += node.nodeFields.b.AutoGenerateField(`${varName}.nodeFields.b`);
+        node.nodeFields.a.AutoGenerateField(`${varName}.nodeFields.a`, src);
+        node.nodeFields.b.AutoGenerateField(`${varName}.nodeFields.b`, src);
 
-    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
-    return src;
+        src.value += "\n";
+    }
+
+    src.value += `${wrapper.gsub("%.%.", `${varName}`)[0]}\n`;
 }

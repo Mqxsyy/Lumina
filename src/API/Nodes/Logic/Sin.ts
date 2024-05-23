@@ -1,6 +1,7 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
+import type { Src } from "API/VFXScriptCreator";
 import { AutoGenSin } from "../AutoGeneration/LogicNodes/AutoGenSin";
 import { LogicNode } from "./LogicNode";
 
@@ -31,7 +32,7 @@ export class Sin extends LogicNode {
         return SinName;
     }
 
-    GetAutoGenerationCode(wrapper: string) {
-        return AutoGenSin(this, wrapper);
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        AutoGenSin(this, src, wrapper);
     }
 }

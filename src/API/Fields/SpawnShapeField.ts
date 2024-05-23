@@ -1,3 +1,4 @@
+import type { Src } from "API/VFXScriptCreator";
 import { NodeField } from "./NodeField";
 
 export enum SpawnShape {
@@ -45,8 +46,8 @@ export class SpawnShapeField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    AutoGenerateField(fieldPath: string) {
-        return `${fieldPath}.SetSpawnShape(${this.spawnShape}) \n`;
+    AutoGenerateField(fieldPath: string, src: Src) {
+        src.value += `${fieldPath}.SetSpawnShape(${this.spawnShape}) \n`;
     }
 
     SerializeData() {

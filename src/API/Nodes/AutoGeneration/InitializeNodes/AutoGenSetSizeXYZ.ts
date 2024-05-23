@@ -1,14 +1,15 @@
 import type { SetSizeXYZ } from "API/Nodes/Initialize/SetSizeXYZ";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenSetSizeXYZ(node: SetSizeXYZ) {
+export function AutoGenSetSizeXYZ(node: SetSizeXYZ, src: Src) {
     const className = `SetSizeXYZ${node.id}`;
     const varName = `setSizeXYZ${node.id}`;
 
-    let src = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetSizeXYZ").SetSizeXYZ \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "SetSizeXYZ").SetSizeXYZ \n`;
+    src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.size.AutoGenerateField(`${varName}.nodeFields.size`);
+    node.nodeFields.size.AutoGenerateField(`${varName}.nodeFields.size`, src);
 
-    src += `nodeSystem:AddNode(${varName})`;
-    return src;
+    src.value += "\n";
+    src.value += `nodeSystem:AddNode(${varName})`;
 }

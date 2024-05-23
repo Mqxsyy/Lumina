@@ -1,16 +1,19 @@
 import type { Clamp } from "API/Nodes/Logic/Clamp";
+import type { Src } from "API/VFXScriptCreator";
 
-export function AutoGenClamp(node: Clamp, wrapper: string) {
+export function AutoGenClamp(node: Clamp, src: Src, wrapper: string) {
     const className = `Clamp${node.id}`;
     const varName = `clamp${node.id}`;
 
-    let src = "\n";
-    src += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "Clamp").Clamp \n`;
-    src += `local ${varName} = ${className}.new() \n`;
+    if (string.match(src.value, className)[0] === undefined) {
+        src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "Clamp").Clamp \n`;
+        src.value += `local ${varName} = ${className}.new() \n\n`;
 
-    src += node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`);
-    src += node.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`);
+        node.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
+        node.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`, src);
 
-    src += `${wrapper.gsub("%.%.", `${varName}.Calculate`)[0]}\n`;
-    return src;
+        src.value += "\n";
+    }
+
+    src.value += `${wrapper.gsub("%.%.", `${varName}`)[0]}\n`;
 }
