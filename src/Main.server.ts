@@ -1,13 +1,14 @@
+import CheckForUpdates from "UpdateChecker/CheckForUpdates";
 import { GetWindow, InitializeWindows, Windows } from "Windows/WindowSevice";
 InitializeWindows(plugin); // widgets are bloody annoying to work with
+CheckForUpdates(plugin);
 
 import { InitializeLineGraph } from "Components/Windows/Line/LineGraph";
 import { InitializeColorPicker } from "Components/Windows/Pickers.tsx/ColorPicker";
 import { InitializeColorRamp } from "Components/Windows/Ramps/ColorRamp";
 import { InitUI } from "UIHandler";
-import CheckForUpdates from "UpdateChecker/CheckForUpdates";
 
-const toolbar = plugin.CreateToolbar("Lumina 0.1.0");
+const toolbar = plugin.CreateToolbar("Lumina 0.1.1");
 
 // i guess I'll try to follow this versioning
 // MAJOR.MINOR.PATCH
@@ -29,5 +30,3 @@ InitUI();
 InitializeLineGraph();
 InitializeColorPicker();
 InitializeColorRamp();
-
-CheckForUpdates();

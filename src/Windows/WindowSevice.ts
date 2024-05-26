@@ -35,7 +35,7 @@ const windows: { [key in Windows]: Window } = {
     },
     [Windows.UpdateLog]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
-        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 600, 400, 200),
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 400, 250, 400, 200),
     },
 };
 

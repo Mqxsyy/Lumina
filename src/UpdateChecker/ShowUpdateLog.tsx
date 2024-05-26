@@ -27,7 +27,7 @@ export default function ShowUpdateLog() {
                     Size={UDim2.fromScale(1, 0)}
                     TextXAlignment="Center"
                     TextWrapped={true}
-                    Text="Lumina Update 0.1.0"
+                    Text="Lumina Update 0.1.1"
                     FontWeight={Enum.FontWeight.ExtraBold}
                     TextSize={40}
                     TextYAlignment="Bottom"
@@ -45,84 +45,12 @@ export default function ShowUpdateLog() {
                     <uiflexitem FlexMode={Enum.UIFlexMode.Fill} />
                     <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 20)} />
 
+                    <FeatureHeader Text="Changes" />
                     <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                         <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 10)} />
+                        <uipadding PaddingLeft={new UDim(0, 10)} />
 
-                        <FeatureHeader Text="New Features:" />
-                        <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                            <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 5)} />
-                            <uipadding PaddingLeft={new UDim(0, 10)} />
-
-                            <FeatureDetail Text="- Now able to reorder nodes in node groups" />
-                            <FeatureDetail Text="- Created update log" />
-                        </Div>
-                    </Div>
-                    <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                        <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 10)} />
-
-                        <FeatureHeader Text="New Nodes:" />
-                        <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                            <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 20)} />
-                            <uipadding PaddingLeft={new UDim(0, 10)} />
-
-                            <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                                <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 5)} />
-
-                                <FeatureHeader Text="Initialize" FontSize={22} />
-                                <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                                    <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 5)} />
-                                    <uipadding PaddingLeft={new UDim(0, 10)} />
-
-                                    <FeatureDetail Text="- AddPositionFromShape" />
-                                </Div>
-                            </Div>
-                            <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                                <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 5)} />
-                                <FeatureHeader Text="Render" FontSize={22} />
-                                <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                                    <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 5)} />
-                                    <uipadding PaddingLeft={new UDim(0, 10)} />
-
-                                    <FeatureDetail Text="- VolumetricParticle" />
-                                    <FeatureDetail Text="- MeshParticle" />
-                                </Div>
-                            </Div>
-                            <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                                <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 5)} />
-
-                                <FeatureHeader Text="Logic" FontSize={22} />
-                                <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                                    <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 5)} />
-                                    <uipadding PaddingLeft={new UDim(0, 10)} />
-
-                                    <FeatureDetail Text="- NumberOut" />
-                                    <FeatureDetail Text="- Add" />
-                                    <FeatureDetail Text="- Subtract" />
-                                    <FeatureDetail Text="- Multiply" />
-                                    <FeatureDetail Text="- Divide" />
-                                    <FeatureDetail Text="- Sin" />
-                                    <FeatureDetail Text="- Cos" />
-                                    <FeatureDetail Text="- Tan" />
-                                    <FeatureDetail Text="- Clamp" />
-                                    <FeatureDetail Text="- Remap" />
-                                    <FeatureDetail Text="- Time" />
-                                    <FeatureDetail Text="- AliveTime" />
-                                </Div>
-                            </Div>
-                        </Div>
-                    </Div>
-                    <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                        <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 10)} />
-
-                        <FeatureHeader Text="Other" />
-                        <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                            <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 10)} />
-                            <uipadding PaddingLeft={new UDim(0, 10)} />
-
-                            <FeatureDetail Text="- Made export auto generated code cleaner" />
-                            <FeatureDetail Text="- Created discord server" />
-                            <FeatureDetail Text="- Created trello page" />
-                        </Div>
+                        <FeatureDetail Text="- Update log no longer uses DataStores" />
                     </Div>
                 </scrollingframe>
             </Div>
