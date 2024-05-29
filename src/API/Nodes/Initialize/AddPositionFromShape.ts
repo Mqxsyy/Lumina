@@ -7,8 +7,7 @@ import { Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenAddPositionFromShape } from "../AutoGeneration/InitializeNodes/AutoGenAddPositionFromShape";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const AddPositionFromShapeName = "AddPositionFromShape";
 export const AddPositionFromShapeFieldNames = {
@@ -228,6 +227,13 @@ export class AddPositionFromShape extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenAddPositionFromShape(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.spawnShape.AutoGenerateField(`${varName}.nodeFields.spawnShape`, src);
+            this.nodeFields.sizeVec2.AutoGenerateField(`${varName}.nodeFields.sizeVec2`, src);
+            this.nodeFields.sizeVec3.AutoGenerateField(`${varName}.nodeFields.sizeVec3`, src);
+            this.nodeFields.filled.AutoGenerateField(`${varName}.nodeFields.filled`, src);
+            this.nodeFields.edgeWidth.AutoGenerateField(`${varName}.nodeFields.edgeWidth`, src);
+            this.nodeFields.rotation.AutoGenerateField(`${varName}.nodeFields.rotation`, src);
+        });
     }
 }

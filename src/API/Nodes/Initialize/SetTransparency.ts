@@ -2,8 +2,7 @@ import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetTransparency } from "../AutoGeneration/InitializeNodes/AutoGenSetTransparency";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetTransparencyName = "SetTransparency";
 export const SetTransparencyFieldNames = {
@@ -33,6 +32,8 @@ export class SetTransparency extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetTransparency(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.transparency.AutoGenerateField(`${varName}.nodeFields.transparency`, src);
+        });
     }
 }

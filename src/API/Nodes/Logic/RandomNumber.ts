@@ -2,10 +2,9 @@ import { BooleanField } from "API/Fields/BooleanField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
-import { AutoGenRandomNumber } from "API/Nodes/AutoGeneration/LogicNodes/AutoGenRandomNumber";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { LogicNode } from "./LogicNode";
+import { AutoGenLogicNode, LogicNode } from "./LogicNode";
 
 export const RandomNumberName = "RandomNumber";
 export const RandomNumberFieldNames = {
@@ -48,6 +47,8 @@ export class RandomNumber extends LogicNode {
     }
 
     GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenRandomNumber(this, src, wrapper);
+        AutoGenLogicNode(this, src, wrapper, (varName) => {
+            this.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`, src);
+        });
     }
 }

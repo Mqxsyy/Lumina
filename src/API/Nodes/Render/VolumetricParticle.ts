@@ -6,10 +6,9 @@ import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenVolumetricParticle } from "../AutoGeneration/RenderNodes/AutoGenVolumetricParticle";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
-import { RenderNode } from "./RenderNode";
+import { AutoGenRenderNode, RenderNode } from "./RenderNode";
 
 export const VolumetricParticleName = "VolumetricParticle";
 export const VolumetricParticleFieldNames = {
@@ -183,6 +182,8 @@ export class VolumetricParticle extends RenderNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenVolumetricParticle(this, src);
+        AutoGenRenderNode(this, src, (varName) => {
+            this.nodeFields.shape.AutoGenerateField(`${varName}.nodeFields.shape`, src);
+        });
     }
 }

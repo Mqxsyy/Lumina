@@ -2,8 +2,7 @@ import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenSin } from "../AutoGeneration/LogicNodes/AutoGenSin";
-import { LogicNode } from "./LogicNode";
+import { AutoGenLogicNode, LogicNode } from "./LogicNode";
 
 export const SinName = "Sin";
 export const SinFieldNames = {
@@ -33,6 +32,8 @@ export class Sin extends LogicNode {
     }
 
     GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenSin(this, src, wrapper);
+        AutoGenLogicNode(this, src, wrapper, (varName) => {
+            this.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
+        });
     }
 }

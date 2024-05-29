@@ -1,10 +1,8 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
-import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenDrag } from "../AutoGeneration/UpdateNodes/AutoGenDrag";
-import { UpdateNode } from "./UpdateNode";
+import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
 
 export const DragName = "Drag";
 export const DragFieldNames = {
@@ -57,6 +55,8 @@ export class Drag extends UpdateNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenDrag(this, src);
+        AutoGenUpdateNode(this, src, (varName) => {
+            this.nodeFields.drag.AutoGenerateField(`${varName}.nodeFields.drag`, src);
+        });
     }
 }

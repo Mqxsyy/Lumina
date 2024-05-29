@@ -1,8 +1,7 @@
 import { NumberField } from "API/Fields/NumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenNumberOut } from "../AutoGeneration/LogicNodes/AutoGenNumberOut";
-import { LogicNode } from "./LogicNode";
+import { AutoGenLogicNode, LogicNode } from "./LogicNode";
 
 export const NumberOutName = "NumberOut";
 export const NumberOutFieldNames = {
@@ -32,6 +31,8 @@ export class NumberOut extends LogicNode {
     }
 
     GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenNumberOut(this, src, wrapper);
+        AutoGenLogicNode(this, src, wrapper, (varName) => {
+            this.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
+        });
     }
 }

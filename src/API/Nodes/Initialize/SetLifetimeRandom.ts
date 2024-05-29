@@ -3,8 +3,7 @@ import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetLifetimeRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetimeRandom";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetLifetimeRandomName = "SetLifetimeRandom";
 export const SetLifetimeRandomFieldNames = {
@@ -37,6 +36,8 @@ export class SetLifetimeRandom extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetLifetimeRandom(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`, src);
+        });
     }
 }

@@ -1,4 +1,4 @@
-import type { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
+import type { SelectionEntry } from "API/Nodes/SelectionEntry";
 import { CreateBasicSystem } from "Components/Systems/CreateBasicSystem";
 import { CreateBurstSystem } from "Components/Systems/CreateBurstSystem";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";

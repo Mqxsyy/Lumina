@@ -2,8 +2,7 @@ import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetEmission } from "../AutoGeneration/InitializeNodes/AutoGenSetEmission";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetEmissionName = "SetEmission";
 export const SetEmissionFieldNames = {
@@ -33,6 +32,8 @@ export class SetEmission extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetEmission(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.emission.AutoGenerateField(`${varName}.nodeFields.emission`, src);
+        });
     }
 }

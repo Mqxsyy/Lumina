@@ -3,8 +3,7 @@ import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetRotationZRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetRotationZRandom";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetRotationZRandomName = "SetRotationZRandom";
 export const SetRotationZRandomFieldNames = {
@@ -37,6 +36,8 @@ export class SetRotationZRandom extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetRotationZRandom(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`, src);
+        });
     }
 }

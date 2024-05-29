@@ -2,8 +2,7 @@ import { LineGraphField } from "API/Fields/LineGraphField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenSetSizeOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetSizeOverLife";
-import { UpdateNode } from "./UpdateNode";
+import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
 
 export const SetSizeOverLifeName = "SetSizeOverLife";
 export const SetSizeOverLifeFieldNames = {
@@ -30,6 +29,8 @@ export class SetSizeOverLife extends UpdateNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetSizeOverLife(this, src);
+        AutoGenUpdateNode(this, src, (varName) => {
+            this.nodeFields.graph.AutoGenerateField(`${varName}.nodeFields.graph`, src);
+        });
     }
 }

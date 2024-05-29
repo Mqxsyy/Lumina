@@ -2,8 +2,7 @@ import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetRotationXYZ } from "../AutoGeneration/InitializeNodes/AutoGenSetRotation";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetRotationXYZName = "SetRotationXYZ";
 export const SetRotationXYZFieldNames = {
@@ -34,6 +33,8 @@ export class SetRotationXYZ extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetRotationXYZ(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.rotation.AutoGenerateField(`${varName}.nodeFields.rotation`, src);
+        });
     }
 }

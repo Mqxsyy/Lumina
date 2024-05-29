@@ -3,8 +3,7 @@ import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenClamp } from "../AutoGeneration/LogicNodes/AutoGenClamp";
-import { LogicNode } from "./LogicNode";
+import { AutoGenLogicNode, LogicNode } from "./LogicNode";
 
 export const ClampName = "Clamp";
 export const ClampFieldNames = {
@@ -40,6 +39,9 @@ export class Clamp extends LogicNode {
     }
 
     GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenClamp(this, src, wrapper);
+        AutoGenLogicNode(this, src, wrapper, (varName) => {
+            this.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
+            this.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`, src);
+        });
     }
 }

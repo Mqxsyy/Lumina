@@ -4,8 +4,7 @@ import type { NodeField } from "API/Fields/NodeField";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetPositionToParent } from "../AutoGeneration/InitializeNodes/AutoGenSetPositionToParent";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetPositionToParentName = "SetPositionToParent";
 export const SetPositionToParentFieldNames = {};
@@ -39,6 +38,6 @@ export class SetPositionToParent extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetPositionToParent(this, src);
+        AutoGenInitializeNode(this, src);
     }
 }

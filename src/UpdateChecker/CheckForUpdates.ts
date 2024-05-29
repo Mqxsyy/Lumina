@@ -16,7 +16,7 @@ export default function CheckForUpdates(plugin: Plugin) {
 
     if (data !== undefined) {
         if (data.version !== localVersion) {
-            RequestUpdate();
+            // RequestUpdate();
             return;
         }
     }
@@ -34,3 +34,10 @@ export default function CheckForUpdates(plugin: Plugin) {
 // Main.server.ts
 // pluginVersion.json
 // updateLog
+
+// check works
+// new release in git
+// post in devforum
+// post in disc
+
+// ENABLE UPDATE WARNING!!!

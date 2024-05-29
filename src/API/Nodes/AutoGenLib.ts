@@ -1,6 +1,6 @@
 import { LowerFirstLetter } from "API/Lib";
 import type { Src } from "API/VFXScriptCreator";
-import type { Node } from "../Node";
+import type { Node } from "./Node";
 
 export function AutoGenImport(node: Node, src: Src) {
     const nodeName = node.GetNodeName();

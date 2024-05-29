@@ -9,10 +9,9 @@ import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenPlaneParticle } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
-import { RenderNode } from "./RenderNode";
+import { AutoGenRenderNode, RenderNode } from "./RenderNode";
 
 const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 
@@ -360,7 +359,15 @@ export class PlaneParticle extends RenderNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenPlaneParticle(this, src);
+        AutoGenRenderNode(this, src, (varName) => {
+            this.nodeFields.orientation.AutoGenerateField(`${varName}.nodeFields.orientation`, src);
+            this.nodeFields.assetId.AutoGenerateField(`${varName}.nodeFields.assetId`, src);
+            this.nodeFields.doubleSided.AutoGenerateField(`${varName}.nodeFields.doubleSided`, src);
+            this.nodeFields.imageSize.AutoGenerateField(`${varName}.nodeFields.imageSize`, src);
+            this.nodeFields.spriteSheetRows.AutoGenerateField(`${varName}.nodeFields.spriteSheetRows`, src);
+            this.nodeFields.spriteSheetColumns.AutoGenerateField(`${varName}.nodeFields.spriteSheetColumns`, src);
+            this.nodeFields.spriteSheetFrameCount.AutoGenerateField(`${varName}.nodeFields.spriteSheetFrameCount`, src);
+        });
     }
 
     Destroy() {

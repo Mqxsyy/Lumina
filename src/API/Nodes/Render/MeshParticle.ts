@@ -7,10 +7,9 @@ import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenMeshParticle } from "../AutoGeneration/RenderNodes/AutoGenMeshParticle";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
-import { RenderNode } from "./RenderNode";
+import { AutoGenRenderNode, RenderNode } from "./RenderNode";
 
 export const MeshParticleName = "MeshParticle";
 export const MeshParticleFieldNames = {
@@ -207,6 +206,13 @@ export class MeshParticle extends RenderNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenMeshParticle(this, src);
+        AutoGenRenderNode(this, src, (varName) => {
+            this.nodeFields.meshId.AutoGenerateField(`${varName}.nodeFields.meshId`, src);
+            this.nodeFields.textureId.AutoGenerateField(`${varName}.nodeFields.textureId`, src);
+            this.nodeFields.textureSize.AutoGenerateField(`${varName}.nodeFields.textureSize`, src);
+            this.nodeFields.spriteSheetRows.AutoGenerateField(`${varName}.nodeFields.spriteSheetRows`, src);
+            this.nodeFields.spriteSheetColumns.AutoGenerateField(`${varName}.nodeFields.spriteSheetColumns`, src);
+            this.nodeFields.spriteSheetFrameCount.AutoGenerateField(`${varName}.nodeFields.spriteSheetFrameCount`, src);
+        });
     }
 }

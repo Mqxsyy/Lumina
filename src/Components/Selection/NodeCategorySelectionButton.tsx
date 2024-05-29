@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import type { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
+import type { SelectionEntry } from "API/Nodes/SelectionEntry";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { StyleColors, StyleProperties } from "Style";
 import Div from "../Div";

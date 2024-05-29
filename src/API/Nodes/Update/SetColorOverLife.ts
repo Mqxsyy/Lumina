@@ -2,8 +2,7 @@ import { ColorRampField } from "API/Fields/ColorRampField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenSetColorOverLife } from "../AutoGeneration/UpdateNodes/AutoGenSetColorOverLife";
-import { UpdateNode } from "./UpdateNode";
+import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
 
 export const SetColorOverLifeName = "SetColorOverLife";
 export const SetColorOverLifeFieldNames = {
@@ -26,6 +25,8 @@ export class SetColorOverLife extends UpdateNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetColorOverLife(this, src);
+        AutoGenUpdateNode(this, src, (varName) => {
+            this.nodeFields.ramp.AutoGenerateField(`${varName}.nodeFields.ramp`, src);
+        });
     }
 }

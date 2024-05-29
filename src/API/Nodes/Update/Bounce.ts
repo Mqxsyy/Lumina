@@ -4,9 +4,8 @@ import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenBounce } from "../AutoGeneration/UpdateNodes/AutoGenBounce";
 import { UpdatePrioriy } from "../Node";
-import { UpdateNode } from "./UpdateNode";
+import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
 
 export const BounceName = "Bounce";
 export const BounceFieldNames = {
@@ -86,6 +85,10 @@ export class Bounce extends UpdateNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenBounce(this, src);
+        AutoGenUpdateNode(this, src, (varName) => {
+            this.nodeFields.velocityMultiplier.AutoGenerateField(`${varName}.nodeFields.velocityMultiplier`, src);
+            this.nodeFields.limitBounces.AutoGenerateField(`${varName}.nodeFields.limitBounces`, src);
+            this.nodeFields.maxBounces.AutoGenerateField(`${varName}.nodeFields.maxBounces`, src);
+        });
     }
 }

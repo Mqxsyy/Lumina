@@ -2,8 +2,7 @@ import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetPosition } from "../AutoGeneration/InitializeNodes/AutoGenSetPosition";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetPositionName = "SetPosition";
 export const SetPositionFieldNames = {
@@ -34,6 +33,8 @@ export class SetPosition extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetPosition(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.position.AutoGenerateField(`${varName}.nodeFields.position`, src);
+        });
     }
 }

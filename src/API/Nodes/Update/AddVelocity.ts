@@ -1,10 +1,8 @@
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
-import { FrameRateMultiplier } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenAddVelocity } from "../AutoGeneration/UpdateNodes/AutoGenAddVelocity";
-import { UpdateNode } from "./UpdateNode";
+import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
 
 export const AddVelocityName = "AddVelocity";
 export const AddVelocityFieldNames = {
@@ -41,6 +39,8 @@ export class AddVelocity extends UpdateNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenAddVelocity(this, src);
+        AutoGenUpdateNode(this, src, (varName) => {
+            this.nodeFields.velocity.AutoGenerateField(`${varName}.nodeFields.velocity`, src);
+        });
     }
 }

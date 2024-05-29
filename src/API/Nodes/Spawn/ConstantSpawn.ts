@@ -1,8 +1,7 @@
 import { NumberField } from "API/Fields/NumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenConstantSpawn } from "../AutoGeneration/SpawnNodes/AutoGenConstantSpawn";
-import { SpawnNode } from "./SpawnNode";
+import { AutoGenSpawnNode, SpawnNode } from "./SpawnNode";
 
 export const ConstantSpawnName = "ConstantSpawn";
 export const ConstantSpawnFieldNames = {
@@ -32,6 +31,8 @@ export class ConstantSpawn extends SpawnNode {
     };
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenConstantSpawn(this, src);
+        AutoGenSpawnNode(this, src, (varName) => {
+            this.nodeFields.rate.AutoGenerateField(`${varName}.nodeFields.rate`, src);
+        });
     }
 }

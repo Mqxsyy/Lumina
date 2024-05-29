@@ -2,8 +2,7 @@ import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenTan } from "../AutoGeneration/LogicNodes/AutoGenTan";
-import { LogicNode } from "./LogicNode";
+import { AutoGenLogicNode, LogicNode } from "./LogicNode";
 
 export const TanName = "Tan";
 export const TanFieldNames = {
@@ -33,6 +32,8 @@ export class Tan extends LogicNode {
     }
 
     GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenTan(this, src, wrapper);
+        AutoGenLogicNode(this, src, wrapper, (varName) => {
+            this.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
+        });
     }
 }

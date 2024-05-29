@@ -2,8 +2,7 @@ import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetLifetime } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetime";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetLifetimeName = "SetLifetime";
 export const SetLifetimeFieldNames = {
@@ -33,6 +32,8 @@ export class SetLifetime extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetLifetime(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.time.AutoGenerateField(`${varName}.nodeFields.time`, src);
+        });
     }
 }

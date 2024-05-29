@@ -4,8 +4,7 @@ import { RemapValue } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { AutoGenRemap } from "../AutoGeneration/LogicNodes/AutoGenRemap";
-import { LogicNode } from "./LogicNode";
+import { AutoGenLogicNode, LogicNode } from "./LogicNode";
 
 export const RemapName = "Remap";
 export const RemapFieldNames = {
@@ -45,6 +44,10 @@ export class Remap extends LogicNode {
     }
 
     GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenRemap(this, src, wrapper);
+        AutoGenLogicNode(this, src, wrapper, (varName) => {
+            this.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
+            this.nodeFields.oldRange.AutoGenerateField(`${varName}.nodeFields.oldRange`, src);
+            this.nodeFields.newRange.AutoGenerateField(`${varName}.nodeFields.newRange`, src);
+        });
     }
 }

@@ -3,8 +3,7 @@ import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetVelocityRandom } from "../AutoGeneration/InitializeNodes/AutoGenSetVelocityRandom";
-import { InitializeNode } from "./InitializeNode";
+import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const SetVelocityRandomName = "SetVelocityRandom";
 export const SetVelocityRandomFieldNames = {
@@ -49,6 +48,10 @@ export class SetVelocityRandom extends InitializeNode {
     }
 
     GetAutoGenerationCode(src: Src) {
-        AutoGenSetVelocityRandom(this, src);
+        AutoGenInitializeNode(this, src, (varName) => {
+            this.nodeFields.rangeX.AutoGenerateField(`${varName}.nodeFields.rangeX`, src);
+            this.nodeFields.rangeY.AutoGenerateField(`${varName}.nodeFields.rangeY`, src);
+            this.nodeFields.rangeZ.AutoGenerateField(`${varName}.nodeFields.rangeZ`, src);
+        });
     }
 }
