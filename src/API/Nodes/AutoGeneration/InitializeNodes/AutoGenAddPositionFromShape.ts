@@ -5,7 +5,7 @@ export function AutoGenAddPositionFromShape(node: AddPositionFromShape, src: Src
     const className = `AddPositionFromShape${node.id}`;
     const varName = `addPositionFromShape${node.id}`;
 
-    src.value = `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "AddPositionFromShape").AddPositionFromShape \n`;
+    src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Initialize", "AddPositionFromShape").AddPositionFromShape \n`;
     src.value += `local ${varName} = ${className}.new() \n\n`;
 
     node.nodeFields.spawnShape.AutoGenerateField(`${varName}.nodeFields.spawnShape`, src);

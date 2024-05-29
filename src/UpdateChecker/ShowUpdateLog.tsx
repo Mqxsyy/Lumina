@@ -27,7 +27,7 @@ export default function ShowUpdateLog() {
                     Size={UDim2.fromScale(1, 0)}
                     TextXAlignment="Center"
                     TextWrapped={true}
-                    Text="Lumina Update 0.1.1"
+                    Text="Lumina Update 0.1.2"
                     FontWeight={Enum.FontWeight.ExtraBold}
                     TextSize={40}
                     TextYAlignment="Bottom"
@@ -50,7 +50,7 @@ export default function ShowUpdateLog() {
                         <uilistlayout FillDirection="Vertical" VerticalAlignment={"Top"} Padding={new UDim(0, 10)} />
                         <uipadding PaddingLeft={new UDim(0, 10)} />
 
-                        <FeatureDetail Text="- Update log no longer uses DataStores" />
+                        <FeatureDetail Text="- Fixed script auto generation breaking with certain nodes" />
                     </Div>
                 </scrollingframe>
             </Div>
