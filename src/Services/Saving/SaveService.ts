@@ -102,7 +102,7 @@ export function SerializeNode(node: Node, ignoreConnections = false): Serialized
     const serializedNode: SerializedNode = {
         nodeName: node.GetNodeName(),
         fields: SerializeFields(node.nodeFields, ignoreConnections ? undefined : nodeData.connectionsIn),
-        order: nodeData.order,
+        order: nodeData.node.updateOrder,
     };
 
     if (nodeData.connectionsOut.size() !== 0 && !ignoreConnections) {

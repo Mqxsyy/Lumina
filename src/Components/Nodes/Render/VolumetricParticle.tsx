@@ -6,7 +6,12 @@ import Node from "../Node";
 
 export function CreateVolumetricParticle() {
     return AddNode(new VolumetricParticleAPI(), (data: NodeData) => {
-        return <VolumetricParticle key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <VolumetricParticle
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 

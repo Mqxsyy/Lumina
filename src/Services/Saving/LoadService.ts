@@ -214,7 +214,7 @@ export function CreateNode(group: NodeGroups, nodeName: string, fields: Serializ
         node.data.node.nodeFields[field.name].ReadSerializedData(field.data);
     }
 
-    node.data.order = order;
+    node.data.node.updateOrder = order;
 
     return node;
 }

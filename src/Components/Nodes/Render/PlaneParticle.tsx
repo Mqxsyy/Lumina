@@ -12,7 +12,12 @@ import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
 export function CreatePlaneParticle() {
     return AddNode(new PlaneParticleAPI(), (data: NodeData) => {
-        return <PlaneParticle key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <PlaneParticle
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 

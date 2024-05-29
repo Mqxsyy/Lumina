@@ -123,7 +123,7 @@ export class MeshParticle extends RenderNode {
         }
 
         for (const node of updateNodes) {
-            node.Update(data);
+            node.Update(data, 0.0167);
         }
 
         if (data.rotation !== Vector3.zero) {
@@ -162,7 +162,7 @@ export class MeshParticle extends RenderNode {
                 }
 
                 for (const updateNode of aliveParticleData.updateNodes) {
-                    updateNode.Update(aliveParticleData);
+                    updateNode.Update(aliveParticleData, dt);
                 }
 
                 if (aliveParticleData.velocityNormal !== Vector3.zero) {

@@ -7,7 +7,12 @@ import Node from "../Node";
 
 export function CreateSetEmission() {
     return AddNode(new SetEmissionAPI(), (data: NodeData) => {
-        return <SetEmission key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <SetEmission
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 

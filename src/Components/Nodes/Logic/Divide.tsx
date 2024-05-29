@@ -1,13 +1,18 @@
 import React from "@rbxts/react";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Divide as DivideAPI, DivideFieldNames } from "API/Nodes/Logic/Divide";
+import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateDivide() {
     return AddNode(new DivideAPI(), (data: NodeData) => {
-        return <Divide key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <Divide
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 

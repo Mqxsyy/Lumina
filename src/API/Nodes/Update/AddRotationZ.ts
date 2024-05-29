@@ -25,8 +25,8 @@ export class AddRotationZ extends UpdateNode {
         };
     }
 
-    Update(data: ParticleData) {
-        const zAddition = this.nodeFields.rotation.GetNumber(data) * FrameRateMultiplier;
+    Update(data: ParticleData, dt: number) {
+        const zAddition = this.nodeFields.rotation.GetNumber(data) * dt;
         const rotation = data.rotation;
 
         data.rotation = new Vector3(rotation.X, rotation.Y, rotation.Z + zAddition);

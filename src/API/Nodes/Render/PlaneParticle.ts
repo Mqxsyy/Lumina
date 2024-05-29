@@ -205,27 +205,35 @@ export class PlaneParticle extends RenderNode {
         const doubleSided = this.nodeFields.doubleSided.GetBoolean();
         const imageId = `rbxassetid://${this.nodeFields.assetId.GetNumber()}`;
 
+        const orderedInitializeNodes = initializeNodes
+            .sort((a, b) => a.updateOrder < b.updateOrder)
+            .sort((a, b) => a.updatePriority < b.updatePriority);
+
+        const orderedUpdateNodes = updateNodes
+            .sort((a, b) => a.updateOrder < b.updateOrder)
+            .sort((a, b) => a.updatePriority < b.updatePriority);
+
         if (!doubleSided) {
             particle = this.objectPoolOneSided.GetItem() as OneSidedPlaneParticle;
             particle.Front.ImageLabel.Image = imageId;
             particle.CFrame = CFrameZero;
 
-            data = CreateParticleData(id, ParticleTypes.OneSidedPlane, particle, updateNodes);
+            data = CreateParticleData(id, ParticleTypes.OneSidedPlane, particle, orderedUpdateNodes);
         } else {
             particle = this.objectPoolDoubleSided.GetItem() as DoubleSidedPlaneParticle;
             particle.Front.ImageLabel.Image = imageId;
             (particle as DoubleSidedPlaneParticle).Back.ImageLabel.Image = imageId;
             particle.CFrame = CFrameZero;
 
-            data = CreateParticleData(id, ParticleTypes.DoubleSidedPlane, particle, updateNodes);
+            data = CreateParticleData(id, ParticleTypes.DoubleSidedPlane, particle, orderedUpdateNodes);
         }
 
-        for (const node of initializeNodes) {
-            node.Initialize(data);
+        for (let i = 0; i < orderedInitializeNodes.size(); i++) {
+            orderedInitializeNodes[i].Initialize(data);
         }
 
-        for (const node of updateNodes) {
-            node.Update(data);
+        for (let i = 0; i < orderedUpdateNodes.size(); i++) {
+            orderedUpdateNodes[i].Update(data, 0.0167); // ideal 60 fps dt
         }
 
         const orientation = this.nodeFields.orientation.GetOrientation();
@@ -274,6 +282,10 @@ export class PlaneParticle extends RenderNode {
                     movedParticles.push(aliveParticleData.particle);
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
+                    for (const updateNode of aliveParticleData.updateNodes) {
+                        updateNode.ClearCache(aliveParticleData.particleId);
+                    }
+
                     if (this.aliveParticles.size() === 0) {
                         if (this.updateLoop === undefined) continue;
 
@@ -284,8 +296,8 @@ export class PlaneParticle extends RenderNode {
                     continue;
                 }
 
-                for (const updateNode of aliveParticleData.updateNodes) {
-                    updateNode.Update(aliveParticleData);
+                for (let i = 0; i < aliveParticleData.updateNodes.size(); i++) {
+                    aliveParticleData.updateNodes[i].Update(aliveParticleData, dt);
                 }
 
                 UpdateParticleProperties(aliveParticleData);
@@ -318,25 +330,22 @@ export class PlaneParticle extends RenderNode {
                     }
                 }
 
-                let position: Vector3 | undefined;
-                if (aliveParticleData.velocityNormal !== Vector3.zero) {
-                    const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
-                    position = aliveParticleData.particle.Position.add(velocity.mul(dt));
-                }
-
-                let cframe: CFrame;
-                if (position !== undefined) {
-                    cframe = CheckOrientation(orientation, position, aliveParticleData);
+                let cframe = aliveParticleData.particle.CFrame;
+                if (aliveParticleData.nextPos === undefined) {
+                    if (aliveParticleData.velocityNormal !== Vector3.zero) {
+                        const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier).mul(dt);
+                        cframe = new CFrame(aliveParticleData.particle.Position.add(velocity));
+                    }
                 } else {
-                    cframe = CheckOrientation(orientation, aliveParticleData.particle.Position, aliveParticleData);
+                    cframe = new CFrame(aliveParticleData.nextPos);
+                    aliveParticleData.nextPos = undefined;
                 }
 
-                if (cframe !== undefined) {
+                cframe = CheckOrientation(orientation, cframe.Position, aliveParticleData);
+
+                if (aliveParticleData.particle.CFrame !== cframe) {
                     movedParticles.push(aliveParticleData.particle);
                     movedParticlesCFrames.push(cframe);
-                } else if (position !== undefined) {
-                    movedParticles.push(aliveParticleData.particle);
-                    movedParticlesCFrames.push(new CFrame(position));
                 }
 
                 aliveParticleData.alivetime += dt;

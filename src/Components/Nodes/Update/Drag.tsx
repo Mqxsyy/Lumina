@@ -7,7 +7,12 @@ import Node from "../Node";
 
 export function CreateDrag() {
     return AddNode(new DragAPI(), (data: NodeData) => {
-        return <Drag key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <Drag
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 

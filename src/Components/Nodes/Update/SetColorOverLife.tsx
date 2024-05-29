@@ -6,7 +6,12 @@ import Node from "../Node";
 
 export function CreateSetColorOverLife() {
     return AddNode(new ColorOverLifeAPI(), (data: NodeData) => {
-        return <SetColorOverLife key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <SetColorOverLife
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 

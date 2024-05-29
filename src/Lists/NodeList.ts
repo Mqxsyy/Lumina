@@ -101,6 +101,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Add Rotation Z Random",
             create: () => CreateBarrel.CreateAddRotationZRandom(),
         },
+        [NameBarrel.BounceName]: {
+            name: "Bounce",
+            create: () => CreateBarrel.CreateBounce(),
+        },
         [NameBarrel.DragName]: {
             name: "Drag",
             create: () => CreateBarrel.CreateDrag(),

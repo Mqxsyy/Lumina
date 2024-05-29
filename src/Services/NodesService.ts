@@ -23,7 +23,6 @@ export interface NodeData {
     loadedConnectionsOut?: NodeConnectionOut[];
     connectionsIn: NodeConnectionIn[];
     loadedConnectionsIn?: NodeConnectionIn[];
-    order: number;
     node: Node;
     dataChanged: FastEvent;
     onDestroy: FastEvent<[NodeData]>;
@@ -53,7 +52,6 @@ export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
             anchorPoint: GetMousePositionOnCanvas().div(GetZoomScale()),
             connectionsOut: [],
             connectionsIn: [],
-            order: -1,
             node: api,
             dataChanged: new FastEvent(),
             onDestroy: new FastEvent(),

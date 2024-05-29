@@ -25,8 +25,8 @@ export class Drag extends UpdateNode {
         };
     }
 
-    Update(data: ParticleData) {
-        const drag = this.nodeFields.drag.GetNumber(data) * FrameRateMultiplier;
+    Update(data: ParticleData, dt: number) {
+        const drag = this.nodeFields.drag.GetNumber(data) * dt;
         const oldVelocity = data.velocityNormal;
 
         let [x, y, z] = [0, 0, 0];

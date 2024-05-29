@@ -27,11 +27,11 @@ export class AddRotationZRandom extends UpdateNode {
         };
     }
 
-    Update(data: ParticleData) {
+    Update(data: ParticleData, dt: number) {
         let zAddition = this.storedValues.get(data.particleId);
         if (zAddition === undefined) {
             const range = this.nodeFields.range.GetVector2(data);
-            zAddition = RoundDecimal(Rand.NextNumber(range.x, range.y) * FrameRateMultiplier, 0.01);
+            zAddition = RoundDecimal(Rand.NextNumber(range.x, range.y) * dt, 0.01);
             this.storedValues.set(data.particleId, zAddition);
         }
 

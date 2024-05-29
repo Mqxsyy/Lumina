@@ -70,8 +70,9 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
     const updateChildNodesOrders = () => {
         for (let i = 0; i < childNodesRef.current.size(); i++) {
             const node = childNodesRef.current[i];
+
             UpdateNodeData(node.data.node.id, (data) => {
-                data.order = i;
+                data.node.updateOrder = i;
                 return data;
             });
         }

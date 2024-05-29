@@ -3,8 +3,17 @@ import type { Src } from "API/VFXScriptCreator";
 import type { NodeGroups } from "../NodeGroup";
 import { NodeIdPool } from "./NodeIdPool";
 
+export enum UpdatePrioriy {
+    First = 1,
+    Default = 2,
+    Last = 3,
+}
+
 export abstract class Node {
     id: number;
+
+    updatePriority = UpdatePrioriy.Default;
+    updateOrder = -1;
 
     abstract nodeGroup: NodeGroups;
     abstract nodeFields: { [key: string]: NodeField };

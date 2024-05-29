@@ -25,8 +25,8 @@ export class Accelerate extends UpdateNode {
         };
     }
 
-    Update(data: ParticleData) {
-        const acceleration = this.nodeFields.acceleration.GetNumber(data) * FrameRateMultiplier;
+    Update(data: ParticleData, dt: number) {
+        const acceleration = this.nodeFields.acceleration.GetNumber(data) * dt;
         const oldVelocity = data.velocityNormal;
 
         const x = oldVelocity.X + oldVelocity.X * acceleration;

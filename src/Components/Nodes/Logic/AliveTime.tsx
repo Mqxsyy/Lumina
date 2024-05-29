@@ -7,7 +7,12 @@ import Node from "../Node";
 
 export function CreateAliveTime() {
     return AddNode(new AliveTimeAPI(), (data: NodeData) => {
-        return <AliveTime key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <AliveTime
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 

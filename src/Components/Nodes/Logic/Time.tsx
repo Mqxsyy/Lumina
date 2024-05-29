@@ -7,7 +7,12 @@ import Node from "../Node";
 
 export function CreateTime() {
     return AddNode(new TimeAPI(), (data: NodeData) => {
-        return <Time key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <Time
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 

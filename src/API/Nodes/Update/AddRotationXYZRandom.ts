@@ -34,16 +34,16 @@ export class AddRotationXYZRandom extends UpdateNode {
         };
     }
 
-    Update(data: ParticleData) {
+    Update(data: ParticleData, dt: number) {
         let addition = this.storedValues.get(data.particleId);
         if (addition === undefined) {
             const rangeX = this.nodeFields.rangeX.GetVector2(data);
             const rangeY = this.nodeFields.rangeX.GetVector2(data);
             const rangeZ = this.nodeFields.rangeX.GetVector2(data);
 
-            const x = RoundDecimal(Rand.NextNumber(rangeX.x, rangeY.y) * FrameRateMultiplier, 0.01);
-            const y = RoundDecimal(Rand.NextNumber(rangeY.x, rangeY.y) * FrameRateMultiplier, 0.01);
-            const z = RoundDecimal(Rand.NextNumber(rangeZ.x, rangeZ.y) * FrameRateMultiplier, 0.01);
+            const x = RoundDecimal(Rand.NextNumber(rangeX.x, rangeY.y) * dt, 0.01);
+            const y = RoundDecimal(Rand.NextNumber(rangeY.x, rangeY.y) * dt, 0.01);
+            const z = RoundDecimal(Rand.NextNumber(rangeZ.x, rangeZ.y) * dt, 0.01);
 
             addition = { x, y, z };
             this.storedValues.set(data.particleId, addition);
