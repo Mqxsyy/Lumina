@@ -11,17 +11,9 @@ export const CosFieldNames = {
 
 export class Cos extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
-    nodeFields: {
-        input: ConnectableNumberField;
+    nodeFields = {
+        input: new ConnectableNumberField(0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            input: new ConnectableNumberField(0),
-        };
-    }
 
     Calculate = (data: ParticleData) => {
         return math.cos(this.nodeFields.input.GetNumber(data));

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "@rbxts/react";
-import { SpawnShape } from "API/Fields/SpawnShapeField";
+import { SpawnShape } from "API/Nodes/FieldStates";
 import { AddPositionFromShape as AddPositionFromShapeAPI, AddPositionFromShapeFieldNames } from "API/Nodes/Initialize/AddPositionFromShape";
 import BooleanField from "Components/NodeFields/BooleanField";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
-import SpawnShapeField from "Components/NodeFields/SpawnShapeField";
+import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -40,9 +40,9 @@ function AddPositionFromShape({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <SpawnShapeField NodeField={(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape} Label="Spawn Shape" />
+            <StateField NodeField={(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape} Label="Spawn Shape" />
 
-            {(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape.GetSpawnShape() === SpawnShape.Square && (
+            {(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape.GetState() === SpawnShape.Square && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as AddPositionFromShapeAPI).nodeFields.sizeVec2}
@@ -52,7 +52,7 @@ function AddPositionFromShape({ data }: { data: NodeData }) {
                     AllowNegatives={[false, false]}
                 />
             )}
-            {(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape.GetSpawnShape() === SpawnShape.Cube && (
+            {(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape.GetState() === SpawnShape.Cube && (
                 <ConnectableVector3Field
                     NodeId={data.node.id}
                     NodeField={(data.node as AddPositionFromShapeAPI).nodeFields.sizeVec3}
@@ -62,7 +62,7 @@ function AddPositionFromShape({ data }: { data: NodeData }) {
                     AllowNegatives={[false, false, false]}
                 />
             )}
-            {(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape.GetSpawnShape() === SpawnShape.Ellipse && (
+            {(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape.GetState() === SpawnShape.Ellipse && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as AddPositionFromShapeAPI).nodeFields.sizeVec2}
@@ -72,7 +72,7 @@ function AddPositionFromShape({ data }: { data: NodeData }) {
                     AllowNegatives={[false, false]}
                 />
             )}
-            {(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape.GetSpawnShape() === SpawnShape.Sphere && (
+            {(data.node as AddPositionFromShapeAPI).nodeFields.spawnShape.GetState() === SpawnShape.Sphere && (
                 <ConnectableVector3Field
                     NodeId={data.node.id}
                     NodeField={(data.node as AddPositionFromShapeAPI).nodeFields.sizeVec3}

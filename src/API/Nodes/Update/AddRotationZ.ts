@@ -11,17 +11,9 @@ export const AddRotationZFieldNames = {
 
 export class AddRotationZ extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
-    nodeFields: {
-        rotation: ConnectableNumberField;
+    nodeFields = {
+        rotation: new ConnectableNumberField(0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            rotation: new ConnectableNumberField(0),
-        };
-    }
 
     Update(data: ParticleData, dt: number) {
         const zAddition = this.nodeFields.rotation.GetNumber(data) * dt;

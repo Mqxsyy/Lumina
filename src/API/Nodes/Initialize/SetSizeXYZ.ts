@@ -11,17 +11,9 @@ export const SetSizeXYZFieldNames = {
 
 export class SetSizeXYZ extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        size: ConnectableVector3Field;
+    nodeFields = {
+        size: new ConnectableVector3Field(1, 1, 1),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            size: new ConnectableVector3Field(1, 1, 1),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const size = this.nodeFields.size.GetVector3(data);

@@ -11,17 +11,9 @@ export const SetColorFieldNames = {
 
 export class SetColor extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        color: ColorField;
+    nodeFields = {
+        color: new ColorField(0, 1, 1),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            color: new ColorField(0, 1, 1),
-        };
-    }
 
     Initialize(data: ParticleData) {
         data.color = this.nodeFields.color.GetColor();

@@ -11,17 +11,9 @@ export const SetRotationXYZFieldNames = {
 
 export class SetRotationXYZ extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        rotation: ConnectableVector3Field;
+    nodeFields = {
+        rotation: new ConnectableVector3Field(0, 0, 0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            rotation: new ConnectableVector3Field(0, 0, 0),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const rotation = this.nodeFields.rotation.GetVector3(data);

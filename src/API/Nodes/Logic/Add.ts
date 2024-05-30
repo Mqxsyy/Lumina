@@ -12,19 +12,10 @@ export const AddFieldNames = {
 
 export class Add extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
-    nodeFields: {
-        a: ConnectableNumberField;
-        b: ConnectableNumberField;
+    nodeFields = {
+        a: new ConnectableNumberField(1),
+        b: new ConnectableNumberField(0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            a: new ConnectableNumberField(1),
-            b: new ConnectableNumberField(0),
-        };
-    }
 
     Calculate = (data: ParticleData) => {
         const a = this.nodeFields.a.GetNumber(data);

@@ -12,19 +12,10 @@ export const DivideFieldNames = {
 
 export class Divide extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
-    nodeFields: {
-        a: ConnectableNumberField;
-        b: ConnectableNumberField;
+    nodeFields = {
+        a: new ConnectableNumberField(1),
+        b: new ConnectableNumberField(1),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            a: new ConnectableNumberField(1),
-            b: new ConnectableNumberField(1),
-        };
-    }
 
     Calculate = (data: ParticleData) => {
         const a = this.nodeFields.a.GetNumber(data);

@@ -10,17 +10,9 @@ export const NumberOutFieldNames = {
 
 export class NumberOut extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
-    nodeFields: {
-        input: NumberField;
+    nodeFields = {
+        input: new NumberField(0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            input: new NumberField(0),
-        };
-    }
 
     Calculate = () => {
         return this.nodeFields.input.GetNumber();

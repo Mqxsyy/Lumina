@@ -10,17 +10,9 @@ export const BurstSpawnFieldNames = {
 
 export class BurstSpawn extends SpawnNode {
     nodeGroup: NodeGroups = NodeGroups.Spawn;
-    nodeFields: {
-        amount: NumberField;
+    nodeFields = {
+        amount: new NumberField(20),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            amount: new NumberField(20),
-        };
-    }
 
     GetNodeName() {
         return BurstSpawnName;

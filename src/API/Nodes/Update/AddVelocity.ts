@@ -11,17 +11,9 @@ export const AddVelocityFieldNames = {
 
 export class AddVelocity extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
-    nodeFields: {
-        velocity: ConnectableVector3Field;
+    nodeFields = {
+        velocity: new ConnectableVector3Field(0, 0, 0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            velocity: new ConnectableVector3Field(0, 0, 0),
-        };
-    }
 
     Update(data: ParticleData, dt: number) {
         const acceleration = this.nodeFields.velocity.GetVector3(data);

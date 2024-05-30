@@ -12,17 +12,9 @@ export const SetRotationZRandomFieldNames = {
 
 export class SetRotationZRandom extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        range: ConnectableVector2Field;
+    nodeFields = {
+        range: new ConnectableVector2Field(0, 0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            range: new ConnectableVector2Field(0, 0),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const range = this.nodeFields.range.GetVector2(data);

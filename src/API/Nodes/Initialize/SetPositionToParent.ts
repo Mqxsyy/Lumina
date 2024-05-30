@@ -1,6 +1,4 @@
 import { RunService } from "@rbxts/services";
-import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
-import type { NodeField } from "API/Fields/NodeField";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
@@ -11,19 +9,9 @@ export const SetPositionToParentFieldNames = {};
 
 export class SetPositionToParent extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: { [key: string]: NodeField };
+    nodeFields = {};
 
     parent?: BasePart;
-
-    constructor(parent?: BasePart) {
-        super();
-
-        this.parent = parent;
-
-        this.nodeFields = {
-            position: new ConnectableVector3Field(0, 0, 0),
-        };
-    }
 
     Initialize(data: ParticleData) {
         if (!RunService.IsRunning()) return;

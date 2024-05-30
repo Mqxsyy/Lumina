@@ -15,23 +15,13 @@ export const AddRotationXYZRandomFieldNames = {
 
 export class AddRotationXYZRandom extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
-    nodeFields: {
-        rangeX: ConnectableVector2Field;
-        rangeY: ConnectableVector2Field;
-        rangeZ: ConnectableVector2Field;
+    nodeFields = {
+        rangeX: new ConnectableVector2Field(0, 0),
+        rangeY: new ConnectableVector2Field(0, 0),
+        rangeZ: new ConnectableVector2Field(0, 0),
     };
 
     storedValues = new Map<number, SimpleVector3>();
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            rangeX: new ConnectableVector2Field(0, 0),
-            rangeY: new ConnectableVector2Field(0, 0),
-            rangeZ: new ConnectableVector2Field(0, 0),
-        };
-    }
 
     Update(data: ParticleData, dt: number) {
         let addition = this.storedValues.get(data.particleId);

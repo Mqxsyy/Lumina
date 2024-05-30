@@ -5,11 +5,12 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import BooleanField from "Components/NodeFields/BooleanField";
 import NumberField from "Components/NodeFields/NumberField";
-import OrientationField from "Components/NodeFields/OrientationField";
+import StateField from "Components/NodeFields/StateField";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, type NodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
+
 export function CreatePlaneParticle() {
     return AddNode(new PlaneParticleAPI(), (data: NodeData) => {
         return (
@@ -31,7 +32,7 @@ function PlaneParticle({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <OrientationField NodeField={(data.node as PlaneParticleAPI).nodeFields.orientation} Label={"Orientation"} />
+            <StateField NodeField={(data.node as PlaneParticleAPI).nodeFields.orientation} Label={"Orientation"} />
             <NumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as PlaneParticleAPI).nodeFields.assetId}

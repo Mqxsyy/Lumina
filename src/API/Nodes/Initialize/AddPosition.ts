@@ -11,17 +11,9 @@ export const AddPositionFieldNames = {
 
 export class AddPosition extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        position: ConnectableVector3Field;
+    nodeFields = {
+        position: new ConnectableVector3Field(0, 0, 0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            position: new ConnectableVector3Field(0, 0, 0),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const vector3 = this.nodeFields.position.GetVector3(data);

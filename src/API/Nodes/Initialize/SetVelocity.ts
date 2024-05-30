@@ -11,17 +11,9 @@ export const SetVelocityFieldNames = {
 
 export class SetVelocity extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        velocity: ConnectableVector3Field;
+    nodeFields = {
+        velocity: new ConnectableVector3Field(0, 0, 0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            velocity: new ConnectableVector3Field(0, 0, 0),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const vector3 = this.nodeFields.velocity.GetVector3(data);

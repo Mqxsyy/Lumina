@@ -1,7 +1,7 @@
 import { RunService, Workspace } from "@rbxts/services";
 import { BooleanField } from "API/Fields/BooleanField";
 import { NumberField } from "API/Fields/NumberField";
-import { Orientation, OrientationField } from "API/Fields/OrientationField";
+import { StateField } from "API/Fields/StateField";
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetPlaneParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
@@ -9,6 +9,7 @@ import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
+import { Orientation } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { AutoGenRenderNode, RenderNode } from "./RenderNode";
@@ -114,7 +115,7 @@ function CreateDoubleSidedParticle(): DoubleSidedPlaneParticle {
     return particleBase as DoubleSidedPlaneParticle;
 }
 
-function CheckOrientation(orientation: Orientation, position: Vector3, data: ParticleData): CFrame {
+function CheckOrientation(orientation: string, position: Vector3, data: ParticleData): CFrame {
     switch (orientation) {
         case Orientation.FacingCamera: {
             return CFrame.lookAt(position, (game.Workspace.CurrentCamera as Camera).CFrame.Position).mul(
@@ -148,6 +149,9 @@ function CheckOrientation(orientation: Orientation, position: Vector3, data: Par
             return CFrame.lookAt(position, nextPosition).mul(CFrame.Angles(0, 0, math.rad(data.rotation.Z)));
         }
     }
+
+    warn(`Orientation check failed, returning CFrameZero. (${orientation})`);
+    return CFrameZero;
 }
 
 function UpdateImageProperties(texture: Texture, data: ParticleData) {
@@ -172,7 +176,7 @@ function UpdateParticleProperties(data: ParticleData) {
 export class PlaneParticle extends RenderNode {
     nodeGroup: NodeGroups = NodeGroups.Render;
     nodeFields = {
-        orientation: new OrientationField(Orientation.FacingCamera),
+        orientation: new StateField(Orientation, Orientation.FacingCamera),
         assetId: new NumberField(7848741169),
         doubleSided: new BooleanField(false),
         imageSize: new Vector2Field(1024, 1024),
@@ -204,9 +208,13 @@ export class PlaneParticle extends RenderNode {
         const doubleSided = this.nodeFields.doubleSided.GetBoolean();
         const imageId = `rbxassetid://${this.nodeFields.assetId.GetNumber()}`;
 
-        const orderedInitializeNodes = initializeNodes
-            .sort((a, b) => a.updateOrder < b.updateOrder)
-            .sort((a, b) => a.updatePriority < b.updatePriority);
+        const orderedInitializeNodes = initializeNodes.sort((a, b) => {
+            if (a.updatePriority !== b.updatePriority) {
+                return a.updatePriority < b.updatePriority;
+            }
+
+            return a.updateOrder < b.updateOrder;
+        });
 
         const orderedUpdateNodes = updateNodes
             .sort((a, b) => a.updateOrder < b.updateOrder)
@@ -235,7 +243,8 @@ export class PlaneParticle extends RenderNode {
             orderedUpdateNodes[i].Update(data, 0.0167); // ideal 60 fps dt
         }
 
-        const orientation = this.nodeFields.orientation.GetOrientation();
+        const orientation = this.nodeFields.orientation.GetState();
+
         particle.CFrame = CheckOrientation(orientation, particle.CFrame.Position, data);
 
         UpdateParticleProperties(data);

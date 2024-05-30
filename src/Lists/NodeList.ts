@@ -83,6 +83,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Set Velocity Random",
             create: () => CreateBarrel.CreateSetVelocityRandom(),
         },
+        [NameBarrel.DirectVelocityName]: {
+            name: "Direct Velocity",
+            create: () => CreateBarrel.CreateDirectVelocity(),
+        },
     },
     [NodeGroups.Update]: {
         [NameBarrel.AddRotationXYZName]: {

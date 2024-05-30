@@ -12,19 +12,11 @@ export const AddRotationZRandomFieldNames = {
 
 export class AddRotationZRandom extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
-    nodeFields: {
-        range: ConnectableVector2Field;
+    nodeFields = {
+        range: new ConnectableVector2Field(0, 0),
     };
 
     storedValues = new Map<number, number>();
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            range: new ConnectableVector2Field(0, 0),
-        };
-    }
 
     Update(data: ParticleData, dt: number) {
         let zAddition = this.storedValues.get(data.particleId);

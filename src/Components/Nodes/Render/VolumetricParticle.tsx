@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { VolumetricParticle as VolumetricParticleAPI } from "API/Nodes/Render/VolumetricParticle";
-import VolumetricParticleShapeField from "Components/NodeFields/VolumetricParticleShapeField";
+import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -23,7 +23,7 @@ function VolumetricParticle({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <VolumetricParticleShapeField NodeField={(data.node as VolumetricParticleAPI).nodeFields.shape} Label={"Shape"} />
+            <StateField NodeField={(data.node as VolumetricParticleAPI).nodeFields.shape} Label={"Shape"} />
         </Node>
     );
 }

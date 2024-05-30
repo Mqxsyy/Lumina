@@ -14,21 +14,11 @@ export const SetVelocityRandomFieldNames = {
 
 export class SetVelocityRandom extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        rangeX: ConnectableVector2Field;
-        rangeY: ConnectableVector2Field;
-        rangeZ: ConnectableVector2Field;
+    nodeFields = {
+        rangeX: new ConnectableVector2Field(0, 0),
+        rangeY: new ConnectableVector2Field(0, 0),
+        rangeZ: new ConnectableVector2Field(0, 0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            rangeX: new ConnectableVector2Field(0, 0),
-            rangeY: new ConnectableVector2Field(0, 0),
-            rangeZ: new ConnectableVector2Field(0, 0),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const xRange = this.nodeFields.rangeX.GetVector2(data);

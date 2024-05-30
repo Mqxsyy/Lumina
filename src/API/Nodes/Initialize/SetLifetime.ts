@@ -11,17 +11,9 @@ export const SetLifetimeFieldNames = {
 
 export class SetLifetime extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        time: ConnectableNumberField;
+    nodeFields = {
+        time: new ConnectableNumberField(1),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            time: new ConnectableNumberField(1),
-        };
-    }
 
     Initialize(data: ParticleData) {
         data.lifetime = this.nodeFields.time.GetNumber(data);

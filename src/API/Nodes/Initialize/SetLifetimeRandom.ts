@@ -12,17 +12,9 @@ export const SetLifetimeRandomFieldNames = {
 
 export class SetLifetimeRandom extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        range: ConnectableVector2Field;
+    nodeFields = {
+        range: new ConnectableVector2Field(0.5, 1),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            range: new ConnectableVector2Field(0.5, 1),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const range = this.nodeFields.range.GetVector2(data);

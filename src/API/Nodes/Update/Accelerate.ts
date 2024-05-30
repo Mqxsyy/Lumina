@@ -11,17 +11,9 @@ export const AccelerateFieldNames = {
 
 export class Accelerate extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
-    nodeFields: {
-        acceleration: ConnectableNumberField;
+    nodeFields = {
+        acceleration: new ConnectableNumberField(0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            acceleration: new ConnectableNumberField(0),
-        };
-    }
 
     Update(data: ParticleData, dt: number) {
         const acceleration = this.nodeFields.acceleration.GetNumber(data) * dt;

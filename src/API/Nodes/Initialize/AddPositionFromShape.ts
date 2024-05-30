@@ -2,11 +2,12 @@ import { BooleanField } from "API/Fields/BooleanField";
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
-import { SpawnShape, SpawnShapeField } from "API/Fields/SpawnShapeField";
+import { StateField } from "API/Fields/StateField";
 import { Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
+import { SpawnShape } from "../FieldStates";
 import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const AddPositionFromShapeName = "AddPositionFromShape";
@@ -156,27 +157,14 @@ function GetPositionSphere(width: number, height: number, depth: number, edgeWid
 
 export class AddPositionFromShape extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        spawnShape: SpawnShapeField;
-        sizeVec2: ConnectableVector2Field;
-        sizeVec3: ConnectableVector3Field;
-        filled: BooleanField;
-        edgeWidth: ConnectableNumberField;
-        rotation: ConnectableVector3Field;
+    nodeFields = {
+        spawnShape: new StateField(SpawnShape, SpawnShape.Square),
+        sizeVec2: new ConnectableVector2Field(2, 2),
+        sizeVec3: new ConnectableVector3Field(2, 2, 2),
+        filled: new BooleanField(false),
+        edgeWidth: new ConnectableNumberField(0),
+        rotation: new ConnectableVector3Field(0, 0, 0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            spawnShape: new SpawnShapeField(SpawnShape.Square),
-            sizeVec2: new ConnectableVector2Field(2, 2),
-            sizeVec3: new ConnectableVector3Field(2, 2, 2),
-            filled: new BooleanField(false),
-            edgeWidth: new ConnectableNumberField(0),
-            rotation: new ConnectableVector3Field(0, 0, 0),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const rotation = this.nodeFields.rotation.GetVector3(data);
@@ -186,7 +174,7 @@ export class AddPositionFromShape extends InitializeNode {
         const filled = this.nodeFields.filled.GetBoolean();
         const edgeWidth = this.nodeFields.edgeWidth.GetNumber(data);
 
-        switch (this.nodeFields.spawnShape.GetSpawnShape()) {
+        switch (this.nodeFields.spawnShape.GetState()) {
             case SpawnShape.Square: {
                 const width = this.nodeFields.sizeVec2.GetX(data);
                 const height = this.nodeFields.sizeVec2.GetY(data);

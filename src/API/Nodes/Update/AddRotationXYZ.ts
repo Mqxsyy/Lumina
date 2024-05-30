@@ -11,17 +11,9 @@ export const AddRotationXYZFieldNames = {
 
 export class AddRotationXYZ extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
-    nodeFields: {
-        rotation: ConnectableVector3Field;
+    nodeFields = {
+        rotation: new ConnectableVector3Field(0, 0, 0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            rotation: new ConnectableVector3Field(0, 0, 0),
-        };
-    }
 
     Update(data: ParticleData, dt: number) {
         const addition = this.nodeFields.rotation.GetVector3(data);

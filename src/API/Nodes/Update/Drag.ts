@@ -11,17 +11,9 @@ export const DragFieldNames = {
 
 export class Drag extends UpdateNode {
     nodeGroup: NodeGroups = NodeGroups.Update;
-    nodeFields: {
-        drag: ConnectableNumberField;
+    nodeFields = {
+        drag: new ConnectableNumberField(0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            drag: new ConnectableNumberField(0),
-        };
-    }
 
     Update(data: ParticleData, dt: number) {
         const drag = this.nodeFields.drag.GetNumber(data) * dt;

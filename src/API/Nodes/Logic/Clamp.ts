@@ -13,19 +13,10 @@ export const ClampFieldNames = {
 
 export class Clamp extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
-    nodeFields: {
-        input: ConnectableNumberField;
-        range: ConnectableVector2Field;
+    nodeFields = {
+        input: new ConnectableNumberField(0),
+        range: new ConnectableVector2Field(0, 1),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            input: new ConnectableNumberField(0),
-            range: new ConnectableVector2Field(0, 1),
-        };
-    }
 
     Calculate = (data: ParticleData) => {
         const input = this.nodeFields.input.GetNumber(data);

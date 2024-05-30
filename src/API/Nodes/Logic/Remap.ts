@@ -15,21 +15,11 @@ export const RemapFieldNames = {
 
 export class Remap extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
-    nodeFields: {
-        input: ConnectableNumberField;
-        oldRange: ConnectableVector2Field;
-        newRange: ConnectableVector2Field;
+    nodeFields = {
+        input: new ConnectableNumberField(0.5),
+        oldRange: new ConnectableVector2Field(0, 1),
+        newRange: new ConnectableVector2Field(0, 2),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            input: new ConnectableNumberField(0.5),
-            oldRange: new ConnectableVector2Field(0, 1),
-            newRange: new ConnectableVector2Field(0, 2),
-        };
-    }
 
     Calculate = (data: ParticleData) => {
         const input = this.nodeFields.input.GetNumber(data);

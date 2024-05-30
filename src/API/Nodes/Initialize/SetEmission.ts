@@ -11,17 +11,9 @@ export const SetEmissionFieldNames = {
 
 export class SetEmission extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        emission: ConnectableNumberField;
+    nodeFields = {
+        emission: new ConnectableNumberField(1),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            emission: new ConnectableNumberField(1),
-        };
-    }
 
     Initialize(data: ParticleData) {
         data.emission = this.nodeFields.emission.GetNumber(data);

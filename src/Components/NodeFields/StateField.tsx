@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { Orientation, type OrientationField as OrientationFieldAPI } from "API/Fields/OrientationField";
+import type { StateField as StateFieldAPI } from "API/Fields/StateField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import HighlightableTextButton from "Components/Basic/HighlightableTextButton";
 import Div from "Components/Div";
@@ -8,11 +8,11 @@ import { StyleColors, StyleProperties } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
-    NodeField: OrientationFieldAPI;
+    NodeField: StateFieldAPI;
     Label: string;
 }
 
-export default function OrientationField({ NodeField, Label }: Props) {
+export default function StateField({ NodeField, Label }: Props) {
     const [_, setForceRender] = useState(0);
 
     const zoomScale = GetZoomScale();
@@ -34,32 +34,23 @@ export default function OrientationField({ NodeField, Label }: Props) {
         const pos = elementRef.current.AbsolutePosition;
         const posUDim2 = UDim2.fromOffset(pos.X, pos.Y + elementRef.current.AbsoluteSize.Y + 5);
 
-        EnableDropdown(posUDim2, elementRef.current.AbsoluteSize.X, [
-            <HighlightableTextButton
-                key={0}
-                Size={UDim2.fromScale(1, 0)}
-                Text="Facing Camera"
-                OnClick={() => {
-                    NodeField.SetOrientation(Orientation.FacingCamera);
-                }}
-            />,
-            <HighlightableTextButton
-                key={1}
-                Size={UDim2.fromScale(1, 0)}
-                Text="Velocity Parallel"
-                OnClick={() => {
-                    NodeField.SetOrientation(Orientation.VelocityParallel);
-                }}
-            />,
-            <HighlightableTextButton
-                key={2}
-                Size={UDim2.fromScale(1, 0)}
-                Text="Velocity Perpendicular"
-                OnClick={() => {
-                    NodeField.SetOrientation(Orientation.VelocityPerpendicular);
-                }}
-            />,
-        ]);
+        const buttons = [];
+        const states = NodeField.GetStateCollection();
+
+        for (const [k, v] of pairs(states)) {
+            buttons.push(
+                <HighlightableTextButton
+                    key={k}
+                    Size={UDim2.fromScale(1, 0)}
+                    Text={v}
+                    OnClick={() => {
+                        NodeField.SetState(v);
+                    }}
+                />,
+            );
+        }
+
+        EnableDropdown(posUDim2, elementRef.current.AbsoluteSize.X, buttons);
     };
 
     return (
@@ -79,7 +70,7 @@ export default function OrientationField({ NodeField, Label }: Props) {
                 <uicorner CornerRadius={StyleProperties.CornerRadius} />
 
                 <BasicTextLabel
-                    Text={NodeField.GetOrientationName()}
+                    Text={NodeField.GetState()}
                     TextColor={StyleColors.TextDark}
                     TextXAlignment="Center"
                     TextYAlignment="Center"

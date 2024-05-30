@@ -15,21 +15,11 @@ export const RandomNumberFieldNames = {
 
 export class RandomNumber extends LogicNode {
     nodeGroup: NodeGroups = NodeGroups.Logic;
-    nodeFields: {
-        range: ConnectableVector2Field;
-        isInt: BooleanField;
-        randomizeOnce: BooleanField;
+    nodeFields = {
+        range: new ConnectableVector2Field(0, 0),
+        isInt: new BooleanField(false),
+        randomizeOnce: new BooleanField(false),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            range: new ConnectableVector2Field(0, 0),
-            isInt: new BooleanField(false),
-            randomizeOnce: new BooleanField(false),
-        };
-    }
 
     Calculate = (data: ParticleData) => {
         const range = this.nodeFields.range.GetVector2(data);

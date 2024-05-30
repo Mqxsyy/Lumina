@@ -11,17 +11,9 @@ export const SetSizeFieldNames = {
 
 export class SetSize extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        size: ConnectableNumberField;
+    nodeFields = {
+        size: new ConnectableNumberField(1),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            size: new ConnectableNumberField(1),
-        };
-    }
 
     Initialize(data: ParticleData) {
         const size = this.nodeFields.size.GetNumber(data);

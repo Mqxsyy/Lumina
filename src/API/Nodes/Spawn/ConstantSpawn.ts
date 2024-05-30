@@ -10,17 +10,9 @@ export const ConstantSpawnFieldNames = {
 
 export class ConstantSpawn extends SpawnNode {
     nodeGroup: NodeGroups = NodeGroups.Spawn;
-    nodeFields: {
-        rate: NumberField; // per second
+    nodeFields = {
+        rate: new NumberField(20),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            rate: new NumberField(20),
-        };
-    }
 
     GetNodeName() {
         return ConstantSpawnName;

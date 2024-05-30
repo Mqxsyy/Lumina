@@ -11,17 +11,9 @@ export const SetTransparencyFieldNames = {
 
 export class SetTransparency extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        transparency: ConnectableNumberField;
+    nodeFields = {
+        transparency: new ConnectableNumberField(0),
     };
-
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            transparency: new ConnectableNumberField(0),
-        };
-    }
 
     Initialize(data: ParticleData) {
         data.transparency = this.nodeFields.transparency.GetNumber(data);

@@ -1,11 +1,12 @@
 import { RunService, Workspace } from "@rbxts/services";
-import { VolumetricParticleShapeField, VolumetricParticleShapes } from "API/Fields/VolumetricParticleShapeField";
+import { StateField } from "API/Fields/StateField";
 import { GetVolumetricParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
 import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
+import { VolumetricParticleShapes } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { AutoGenRenderNode, RenderNode } from "./RenderNode";
@@ -61,7 +62,7 @@ function UpdateParticleProperties(data: ParticleData) {
 export class VolumetricParticle extends RenderNode {
     nodeGroup = NodeGroups.Render;
     nodeFields = {
-        shape: new VolumetricParticleShapeField(VolumetricParticleShapes.Cube),
+        shape: new StateField(VolumetricParticleShapes, VolumetricParticleShapes.Cube),
     };
 
     objectPool: ObjectPool;
@@ -80,7 +81,7 @@ export class VolumetricParticle extends RenderNode {
         const particle = this.objectPool.GetItem() as Part;
         particle.CFrame = CFrameZero;
 
-        const shape = this.nodeFields.shape.GetShape();
+        const shape = this.nodeFields.shape.GetState();
         if (shape === VolumetricParticleShapes.Cube) {
             if (particle.Shape !== Enum.PartType.Block) {
                 particle.Shape = Enum.PartType.Block;
