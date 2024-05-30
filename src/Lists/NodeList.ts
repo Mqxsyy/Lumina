@@ -141,6 +141,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Add Velocity",
             create: () => CreateBarrel.CreateAddVelocity(),
         },
+        [NameBarrel.MoveTowardsName]: {
+            name: "Move Towards",
+            create: () => CreateBarrel.CreateMoveTowards(),
+        },
     },
     [NodeGroups.Render]: {
         [NameBarrel.PlaneParticleName]: {

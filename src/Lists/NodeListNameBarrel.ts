@@ -31,6 +31,7 @@ export { AddRotationZRandomName } from "API/Nodes/Update/AddRotationZRandom";
 export { AddVelocityName } from "API/Nodes/Update/AddVelocity";
 export { BounceName } from "API/Nodes/Update/Bounce";
 export { DragName } from "API/Nodes/Update/Drag";
+export { MoveTowardsName } from "API/Nodes/Update/MoveTowards";
 export { MultiplySizeOverLifeName } from "API/Nodes/Update/MultiplySizeOverLife";
 export { MultiplyVelocityOverLifeName } from "API/Nodes/Update/MultiplyVelocityOverLife";
 export { SetColorOverLifeName } from "API/Nodes/Update/SetColorOverLife";

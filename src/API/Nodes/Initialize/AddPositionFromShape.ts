@@ -167,7 +167,7 @@ export class AddPositionFromShape extends InitializeNode {
     };
 
     Initialize(data: ParticleData) {
-        const rotation = this.nodeFields.rotation.GetVector3(data);
+        const rotation = this.nodeFields.rotation.GetSimpleVector3(data);
         const rotationCF = CFrame.Angles(math.rad(rotation.x), math.rad(rotation.y), math.rad(rotation.z));
         let position = Vector3.zero;
 

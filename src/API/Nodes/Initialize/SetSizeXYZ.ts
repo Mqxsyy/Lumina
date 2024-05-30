@@ -16,7 +16,7 @@ export class SetSizeXYZ extends InitializeNode {
     };
 
     Initialize(data: ParticleData) {
-        const size = this.nodeFields.size.GetVector3(data);
+        const size = this.nodeFields.size.GetSimpleVector3(data);
         data.sizeNormal = new Vector3(size.x, size.y, size.z);
     }
 

@@ -16,7 +16,7 @@ export class AddVelocity extends UpdateNode {
     };
 
     Update(data: ParticleData, dt: number) {
-        const acceleration = this.nodeFields.velocity.GetVector3(data);
+        const acceleration = this.nodeFields.velocity.GetSimpleVector3(data);
         const oldVelocity = data.velocityNormal;
 
         const x = oldVelocity.X + acceleration.x * dt;

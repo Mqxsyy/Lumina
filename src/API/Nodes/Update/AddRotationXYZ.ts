@@ -16,7 +16,7 @@ export class AddRotationXYZ extends UpdateNode {
     };
 
     Update(data: ParticleData, dt: number) {
-        const addition = this.nodeFields.rotation.GetVector3(data);
+        const addition = this.nodeFields.rotation.GetSimpleVector3(data);
         const rotation = data.rotation;
 
         const x = rotation.X + addition.x * dt;

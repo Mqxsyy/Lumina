@@ -21,12 +21,20 @@ export class ConnectableVector3Field extends NodeField {
         this.vector3Field = new Vector3Field(x, y, z);
     }
 
-    GetVector3(data: ParticleData): SimpleVector3 {
+    GetSimpleVector3(data: ParticleData): SimpleVector3 {
         const x = this.GetX(data);
         const y = this.GetY(data);
         const z = this.GetZ(data);
 
         return { x, y, z };
+    }
+
+    GetVector3(data: ParticleData) {
+        const x = this.GetX(data);
+        const y = this.GetY(data);
+        const z = this.GetZ(data);
+
+        return new Vector3(x, y, z);
     }
 
     GetXAsText = () => {

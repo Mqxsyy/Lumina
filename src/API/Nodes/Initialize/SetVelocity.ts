@@ -16,7 +16,7 @@ export class SetVelocity extends InitializeNode {
     };
 
     Initialize(data: ParticleData) {
-        const vector3 = this.nodeFields.velocity.GetVector3(data);
+        const vector3 = this.nodeFields.velocity.GetSimpleVector3(data);
         data.velocityNormal = new Vector3(vector3.x, vector3.y, vector3.z);
     }
 

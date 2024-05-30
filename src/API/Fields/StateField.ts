@@ -30,7 +30,7 @@ export class StateField extends NodeField {
     };
 
     AutoGenerateField(fieldPath: string, src: Src) {
-        src.value += `${fieldPath}.SetOrientation(${this.currentState}) \n`;
+        src.value += `${fieldPath}.SetState(${this.currentState}) \n`;
     }
 
     SerializeData() {

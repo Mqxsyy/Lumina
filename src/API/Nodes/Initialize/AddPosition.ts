@@ -16,7 +16,7 @@ export class AddPosition extends InitializeNode {
     };
 
     Initialize(data: ParticleData) {
-        const vector3 = this.nodeFields.position.GetVector3(data);
+        const vector3 = this.nodeFields.position.GetSimpleVector3(data);
         data.particle.Position = data.particle.Position.add(new Vector3(vector3.x, vector3.y, vector3.z));
     }
 

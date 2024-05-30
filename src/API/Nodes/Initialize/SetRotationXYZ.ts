@@ -16,7 +16,7 @@ export class SetRotationXYZ extends InitializeNode {
     };
 
     Initialize(data: ParticleData) {
-        const rotation = this.nodeFields.rotation.GetVector3(data);
+        const rotation = this.nodeFields.rotation.GetSimpleVector3(data);
         data.rotation = new Vector3(rotation.x, rotation.y, rotation.z);
     }
 

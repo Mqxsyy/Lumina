@@ -31,6 +31,7 @@ export { CreateAddRotationZRandom } from "Components/Nodes/Update/AddRotationZRa
 export { CreateAddVelocity } from "Components/Nodes/Update/AddVelocity";
 export { CreateBounce } from "Components/Nodes/Update/Bounce";
 export { CreateDrag } from "Components/Nodes/Update/Drag";
+export { CreateMoveTowards } from "Components/Nodes/Update/MoveTowards";
 export { CreateMultiplySizeOverLife } from "Components/Nodes/Update/MultiplySizeOverLife";
 export { CreateMultiplyVelocityOverLife } from "Components/Nodes/Update/MultiplyVelocityOverLife";
 export { CreateSetColorOverLife } from "Components/Nodes/Update/SetColorOverLife";
