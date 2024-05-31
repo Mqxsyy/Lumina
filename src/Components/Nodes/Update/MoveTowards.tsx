@@ -41,7 +41,7 @@ function MoveTowards({ data }: { data: NodeData }) {
             <ConnectableVector3Field
                 NodeId={data.node.id}
                 NodeField={(data.node as MoveTowardsAPI).nodeFields.target}
-                NodeFieldName={"Target Position"}
+                NodeFieldName={MoveTowardsFieldNames.intensity}
             />
             <ConnectableNumberField
                 NodeId={data.node.id}

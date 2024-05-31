@@ -9,25 +9,16 @@ export { CreateDirectVelocity } from "Components/Nodes/Initialize/DirectVelocity
 export { CreateSetColor } from "Components/Nodes/Initialize/SetColor";
 export { CreateSetEmission } from "Components/Nodes/Initialize/SetEmission";
 export { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
-export { CreateSetLifetimeRandom } from "Components/Nodes/Initialize/SetLifetimeRandom";
 export { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 export { CreateSetPositionToParent } from "Components/Nodes/Initialize/SetPositionToParent";
-export { CreateSetRotationXYZ } from "Components/Nodes/Initialize/SetRotationXYZ";
-export { CreateSetRotationZ } from "Components/Nodes/Initialize/SetRotationZ";
-export { CreateSetRotationZRandom } from "Components/Nodes/Initialize/SetRotationZRandom";
+export { CreateSetRotation } from "Components/Nodes/Initialize/SetRotation";
 export { CreateSetSize } from "Components/Nodes/Initialize/SetSize";
-export { CreateSetSizeRandom } from "Components/Nodes/Initialize/SetSizeRandom";
-export { CreateSetSizeXYZ } from "Components/Nodes/Initialize/SetSizeXYZ";
 export { CreateSetTransparency } from "Components/Nodes/Initialize/SetTransparency";
 export { CreateSetVelocity } from "Components/Nodes/Initialize/SetVelocity";
-export { CreateSetVelocityRandom } from "Components/Nodes/Initialize/SetVelocityRandom";
 
 // Update
 export { CreateAccelerate } from "Components/Nodes/Update/Accelerate";
-export { CreateAddRotationXYZ } from "Components/Nodes/Update/AddRotationXYZ";
-export { CreateAddRotationXYZRandom } from "Components/Nodes/Update/AddRotationXYZRandom";
-export { CreateAddRotationZ } from "Components/Nodes/Update/AddRotationZ";
-export { CreateAddRotationZRandom } from "Components/Nodes/Update/AddRotationZRandom";
+export { CreateAddRotation } from "Components/Nodes/Update/AddRotation";
 export { CreateAddVelocity } from "Components/Nodes/Update/AddVelocity";
 export { CreateBounce } from "Components/Nodes/Update/Bounce";
 export { CreateDrag } from "Components/Nodes/Update/Drag";

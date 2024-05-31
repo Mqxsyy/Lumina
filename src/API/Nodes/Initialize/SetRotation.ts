@@ -1,7 +1,7 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { StateField } from "API/Fields/StateField";
-import { Rand, RoundDecimal } from "API/Lib";
+import { Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
@@ -9,19 +9,19 @@ import { AxisType, CalculationType } from "../FieldStates";
 import { IsAxisX, IsAxisY, IsAxisZ } from "../FieldStatesLib";
 import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
-export const SetVelocityName = "SetVelocity";
-export const SetVelocityFieldNames = {
+export const SetRotationName = "SetRotation";
+export const SetRotationFieldNames = {
     calculationType: "calculationType",
     axisType: "axisType",
-    velocityX: "velocityX",
-    velocityY: "velocityY",
-    velocityZ: "velocityZ",
+    rotationX: "rotationX",
+    rotationY: "rotationY",
+    rotationZ: "rotationZ",
     rangeX: "rangeX",
     rangeY: "rangeY",
     rangeZ: "rangeZ",
 };
 
-export class SetVelocity extends InitializeNode {
+export class SetRotation extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields = {
         calculationType: new StateField(CalculationType, CalculationType.Uniform, [
@@ -29,9 +29,9 @@ export class SetVelocity extends InitializeNode {
             CalculationType.RandomConncted,
         ]),
         axisType: new StateField(AxisType, AxisType.XYZ),
-        velocityX: new ConnectableNumberField(0),
-        velocityY: new ConnectableNumberField(0),
-        velocityZ: new ConnectableNumberField(0),
+        rotationX: new ConnectableNumberField(0),
+        rotationY: new ConnectableNumberField(0),
+        rotationZ: new ConnectableNumberField(0),
         rangeX: new ConnectableVector2Field(0, 0),
         rangeY: new ConnectableVector2Field(0, 0),
         rangeZ: new ConnectableVector2Field(0, 0),
@@ -46,36 +46,36 @@ export class SetVelocity extends InitializeNode {
 
         if (IsAxisX(axisType)) {
             if (calculationType === CalculationType.Uniform) {
-                x = this.nodeFields.velocityX.GetNumber(data);
+                x = this.nodeFields.rotationX.GetNumber(data);
             } else {
                 const range = this.nodeFields.rangeX.GetVector2(data);
-                x = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
+                x = Rand.NextNumber(range.x, range.y);
             }
         }
 
         if (IsAxisY(axisType)) {
             if (calculationType === CalculationType.Uniform) {
-                y = this.nodeFields.velocityY.GetNumber(data);
+                y = this.nodeFields.rotationY.GetNumber(data);
             } else {
                 const range = this.nodeFields.rangeY.GetVector2(data);
-                y = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
+                y = Rand.NextNumber(range.x, range.y);
             }
         }
 
         if (IsAxisZ(axisType)) {
             if (calculationType === CalculationType.Uniform) {
-                z = this.nodeFields.velocityZ.GetNumber(data);
+                z = this.nodeFields.rotationZ.GetNumber(data);
             } else {
                 const range = this.nodeFields.rangeZ.GetVector2(data);
-                z = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
+                z = Rand.NextNumber(range.x, range.y);
             }
         }
 
-        data.velocityNormal = new Vector3(x, y, z);
+        data.rotation = new Vector3(x, y, z);
     }
 
     GetNodeName(): string {
-        return SetVelocityName;
+        return SetRotationName;
     }
 
     GetAutoGenerationCode(src: Src) {
@@ -87,9 +87,9 @@ export class SetVelocity extends InitializeNode {
             const axisType = this.nodeFields.axisType.GetState();
 
             if (calculationType === CalculationType.Uniform) {
-                if (IsAxisX(axisType)) this.nodeFields.velocityX.AutoGenerateField(`${varName}.nodeFields.velocityX`, src);
-                if (IsAxisY(axisType)) this.nodeFields.velocityY.AutoGenerateField(`${varName}.nodeFields.velocityY`, src);
-                if (IsAxisZ(axisType)) this.nodeFields.velocityZ.AutoGenerateField(`${varName}.nodeFields.velocityZ`, src);
+                if (IsAxisX(axisType)) this.nodeFields.rotationX.AutoGenerateField(`${varName}.nodeFields.rotationX`, src);
+                if (IsAxisY(axisType)) this.nodeFields.rotationY.AutoGenerateField(`${varName}.nodeFields.rotationY`, src);
+                if (IsAxisZ(axisType)) this.nodeFields.rotationZ.AutoGenerateField(`${varName}.nodeFields.rotationZ`, src);
             }
 
             if (calculationType === CalculationType.Random) {

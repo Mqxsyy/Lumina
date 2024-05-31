@@ -9,25 +9,16 @@ export { DirectVelocityName } from "API/Nodes/Initialize/DirectVelocity";
 export { SetColorName } from "API/Nodes/Initialize/SetColor";
 export { SetEmissionName } from "API/Nodes/Initialize/SetEmission";
 export { SetLifetimeName } from "API/Nodes/Initialize/SetLifetime";
-export { SetLifetimeRandomName } from "API/Nodes/Initialize/SetLifetimeRandom";
 export { SetPositionName } from "API/Nodes/Initialize/SetPosition";
 export { SetPositionToParentName } from "API/Nodes/Initialize/SetPositionToParent";
-export { SetRotationXYZName } from "API/Nodes/Initialize/SetRotationXYZ";
-export { SetRotationZName } from "API/Nodes/Initialize/SetRotationZ";
-export { SetRotationZRandomName } from "API/Nodes/Initialize/SetRotationZRandom";
+export { SetRotationName } from "API/Nodes/Initialize/SetRotation";
 export { SetSizeName } from "API/Nodes/Initialize/SetSize";
-export { SetSizeRandomName } from "API/Nodes/Initialize/SetSizeRandom";
-export { SetSizeXYZName } from "API/Nodes/Initialize/SetSizeXYZ";
 export { SetTransparencyName } from "API/Nodes/Initialize/SetTransparency";
 export { SetVelocityName } from "API/Nodes/Initialize/SetVelocity";
-export { SetVelocityRandomName } from "API/Nodes/Initialize/SetVelocityRandom";
 
 // Update
 export { AccelerateName } from "API/Nodes/Update/Accelerate";
-export { AddRotationXYZName } from "API/Nodes/Update/AddRotationXYZ";
-export { AddRotationXYZRandomName } from "API/Nodes/Update/AddRotationXYZRandom";
-export { AddRotationZName } from "API/Nodes/Update/AddRotationZ";
-export { AddRotationZRandomName } from "API/Nodes/Update/AddRotationZRandom";
+export { AddRotationName } from "API/Nodes/Update/AddRotation";
 export { AddVelocityName } from "API/Nodes/Update/AddVelocity";
 export { BounceName } from "API/Nodes/Update/Bounce";
 export { DragName } from "API/Nodes/Update/Drag";

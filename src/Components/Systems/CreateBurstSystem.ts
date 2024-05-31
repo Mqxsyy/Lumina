@@ -1,11 +1,12 @@
 import { NodeGroups } from "API/NodeGroup";
-import type { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
+import { CalculationType } from "API/Nodes/FieldStates";
+import type { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
 import type { SetPosition } from "API/Nodes/Initialize/SetPosition";
-import type { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
+import type { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
 import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
 import { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 import { CreateBurstSpawn } from "Components/Nodes/Spawn/BurstSpawn";
-import { CreateSetLifetimeRandom, CreateSetVelocityRandom } from "Lists/NodeListCreateBarrel";
+import { CreateSetLifetime, CreateSetVelocity } from "Lists/NodeListCreateBarrel";
 import { CreateEmptySystem } from "./CreateEmptySystem";
 
 export function CreateBurstSystem() {
@@ -19,8 +20,9 @@ export function CreateBurstSystem() {
             (systemData.addToNodeGroup[NodeGroups.Spawn] as (id: number) => void)(burstSpawn.data.node.id);
         });
 
-        const setLifetimeRandom = CreateSetLifetimeRandom();
-        (setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.4, 0.8);
+        const setLifetimeRandom = CreateSetLifetime();
+        (setLifetimeRandom.data.node as SetLifetime).nodeFields.calculationType.SetState(CalculationType.Random);
+        (setLifetimeRandom.data.node as SetLifetime).nodeFields.range.SetVector2(0.4, 0.8);
         setLifetimeRandom.elementLoaded.Connect(() => {
             (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetimeRandom.data.node.id);
         });
@@ -31,10 +33,11 @@ export function CreateBurstSystem() {
             (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(positionNode.data.node.id);
         });
 
-        const setVelocityRandom = CreateSetVelocityRandom();
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-5, 5);
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(-5, 5);
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-5, 5);
+        const setVelocityRandom = CreateSetVelocity();
+        (setVelocityRandom.data.node as SetVelocity).nodeFields.calculationType.SetState(CalculationType.Random);
+        (setVelocityRandom.data.node as SetVelocity).nodeFields.rangeX.SetVector2(-5, 5);
+        (setVelocityRandom.data.node as SetVelocity).nodeFields.rangeY.SetVector2(-5, 5);
+        (setVelocityRandom.data.node as SetVelocity).nodeFields.rangeZ.SetVector2(-5, 5);
         setVelocityRandom.elementLoaded.Connect(() => {
             (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setVelocityRandom.data.node.id);
         });

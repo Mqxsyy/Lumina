@@ -211,6 +211,7 @@ export function CreateNode(group: NodeGroups, nodeName: string, fields: Serializ
     const node = (NodeList[group][nodeName].create as () => NodeCollectionEntry)();
 
     for (const field of fields) {
+        if (node.data.node.nodeFields[field.name] === undefined) continue;
         node.data.node.nodeFields[field.name].ReadSerializedData(field.data);
     }
 

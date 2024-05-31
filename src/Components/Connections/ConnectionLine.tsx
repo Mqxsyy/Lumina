@@ -35,10 +35,8 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 ? (data.endPos as Vector2)
                 : data.endElement.AbsolutePosition.add(data.endElement.AbsoluteSize.div(2)).sub(canvasPosition);
 
-        const xDistance = endPoint1.X - startPoint1.X;
-
-        const startPoint2 = startPoint1.add(new Vector2(xDistance * 0.2, 0));
-        const endPoint2 = endPoint1.sub(new Vector2(xDistance * 0.2, 0));
+        const startPoint2 = startPoint1.add(new Vector2(35, 0));
+        const endPoint2 = endPoint1.sub(new Vector2(35, 0));
 
         const startSegmentPosition1 = canvasPosition.add(startPoint1);
         const startSegmentPosition2 = canvasPosition.add(startPoint2);
@@ -74,7 +72,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
     return (
         <>
             <frame
-                AnchorPoint={startSegment.position.X < endSegment.position.X ? new Vector2(0, 0.5) : new Vector2(1, 0.5)}
+                AnchorPoint={new Vector2(0, 0.5)}
                 Position={UDim2.fromOffset(startSegment.position.X, startSegment.position.Y)}
                 Rotation={startSegment.rotation}
                 Size={UDim2.fromOffset(startSegment.length + 1, math.clamp(3 * zoomScale, 1, math.huge))}
@@ -100,7 +98,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 <uicorner CornerRadius={new UDim(1, 10)} />
             </frame>
             <frame
-                AnchorPoint={startSegment.position.X < endSegment.position.X ? new Vector2(1, 0.5) : new Vector2(0, 0.5)}
+                AnchorPoint={new Vector2(1, 0.5)}
                 Position={UDim2.fromOffset(endSegment.position.X, endSegment.position.Y)}
                 Rotation={endSegment.rotation}
                 Size={UDim2.fromOffset(endSegment.length + 1, math.clamp(3 * zoomScale, 1, math.huge))}

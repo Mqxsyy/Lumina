@@ -9,7 +9,7 @@ import { GetZoomScale } from "ZoomScale";
 
 interface Props {
     NodeField: StateFieldAPI;
-    Label: string;
+    Label?: string;
 }
 
 export default function StateField({ NodeField, Label }: Props) {
@@ -55,9 +55,13 @@ export default function StateField({ NodeField, Label }: Props) {
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-            <uilistlayout FillDirection={"Horizontal"} VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
+            {Label !== undefined && (
+                <uilistlayout FillDirection={"Horizontal"} VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
+            )}
+            {Label !== undefined && (
+                <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
+            )}
 
-            <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
             <imagebutton
                 Size={new UDim2(1, 0, 0, 20 * zoomScale)}
                 BackgroundColor3={StyleColors.Highlight}

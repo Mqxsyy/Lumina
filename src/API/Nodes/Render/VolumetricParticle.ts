@@ -6,7 +6,7 @@ import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
-import { VolumetricParticleShapes } from "../FieldStates";
+import { VolumetricParticleShapeType } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { AutoGenRenderNode, RenderNode } from "./RenderNode";
@@ -62,7 +62,7 @@ function UpdateParticleProperties(data: ParticleData) {
 export class VolumetricParticle extends RenderNode {
     nodeGroup = NodeGroups.Render;
     nodeFields = {
-        shape: new StateField(VolumetricParticleShapes, VolumetricParticleShapes.Cube),
+        shape: new StateField(VolumetricParticleShapeType, VolumetricParticleShapeType.Cube),
     };
 
     objectPool: ObjectPool;
@@ -82,11 +82,11 @@ export class VolumetricParticle extends RenderNode {
         particle.CFrame = CFrameZero;
 
         const shape = this.nodeFields.shape.GetState();
-        if (shape === VolumetricParticleShapes.Cube) {
+        if (shape === VolumetricParticleShapeType.Cube) {
             if (particle.Shape !== Enum.PartType.Block) {
                 particle.Shape = Enum.PartType.Block;
             }
-        } else if (shape === VolumetricParticleShapes.Sphere) {
+        } else if (shape === VolumetricParticleShapeType.Sphere) {
             if (particle.Shape !== Enum.PartType.Ball) {
                 particle.Shape = Enum.PartType.Ball;
             }

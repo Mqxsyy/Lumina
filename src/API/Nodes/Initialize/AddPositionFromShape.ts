@@ -7,7 +7,7 @@ import { Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { SpawnShape } from "../FieldStates";
+import { SpawnShapeType } from "../FieldStates";
 import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
 
 export const AddPositionFromShapeName = "AddPositionFromShape";
@@ -158,7 +158,7 @@ function GetPositionSphere(width: number, height: number, depth: number, edgeWid
 export class AddPositionFromShape extends InitializeNode {
     nodeGroup: NodeGroups = NodeGroups.Initialize;
     nodeFields = {
-        spawnShape: new StateField(SpawnShape, SpawnShape.Square),
+        spawnShape: new StateField(SpawnShapeType, SpawnShapeType.Square),
         sizeVec2: new ConnectableVector2Field(2, 2),
         sizeVec3: new ConnectableVector3Field(2, 2, 2),
         filled: new BooleanField(false),
@@ -175,14 +175,14 @@ export class AddPositionFromShape extends InitializeNode {
         const edgeWidth = this.nodeFields.edgeWidth.GetNumber(data);
 
         switch (this.nodeFields.spawnShape.GetState()) {
-            case SpawnShape.Square: {
+            case SpawnShapeType.Square: {
                 const width = this.nodeFields.sizeVec2.GetX(data);
                 const height = this.nodeFields.sizeVec2.GetY(data);
 
                 position = GetPositionSquare(width, height, edgeWidth, filled);
                 break;
             }
-            case SpawnShape.Cube: {
+            case SpawnShapeType.Cube: {
                 const width = this.nodeFields.sizeVec3.GetX(data);
                 const height = this.nodeFields.sizeVec3.GetY(data);
                 const depth = this.nodeFields.sizeVec3.GetZ(data);
@@ -190,14 +190,14 @@ export class AddPositionFromShape extends InitializeNode {
                 position = GetPositionCube(width, height, depth, edgeWidth, filled);
                 break;
             }
-            case SpawnShape.Ellipse: {
+            case SpawnShapeType.Ellipse: {
                 const width = this.nodeFields.sizeVec2.GetX(data);
                 const height = this.nodeFields.sizeVec2.GetY(data);
 
                 position = GetPositionEllipse(width, height, edgeWidth, filled);
                 break;
             }
-            case SpawnShape.Sphere: {
+            case SpawnShapeType.Sphere: {
                 const width = this.nodeFields.sizeVec3.GetX(data);
                 const height = this.nodeFields.sizeVec3.GetY(data);
                 const depth = this.nodeFields.sizeVec3.GetZ(data);

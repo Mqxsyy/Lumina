@@ -1,4 +1,5 @@
 import { NodeGroups } from "API/NodeGroup";
+import { AxisType } from "API/Nodes/FieldStates";
 import type { SetPosition } from "API/Nodes/Initialize/SetPosition";
 import type { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
 import { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
@@ -31,7 +32,8 @@ export function CreateBasicSystem() {
         });
 
         const setVelocity = CreateSetVelocity();
-        (setVelocity.data.node as SetVelocity).nodeFields.velocity.SetY(5);
+        (setVelocity.data.node as SetVelocity).nodeFields.axisType.SetState(AxisType.Y);
+        (setVelocity.data.node as SetVelocity).nodeFields.velocityY.SetNumber(5);
         setVelocity.elementLoaded.Connect(() => {
             (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setVelocity.data.node.id);
         });

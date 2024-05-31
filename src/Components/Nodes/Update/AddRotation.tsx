@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { CalculationType } from "API/Nodes/FieldStates";
 import { IsAxisX, IsAxisY, IsAxisZ } from "API/Nodes/FieldStatesLib";
-import { SetSize as SetSizeAPI, SetSizeFieldNames } from "API/Nodes/Initialize/SetSize";
+import { AddRotation as AddRotationAPI, AddRotationFieldNames } from "API/Nodes/Update/AddRotation";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
-export function CreateSetSize() {
-    return AddNode(new SetSizeAPI(), (data: NodeData) => {
+export function CreateAddRotation() {
+    return AddNode(new AddRotationAPI(), (data: NodeData) => {
         return (
-            <SetSize
+            <AddRotationXYZ
                 key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
                 data={data}
             />
@@ -19,11 +19,11 @@ export function CreateSetSize() {
     });
 }
 
-function SetSize({ data }: { data: NodeData }) {
+function AddRotationXYZ({ data }: { data: NodeData }) {
     const [_, setForceRender] = useState(0);
 
-    const calculationTypeRef = useRef((data.node as SetSizeAPI).nodeFields.calculationType);
-    const axisTypeRef = useRef((data.node as SetSizeAPI).nodeFields.axisType);
+    const calculationTypeRef = useRef((data.node as AddRotationAPI).nodeFields.calculationType);
+    const axisTypeRef = useRef((data.node as AddRotationAPI).nodeFields.axisType);
 
     useEffect(() => {
         const connection1 = calculationTypeRef.current.FieldChanged.Connect(() => {
@@ -50,10 +50,6 @@ function SetSize({ data }: { data: NodeData }) {
         };
     }, []);
 
-    const isUniformConnected = () => {
-        return calculationTypeRef.current.GetState() === CalculationType.UniformConnected;
-    };
-
     const isUniform = () => {
         return calculationTypeRef.current.GetState() === CalculationType.Uniform;
     };
@@ -62,52 +58,29 @@ function SetSize({ data }: { data: NodeData }) {
         return calculationTypeRef.current.GetState() === CalculationType.Random;
     };
 
-    const isRandomConnected = () => {
-        return calculationTypeRef.current.GetState() === CalculationType.RandomConncted;
-    };
-
     return (
         <Node
-            Name="Set Size"
+            Name="Add Rotation"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
             <StateField NodeField={calculationTypeRef.current} />
-
-            {!isRandomConnected() && !isUniformConnected() && <StateField NodeField={axisTypeRef.current} />}
-
-            {isUniformConnected() && (
-                <ConnectableNumberField
-                    NodeId={data.node.id}
-                    NodeField={(data.node as SetSizeAPI).nodeFields.size}
-                    NodeFieldName={SetSizeFieldNames.size}
-                    Label="Size"
-                />
-            )}
-
-            {isRandomConnected() && (
-                <ConnectableVector2Field
-                    NodeId={data.node.id}
-                    NodeField={(data.node as SetSizeAPI).nodeFields.range}
-                    NodeFieldName={SetSizeFieldNames.range}
-                    Label="Range"
-                />
-            )}
+            <StateField NodeField={axisTypeRef.current} />
 
             {IsAxisX(axisTypeRef.current.GetState()) && isUniform() && (
                 <ConnectableNumberField
                     NodeId={data.node.id}
-                    NodeField={(data.node as SetSizeAPI).nodeFields.sizeX}
-                    NodeFieldName={SetSizeFieldNames.sizeX}
+                    NodeField={(data.node as AddRotationAPI).nodeFields.rotationX}
+                    NodeFieldName={AddRotationFieldNames.rotationX}
                     Label="X"
                 />
             )}
             {IsAxisX(axisTypeRef.current.GetState()) && isRandom() && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
-                    NodeField={(data.node as SetSizeAPI).nodeFields.rangeX}
-                    NodeFieldName={SetSizeFieldNames.rangeX}
+                    NodeField={(data.node as AddRotationAPI).nodeFields.rangeX}
+                    NodeFieldName={AddRotationFieldNames.rangeX}
                     Label="X"
                 />
             )}
@@ -115,16 +88,16 @@ function SetSize({ data }: { data: NodeData }) {
             {IsAxisY(axisTypeRef.current.GetState()) && isUniform() && (
                 <ConnectableNumberField
                     NodeId={data.node.id}
-                    NodeField={(data.node as SetSizeAPI).nodeFields.sizeY}
-                    NodeFieldName={SetSizeFieldNames.sizeY}
+                    NodeField={(data.node as AddRotationAPI).nodeFields.rotationY}
+                    NodeFieldName={AddRotationFieldNames.rotationY}
                     Label="Y"
                 />
             )}
             {IsAxisY(axisTypeRef.current.GetState()) && isRandom() && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
-                    NodeField={(data.node as SetSizeAPI).nodeFields.rangeY}
-                    NodeFieldName={SetSizeFieldNames.rangeY}
+                    NodeField={(data.node as AddRotationAPI).nodeFields.rangeY}
+                    NodeFieldName={AddRotationFieldNames.rangeY}
                     Label="Y"
                 />
             )}
@@ -132,16 +105,16 @@ function SetSize({ data }: { data: NodeData }) {
             {IsAxisZ(axisTypeRef.current.GetState()) && isUniform() && (
                 <ConnectableNumberField
                     NodeId={data.node.id}
-                    NodeField={(data.node as SetSizeAPI).nodeFields.sizeZ}
-                    NodeFieldName={SetSizeFieldNames.sizeZ}
+                    NodeField={(data.node as AddRotationAPI).nodeFields.rotationZ}
+                    NodeFieldName={AddRotationFieldNames.rotationZ}
                     Label="Z"
                 />
             )}
             {IsAxisZ(axisTypeRef.current.GetState()) && isRandom() && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
-                    NodeField={(data.node as SetSizeAPI).nodeFields.rangeZ}
-                    NodeFieldName={SetSizeFieldNames.rangeZ}
+                    NodeField={(data.node as AddRotationAPI).nodeFields.rangeZ}
+                    NodeFieldName={AddRotationFieldNames.rangeZ}
                     Label="Z"
                 />
             )}

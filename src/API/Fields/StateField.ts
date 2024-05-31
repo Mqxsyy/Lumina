@@ -10,10 +10,23 @@ export class StateField extends NodeField {
     readonly stateCollection: FieldState;
     currentState: string;
 
-    constructor(stateCollection: FieldState, currentState: string) {
+    constructor(stateCollection: FieldState, currentState: string, excludedStates?: string[]) {
         super();
-        this.stateCollection = stateCollection;
+
         this.currentState = currentState;
+
+        if (excludedStates === undefined) {
+            this.stateCollection = stateCollection;
+            return;
+        }
+
+        const filteredStateCollection: FieldState = {};
+        for (const [k, v] of pairs(stateCollection)) {
+            if (excludedStates.findIndex((s) => s === v) !== -1) continue;
+            filteredStateCollection[k] = v;
+        }
+
+        this.stateCollection = filteredStateCollection;
     }
 
     GetState() {

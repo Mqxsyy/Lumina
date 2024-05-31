@@ -27,10 +27,6 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Set Lifetime",
             create: () => CreateBarrel.CreateSetLifetime(),
         },
-        [NameBarrel.SetLifetimeRandomName]: {
-            name: "Set Lifetime Random",
-            create: () => CreateBarrel.CreateSetLifetimeRandom(),
-        },
         [NameBarrel.SetPositionName]: {
             name: "Set Position",
             create: () => CreateBarrel.CreateSetPosition(),
@@ -47,29 +43,13 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Add Position From Shape",
             create: () => CreateBarrel.CreateAddPositionFromShape(),
         },
-        [NameBarrel.SetRotationXYZName]: {
-            name: "Set Rotation XYZ",
-            create: () => CreateBarrel.CreateSetRotationXYZ(),
-        },
-        [NameBarrel.SetRotationZName]: {
-            name: "Set Rotation Z",
-            create: () => CreateBarrel.CreateSetRotationZ(),
-        },
-        [NameBarrel.SetRotationZRandomName]: {
-            name: "Set Rotation Z Random",
-            create: () => CreateBarrel.CreateSetRotationZ(),
+        [NameBarrel.SetRotationName]: {
+            name: "Set Rotation",
+            create: () => CreateBarrel.CreateSetRotation(),
         },
         [NameBarrel.SetSizeName]: {
             name: "Set Size",
             create: () => CreateBarrel.CreateSetSize(),
-        },
-        [NameBarrel.SetSizeRandomName]: {
-            name: "Set Size Random",
-            create: () => CreateBarrel.CreateSetSizeRandom(),
-        },
-        [NameBarrel.SetSizeXYZName]: {
-            name: "Set Size XYZ",
-            create: () => CreateBarrel.CreateSetSizeXYZ(),
         },
         [NameBarrel.SetTransparencyName]: {
             name: "Set Transparency",
@@ -79,31 +59,15 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Set Velocity",
             create: () => CreateBarrel.CreateSetVelocity(),
         },
-        [NameBarrel.SetVelocityRandomName]: {
-            name: "Set Velocity Random",
-            create: () => CreateBarrel.CreateSetVelocityRandom(),
-        },
         [NameBarrel.DirectVelocityName]: {
             name: "Direct Velocity",
             create: () => CreateBarrel.CreateDirectVelocity(),
         },
     },
     [NodeGroups.Update]: {
-        [NameBarrel.AddRotationXYZName]: {
-            name: "Add Rotation XYZ",
-            create: () => CreateBarrel.CreateAddRotationXYZ(),
-        },
-        [NameBarrel.AddRotationXYZRandomName]: {
-            name: "Add Rotation XYZ Random",
-            create: () => CreateBarrel.CreateAddRotationXYZRandom(),
-        },
-        [NameBarrel.AddRotationZName]: {
-            name: "Add Rotation Z",
-            create: () => CreateBarrel.CreateAddRotationZ(),
-        },
-        [NameBarrel.AddRotationZRandomName]: {
-            name: "Add Rotation Z Random",
-            create: () => CreateBarrel.CreateAddRotationZRandom(),
+        [NameBarrel.AddRotationName]: {
+            name: "Add Rotation",
+            create: () => CreateBarrel.CreateAddRotation(),
         },
         [NameBarrel.BounceName]: {
             name: "Bounce",

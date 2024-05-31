@@ -9,7 +9,7 @@ import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { NodeGroups } from "../../NodeGroup";
-import { Orientation } from "../FieldStates";
+import { OrientationType } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { AutoGenRenderNode, RenderNode } from "./RenderNode";
@@ -117,12 +117,12 @@ function CreateDoubleSidedParticle(): DoubleSidedPlaneParticle {
 
 function CheckOrientation(orientation: string, position: Vector3, data: ParticleData): CFrame {
     switch (orientation) {
-        case Orientation.FacingCamera: {
+        case OrientationType.FacingCamera: {
             return CFrame.lookAt(position, (game.Workspace.CurrentCamera as Camera).CFrame.Position).mul(
                 CFrame.Angles(0, 0, math.rad(data.rotation.Z)),
             );
         }
-        case Orientation.VelocityParallel: {
+        case OrientationType.VelocityParallel: {
             const velocity = data.velocityNormal.Unit;
             if (velocity === Vector3.zero) return new CFrame(position);
 
@@ -144,7 +144,7 @@ function CheckOrientation(orientation: string, position: Vector3, data: Particle
 
             return velocityAligned.mul(CFrame.Angles(angle, 0, 0)).mul(CFrame.Angles(0, 0, math.rad(data.rotation.Z)));
         }
-        case Orientation.VelocityPerpendicular: {
+        case OrientationType.VelocityPerpendicular: {
             const nextPosition = position.add(data.velocityNormal);
             return CFrame.lookAt(position, nextPosition).mul(CFrame.Angles(0, 0, math.rad(data.rotation.Z)));
         }
@@ -176,7 +176,7 @@ function UpdateParticleProperties(data: ParticleData) {
 export class PlaneParticle extends RenderNode {
     nodeGroup: NodeGroups = NodeGroups.Render;
     nodeFields = {
-        orientation: new StateField(Orientation, Orientation.FacingCamera),
+        orientation: new StateField(OrientationType, OrientationType.FacingCamera),
         assetId: new NumberField(7848741169),
         doubleSided: new BooleanField(false),
         imageSize: new Vector2Field(1024, 1024),
