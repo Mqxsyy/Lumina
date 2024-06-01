@@ -58,6 +58,8 @@ function SetRotationZ({ data }: { data: NodeData }) {
         return calculationTypeRef.current.GetState() === CalculationType.Random;
     };
 
+    const axisType = axisTypeRef.current.GetState();
+
     return (
         <Node
             Name="Set Rotation"
@@ -68,7 +70,7 @@ function SetRotationZ({ data }: { data: NodeData }) {
             <StateField NodeField={calculationTypeRef.current} />
             <StateField NodeField={axisTypeRef.current} />
 
-            {IsAxisX(axisTypeRef.current.GetState()) && isUniform() && (
+            {IsAxisX(axisType) && isUniform() && (
                 <ConnectableNumberField
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rotationX}
@@ -76,16 +78,17 @@ function SetRotationZ({ data }: { data: NodeData }) {
                     Label="X"
                 />
             )}
-            {IsAxisX(axisTypeRef.current.GetState()) && isRandom() && (
+            {IsAxisX(axisType) && isRandom() && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rangeX}
                     NodeFieldName={SetRotationFieldNames.rangeX}
-                    Label="X"
+                    Label={IsAxisY(axisType) || IsAxisZ(axisType) ? "X" : undefined}
+                    ValueLabels={["Min", "Max"]}
                 />
             )}
 
-            {IsAxisY(axisTypeRef.current.GetState()) && isUniform() && (
+            {IsAxisY(axisType) && isUniform() && (
                 <ConnectableNumberField
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rotationY}
@@ -93,16 +96,17 @@ function SetRotationZ({ data }: { data: NodeData }) {
                     Label="Y"
                 />
             )}
-            {IsAxisY(axisTypeRef.current.GetState()) && isRandom() && (
+            {IsAxisY(axisType) && isRandom() && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rangeY}
                     NodeFieldName={SetRotationFieldNames.rangeY}
-                    Label="Y"
+                    Label={IsAxisX(axisType) || IsAxisZ(axisType) ? "Y" : undefined}
+                    ValueLabels={["Min", "Max"]}
                 />
             )}
 
-            {IsAxisZ(axisTypeRef.current.GetState()) && isUniform() && (
+            {IsAxisZ(axisType) && isUniform() && (
                 <ConnectableNumberField
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rotationZ}
@@ -110,12 +114,13 @@ function SetRotationZ({ data }: { data: NodeData }) {
                     Label="Z"
                 />
             )}
-            {IsAxisZ(axisTypeRef.current.GetState()) && isRandom() && (
+            {IsAxisZ(axisType) && isRandom() && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rangeZ}
                     NodeFieldName={SetRotationFieldNames.rangeZ}
-                    Label="Z"
+                    Label={IsAxisX(axisType) || IsAxisY(axisType) ? "Z" : undefined}
+                    ValueLabels={["Min", "Max"]}
                 />
             )}
         </Node>

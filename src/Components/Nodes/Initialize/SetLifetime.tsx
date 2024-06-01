@@ -59,7 +59,7 @@ function SetLifetime({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as SetLifetimeAPI).nodeFields.range}
                     NodeFieldName={SetLifetimeFieldNames.range}
-                    Label={CapitalizeFirstLetter(SetLifetimeFieldNames.range)}
+                    ValueLabels={["Min", "Max"]}
                 />
             )}
         </Node>
