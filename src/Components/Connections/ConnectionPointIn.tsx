@@ -37,18 +37,26 @@ export default function ConnectionPointIn({
     UnbindNode,
 }: Props) {
     const [_, setForceRender] = useState(0);
+
     const [connectionId, setConnectionId] = useState(-1);
+    const connectionIdRef = useRef(-1);
+
     const elementRef = useRef<ImageButton>();
     const isLoadingConnectionsRef = useRef(false);
 
     const node = GetNodeById(NodeId) as NodeCollectionEntry;
     const nodeData = node.data;
 
+    const updateConnectionId = (id: number) => {
+        connectionIdRef.current = id;
+        setConnectionId(id);
+    };
+
     const finishConnection = (id: number) => {
         if (elementRef.current === undefined) return;
         if (node.element === undefined) return;
 
-        setConnectionId(id);
+        updateConnectionId(id);
 
         UpdateConnectionData(id, (data: ConnectionData) => {
             data.endElement = elementRef.current;
@@ -71,7 +79,7 @@ export default function ConnectionPointIn({
         const destroyConnection = connectionData.onDestroy.Connect(() => {
             destroyConnection.Disconnect();
 
-            setConnectionId(-1);
+            updateConnectionId(-1);
             UnbindNode();
 
             if (GetNodeById(NodeId) === undefined) return;
@@ -127,26 +135,12 @@ export default function ConnectionPointIn({
 
         return () => {
             connection.Disconnect();
+
+            if (connectionIdRef.current !== -1) {
+                DestroyConnection(connectionIdRef.current);
+            }
         };
     }, []);
-
-    useEffect(() => {
-        let destroyConnection: FastEventConnection | undefined = nodeData.onDestroy.Connect(() => {
-            if (destroyConnection === undefined) return;
-
-            destroyConnection.Disconnect();
-            destroyConnection = undefined;
-
-            if (connectionId !== -1) {
-                DestroyConnection(connectionId);
-            }
-        });
-
-        return () => {
-            if (destroyConnection === undefined) return;
-            destroyConnection.Disconnect();
-        };
-    }, [nodeData.onDestroy, connectionId]);
 
     useEffect(() => {
         if (elementRef.current === undefined) return;

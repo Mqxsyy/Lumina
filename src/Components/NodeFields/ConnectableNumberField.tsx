@@ -12,7 +12,7 @@ interface Props {
     NodeField: NumberFieldAPI;
     NodeFieldName: string;
 
-    Label: string;
+    Label?: string;
     AllowNegative?: boolean;
 
     OverrideSetNumber?: (number: number) => undefined;
@@ -22,7 +22,7 @@ export default function ConnectableNumberField({
     NodeId,
     NodeField,
     NodeFieldName,
-    Label,
+    Label = undefined,
     AllowNegative = false,
     OverrideSetNumber = undefined,
 }: Props) {
@@ -55,7 +55,11 @@ export default function ConnectableNumberField({
                 BindNode={NodeField.ConnectNode}
                 UnbindNode={NodeField.DisconnectNode}
             />
-            <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
+
+            {Label !== undefined && (
+                <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
+            )}
+
             <NumberInput
                 AnchorPoint={new Vector2(1, 0)}
                 Position={UDim2.fromScale(1, 0)}

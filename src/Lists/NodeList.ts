@@ -125,37 +125,17 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         },
     },
     [NodeGroups.Logic]: {
-        [NameBarrel.NumberInputName]: {
+        [NameBarrel.NumberOutName]: {
             name: "Number Out",
-            create: () => CreateBarrel.CreateNumberInput(),
+            create: () => CreateBarrel.CreateNumberOut(),
         },
-        [NameBarrel.AddName]: {
-            name: "Add",
-            create: () => CreateBarrel.CreateAdd(),
+        [NameBarrel.BasicMathOperationName]: {
+            name: "Basic Math Operation",
+            create: () => CreateBarrel.CreateBasicMathOperation(),
         },
-        [NameBarrel.SubtractName]: {
-            name: "Subtract",
-            create: () => CreateBarrel.CreateSubtract(),
-        },
-        [NameBarrel.MultiplyName]: {
-            name: "Multiply",
-            create: () => CreateBarrel.CreateMultiply(),
-        },
-        [NameBarrel.DivideName]: {
-            name: "Divide",
-            create: () => CreateBarrel.CreateDivide(),
-        },
-        [NameBarrel.SinName]: {
-            name: "Sin",
-            create: () => CreateBarrel.CreateSin(),
-        },
-        [NameBarrel.CosName]: {
-            name: "Cos",
-            create: () => CreateBarrel.CreateCos(),
-        },
-        [NameBarrel.TanName]: {
-            name: "Tan",
-            create: () => CreateBarrel.CreateTan(),
+        [NameBarrel.TrigonometryName]: {
+            name: "Trigonometry",
+            create: () => CreateBarrel.CreateTrigonometry(),
         },
         [NameBarrel.ClampName]: {
             name: "Clamp",

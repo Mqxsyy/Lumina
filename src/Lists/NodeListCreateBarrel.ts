@@ -35,16 +35,11 @@ export { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 export { CreateVolumetricParticle } from "Components/Nodes/Render/VolumetricParticle";
 
 // Logic
-export { CreateAdd } from "Components/Nodes/Logic/Add";
 export { CreateAliveTime } from "Components/Nodes/Logic/AliveTime";
+export { CreateBasicMathOperation } from "Components/Nodes/Logic/BasicMathOperation";
 export { CreateClamp } from "Components/Nodes/Logic/Clamp";
-export { CreateCos } from "Components/Nodes/Logic/Cos";
-export { CreateDivide } from "Components/Nodes/Logic/Divide";
-export { CreateMultiply } from "Components/Nodes/Logic/Multiply";
-export { CreateNumberOut as CreateNumberInput } from "Components/Nodes/Logic/NumberOut";
+export { CreateNumberOut } from "Components/Nodes/Logic/NumberOut";
 export { CreateRandomNumber } from "Components/Nodes/Logic/RandomNumber";
 export { CreateRemap } from "Components/Nodes/Logic/Remap";
-export { CreateSin } from "Components/Nodes/Logic/Sin";
-export { CreateSubtract } from "Components/Nodes/Logic/Subtract";
-export { CreateTan } from "Components/Nodes/Logic/Tan";
 export { CreateTime } from "Components/Nodes/Logic/Time";
+export { CreateTrigonometry } from "Components/Nodes/Logic/Trigonometry";

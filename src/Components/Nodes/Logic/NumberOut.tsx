@@ -24,13 +24,10 @@ function NumberOut({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
             ConnectioNode={data.node as LogicNode}
+            Width={120}
+            UsePadding={false}
         >
-            <NumberField
-                NodeId={data.node.id}
-                NodeField={(data.node as NumberOutAPI).nodeFields.input}
-                Label="Input"
-                AllowNegative={true}
-            />
+            <NumberField NodeId={data.node.id} NodeField={(data.node as NumberOutAPI).nodeFields.input} AllowNegative={true} />
         </Node>
     );
 }

@@ -35,16 +35,11 @@ export { PlaneParticleName } from "API/Nodes/Render/PlaneParticle";
 export { VolumetricParticleName } from "API/Nodes/Render/VolumetricParticle";
 
 // Logic
-export { AddName } from "API/Nodes/Logic/Add";
 export { AliveTimeName } from "API/Nodes/Logic/Alivetime";
+export { BasicMathOperationName } from "API/Nodes/Logic/BasicMathOperation";
 export { ClampName } from "API/Nodes/Logic/Clamp";
-export { CosName } from "API/Nodes/Logic/Cos";
-export { DivideName } from "API/Nodes/Logic/Divide";
-export { MultiplyName } from "API/Nodes/Logic/Multiply";
-export { NumberOutName as NumberInputName } from "API/Nodes/Logic/NumberOut";
+export { NumberOutName } from "API/Nodes/Logic/NumberOut";
 export { RandomNumberName } from "API/Nodes/Logic/RandomNumber";
 export { RemapName } from "API/Nodes/Logic/Remap";
-export { SinName } from "API/Nodes/Logic/Sin";
-export { SubtractName } from "API/Nodes/Logic/Subtract";
-export { TanName } from "API/Nodes/Logic/Tan";
 export { TimeName } from "API/Nodes/Logic/Time";
+export { TrigonometryName } from "API/Nodes/Logic/Trigonometry";

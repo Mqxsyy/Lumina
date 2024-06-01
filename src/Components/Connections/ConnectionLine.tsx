@@ -35,8 +35,8 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 ? (data.endPos as Vector2)
                 : data.endElement.AbsolutePosition.add(data.endElement.AbsoluteSize.div(2)).sub(canvasPosition);
 
-        const startPoint2 = startPoint1.add(new Vector2(35, 0));
-        const endPoint2 = endPoint1.sub(new Vector2(35, 0));
+        const startPoint2 = startPoint1.add(new Vector2(20 * zoomScale, 0));
+        const endPoint2 = endPoint1.sub(new Vector2(20 * zoomScale, 0));
 
         const startSegmentPosition1 = canvasPosition.add(startPoint1);
         const startSegmentPosition2 = canvasPosition.add(startPoint2);

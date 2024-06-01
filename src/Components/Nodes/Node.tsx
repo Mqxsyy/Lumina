@@ -19,6 +19,7 @@ const NODE_SELECT_TIME = 0.1;
 interface Props {
     Name: string;
     Width?: number;
+    UsePadding?: boolean;
     NodeId: number;
     NodeAnchorPoint: Vector2;
     IsConnectedToSystem: boolean;
@@ -28,6 +29,7 @@ interface Props {
 function Node({
     Name,
     Width = NODE_WIDTH,
+    UsePadding = true,
     NodeId,
     NodeAnchorPoint,
     IsConnectedToSystem,
@@ -149,6 +151,7 @@ function Node({
                 PaddingTop={new UDim(0, 1 + 5 * zoomScale)}
                 PaddingBottom={new UDim(0, 1 + 5 * zoomScale)}
             />
+
             {GetSelectedNodeId() === NodeId && (
                 <uistroke Thickness={math.clamp(3 * zoomScale, 1, math.huge)} Color={StyleColors.Selection} />
             )}
@@ -162,7 +165,7 @@ function Node({
             </Div>
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                 <uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
-                <uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />
+                {UsePadding && <uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />}
 
                 {children}
             </Div>

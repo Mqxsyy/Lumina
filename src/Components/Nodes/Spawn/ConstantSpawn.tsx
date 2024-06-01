@@ -37,7 +37,7 @@ function ConstantSpawn({ data }: { data: NodeData }) {
             <NumberField
                 NodeId={id}
                 NodeField={nodeFields.rate}
-                Label={"Constant Spawn"}
+                Label={"Rate"}
                 OverrideSetNumber={rateChanged as (number: number) => undefined}
             />
         </Node>

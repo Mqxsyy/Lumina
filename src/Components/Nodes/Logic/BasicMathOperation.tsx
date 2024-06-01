@@ -1,14 +1,15 @@
 import React from "@rbxts/react";
-import { Divide as DivideAPI, DivideFieldNames } from "API/Nodes/Logic/Divide";
+import { BasicMathOperation as BasicMathOperationAPI, BasicMathOperationFieldNames } from "API/Nodes/Logic/BasicMathOperation";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
+import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
-export function CreateDivide() {
-    return AddNode(new DivideAPI(), (data: NodeData) => {
+export function CreateBasicMathOperation() {
+    return AddNode(new BasicMathOperationAPI(), (data: NodeData) => {
         return (
-            <Divide
+            <BasicMathOperation
                 key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
                 data={data}
             />
@@ -16,27 +17,28 @@ export function CreateDivide() {
     });
 }
 
-function Divide({ data }: { data: NodeData }) {
+function BasicMathOperation({ data }: { data: NodeData }) {
     return (
         <Node
-            Name="Divide"
+            Name="Basic Math Operation"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
             ConnectioNode={data.node as LogicNode}
+            Width={175}
+            UsePadding={false}
         >
+            <StateField NodeField={(data.node as BasicMathOperationAPI).nodeFields.operationType} />
             <ConnectableNumberField
                 NodeId={data.node.id}
-                NodeField={(data.node as DivideAPI).nodeFields.a}
-                NodeFieldName={DivideFieldNames.a}
-                Label="A"
+                NodeField={(data.node as BasicMathOperationAPI).nodeFields.a}
+                NodeFieldName={BasicMathOperationFieldNames.a}
                 AllowNegative={true}
             />
             <ConnectableNumberField
                 NodeId={data.node.id}
-                NodeField={(data.node as DivideAPI).nodeFields.b}
-                NodeFieldName={DivideFieldNames.b}
-                Label="B"
+                NodeField={(data.node as BasicMathOperationAPI).nodeFields.b}
+                NodeFieldName={BasicMathOperationFieldNames.b}
                 AllowNegative={true}
             />
         </Node>

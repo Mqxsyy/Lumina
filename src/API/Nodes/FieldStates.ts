@@ -17,6 +17,19 @@ export const AxisType = {
     XYZ: "XYZ",
 };
 
+export const MathOperationType = {
+    Add: "Add",
+    Subtract: "Subtract",
+    Multiply: "Multiply",
+    Divide: "Divide",
+};
+
+export const TrigonometryType = {
+    Sin: "Sin",
+    Cos: "Cos",
+    Tan: "Tan",
+};
+
 export const SpaceType = {
     WorldSpace: "World Space",
     LocalSpace: "Local Space",
