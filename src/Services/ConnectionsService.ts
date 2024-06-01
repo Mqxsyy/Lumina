@@ -8,6 +8,7 @@ import type { NodeData } from "./NodesService";
 
 export interface ConnectionData {
     id: number;
+    valueType: string;
     loadedId?: number;
     startNode: NodeData;
     startElement: ImageButton;
@@ -40,10 +41,11 @@ export function GetConnectionById(id: number) {
     return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
-export function CreateConnection(startNode: NodeData, startElement: ImageButton, loadedId?: number) {
+export function CreateConnection(startNode: NodeData, startElement: ImageButton, valueType: string, loadedId?: number) {
     const connection: ConnectionCollectionEntry = {
         data: {
             id: idPool.GetNextId(),
+            valueType,
             loadedId,
             startNode,
             startElement,

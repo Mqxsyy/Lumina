@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import type { FastEventConnection } from "API/Bindables/FastEvent";
+import { NodeField } from "API/Fields/NodeField";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
@@ -19,21 +20,19 @@ const NODE_SELECT_TIME = 0.1;
 interface Props {
     Name: string;
     Width?: number;
-    UsePadding?: boolean;
     NodeId: number;
     NodeAnchorPoint: Vector2;
     IsConnectedToSystem: boolean;
-    ConnectioNode?: LogicNode;
+    ConnectionValueType?: string;
 }
 
 function Node({
     Name,
     Width = NODE_WIDTH,
-    UsePadding = true,
     NodeId,
     NodeAnchorPoint,
     IsConnectedToSystem,
-    ConnectioNode = undefined,
+    ConnectionValueType = undefined,
     children,
 }: React.PropsWithChildren<Props>) {
     const [_, setForceRender] = useState(0);
@@ -99,16 +98,31 @@ function Node({
     };
 
     useEffect(() => {
-        const connection = ZoomScaleChanged.Connect((newScale) => {
+        const zoomConnection = ZoomScaleChanged.Connect((newScale) => {
             setZoomScale(newScale);
         });
+
+        const fieldsConnections: RBXScriptConnection[] = [];
+
+        const node = GetNodeById(NodeId) as NodeCollectionEntry;
+        const fields = node.data.node.nodeFields;
+        for (const [_, field] of pairs(fields)) {
+            fieldsConnections.push(
+                field.FieldChanged.Connect(() => {
+                    setForceRender((prev) => prev + 1);
+                }),
+            );
+        }
 
         return () => {
             if (selectedNodeIdChangedConnectionRef.current !== undefined) {
                 selectedNodeIdChangedConnectionRef.current.Disconnect();
             }
 
-            connection.Disconnect();
+            zoomConnection.Disconnect();
+            for (const fieldConnection of fieldsConnections) {
+                fieldConnection.Disconnect();
+            }
         };
     }, []);
 
@@ -116,6 +130,14 @@ function Node({
         if (elementRef.current === undefined) return;
         SetNodeElement(NodeId, elementRef.current);
         setForceRender((prev) => prev + 1);
+
+        const connection = elementRef.current.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+            setForceRender((prev) => prev + 1);
+        });
+
+        return () => {
+            connection.Disconnect();
+        };
     }, [elementRef.current]);
 
     return (
@@ -161,11 +183,11 @@ function Node({
                 <BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={Name}>
                     <uiflexitem FlexMode={"Fill"} />
                 </BasicTextLabel>
-                {ConnectioNode !== undefined && <ConnectionPointOut NodeId={NodeId} />}
+                {ConnectionValueType !== undefined && <ConnectionPointOut NodeId={NodeId} ValueType={ConnectionValueType} />}
             </Div>
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                 <uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
-                {UsePadding && <uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />}
+                <uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />
 
                 {children}
             </Div>

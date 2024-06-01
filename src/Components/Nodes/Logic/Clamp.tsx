@@ -1,4 +1,5 @@
 import React from "@rbxts/react";
+import { ValueType } from "API/Nodes/FieldStates";
 import { Clamp as ClampAPI, ClampFieldNames } from "API/Nodes/Logic/Clamp";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
@@ -24,7 +25,7 @@ function Clamp({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectioNode={data.node as LogicNode}
+            ConnectionValueType={ValueType.Number}
         >
             <ConnectableNumberField
                 NodeId={data.node.id}

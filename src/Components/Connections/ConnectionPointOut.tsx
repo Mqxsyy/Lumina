@@ -17,6 +17,7 @@ interface Props {
     Position?: UDim2;
     Size?: UDim2;
     NodeId: number;
+    ValueType: string;
 }
 
 export default function ConnectionPointOut({
@@ -24,6 +25,7 @@ export default function ConnectionPointOut({
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
+    ValueType,
 }: Props) {
     const [_, setForceRender] = useState(0);
     const [connectionIds, setConnectionIds] = useState<number[]>([]);
@@ -36,7 +38,7 @@ export default function ConnectionPointOut({
         if (elementRef.current === undefined) return;
         if (node.element === undefined) return;
 
-        const connectionData = CreateConnection(nodeData, elementRef.current, loadedId);
+        const connectionData = CreateConnection(nodeData, elementRef.current, ValueType, loadedId);
         setConnectionIds((prev) => [...prev, connectionData.id]);
 
         UpdateNodeData(NodeId, (data) => {

@@ -1,4 +1,5 @@
 import React from "@rbxts/react";
+import { ValueType } from "API/Nodes/FieldStates";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { RandomNumber as RandomNumberAPI, RandomNumberFieldNames } from "API/Nodes/Logic/RandomNumber";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
@@ -23,7 +24,7 @@ function RandomNumber({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectioNode={data.node as LogicNode}
+            ConnectionValueType={ValueType.Number}
         >
             <ConnectableVector2Field
                 NodeId={data.node.id}

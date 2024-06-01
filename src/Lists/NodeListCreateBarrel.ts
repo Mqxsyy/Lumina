@@ -38,8 +38,8 @@ export { CreateVolumetricParticle } from "Components/Nodes/Render/VolumetricPart
 export { CreateAliveTime } from "Components/Nodes/Logic/AliveTime";
 export { CreateBasicMathOperation } from "Components/Nodes/Logic/BasicMathOperation";
 export { CreateClamp } from "Components/Nodes/Logic/Clamp";
-export { CreateNumberOut } from "Components/Nodes/Logic/NumberOut";
 export { CreateRandomNumber } from "Components/Nodes/Logic/RandomNumber";
 export { CreateRemap } from "Components/Nodes/Logic/Remap";
 export { CreateTime } from "Components/Nodes/Logic/Time";
 export { CreateTrigonometry } from "Components/Nodes/Logic/Trigonometry";
+export { CreateValueOut } from "Components/Nodes/Logic/ValueOut";

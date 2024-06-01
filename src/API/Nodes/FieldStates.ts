@@ -52,3 +52,8 @@ export const OrientationType = {
     VelocityParallel: "Velocity Parallel",
     VelocityPerpendicular: "Velocity Perpendicular",
 };
+
+export const ValueType = {
+    Number: "Number",
+    Vector3: "Vector3",
+};

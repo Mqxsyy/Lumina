@@ -22,6 +22,7 @@ interface Props {
     NodeId: number;
     NodeFieldName: string;
     ValueName?: string;
+    ValueType: string;
     BindNode: (boundNode: LogicNode) => void;
     UnbindNode: () => void;
 }
@@ -33,6 +34,7 @@ export default function ConnectionPointIn({
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
+    ValueType,
     BindNode,
     UnbindNode,
 }: Props) {
@@ -110,6 +112,8 @@ export default function ConnectionPointIn({
 
         const connectionData = (GetConnectionById(movingConnectionId) as ConnectionCollectionEntry).data;
         if (connectionData.startNode.node.id === NodeId) return;
+
+        if (connectionData.valueType !== ValueType) return;
 
         UnbindMovingConnection();
         finishConnection(movingConnectionId);

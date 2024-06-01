@@ -125,9 +125,9 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         },
     },
     [NodeGroups.Logic]: {
-        [NameBarrel.NumberOutName]: {
-            name: "Number Out",
-            create: () => CreateBarrel.CreateNumberOut(),
+        [NameBarrel.ValueOutName]: {
+            name: "Value Out",
+            create: () => CreateBarrel.CreateValueOut(),
         },
         [NameBarrel.BasicMathOperationName]: {
             name: "Basic Math Operation",

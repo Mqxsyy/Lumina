@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "@rbxts/react";
 import type { ConnectableVector2Field as Vector2FieldAPI } from "API/Fields/ConnectableVector2Field";
+import { ValueType } from "API/Nodes/FieldStates";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
@@ -60,6 +61,7 @@ export function ConnectableVector2Field({
                         NodeId={NodeId}
                         NodeFieldName={NodeFieldName}
                         ValueName={"X"}
+                        ValueType={ValueType.Number}
                         BindNode={NodeField.ConnectX}
                         UnbindNode={NodeField.DisconnectX}
                     />
@@ -83,6 +85,7 @@ export function ConnectableVector2Field({
                         NodeId={NodeId}
                         NodeFieldName={NodeFieldName}
                         ValueName={"Y"}
+                        ValueType={ValueType.Number}
                         BindNode={NodeField.ConnectY}
                         UnbindNode={NodeField.DisconnectY}
                     />

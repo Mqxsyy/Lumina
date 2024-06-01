@@ -1,4 +1,4 @@
-import React from "@rbxts/react";
+import React, { useState } from "@rbxts/react";
 import { SetPosition as SetPositionAPI, SetPositionFieldNames } from "API/Nodes/Initialize/SetPosition";
 import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
 import { AddNode, type NodeData } from "Services/NodesService";
@@ -27,6 +27,7 @@ function SetPosition({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as SetPositionAPI).nodeFields.position}
                 NodeFieldName={SetPositionFieldNames.position}
+                Label={"Position"}
             />
         </Node>
     );

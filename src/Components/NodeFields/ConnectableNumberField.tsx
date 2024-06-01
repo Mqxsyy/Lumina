@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "@rbxts/react";
 import type { ConnectableNumberField as NumberFieldAPI } from "API/Fields/ConnectableNumberField";
+import { ValueType } from "API/Nodes/FieldStates";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
@@ -52,6 +53,7 @@ export default function ConnectableNumberField({
             <ConnectionPointIn
                 NodeId={NodeId}
                 NodeFieldName={NodeFieldName}
+                ValueType={ValueType.Number}
                 BindNode={NodeField.ConnectNode}
                 UnbindNode={NodeField.DisconnectNode}
             />

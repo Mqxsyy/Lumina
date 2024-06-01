@@ -1,4 +1,5 @@
 import React from "@rbxts/react";
+import { ValueType } from "API/Nodes/FieldStates";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Trigonometry as TrigonometryAPI, TrigonometryFieldNames } from "API/Nodes/Logic/Trigonometry";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
@@ -24,9 +25,8 @@ function Trigonometry({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectioNode={data.node as LogicNode}
+            ConnectionValueType={ValueType.Number}
             Width={175}
-            UsePadding={false}
         >
             <StateField NodeField={(data.node as TrigonometryAPI).nodeFields.trigonometryType} />
             <ConnectableNumberField

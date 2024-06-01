@@ -21,35 +21,8 @@ export function CreateSetSize() {
 }
 
 function SetSize({ data }: { data: NodeData }) {
-    const [_, setForceRender] = useState(0);
-
     const calculationTypeRef = useRef((data.node as SetSizeAPI).nodeFields.calculationType);
     const axisTypeRef = useRef((data.node as SetSizeAPI).nodeFields.axisType);
-
-    useEffect(() => {
-        const connection1 = calculationTypeRef.current.FieldChanged.Connect(() => {
-            setForceRender((prev) => prev + 1);
-
-            task.spawn(() => {
-                task.wait();
-                setForceRender((prev) => prev + 1);
-            });
-        });
-
-        const connection2 = axisTypeRef.current.FieldChanged.Connect(() => {
-            setForceRender((prev) => prev + 1);
-
-            task.spawn(() => {
-                task.wait();
-                setForceRender((prev) => prev + 1);
-            });
-        });
-
-        return () => {
-            connection1.Disconnect();
-            connection2.Disconnect();
-        };
-    }, []);
 
     const isUniformConnected = () => {
         return calculationTypeRef.current.GetState() === CalculationType.UniformConnected;

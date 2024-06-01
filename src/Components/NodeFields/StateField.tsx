@@ -3,16 +3,19 @@ import type { StateField as StateFieldAPI } from "API/Fields/StateField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import HighlightableTextButton from "Components/Basic/HighlightableTextButton";
 import Div from "Components/Div";
+import { DestroyConnection } from "Services/ConnectionsService";
 import { EnableDropdown } from "Services/DropdownService";
+import { GetNodeById } from "Services/NodesService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
+    NodeId?: number;
     NodeField: StateFieldAPI;
     Label?: string;
 }
 
-export default function StateField({ NodeField, Label }: Props) {
+export default function StateField({ NodeId, NodeField, Label }: Props) {
     const [_, setForceRender] = useState(0);
 
     const zoomScale = GetZoomScale();
@@ -20,6 +23,15 @@ export default function StateField({ NodeField, Label }: Props) {
 
     useEffect(() => {
         const connection = NodeField.FieldChanged.Connect(() => {
+            if (NodeId !== undefined) {
+                const node = GetNodeById(NodeId);
+                if (node !== undefined) {
+                    for (const connection of node.data.connectionsOut) {
+                        DestroyConnection(connection.id);
+                    }
+                }
+            }
+
             setForceRender((prev) => prev + 1);
         });
 

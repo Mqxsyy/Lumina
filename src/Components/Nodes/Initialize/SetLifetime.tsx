@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "@rbxts/react";
+import React, { useRef } from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { CalculationType } from "API/Nodes/FieldStates";
 import { SetLifetime as SetLifetimeAPI, SetLifetimeFieldNames } from "API/Nodes/Initialize/SetLifetime";
@@ -20,23 +20,7 @@ export function CreateSetLifetime() {
 }
 
 function SetLifetime({ data }: { data: NodeData }) {
-    const [_, setForceRender] = useState(0);
     const calculationTypeRef = useRef((data.node as SetLifetimeAPI).nodeFields.calculationType);
-
-    useEffect(() => {
-        const connection = calculationTypeRef.current.FieldChanged.Connect(() => {
-            setForceRender((prev) => prev + 1);
-
-            task.spawn(() => {
-                task.wait();
-                setForceRender((prev) => prev + 1);
-            });
-        });
-
-        return () => {
-            connection.Disconnect();
-        };
-    }, []);
 
     return (
         <Node

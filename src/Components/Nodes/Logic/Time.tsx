@@ -1,4 +1,5 @@
 import React from "@rbxts/react";
+import { ValueType } from "API/Nodes/FieldStates";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Time as TimeAPI } from "API/Nodes/Logic/Time";
 import Div from "Components/Div";
@@ -24,7 +25,7 @@ function Time({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectioNode={data.node as LogicNode}
+            ConnectionValueType={ValueType.Number}
         >
             <Div Size={UDim2.fromOffset(0, 0)} />
         </Node>

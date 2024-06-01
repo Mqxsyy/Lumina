@@ -1,4 +1,5 @@
 import React from "@rbxts/react";
+import { ValueType } from "API/Nodes/FieldStates";
 import { AliveTime as AliveTimeAPI } from "API/Nodes/Logic/Alivetime";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import Div from "Components/Div";
@@ -24,7 +25,7 @@ function AliveTime({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectioNode={data.node as LogicNode}
+            ConnectionValueType={ValueType.Number}
         >
             <Div Size={UDim2.fromOffset(0, 0)} />
         </Node>
