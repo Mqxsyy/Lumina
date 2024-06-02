@@ -27,6 +27,7 @@ function DirectVelocity({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as DirectVelocityAPI).nodeFields.directon}
                 NodeFieldName={DirectVelocityFieldNames.directon}
+                Label="Direction"
             />
         </Node>
     );

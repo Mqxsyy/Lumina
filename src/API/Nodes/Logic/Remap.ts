@@ -23,8 +23,8 @@ export class Remap extends LogicNode {
 
     Calculate = (data: ParticleData) => {
         const input = this.nodeFields.input.GetNumber(data);
-        const oldRange = this.nodeFields.oldRange.GetVector2(data);
-        const newRange = this.nodeFields.newRange.GetVector2(data);
+        const oldRange = this.nodeFields.oldRange.GetSimpleVector2(data);
+        const newRange = this.nodeFields.newRange.GetSimpleVector2(data);
 
         return RemapValue(input, oldRange.x, oldRange.y, newRange.x, newRange.y);
     };

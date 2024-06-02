@@ -42,6 +42,7 @@ function MoveTowards({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as MoveTowardsAPI).nodeFields.target}
                 NodeFieldName={MoveTowardsFieldNames.intensity}
+                Label={"Target Position"}
             />
             <ConnectableNumberField
                 NodeId={data.node.id}

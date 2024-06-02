@@ -20,7 +20,7 @@ export class Clamp extends LogicNode {
 
     Calculate = (data: ParticleData) => {
         const input = this.nodeFields.input.GetNumber(data);
-        const range = this.nodeFields.range.GetVector2(data);
+        const range = this.nodeFields.range.GetSimpleVector2(data);
 
         return math.clamp(input, range.x, range.y);
     };

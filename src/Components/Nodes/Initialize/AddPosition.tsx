@@ -27,6 +27,7 @@ function AddPosition({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as AddPositionAPI).nodeFields.position}
                 NodeFieldName={AddPositionFieldNames.position}
+                Label="Position"
             />
         </Node>
     );

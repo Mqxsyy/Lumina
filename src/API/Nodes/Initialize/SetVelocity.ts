@@ -48,7 +48,7 @@ export class SetVelocity extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 x = this.nodeFields.velocityX.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeX.GetVector2(data);
+                const range = this.nodeFields.rangeX.GetSimpleVector2(data);
                 x = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
             }
         }
@@ -57,7 +57,7 @@ export class SetVelocity extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 y = this.nodeFields.velocityY.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeY.GetVector2(data);
+                const range = this.nodeFields.rangeY.GetSimpleVector2(data);
                 y = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
             }
         }
@@ -66,7 +66,7 @@ export class SetVelocity extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 z = this.nodeFields.velocityZ.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeZ.GetVector2(data);
+                const range = this.nodeFields.rangeZ.GetSimpleVector2(data);
                 z = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
             }
         }

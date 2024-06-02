@@ -40,6 +40,7 @@ function Clamp({ data }: { data: NodeData }) {
                 NodeFieldName={ClampFieldNames.range}
                 ValueLabels={["Min", "Max"]}
                 AllowNegatives={[true, true]}
+                Label="Range"
             />
         </Node>
     );

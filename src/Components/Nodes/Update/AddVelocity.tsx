@@ -27,6 +27,7 @@ function AddVelocity({ data }: { data: NodeData }) {
                 NodeId={data.node.id}
                 NodeField={(data.node as AddVelocityAPI).nodeFields.velocity}
                 NodeFieldName={AddVelocityFieldNames.velocity}
+                Label="Velocity"
             />
         </Node>
     );

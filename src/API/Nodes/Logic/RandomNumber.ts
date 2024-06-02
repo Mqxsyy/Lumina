@@ -22,7 +22,7 @@ export class RandomNumber extends LogicNode {
     };
 
     Calculate = (data: ParticleData) => {
-        const range = this.nodeFields.range.GetVector2(data);
+        const range = this.nodeFields.range.GetSimpleVector2(data);
         let value = range.x + Rand.NextNumber() * (range.y - range.x);
 
         if (this.nodeFields.isInt.GetBoolean()) {

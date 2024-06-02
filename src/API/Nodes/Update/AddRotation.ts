@@ -56,7 +56,7 @@ export class AddRotation extends UpdateNode {
                 const storedX = this.storedValuesX.get(data.particleId);
 
                 if (storedX === undefined) {
-                    const range = this.nodeFields.rangeX.GetVector2(data);
+                    const range = this.nodeFields.rangeX.GetSimpleVector2(data);
                     x = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
                     this.storedValuesX.set(data.particleId, x);
                 } else {
@@ -72,7 +72,7 @@ export class AddRotation extends UpdateNode {
                 const storedY = this.storedValuesY.get(data.particleId);
 
                 if (storedY === undefined) {
-                    const range = this.nodeFields.rangeY.GetVector2(data);
+                    const range = this.nodeFields.rangeY.GetSimpleVector2(data);
                     y = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
                     this.storedValuesY.set(data.particleId, y);
                 } else {
@@ -88,7 +88,7 @@ export class AddRotation extends UpdateNode {
                 const storedZ = this.storedValuesZ.get(data.particleId);
 
                 if (storedZ === undefined) {
-                    const range = this.nodeFields.rangeZ.GetVector2(data);
+                    const range = this.nodeFields.rangeZ.GetSimpleVector2(data);
                     z = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
                     this.storedValuesZ.set(data.particleId, z);
                 } else {

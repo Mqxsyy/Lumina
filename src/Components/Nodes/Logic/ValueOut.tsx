@@ -4,6 +4,7 @@ import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { ValueOut as ValueOutAPI } from "API/Nodes/Logic/ValueOut";
 import NumberField from "Components/NodeFields/NumberField";
 import StateField from "Components/NodeFields/StateField";
+import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { Vector3Field } from "Components/NodeFields/Vector3Field";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
@@ -36,6 +37,10 @@ function ValueOut({ data }: { data: NodeData }) {
 
             {valueType === ValueType.Number && (
                 <NumberField NodeId={data.node.id} NodeField={(data.node as ValueOutAPI).nodeFields.numberIn} AllowNegative={true} />
+            )}
+
+            {valueType === ValueType.Vector2 && (
+                <Vector2Field NodeId={data.node.id} NodeField={(data.node as ValueOutAPI).nodeFields.vector2In} />
             )}
 
             {valueType === ValueType.Vector3 && (

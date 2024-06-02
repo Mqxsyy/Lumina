@@ -20,8 +20,27 @@ export function CreateSetRotation() {
 }
 
 function SetRotationZ({ data }: { data: NodeData }) {
+    const [_, setForceRender] = useState(0);
+
     const calculationTypeRef = useRef((data.node as SetRotationAPI).nodeFields.calculationType);
     const axisTypeRef = useRef((data.node as SetRotationAPI).nodeFields.axisType);
+
+    useEffect(() => {
+        const connection1 = calculationTypeRef.current.FieldChanged.Connect(() => {
+            task.wait();
+            setForceRender((prev) => prev + 1);
+        });
+
+        const connection2 = axisTypeRef.current.FieldChanged.Connect(() => {
+            task.wait();
+            setForceRender((prev) => prev + 1);
+        });
+
+        return () => {
+            connection1.Disconnect();
+            connection2.Disconnect();
+        };
+    }, []);
 
     const isUniform = () => {
         return calculationTypeRef.current.GetState() === CalculationType.Uniform;
@@ -56,7 +75,7 @@ function SetRotationZ({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rangeX}
                     NodeFieldName={SetRotationFieldNames.rangeX}
-                    Label={IsAxisY(axisType) || IsAxisZ(axisType) ? "X" : undefined}
+                    Label={IsAxisY(axisType) || IsAxisZ(axisType) ? "Range X" : "Range"}
                     ValueLabels={["Min", "Max"]}
                 />
             )}
@@ -74,7 +93,7 @@ function SetRotationZ({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rangeY}
                     NodeFieldName={SetRotationFieldNames.rangeY}
-                    Label={IsAxisX(axisType) || IsAxisZ(axisType) ? "Y" : undefined}
+                    Label={IsAxisX(axisType) || IsAxisZ(axisType) ? "Range Y" : "Range"}
                     ValueLabels={["Min", "Max"]}
                 />
             )}
@@ -92,7 +111,7 @@ function SetRotationZ({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as SetRotationAPI).nodeFields.rangeZ}
                     NodeFieldName={SetRotationFieldNames.rangeZ}
-                    Label={IsAxisX(axisType) || IsAxisY(axisType) ? "Z" : undefined}
+                    Label={IsAxisX(axisType) || IsAxisY(axisType) ? "Range Z" : "Range"}
                     ValueLabels={["Min", "Max"]}
                 />
             )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import type { FastEventConnection } from "API/Bindables/FastEvent";
+import type { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import {
     type ConnectionCollectionEntry,
@@ -23,6 +23,7 @@ interface Props {
     NodeFieldName: string;
     ValueName?: string;
     ValueType: string;
+    DestroyConnectionEvent?: FastEvent;
     BindNode: (boundNode: LogicNode) => void;
     UnbindNode: () => void;
 }
@@ -35,6 +36,7 @@ export default function ConnectionPointIn({
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
     ValueType,
+    DestroyConnectionEvent = undefined,
     BindNode,
     UnbindNode,
 }: Props) {
@@ -137,12 +139,18 @@ export default function ConnectionPointIn({
             setForceRender((prev) => prev + 1);
         });
 
+        let connection2: undefined | FastEventConnection;
+
+        if (DestroyConnectionEvent !== undefined) {
+            connection2 = DestroyConnectionEvent.Connect(() => {
+                if (connectionIdRef.current === -1) return;
+                DestroyConnection(connectionIdRef.current);
+            });
+        }
+
         return () => {
             connection.Disconnect();
-
-            if (connectionIdRef.current !== -1) {
-                DestroyConnection(connectionIdRef.current);
-            }
+            if (connection2 !== undefined) connection2.Disconnect();
         };
     }, []);
 

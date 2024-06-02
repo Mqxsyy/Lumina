@@ -48,7 +48,7 @@ export class SetRotation extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 x = this.nodeFields.rotationX.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeX.GetVector2(data);
+                const range = this.nodeFields.rangeX.GetSimpleVector2(data);
                 x = Rand.NextNumber(range.x, range.y);
             }
         }
@@ -57,7 +57,7 @@ export class SetRotation extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 y = this.nodeFields.rotationY.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeY.GetVector2(data);
+                const range = this.nodeFields.rangeY.GetSimpleVector2(data);
                 y = Rand.NextNumber(range.x, range.y);
             }
         }
@@ -66,7 +66,7 @@ export class SetRotation extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 z = this.nodeFields.rotationZ.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeZ.GetVector2(data);
+                const range = this.nodeFields.rangeZ.GetSimpleVector2(data);
                 z = Rand.NextNumber(range.x, range.y);
             }
         }

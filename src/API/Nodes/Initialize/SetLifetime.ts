@@ -34,7 +34,7 @@ export class SetLifetime extends InitializeNode {
             return;
         }
 
-        const range = this.nodeFields.range.GetVector2(data);
+        const range = this.nodeFields.range.GetSimpleVector2(data);
         const lifetime = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
 
         data.lifetime = lifetime;

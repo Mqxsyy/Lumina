@@ -47,7 +47,7 @@ export class SetSize extends InitializeNode {
         }
 
         if (calculationType === CalculationType.RandomConncted) {
-            const range = this.nodeFields.range.GetVector2(data);
+            const range = this.nodeFields.range.GetSimpleVector2(data);
             const size = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
             data.sizeNormal = new Vector3(size, size, size);
             return;
@@ -62,7 +62,7 @@ export class SetSize extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 x = this.nodeFields.sizeX.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeX.GetVector2(data);
+                const range = this.nodeFields.rangeX.GetSimpleVector2(data);
                 x = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
             }
         }
@@ -71,7 +71,7 @@ export class SetSize extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 y = this.nodeFields.sizeY.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeY.GetVector2(data);
+                const range = this.nodeFields.rangeY.GetSimpleVector2(data);
                 y = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
             }
         }
@@ -80,7 +80,7 @@ export class SetSize extends InitializeNode {
             if (calculationType === CalculationType.Uniform) {
                 z = this.nodeFields.sizeZ.GetNumber(data);
             } else {
-                const range = this.nodeFields.rangeZ.GetVector2(data);
+                const range = this.nodeFields.rangeZ.GetSimpleVector2(data);
                 z = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
             }
         }

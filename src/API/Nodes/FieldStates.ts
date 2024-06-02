@@ -55,5 +55,6 @@ export const OrientationType = {
 
 export const ValueType = {
     Number: "Number",
+    Vector2: "Vector2",
     Vector3: "Vector3",
 };
