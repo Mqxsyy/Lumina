@@ -157,5 +157,9 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Alive Time",
             create: () => CreateBarrel.CreateAliveTime(),
         },
+        [NameBarrel.VectorMathName]: {
+            name: "Vector Math",
+            create: () => CreateBarrel.CreateVectorMath(),
+        },
     },
 };

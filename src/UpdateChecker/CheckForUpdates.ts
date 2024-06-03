@@ -22,8 +22,7 @@ export default function CheckForUpdates(plugin: Plugin) {
     }
 
     const savedVersion = plugin.GetSetting("Version");
-    // at a later date make a nil check, don't want to show log to new users
-    if (savedVersion !== localVersion) {
+    if (savedVersion !== localVersion && savedVersion !== undefined) {
         plugin.SetSetting("Version", localVersion);
         ShowUpdateLog();
     }

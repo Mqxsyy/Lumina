@@ -43,3 +43,4 @@ export { CreateRemap } from "Components/Nodes/Logic/Remap";
 export { CreateTime } from "Components/Nodes/Logic/Time";
 export { CreateTrigonometry } from "Components/Nodes/Logic/Trigonometry";
 export { CreateValueOut } from "Components/Nodes/Logic/ValueOut";
+export { CreateVectorMath } from "Components/Nodes/Logic/VectorMath";

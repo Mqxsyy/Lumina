@@ -43,3 +43,4 @@ export { RemapName } from "API/Nodes/Logic/Remap";
 export { TimeName } from "API/Nodes/Logic/Time";
 export { TrigonometryName } from "API/Nodes/Logic/Trigonometry";
 export { ValueOutName } from "API/Nodes/Logic/ValueOut";
+export { VectorMathName } from "API/Nodes/Logic/VectorMath";
