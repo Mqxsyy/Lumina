@@ -109,6 +109,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
             name: "Move Towards",
             create: () => CreateBarrel.CreateMoveTowards(),
         },
+        [NameBarrel.LookTowardsName]: {
+            name: "Look Towards",
+            create: () => CreateBarrel.CreateLookTowards(),
+        },
     },
     [NodeGroups.Render]: {
         [NameBarrel.PlaneParticleName]: {
@@ -160,6 +164,10 @@ export const NodeList: { [key in NodeGroups]: { [key: string]: SelectionEntry } 
         [NameBarrel.VectorMathName]: {
             name: "Vector Math",
             create: () => CreateBarrel.CreateVectorMath(),
+        },
+        [NameBarrel.GetParentPropertyName]: {
+            name: "Get Parent Property",
+            create: () => CreateBarrel.CreateGetParentProperty(),
         },
     },
 };

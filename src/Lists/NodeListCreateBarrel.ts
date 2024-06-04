@@ -22,6 +22,7 @@ export { CreateAddRotation } from "Components/Nodes/Update/AddRotation";
 export { CreateAddVelocity } from "Components/Nodes/Update/AddVelocity";
 export { CreateBounce } from "Components/Nodes/Update/Bounce";
 export { CreateDrag } from "Components/Nodes/Update/Drag";
+export { CreateLookTowards } from "Components/Nodes/Update/LookTowards";
 export { CreateMoveTowards } from "Components/Nodes/Update/MoveTowards";
 export { CreateMultiplySizeOverLife } from "Components/Nodes/Update/MultiplySizeOverLife";
 export { CreateMultiplyVelocityOverLife } from "Components/Nodes/Update/MultiplyVelocityOverLife";
@@ -38,6 +39,7 @@ export { CreateVolumetricParticle } from "Components/Nodes/Render/VolumetricPart
 export { CreateAliveTime } from "Components/Nodes/Logic/AliveTime";
 export { CreateBasicMathOperation } from "Components/Nodes/Logic/BasicMathOperation";
 export { CreateClamp } from "Components/Nodes/Logic/Clamp";
+export { CreateGetParentProperty } from "Components/Nodes/Logic/GetParentProperty";
 export { CreateRandomNumber } from "Components/Nodes/Logic/RandomNumber";
 export { CreateRemap } from "Components/Nodes/Logic/Remap";
 export { CreateTime } from "Components/Nodes/Logic/Time";

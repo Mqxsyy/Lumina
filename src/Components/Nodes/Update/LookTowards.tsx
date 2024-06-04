@@ -1,15 +1,16 @@
 import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
-import { MoveTowards as MoveTowardsAPI, MoveTowardsFieldNames } from "API/Nodes/Update/MoveTowards";
+import { LookTowards as LookTowardsAPI, LookTowardsFieldNames } from "API/Nodes/Update/LookTowards";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
+import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
-export function CreateMoveTowards() {
-    return AddNode(new MoveTowardsAPI(), (data: NodeData) => {
+export function CreateLookTowards() {
+    return AddNode(new LookTowardsAPI(), (data: NodeData) => {
         return (
-            <MoveTowards
+            <LookTowards
                 key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
                 data={data}
             />
@@ -17,31 +18,26 @@ export function CreateMoveTowards() {
     });
 }
 
-function MoveTowards({ data }: { data: NodeData }) {
+function LookTowards({ data }: { data: NodeData }) {
     return (
         <Node
-            Name="Move Towards"
+            Name="Look Towards"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
+            <StateField NodeField={(data.node as LookTowardsAPI).nodeFields.axisType} />
             <ConnectableVector3Field
                 NodeId={data.node.id}
-                NodeField={(data.node as MoveTowardsAPI).nodeFields.target}
-                NodeFieldName={MoveTowardsFieldNames.intensity}
+                NodeField={(data.node as LookTowardsAPI).nodeFields.target}
+                NodeFieldName={LookTowardsFieldNames.intensity}
                 Label={"Target Position"}
             />
             <ConnectableNumberField
                 NodeId={data.node.id}
-                NodeField={(data.node as MoveTowardsAPI).nodeFields.intensity}
-                NodeFieldName={MoveTowardsFieldNames.intensity}
-                Label={CapitalizeFirstLetter(MoveTowardsFieldNames.intensity)}
-            />
-            <ConnectableNumberField
-                NodeId={data.node.id}
-                NodeField={(data.node as MoveTowardsAPI).nodeFields.speed}
-                NodeFieldName={MoveTowardsFieldNames.speed}
-                Label={CapitalizeFirstLetter(MoveTowardsFieldNames.speed)}
+                NodeField={(data.node as LookTowardsAPI).nodeFields.intensity}
+                NodeFieldName={LookTowardsFieldNames.intensity}
+                Label={CapitalizeFirstLetter(LookTowardsFieldNames.intensity)}
             />
         </Node>
     );

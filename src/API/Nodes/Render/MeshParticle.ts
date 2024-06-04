@@ -88,9 +88,9 @@ export class MeshParticle extends RenderNode {
         meshId: new NumberField(DEFAULT_MESH_ID),
         textureId: new NumberField(DEFAULT_TEXTURE_ID),
         textureSize: new Vector2Field(1024, 1024),
-        spriteSheetRows: new NumberField(16),
-        spriteSheetColumns: new NumberField(4),
-        spriteSheetFrameCount: new NumberField(4),
+        spriteSheetRows: new NumberField(1),
+        spriteSheetColumns: new NumberField(1),
+        spriteSheetFrameCount: new NumberField(1),
     };
 
     objectPool: ObjectPool;

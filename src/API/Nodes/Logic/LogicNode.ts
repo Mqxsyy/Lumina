@@ -7,7 +7,13 @@ export abstract class LogicNode extends Node {
     abstract Calculate: (data: ParticleData) => unknown;
 }
 
-export function AutoGenLogicNode(node: LogicNode, src: Src, wrapper: string, createFields?: (varName: string) => void) {
+export function AutoGenLogicNode(
+    node: LogicNode,
+    src: Src,
+    wrapper: string,
+    createFields?: (varName: string) => void,
+    constructorParams?: string,
+) {
     const nodeName = node.GetNodeName();
 
     const className = `${nodeName}${node.id}`;
@@ -15,7 +21,7 @@ export function AutoGenLogicNode(node: LogicNode, src: Src, wrapper: string, cre
 
     if (string.match(src.value, className)[0] === undefined) {
         src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "${nodeName}").${nodeName} \n`;
-        src.value += `local ${varName} = ${className}.new() \n\n`;
+        src.value += `local ${varName} = ${className}.new(${constructorParams}) \n\n`;
 
         if (createFields !== undefined) {
             createFields(varName);

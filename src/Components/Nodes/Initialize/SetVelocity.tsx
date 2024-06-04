@@ -67,6 +67,7 @@ function SetVelocity({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as SetVelocityAPI).nodeFields.velocityX}
                     NodeFieldName={SetVelocityFieldNames.velocityX}
+                    AllowNegative={true}
                     Label="X"
                 />
             )}
@@ -85,6 +86,7 @@ function SetVelocity({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as SetVelocityAPI).nodeFields.velocityY}
                     NodeFieldName={SetVelocityFieldNames.velocityY}
+                    AllowNegative={true}
                     Label="Y"
                 />
             )}
@@ -103,6 +105,7 @@ function SetVelocity({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as SetVelocityAPI).nodeFields.velocityZ}
                     NodeFieldName={SetVelocityFieldNames.velocityZ}
+                    AllowNegative={true}
                     Label="Z"
                 />
             )}

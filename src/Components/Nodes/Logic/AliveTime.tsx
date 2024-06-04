@@ -1,7 +1,6 @@
 import React from "@rbxts/react";
 import { ValueType } from "API/Nodes/FieldStates";
 import { AliveTime as AliveTimeAPI } from "API/Nodes/Logic/Alivetime";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import Div from "Components/Div";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";

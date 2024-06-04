@@ -14,6 +14,7 @@ interface Props {
     TextXAlignment?: "Left" | "Center" | "Right";
     TextYAlignment?: "Top" | "Center" | "Bottom";
     TextWrapped?: boolean;
+    TextTruncate?: "None" | "AtEnd" | "SplitWord";
     Text: string;
 
     ZIndex?: number;
@@ -32,6 +33,7 @@ export function BasicTextLabel({
     TextXAlignment = "Left",
     TextYAlignment = "Center",
     TextWrapped = false,
+    TextTruncate = "None",
     Text,
     ZIndex = 1,
     IsAffectedByZoom = true,
@@ -53,6 +55,7 @@ export function BasicTextLabel({
             TextXAlignment={TextXAlignment}
             TextYAlignment={TextYAlignment}
             TextWrapped={TextWrapped}
+            TextTruncate={TextTruncate}
             Text={Text}
             ZIndex={ZIndex}
         >

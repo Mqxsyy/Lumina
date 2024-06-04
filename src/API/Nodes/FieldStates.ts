@@ -58,3 +58,12 @@ export const ValueType = {
     Vector2: "Vector2",
     Vector3: "Vector3",
 };
+
+export const PropertyType = {
+    Position: "Position",
+    Size: "Size",
+    Rotation: "Rotation",
+    LookVector: "LookVector",
+    RightVector: "RightVector",
+    UpVector: "UpVector",
+};
