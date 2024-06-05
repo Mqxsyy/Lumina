@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { AddPosition as AddPositionAPI, AddPositionFieldNames } from "API/Nodes/Initialize/AddPosition";
-import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
+import ConnectableVector3Field from "Components/NodeFields/ConnectableVector3Field";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 

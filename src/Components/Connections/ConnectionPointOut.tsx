@@ -27,7 +27,6 @@ export default function ConnectionPointOut({
     Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
     ValueType,
 }: Props) {
-    const [_, setForceRender] = useState(0);
     const [connectionIds, setConnectionIds] = useState<number[]>([]);
     const elementRef = useRef<ImageButton>();
 
@@ -75,37 +74,6 @@ export default function ConnectionPointOut({
         const connectionData = createConnection() as ConnectionData;
         StartMovingConnection(connectionData.id);
     };
-
-    useEffect(() => {
-        const connection = node.elementLoaded.Connect(() => {
-            setForceRender((prev) => prev + 1);
-        });
-
-        return () => {
-            connection.Disconnect();
-        };
-    }, []);
-
-    useEffect(() => {
-        let destroyConnection: FastEventConnection | undefined = nodeData.onDestroy.Connect(() => {
-            if (destroyConnection === undefined) return;
-
-            destroyConnection.Disconnect();
-            destroyConnection = undefined;
-            if (connectionIds.size() !== 0) {
-                UnbindMovingConnection();
-
-                for (const connectionId of connectionIds) {
-                    DestroyConnection(connectionId);
-                }
-            }
-        });
-
-        return () => {
-            if (destroyConnection === undefined) return;
-            destroyConnection.Disconnect();
-        };
-    }, [nodeData.onDestroy, connectionIds]);
 
     useEffect(() => {
         if (elementRef.current === undefined) return;

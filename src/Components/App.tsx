@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
-import { ConnectionsChanged, UnbindMovingConnection } from "Services/ConnectionsService";
+import { UnbindMovingConnection } from "Services/ConnectionsService";
 import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { DisableDropdown, DropdownDataChanged, GetDropdownData } from "Services/DropdownService";
@@ -128,10 +128,6 @@ export function App() {
             setForceRender((prev) => prev + 1);
         });
 
-        const connectionsChangedConnection = ConnectionsChanged.Connect(() => {
-            setForceRender((prev) => prev + 1);
-        });
-
         const dropdownDataChangedConnection = DropdownDataChanged.Connect(() => {
             setForceRender((prev) => prev + 1);
         });
@@ -151,7 +147,6 @@ export function App() {
             canvasDataChangedConnection.Disconnect();
             nodeSystemsChangedConnection.Disconnect();
             nodesChangedConnection.Disconnect();
-            connectionsChangedConnection.Disconnect();
             dropdownDataChangedConnection.Disconnect();
             loadServiceConnection.Disconnect();
         };

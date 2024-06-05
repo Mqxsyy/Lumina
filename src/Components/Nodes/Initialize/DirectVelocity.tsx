@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { DirectVelocity as DirectVelocityAPI, DirectVelocityFieldNames } from "API/Nodes/Initialize/DirectVelocity";
-import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
+import ConnectableVector3Field from "Components/NodeFields/ConnectableVector3Field";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 

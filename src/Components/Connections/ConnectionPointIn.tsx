@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import type { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import { ReloadConnectionVisuals } from "Components/Events";
 import {
     type ConnectionCollectionEntry,
     type ConnectionData,
@@ -23,7 +24,6 @@ interface Props {
     NodeFieldName: string;
     ValueName?: string;
     ValueType: string;
-    DestroyConnectionEvent?: FastEvent;
     BindNode: (boundNode: LogicNode) => void;
     UnbindNode: () => void;
 }
@@ -36,12 +36,9 @@ export default function ConnectionPointIn({
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
     ValueType,
-    DestroyConnectionEvent = undefined,
     BindNode,
     UnbindNode,
 }: Props) {
-    const [_, setForceRender] = useState(0);
-
     const [connectionId, setConnectionId] = useState(-1);
     const connectionIdRef = useRef(-1);
 
@@ -99,11 +96,19 @@ export default function ConnectionPointIn({
         });
 
         BindNode(connectionData.startNode.node as LogicNode);
+
+        coroutine.wrap(() => {
+            task.wait();
+            ReloadConnectionVisuals.Fire();
+        })();
     };
 
     const mouseButton1Down = () => {
         if (connectionId === -1) return;
         DestroyConnection(connectionId);
+
+        task.wait();
+        ReloadConnectionVisuals.Fire();
     };
 
     const mouseButton1Up = () => {
@@ -133,26 +138,6 @@ export default function ConnectionPointIn({
             break;
         }
     });
-
-    useEffect(() => {
-        const connection = node.elementLoaded.Connect(() => {
-            setForceRender((prev) => prev + 1);
-        });
-
-        let connection2: undefined | FastEventConnection;
-
-        if (DestroyConnectionEvent !== undefined) {
-            connection2 = DestroyConnectionEvent.Connect(() => {
-                if (connectionIdRef.current === -1) return;
-                DestroyConnection(connectionIdRef.current);
-            });
-        }
-
-        return () => {
-            connection.Disconnect();
-            if (connection2 !== undefined) connection2.Disconnect();
-        };
-    }, []);
 
     useEffect(() => {
         if (elementRef.current === undefined) return;
@@ -202,7 +187,7 @@ export default function ConnectionPointIn({
             AnchorPoint={AnchorPoint}
             Position={Position}
             Size={Size}
-            ConnectionId={connectionId === -1 ? undefined : connectionId}
+            ConnectionIds={connectionId === -1 ? undefined : [connectionId]}
             GetElementRef={(element) => {
                 elementRef.current = element;
             }}

@@ -2,7 +2,7 @@ import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
 import { MoveTowards as MoveTowardsAPI, MoveTowardsFieldNames } from "API/Nodes/Update/MoveTowards";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
+import ConnectableVector3Field from "Components/NodeFields/ConnectableVector3Field";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -28,20 +28,20 @@ function MoveTowards({ data }: { data: NodeData }) {
             <ConnectableVector3Field
                 NodeId={data.node.id}
                 NodeField={(data.node as MoveTowardsAPI).nodeFields.target}
-                NodeFieldName={MoveTowardsFieldNames.intensity}
+                NodeFieldName={MoveTowardsFieldNames.target}
                 Label={"Target Position"}
             />
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as MoveTowardsAPI).nodeFields.intensity}
                 NodeFieldName={MoveTowardsFieldNames.intensity}
-                Label={CapitalizeFirstLetter(MoveTowardsFieldNames.intensity)}
+                Label={"Intensity"}
             />
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as MoveTowardsAPI).nodeFields.speed}
                 NodeFieldName={MoveTowardsFieldNames.speed}
-                Label={CapitalizeFirstLetter(MoveTowardsFieldNames.speed)}
+                Label={"Speed"}
             />
         </Node>
     );

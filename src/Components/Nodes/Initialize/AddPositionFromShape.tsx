@@ -4,7 +4,7 @@ import { AddPositionFromShape as AddPositionFromShapeAPI, AddPositionFromShapeFi
 import BooleanField from "Components/NodeFields/BooleanField";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
-import { ConnectableVector3Field } from "Components/NodeFields/ConnectableVector3Field";
+import ConnectableVector3Field from "Components/NodeFields/ConnectableVector3Field";
 import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";

@@ -1,10 +1,8 @@
-import { useEffect, useState } from "@rbxts/react";
-import { FastEvent } from "API/Bindables/FastEvent";
+import { memo, useEffect, useState } from "@rbxts/react";
 import { GetAllConnections } from "Services/ConnectionsService";
+import { ReloadConnectionVisuals } from "./Events";
 
-export const ReloadConnectionVisuals = new FastEvent();
-
-export default function DisplayConnections() {
+function DisplayConnections() {
     const [_, setForceRender] = useState(0);
 
     useEffect(() => {
@@ -21,3 +19,5 @@ export default function DisplayConnections() {
         return connection.create(connection.data);
     });
 }
+
+export default memo(DisplayConnections);

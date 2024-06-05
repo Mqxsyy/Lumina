@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { FastEvent } from "API/Bindables/FastEvent";
 import type { ConnectableVector3Field as Vector3FieldAPI } from "API/Fields/ConnectableVector3Field";
 import { ValueType } from "API/Nodes/FieldStates";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
-import { ReloadConnectionVisuals } from "Components/DisplayConnections";
 import Div from "Components/Div";
+import { GetNodeById, type NodeCollectionEntry } from "Services/NodesService";
 import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
@@ -20,7 +19,7 @@ interface Props {
     AllowNegatives?: [boolean, boolean, boolean];
 }
 
-export function ConnectableVector3Field({
+export default function ConnectableVector3Field({
     NodeId,
     NodeField,
     NodeFieldName,
@@ -30,7 +29,6 @@ export function ConnectableVector3Field({
 }: Props) {
     const [_, setForceRender] = useState(0);
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const collapsedEventRef = useRef(new FastEvent());
     const zoomScale = GetZoomScale();
 
     const wasOpenRef = useRef(false);
@@ -43,7 +41,6 @@ export function ConnectableVector3Field({
     if (!isCollapsed && NodeField.connectedNodeVector3 !== undefined) {
         wasOpenRef.current = !isCollapsed;
         setIsCollapsed(true);
-        collapsedEventRef.current.Fire();
     }
 
     useEffect(() => {
@@ -51,8 +48,13 @@ export function ConnectableVector3Field({
             setForceRender((prev) => prev + 1);
         });
 
+        const connection2 = (GetNodeById(NodeId) as NodeCollectionEntry).data.dataChanged.Connect(() => {
+            setForceRender((prev) => prev + 1);
+        });
+
         return () => {
             connection.Disconnect();
+            connection2.Disconnect();
         };
     }, []);
 
@@ -88,10 +90,6 @@ export function ConnectableVector3Field({
                         Event={{
                             MouseButton1Down: () => {
                                 setIsCollapsed(!isCollapsed);
-                                collapsedEventRef.current.Fire();
-
-                                task.wait();
-                                ReloadConnectionVisuals.Fire();
                             },
                         }}
                     />
@@ -111,7 +109,6 @@ export function ConnectableVector3Field({
                             NodeFieldName={NodeFieldName}
                             ValueName={"X"}
                             ValueType={ValueType.Number}
-                            DestroyConnectionEvent={collapsedEventRef.current}
                             BindNode={NodeField.ConnectX}
                             UnbindNode={NodeField.DisconnectX}
                         />
@@ -136,7 +133,6 @@ export function ConnectableVector3Field({
                             NodeFieldName={NodeFieldName}
                             ValueName={"Y"}
                             ValueType={ValueType.Number}
-                            DestroyConnectionEvent={collapsedEventRef.current}
                             BindNode={NodeField.ConnectY}
                             UnbindNode={NodeField.DisconnectY}
                         />
@@ -161,7 +157,6 @@ export function ConnectableVector3Field({
                             NodeFieldName={NodeFieldName}
                             ValueName={"Z"}
                             ValueType={ValueType.Number}
-                            DestroyConnectionEvent={collapsedEventRef.current}
                             BindNode={NodeField.ConnectZ}
                             UnbindNode={NodeField.DisconnectZ}
                         />

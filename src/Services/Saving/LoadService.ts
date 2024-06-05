@@ -1,4 +1,4 @@
-import { HttpService } from "@rbxts/services";
+import { HttpService, RunService } from "@rbxts/services";
 import { FastEvent } from "API/Bindables/FastEvent";
 import { API_VERSION } from "API/ExportAPI";
 import { NodeGroups } from "API/NodeGroup";
@@ -88,7 +88,7 @@ export function LoadFromFile() {
         });
     }
 
-    task.wait(0.1); // adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
+    RunService.RenderStepped.Wait(); // adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
 
     // connections
     for (const cachedNode1 of cachedNodes) {
