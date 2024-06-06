@@ -125,10 +125,8 @@ export class MeshParticle extends RenderNode {
             node.Update(data, 0.0167);
         }
 
-        if (data.rotation !== Vector3.zero) {
-            const rot = data.rotation;
-            const [x, y, z] = [math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z)];
-            particle.CFrame = particle.CFrame.mul(CFrame.Angles(x, y, z));
+        if (data.rotation !== CFrameZero) {
+            particle.CFrame = particle.CFrame.mul(data.rotation);
         }
 
         UpdateParticleProperties(data);
@@ -170,10 +168,8 @@ export class MeshParticle extends RenderNode {
 
                     let cf = new CFrame(pos);
 
-                    if (aliveParticleData.rotation !== Vector3.zero) {
-                        const rot = aliveParticleData.rotation;
-                        const [x, y, z] = [math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z)];
-                        cf = cf.mul(CFrame.Angles(x, y, z));
+                    if (aliveParticleData.rotation !== CFrameZero) {
+                        cf = cf.mul(aliveParticleData.rotation);
                     }
 
                     movedParticles.push(aliveParticleData.particle);

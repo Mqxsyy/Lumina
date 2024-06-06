@@ -88,7 +88,7 @@ export function LoadFromFile() {
         });
     }
 
-    RunService.RenderStepped.Wait(); // adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
+    task.wait(0.1); // adding wait is bad, but without it connections load before nodes and there's some weirdness with nodes not detecting existing connections
 
     // connections
     for (const cachedNode1 of cachedNodes) {

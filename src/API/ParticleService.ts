@@ -1,4 +1,5 @@
 import { IdPool } from "./IdPool";
+import { CFrameZero } from "./Lib";
 import type { UpdateNode } from "./Nodes/Update/UpdateNode";
 
 export enum ParticleTypes {
@@ -22,7 +23,7 @@ export interface ParticleData {
     velocityMultiplier: Vector3;
     nextPos: Vector3 | undefined;
 
-    rotation: Vector3;
+    rotation: CFrame;
     transparency: number;
     color: Color3;
     emission: number;
@@ -59,7 +60,7 @@ export function CreateParticleData(
         velocityNormal: Vector3.zero,
         velocityMultiplier: Vector3.one,
         nextPos: undefined,
-        rotation: Vector3.zero,
+        rotation: CFrameZero,
         transparency: 0,
         color: new Color3(1, 1, 1),
         updateNodes,

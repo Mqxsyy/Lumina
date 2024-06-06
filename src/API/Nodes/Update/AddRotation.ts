@@ -98,7 +98,7 @@ export class AddRotation extends UpdateNode {
         }
 
         const currentRotation = data.rotation;
-        data.rotation = new Vector3(currentRotation.X + x * dt, currentRotation.Y + y * dt, currentRotation.Z + z * dt);
+        data.rotation = CFrame.Angles(currentRotation.X + x * dt, currentRotation.Y + y * dt, currentRotation.Z + z * dt);
     }
 
     GetNodeName(): string {

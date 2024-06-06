@@ -71,7 +71,7 @@ export class SetRotation extends InitializeNode {
             }
         }
 
-        data.rotation = new Vector3(x, y, z);
+        data.rotation = CFrame.Angles(x, y, z);
     }
 
     GetNodeName(): string {

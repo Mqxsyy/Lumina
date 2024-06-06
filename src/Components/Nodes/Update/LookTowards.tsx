@@ -38,6 +38,12 @@ function LookTowards({ data }: { data: NodeData }) {
                 NodeFieldName={LookTowardsFieldNames.intensity}
                 Label={"Intensity"}
             />
+            <ConnectableVector3Field
+                NodeId={data.node.id}
+                NodeField={(data.node as LookTowardsAPI).nodeFields.rotationAdjustment}
+                NodeFieldName={LookTowardsFieldNames.rotationAdjustment}
+                Label={"Rotation Adjustment"}
+            />
         </Node>
     );
 }
