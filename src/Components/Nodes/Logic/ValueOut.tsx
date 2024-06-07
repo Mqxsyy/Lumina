@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "@rbxts/react";
+import React, { useRef } from "@rbxts/react";
 import { ValueType } from "API/Nodes/FieldStates";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { ValueOut as ValueOutAPI } from "API/Nodes/Logic/ValueOut";
 import NumberField from "Components/NodeFields/NumberField";
 import StateField from "Components/NodeFields/StateField";

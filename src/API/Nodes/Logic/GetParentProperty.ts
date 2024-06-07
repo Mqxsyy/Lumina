@@ -1,22 +1,16 @@
 import { RunService } from "@rbxts/services";
 import { StateField } from "API/Fields/StateField";
-import { NodeGroups } from "API/NodeGroup";
-import type { Src } from "API/VFXScriptCreator";
 import { PropertyType } from "../FieldStates";
-import { AutoGenLogicNode, LogicNode } from "./LogicNode";
+import { LogicNode } from "./LogicNode";
 
 let Selection: Selection | undefined;
 if (RunService.IsStudio()) {
     Selection = game.GetService("Selection");
 }
 
-export const GetParentPropertyName = "GetParentProperty";
-export const GetParentPropertyFieldNames = {
-    propertyType: "propertyType",
-};
-
 export class GetParentProperty extends LogicNode {
-    nodeGroup: NodeGroups = NodeGroups.Logic;
+    static className = "GetParentProperty";
+
     nodeFields = {
         propertyType: new StateField(PropertyType, PropertyType.Position),
     };
@@ -81,19 +75,7 @@ export class GetParentProperty extends LogicNode {
         }
     }
 
-    GetNodeName(): string {
-        return GetParentPropertyName;
-    }
-
-    GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenLogicNode(
-            this,
-            src,
-            wrapper,
-            (varName) => {
-                this.nodeFields.propertyType.AutoGenerateField(`${varName}.nodeFields.propertyType`, src);
-            },
-            "script.Parent",
-        );
+    GetClassName(): string {
+        return GetParentProperty.className;
     }
 }

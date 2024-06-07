@@ -1,20 +1,12 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { RemapValue } from "API/Lib";
-import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenLogicNode, LogicNode } from "./LogicNode";
-
-export const RemapName = "Remap";
-export const RemapFieldNames = {
-    input: "input",
-    oldRange: "oldRange",
-    newRange: "newRange",
-};
+import { LogicNode } from "./LogicNode";
 
 export class Remap extends LogicNode {
-    nodeGroup: NodeGroups = NodeGroups.Logic;
+    static className = "Remap";
+
     nodeFields = {
         input: new ConnectableNumberField(0.5),
         oldRange: new ConnectableVector2Field(0, 1),
@@ -29,15 +21,7 @@ export class Remap extends LogicNode {
         return RemapValue(input, oldRange.x, oldRange.y, newRange.x, newRange.y);
     };
 
-    GetNodeName(): string {
-        return RemapName;
-    }
-
-    GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenLogicNode(this, src, wrapper, (varName) => {
-            this.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
-            this.nodeFields.oldRange.AutoGenerateField(`${varName}.nodeFields.oldRange`, src);
-            this.nodeFields.newRange.AutoGenerateField(`${varName}.nodeFields.newRange`, src);
-        });
+    GetClassName(): string {
+        return Remap.className;
     }
 }

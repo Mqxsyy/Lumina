@@ -1,17 +1,12 @@
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenAddToSystem, AutoGenImport } from "../AutoGenLib";
+import { NodeGroups } from "API/NodeGroup";
 import { Node } from "../Node";
 
 export abstract class SpawnNode extends Node {
-    abstract GetValue: () => number;
-}
+    static nodeGroups = [NodeGroups.Spawn];
 
-export function AutoGenSpawnNode(node: SpawnNode, src: Src, createFields?: (varName: string) => void) {
-    const varName = AutoGenImport(node, src);
-
-    if (createFields !== undefined) {
-        createFields(varName);
+    GetNodeGroups(): NodeGroups[] {
+        return SpawnNode.nodeGroups;
     }
 
-    AutoGenAddToSystem(varName, src);
+    abstract GetValue: () => number;
 }

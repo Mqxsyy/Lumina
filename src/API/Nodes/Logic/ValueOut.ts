@@ -2,21 +2,12 @@ import { NumberField } from "API/Fields/NumberField";
 import { StateField } from "API/Fields/StateField";
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { Vector3Field } from "API/Fields/Vector3Field";
-import { NodeGroups } from "API/NodeGroup";
-import type { Src } from "API/VFXScriptCreator";
 import { ValueType } from "../FieldStates";
-import { AutoGenLogicNode, LogicNode } from "./LogicNode";
-
-export const ValueOutName = "ValueOut";
-export const NumberOutFieldNames = {
-    valueType: "valueType",
-    numberIn: "numberIn",
-    vector2In: "vector2In",
-    vector3In: "vector3In",
-};
+import { LogicNode } from "./LogicNode";
 
 export class ValueOut extends LogicNode {
-    nodeGroup: NodeGroups = NodeGroups.Logic;
+    static className = "ValueOut";
+
     nodeFields = {
         valueType: new StateField(ValueType, ValueType.Number),
         numberIn: new NumberField(0),
@@ -42,16 +33,7 @@ export class ValueOut extends LogicNode {
         return value;
     };
 
-    GetNodeName(): string {
-        return ValueOutName;
-    }
-
-    GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenLogicNode(this, src, wrapper, (varName) => {
-            this.nodeFields.valueType.AutoGenerateField(`${varName}.nodeFields.valueType`, src);
-            this.nodeFields.numberIn.AutoGenerateField(`${varName}.nodeFields.numberIn`, src);
-            this.nodeFields.vector2In.AutoGenerateField(`${varName}.nodeFields.vector2In`, src);
-            this.nodeFields.vector3In.AutoGenerateField(`${varName}.nodeFields.vector3In`, src);
-        });
+    GetClassName(): string {
+        return ValueOut.className;
     }
 }

@@ -1,6 +1,5 @@
 import React from "@rbxts/react";
 import { ValueType } from "API/Nodes/FieldStates";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
 import { Time as TimeAPI } from "API/Nodes/Logic/Time";
 import Div from "Components/Div";
 import { AddNode, type NodeData } from "Services/NodesService";

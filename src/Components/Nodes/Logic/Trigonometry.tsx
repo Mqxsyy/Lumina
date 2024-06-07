@@ -1,7 +1,6 @@
 import React from "@rbxts/react";
 import { ValueType } from "API/Nodes/FieldStates";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
-import { Trigonometry as TrigonometryAPI, TrigonometryFieldNames } from "API/Nodes/Logic/Trigonometry";
+import { Trigonometry as TrigonometryAPI } from "API/Nodes/Logic/Trigonometry";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
@@ -32,7 +31,7 @@ function Trigonometry({ data }: { data: NodeData }) {
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as TrigonometryAPI).nodeFields.input}
-                NodeFieldName={TrigonometryFieldNames.input}
+                NodeFieldName={"input"}
                 AllowNegative={true}
             />
         </Node>

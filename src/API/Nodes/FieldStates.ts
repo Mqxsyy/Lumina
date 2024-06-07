@@ -30,6 +30,11 @@ export const TrigonometryType = {
     Tan: "Tan",
 };
 
+export const NodeOperationType = {
+    Set: "Set",
+    Add: "Add",
+};
+
 export const SpaceType = {
     WorldSpace: "World Space",
     LocalSpace: "Local Space",

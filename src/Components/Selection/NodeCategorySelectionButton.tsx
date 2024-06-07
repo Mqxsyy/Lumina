@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import type { SelectionEntry } from "API/Nodes/SelectionEntry";
+import type { Entry, SelectionEntry } from "API/Nodes/SelectionEntry";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { StyleColors, StyleProperties } from "Style";
 import Div from "../Div";
@@ -7,15 +7,15 @@ import { NodeSelectionButton } from "./NodeSelectionButton";
 
 interface Props {
     Text: string;
-    NodeCategory: { [key: string]: SelectionEntry };
+    Nodes: Entry[];
     CategoryUnhoverFunctions: (() => void)[];
     ToggleSelection: () => void;
     ExposeUnhover: (fn: () => void) => void;
 }
 
-export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhoverFunctions, ToggleSelection, ExposeUnhover }: Props) {
+export function NodeCategorySelectionButton({ Text, Nodes, CategoryUnhoverFunctions, ToggleSelection, ExposeUnhover }: Props) {
     const [hovering, setHovering] = useState(false);
-    const [nodes, setNodes] = useState([] as SelectionEntry[]);
+    const [nodes, setNodes] = useState([] as Entry[]);
 
     const isHoveringButtonRef = useRef(false);
     const isHoveringSelectionRef = useRef(false);
@@ -49,9 +49,8 @@ export function NodeCategorySelectionButton({ Text, NodeCategory, CategoryUnhove
     useEffect(() => {
         const nodes = [];
 
-        for (const [_, v] of pairs(NodeCategory)) {
-            if (v.create === undefined) continue;
-            nodes.push(v);
+        for (const node of Nodes) {
+            nodes.push(node);
         }
 
         ExposeUnhover(() => {

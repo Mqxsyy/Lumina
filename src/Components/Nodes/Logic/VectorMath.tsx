@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { MathOperationType, ValueType } from "API/Nodes/FieldStates";
-import { VectorMath as VectorMathAPI, VectorMathFieldNames } from "API/Nodes/Logic/VectorMath";
-import Div from "Components/Div";
+import { VectorMath as VectorMathAPI } from "API/Nodes/Logic/VectorMath";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import ConnectableVector3Field from "Components/NodeFields/ConnectableVector3Field";
 import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
-import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
 
 export function CreateVectorMath() {
@@ -83,7 +81,7 @@ function VectorMath({ data }: { data: NodeData }) {
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as VectorMathAPI).nodeFields.vector2A}
-                    NodeFieldName={VectorMathFieldNames.vector2A}
+                    NodeFieldName={"vector2A"}
                     Label={"A"}
                 />
             )}
@@ -91,7 +89,7 @@ function VectorMath({ data }: { data: NodeData }) {
                 <ConnectableVector3Field
                     NodeId={data.node.id}
                     NodeField={(data.node as VectorMathAPI).nodeFields.vector3A}
-                    NodeFieldName={VectorMathFieldNames.vector3A}
+                    NodeFieldName={"vector3A"}
                     Label={"A"}
                 />
             )}
@@ -101,7 +99,7 @@ function VectorMath({ data }: { data: NodeData }) {
                 <ConnectableNumberField
                     NodeId={data.node.id}
                     NodeField={(data.node as VectorMathAPI).nodeFields.numberB}
-                    NodeFieldName={VectorMathFieldNames.numberB}
+                    NodeFieldName={"numberB"}
                     Label={"B"}
                 />
             )}
@@ -109,7 +107,7 @@ function VectorMath({ data }: { data: NodeData }) {
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as VectorMathAPI).nodeFields.vector2B}
-                    NodeFieldName={VectorMathFieldNames.vector2B}
+                    NodeFieldName={"vector2B"}
                     Label={"B"}
                 />
             )}
@@ -117,7 +115,7 @@ function VectorMath({ data }: { data: NodeData }) {
                 <ConnectableVector3Field
                     NodeId={data.node.id}
                     NodeField={(data.node as VectorMathAPI).nodeFields.vector3B}
-                    NodeFieldName={VectorMathFieldNames.vector3B}
+                    NodeFieldName={"vector3B"}
                     Label={"B"}
                 />
             )}

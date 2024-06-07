@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { CalculationType } from "API/Nodes/FieldStates";
 import { IsAxisX, IsAxisY, IsAxisZ } from "API/Nodes/FieldStatesLib";
-import { SetSize as SetSizeAPI, SetSizeFieldNames } from "API/Nodes/Initialize/SetSize";
+import { SetSize as SetSizeAPI } from "API/Nodes/Mixed/SetSize";
 import Div from "Components/Div";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
@@ -75,7 +75,7 @@ function SetSize({ data }: { data: NodeData }) {
                 <ConnectableNumberField
                     NodeId={data.node.id}
                     NodeField={(data.node as SetSizeAPI).nodeFields.size}
-                    NodeFieldName={SetSizeFieldNames.size}
+                    NodeFieldName={"size"}
                     Label="Size"
                 />
             )}
@@ -84,7 +84,7 @@ function SetSize({ data }: { data: NodeData }) {
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as SetSizeAPI).nodeFields.range}
-                    NodeFieldName={SetSizeFieldNames.range}
+                    NodeFieldName={"range"}
                     ValueLabels={["Min", "Max"]}
                     Label="Range"
                 />
@@ -96,7 +96,7 @@ function SetSize({ data }: { data: NodeData }) {
                         <ConnectableNumberField
                             NodeId={data.node.id}
                             NodeField={(data.node as SetSizeAPI).nodeFields.sizeX}
-                            NodeFieldName={SetSizeFieldNames.sizeX}
+                            NodeFieldName={"sizeX"}
                             Label="X"
                         />
                     )}
@@ -104,7 +104,7 @@ function SetSize({ data }: { data: NodeData }) {
                         <ConnectableVector2Field
                             NodeId={data.node.id}
                             NodeField={(data.node as SetSizeAPI).nodeFields.rangeX}
-                            NodeFieldName={SetSizeFieldNames.rangeX}
+                            NodeFieldName={"rangeX"}
                             Label="X"
                             ValueLabels={["Min", "Max"]}
                         />
@@ -118,7 +118,7 @@ function SetSize({ data }: { data: NodeData }) {
                         <ConnectableNumberField
                             NodeId={data.node.id}
                             NodeField={(data.node as SetSizeAPI).nodeFields.sizeY}
-                            NodeFieldName={SetSizeFieldNames.sizeY}
+                            NodeFieldName={"sizeY"}
                             Label="Y"
                         />
                     )}
@@ -126,7 +126,7 @@ function SetSize({ data }: { data: NodeData }) {
                         <ConnectableVector2Field
                             NodeId={data.node.id}
                             NodeField={(data.node as SetSizeAPI).nodeFields.rangeY}
-                            NodeFieldName={SetSizeFieldNames.rangeY}
+                            NodeFieldName={"rangeY"}
                             Label="Y"
                             ValueLabels={["Min", "Max"]}
                         />
@@ -140,7 +140,7 @@ function SetSize({ data }: { data: NodeData }) {
                         <ConnectableNumberField
                             NodeId={data.node.id}
                             NodeField={(data.node as SetSizeAPI).nodeFields.sizeZ}
-                            NodeFieldName={SetSizeFieldNames.sizeZ}
+                            NodeFieldName={"sizeZ"}
                             Label="Z"
                         />
                     )}
@@ -148,7 +148,7 @@ function SetSize({ data }: { data: NodeData }) {
                         <ConnectableVector2Field
                             NodeId={data.node.id}
                             NodeField={(data.node as SetSizeAPI).nodeFields.rangeZ}
-                            NodeFieldName={SetSizeFieldNames.rangeZ}
+                            NodeFieldName={"rangeZ"}
                             Label="Z"
                             ValueLabels={["Min", "Max"]}
                         />

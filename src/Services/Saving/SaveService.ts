@@ -2,6 +2,7 @@ import { HttpService } from "@rbxts/services";
 import { API_VERSION } from "API/ExportAPI";
 import type { NodeField } from "API/Fields/NodeField";
 import { GetSavesFolder } from "API/FolderLocations";
+import { NodeGroups } from "API/NodeGroup";
 import type { Node } from "API/Nodes/Node";
 import { GetAllSystems, type NodeSystemData } from "Services/NodeSystemService";
 import { GetAllNodes, GetNodeById, type NodeConnectionIn } from "Services/NodesService";
@@ -32,7 +33,6 @@ export function SaveToFile() {
 
         const serializedNode: SerializedFloatingNode = {
             ...SerializeNode(node),
-            nodeGroup: node.nodeGroup,
             anchorPoint: { x: anchorPoint.X, y: anchorPoint.Y },
         };
 
@@ -100,7 +100,7 @@ export function SerializeNode(node: Node, ignoreConnections = false): Serialized
     const nodeData = collectionEntry.data;
 
     const serializedNode: SerializedNode = {
-        nodeName: node.GetNodeName(),
+        className: node.GetClassName(),
         fields: SerializeFields(node.nodeFields, ignoreConnections ? undefined : nodeData.connectionsIn),
         order: nodeData.node.updateOrder,
     };

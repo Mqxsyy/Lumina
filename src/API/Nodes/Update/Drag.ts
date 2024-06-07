@@ -1,21 +1,15 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
-import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
-
-export const DragName = "Drag";
-export const DragFieldNames = {
-    drag: "drag",
-};
+import { UpdateNode } from "./UpdateNode";
 
 export class Drag extends UpdateNode {
-    nodeGroup: NodeGroups = NodeGroups.Update;
+    static className = "Drag";
+
     nodeFields = {
         drag: new ConnectableNumberField(0),
     };
 
-    Update(data: ParticleData, dt: number) {
+    Run(data: ParticleData, dt: number) {
         const drag = this.nodeFields.drag.GetNumber(data) * dt;
         const oldVelocity = data.velocityNormal;
 
@@ -42,13 +36,7 @@ export class Drag extends UpdateNode {
         data.velocityNormal = new Vector3(x, y, z);
     }
 
-    GetNodeName(): string {
-        return DragName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenUpdateNode(this, src, (varName) => {
-            this.nodeFields.drag.AutoGenerateField(`${varName}.nodeFields.drag`, src);
-        });
+    GetClassName(): string {
+        return Drag.className;
     }
 }

@@ -1,6 +1,5 @@
 import React from "@rbxts/react";
-import { CapitalizeFirstLetter } from "API/Lib";
-import { BurstSpawn as BurstSpawnAPI, BurstSpawnFieldNames } from "API/Nodes/Spawn/BurstSpawn";
+import { BurstSpawn as BurstSpawnAPI } from "API/Nodes/Spawn/BurstSpawn";
 import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
@@ -24,11 +23,7 @@ function BurstSpawn({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <NumberField
-                NodeId={data.node.id}
-                NodeField={(data.node as BurstSpawnAPI).nodeFields.amount}
-                Label={CapitalizeFirstLetter(BurstSpawnFieldNames.amount)}
-            />
+            <NumberField NodeId={data.node.id} NodeField={(data.node as BurstSpawnAPI).nodeFields.amount} Label={"Amount"} />
         </Node>
     );
 }

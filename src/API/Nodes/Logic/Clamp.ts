@@ -1,18 +1,11 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
-import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenLogicNode, LogicNode } from "./LogicNode";
-
-export const ClampName = "Clamp";
-export const ClampFieldNames = {
-    input: "input",
-    range: "range",
-};
+import { LogicNode } from "./LogicNode";
 
 export class Clamp extends LogicNode {
-    nodeGroup: NodeGroups = NodeGroups.Logic;
+    static className = "Clamp";
+
     nodeFields = {
         input: new ConnectableNumberField(0),
         range: new ConnectableVector2Field(0, 1),
@@ -25,14 +18,7 @@ export class Clamp extends LogicNode {
         return math.clamp(input, range.x, range.y);
     };
 
-    GetNodeName(): string {
-        return ClampName;
-    }
-
-    GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenLogicNode(this, src, wrapper, (varName) => {
-            this.nodeFields.input.AutoGenerateField(`${varName}.nodeFields.input`, src);
-            this.nodeFields.range.AutoGenerateField(`${varName}.nodeFields.range`, src);
-        });
+    GetClassName(): string {
+        return Clamp.className;
     }
 }

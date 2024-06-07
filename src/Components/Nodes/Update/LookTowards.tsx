@@ -1,5 +1,5 @@
 import React from "@rbxts/react";
-import { LookTowards as LookTowardsAPI, LookTowardsFieldNames } from "API/Nodes/Update/LookTowards";
+import { LookTowards as LookTowardsAPI } from "API/Nodes/Update/LookTowards";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import ConnectableVector3Field from "Components/NodeFields/ConnectableVector3Field";
 import StateField from "Components/NodeFields/StateField";
@@ -29,19 +29,19 @@ function LookTowards({ data }: { data: NodeData }) {
             <ConnectableVector3Field
                 NodeId={data.node.id}
                 NodeField={(data.node as LookTowardsAPI).nodeFields.target}
-                NodeFieldName={LookTowardsFieldNames.target}
+                NodeFieldName={"target"}
                 Label={"Target Position"}
             />
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as LookTowardsAPI).nodeFields.intensity}
-                NodeFieldName={LookTowardsFieldNames.intensity}
+                NodeFieldName={"intensity"}
                 Label={"Intensity"}
             />
             <ConnectableVector3Field
                 NodeId={data.node.id}
                 NodeField={(data.node as LookTowardsAPI).nodeFields.rotationAdjustment}
-                NodeFieldName={LookTowardsFieldNames.rotationAdjustment}
+                NodeFieldName={"rotationAdjustment"}
                 Label={"Rotation Adjustment"}
             />
         </Node>

@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { CapitalizeFirstLetter } from "API/Lib";
-import { PlaneParticle as PlaneParticleAPI, PlaneParticleFieldNames } from "API/Nodes/Render/PlaneParticle";
+import { PlaneParticle as PlaneParticleAPI } from "API/Nodes/Render/PlaneParticle";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import BooleanField from "Components/NodeFields/BooleanField";
@@ -36,7 +36,7 @@ function PlaneParticle({ data }: { data: NodeData }) {
             <NumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as PlaneParticleAPI).nodeFields.assetId}
-                Label={CapitalizeFirstLetter(PlaneParticleFieldNames.assetId)}
+                Label={"Asset Id"}
                 AllowNegative={false}
             />
             <BooleanField NodeField={(data.node as PlaneParticleAPI).nodeFields.doubleSided} Label={"DoubleSided"} />

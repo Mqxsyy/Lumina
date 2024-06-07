@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "@rbxts/react";
 import { NodeGroups } from "API/NodeGroup";
-import type { SelectionEntry } from "API/Nodes/SelectionEntry";
+import type { Entry, SelectionEntry } from "API/Nodes/SelectionEntry";
 import { NodeList } from "Lists/NodeList";
 import { NodeSystems } from "Lists/SystemsList";
 import { StyleColors, StyleProperties } from "Style";
@@ -17,8 +17,43 @@ interface Props {
     ToggleSelection: () => void;
 }
 
+const spawnNodes: Entry[] = [];
+const initializeNodes: Entry[] = [];
+const updateNodes: Entry[] = [];
+const renderNodes: Entry[] = [];
+const logicNodes: Entry[] = [];
+
+function GetEntries(trg: Entry[], group: NodeGroups) {
+    for (const node of NodeList.filter((n) => n.nodeGroups.findIndex((e) => e === group) !== -1)) {
+        if (node.alternativeEntries !== undefined) {
+            for (const alt of node.alternativeEntries) {
+                trg.push(alt);
+            }
+        } else {
+            trg.push(node.defaultEntry);
+        }
+    }
+}
+
+GetEntries(spawnNodes, NodeGroups.Spawn);
+GetEntries(initializeNodes, NodeGroups.Initialize);
+GetEntries(updateNodes, NodeGroups.Update);
+GetEntries(renderNodes, NodeGroups.Render);
+GetEntries(logicNodes, NodeGroups.Logic);
+
+const allNodes: Entry[] = [];
+for (const node of NodeList) {
+    if (node.alternativeEntries !== undefined) {
+        for (const alt of node.alternativeEntries) {
+            allNodes.push(alt);
+        }
+    } else {
+        allNodes.push(node.defaultEntry);
+    }
+}
+
 export function NodeSelection({ Position, ToggleSelection }: Props) {
-    const [searchedSelection, setSearchedSelection] = useState<SelectionEntry[]>([]);
+    const [searchedSelection, setSearchedSelection] = useState<Entry[]>([]);
     const [displayDefaultCategories, setDisplayDefaultCategories] = useState(true);
     const categoryUnhoverFunctionsRef = useRef<(() => void)[]>([]);
 
@@ -30,23 +65,21 @@ export function NodeSelection({ Position, ToggleSelection }: Props) {
         }
 
         setDisplayDefaultCategories(false);
-        const selectionEntries = [] as SelectionEntry[];
+        const entries = [] as Entry[];
 
-        for (const [_, selectionEntry] of pairs(NodeSystems)) {
-            if (selectionEntry.name.lower().find(text.lower())[0] !== undefined) {
-                selectionEntries.push(selectionEntry);
+        for (const entry of NodeSystems) {
+            if (entry.name.lower().find(text.lower())[0] !== undefined) {
+                entries.push(entry);
             }
         }
 
-        for (const [_, group] of pairs(NodeList)) {
-            for (const [_, selectionEntry] of pairs(group)) {
-                if (selectionEntry.name.lower().find(text.lower())[0] !== undefined) {
-                    selectionEntries.push(selectionEntry);
-                }
+        for (const entry of allNodes) {
+            if (entry.name.lower().find(text.lower())[0] !== undefined) {
+                entries.push(entry);
             }
         }
 
-        setSearchedSelection(selectionEntries);
+        setSearchedSelection(entries);
     };
 
     const getCategoryUnhover = (fn: () => void) => {
@@ -114,42 +147,42 @@ export function NodeSelection({ Position, ToggleSelection }: Props) {
 
                             <NodeCategorySelectionButton
                                 Text="Systems"
-                                NodeCategory={NodeSystems}
+                                Nodes={NodeSystems}
                                 CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
                                 ToggleSelection={ToggleSelection}
                                 ExposeUnhover={getCategoryUnhover}
                             />
                             <NodeCategorySelectionButton
                                 Text="Spawn"
-                                NodeCategory={NodeList[NodeGroups.Spawn]}
+                                Nodes={spawnNodes}
                                 CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
                                 ToggleSelection={ToggleSelection}
                                 ExposeUnhover={getCategoryUnhover}
                             />
                             <NodeCategorySelectionButton
                                 Text="Initialize"
-                                NodeCategory={NodeList[NodeGroups.Initialize]}
+                                Nodes={initializeNodes}
                                 CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
                                 ToggleSelection={ToggleSelection}
                                 ExposeUnhover={getCategoryUnhover}
                             />
                             <NodeCategorySelectionButton
                                 Text="Update"
-                                NodeCategory={NodeList[NodeGroups.Update]}
+                                Nodes={updateNodes}
                                 CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
                                 ToggleSelection={ToggleSelection}
                                 ExposeUnhover={getCategoryUnhover}
                             />
                             <NodeCategorySelectionButton
                                 Text="Render"
-                                NodeCategory={NodeList[NodeGroups.Render]}
+                                Nodes={renderNodes}
                                 CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
                                 ToggleSelection={ToggleSelection}
                                 ExposeUnhover={getCategoryUnhover}
                             />
                             <NodeCategorySelectionButton
                                 Text="Logic"
-                                NodeCategory={NodeList[NodeGroups.Logic]}
+                                Nodes={logicNodes}
                                 CategoryUnhoverFunctions={categoryUnhoverFunctionsRef.current}
                                 ToggleSelection={ToggleSelection}
                                 ExposeUnhover={getCategoryUnhover}

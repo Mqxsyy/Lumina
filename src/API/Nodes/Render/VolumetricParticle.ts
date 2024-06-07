@@ -2,19 +2,12 @@ import { RunService, Workspace } from "@rbxts/services";
 import { StateField } from "API/Fields/StateField";
 import { GetVolumetricParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
-import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
 import { VolumetricParticleShapeType } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
-import { AutoGenRenderNode, RenderNode } from "./RenderNode";
-
-export const VolumetricParticleName = "VolumetricParticle";
-export const VolumetricParticleFieldNames = {
-    shape: "shape",
-};
+import { RenderNode } from "./RenderNode";
 
 const DEFAULT_SIZE = new Vector3(1, 1, 1);
 const DEFAULT_MATERIAL = Enum.Material.SmoothPlastic;
@@ -60,7 +53,8 @@ function UpdateParticleProperties(data: ParticleData) {
 }
 
 export class VolumetricParticle extends RenderNode {
-    nodeGroup = NodeGroups.Render;
+    static className = "VolumetricParticle";
+
     nodeFields = {
         shape: new StateField(VolumetricParticleShapeType, VolumetricParticleShapeType.Cube),
     };
@@ -95,11 +89,11 @@ export class VolumetricParticle extends RenderNode {
         const data = CreateParticleData(id, ParticleTypes.Cube, particle, updateNodes);
 
         for (const node of initializeNodes) {
-            node.Initialize(data);
+            node.Run(data);
         }
 
         for (const node of updateNodes) {
-            node.Update(data, 0.0167);
+            node.Run(data, 0.0167);
         }
 
         if (data.rotation !== CFrameZero) {
@@ -136,7 +130,7 @@ export class VolumetricParticle extends RenderNode {
                 }
 
                 for (const updateNode of aliveParticleData.updateNodes) {
-                    updateNode.Update(aliveParticleData, dt);
+                    updateNode.Run(aliveParticleData, dt);
                 }
 
                 if (aliveParticleData.velocityNormal !== Vector3.zero) {
@@ -174,13 +168,7 @@ export class VolumetricParticle extends RenderNode {
         this.objectPool.ClearStandby();
     }
 
-    GetNodeName() {
-        return VolumetricParticleName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenRenderNode(this, src, (varName) => {
-            this.nodeFields.shape.AutoGenerateField(`${varName}.nodeFields.shape`, src);
-        });
+    GetClassName() {
+        return VolumetricParticle.className;
     }
 }

@@ -1,21 +1,15 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
-import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
-
-export const AccelerateName = "Accelerate";
-export const AccelerateFieldNames = {
-    acceleration: "acceleration",
-};
+import { UpdateNode } from "./UpdateNode";
 
 export class Accelerate extends UpdateNode {
-    nodeGroup: NodeGroups = NodeGroups.Update;
+    static className = "Accelerate";
+
     nodeFields = {
         acceleration: new ConnectableNumberField(0),
     };
 
-    Update(data: ParticleData, dt: number) {
+    Run(data: ParticleData, dt: number) {
         const acceleration = this.nodeFields.acceleration.GetNumber(data) * dt;
         const oldVelocity = data.velocityNormal;
 
@@ -26,13 +20,7 @@ export class Accelerate extends UpdateNode {
         data.velocityNormal = new Vector3(x, y, z);
     }
 
-    GetNodeName(): string {
-        return AccelerateName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenUpdateNode(this, src, (varName) => {
-            this.nodeFields.acceleration.AutoGenerateField(`${varName}.nodeFields.acceleration`, src);
-        });
+    GetClassName(): string {
+        return Accelerate.className;
     }
 }

@@ -1,14 +1,13 @@
 import React from "@rbxts/react";
-import { CapitalizeFirstLetter } from "API/Lib";
-import { SetEmission as SetEmissionAPI, SetEmissionFieldNames } from "API/Nodes/Initialize/SetEmission";
+import { SetTransparency as SetTransparencyAPI } from "API/Nodes/Mixed/SetTransparency";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
-export function CreateSetEmission() {
-    return AddNode(new SetEmissionAPI(), (data: NodeData) => {
+export function CreateSetTransparency() {
+    return AddNode(new SetTransparencyAPI(), (data: NodeData) => {
         return (
-            <SetEmission
+            <SetTransparency
                 key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
                 data={data}
             />
@@ -16,19 +15,19 @@ export function CreateSetEmission() {
     });
 }
 
-function SetEmission({ data }: { data: NodeData }) {
+function SetTransparency({ data }: { data: NodeData }) {
     return (
         <Node
-            Name="Set Emission"
+            Name="Set Transparency"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
             <ConnectableNumberField
                 NodeId={data.node.id}
-                NodeField={(data.node as SetEmissionAPI).nodeFields.emission}
-                NodeFieldName={SetEmissionFieldNames.emission}
-                Label={CapitalizeFirstLetter(SetEmissionFieldNames.emission)}
+                NodeField={(data.node as SetTransparencyAPI).nodeFields.transparency}
+                NodeFieldName={"transparency"}
+                Label={"Transparency"}
             />
         </Node>
     );

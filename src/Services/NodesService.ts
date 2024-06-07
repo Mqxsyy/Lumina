@@ -104,7 +104,7 @@ export function RemoveNode(id: number) {
     const index = NodeCollection.findIndex((collection) => collection.data.node.id === id);
     if (index !== -1) {
         const node = NodeCollection[index];
-        if (node.data.node.nodeGroup === NodeGroups.Render) {
+        if (node.data.node.GetNodeGroups().findIndex((g) => g === NodeGroups.Render) !== -1) {
             (node.data.node as RenderNode).Destroy();
         }
 

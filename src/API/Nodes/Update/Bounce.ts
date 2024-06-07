@@ -1,22 +1,14 @@
 import { Workspace } from "@rbxts/services";
 import { BooleanField } from "API/Fields/BooleanField";
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
-import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
 import { UpdatePrioriy } from "../Node";
-import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
-
-export const BounceName = "Bounce";
-export const BounceFieldNames = {
-    velocityMultiplier: "velocityMultiplier",
-    limitBounces: "limitBounces",
-    maxBounces: "maxBounces",
-};
+import { UpdateNode } from "./UpdateNode";
 
 export class Bounce extends UpdateNode {
+    static className = "Bounce";
+
     updatePriority = UpdatePrioriy.Last;
-    nodeGroup = NodeGroups.Update;
     nodeFields = {
         velocityMultiplier: new ConnectableNumberField(1),
         limitBounces: new BooleanField(false),
@@ -70,7 +62,7 @@ export class Bounce extends UpdateNode {
         return [reflectedVelocityNormal, reflectedPos];
     }
 
-    Update(data: ParticleData, dt: number) {
+    Run(data: ParticleData, dt: number) {
         const result = this.CheckReflection(data, dt);
         if (result === undefined) return;
 
@@ -80,15 +72,7 @@ export class Bounce extends UpdateNode {
         data.nextPos = reflectedPos;
     }
 
-    GetNodeName(): string {
-        return BounceName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenUpdateNode(this, src, (varName) => {
-            this.nodeFields.velocityMultiplier.AutoGenerateField(`${varName}.nodeFields.velocityMultiplier`, src);
-            this.nodeFields.limitBounces.AutoGenerateField(`${varName}.nodeFields.limitBounces`, src);
-            this.nodeFields.maxBounces.AutoGenerateField(`${varName}.nodeFields.maxBounces`, src);
-        });
+    GetClassName(): string {
+        return Bounce.className;
     }
 }

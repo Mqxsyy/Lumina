@@ -3,23 +3,11 @@ import { NumberField } from "API/Fields/NumberField";
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetMeshParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
-import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
-import { AutoGenRenderNode, RenderNode } from "./RenderNode";
-
-export const MeshParticleName = "MeshParticle";
-export const MeshParticleFieldNames = {
-    meshId: "meshId",
-    textureId: "textureId",
-    textureSize: "textureSize",
-    spriteSheetRows: "spriteSheetRows",
-    spriteSheetColumns: "spriteSheetColumns",
-    spriteSheetFrameCount: "spriteSheetFrameCount",
-};
+import { RenderNode } from "./RenderNode";
 
 const BASE_SIZE = new Vector3(0.001, 0.001, 0.001);
 const DEFAULT_SIZE = new Vector3(1, 1, 1);
@@ -83,7 +71,8 @@ function UpdateParticleProperties(data: ParticleData) {
 }
 
 export class MeshParticle extends RenderNode {
-    nodeGroup = NodeGroups.Render;
+    static className = "MeshParticle";
+
     nodeFields = {
         meshId: new NumberField(DEFAULT_MESH_ID),
         textureId: new NumberField(DEFAULT_TEXTURE_ID),
@@ -118,11 +107,11 @@ export class MeshParticle extends RenderNode {
         const data = CreateParticleData(id, ParticleTypes.Cube, particle, updateNodes);
 
         for (const node of initializeNodes) {
-            node.Initialize(data);
+            node.Run(data);
         }
 
         for (const node of updateNodes) {
-            node.Update(data, 0.0167);
+            node.Run(data, 1);
         }
 
         if (data.rotation !== CFrameZero) {
@@ -159,7 +148,7 @@ export class MeshParticle extends RenderNode {
                 }
 
                 for (const updateNode of aliveParticleData.updateNodes) {
-                    updateNode.Update(aliveParticleData, dt);
+                    updateNode.Run(aliveParticleData, dt);
                 }
 
                 if (aliveParticleData.velocityNormal !== Vector3.zero) {
@@ -197,18 +186,7 @@ export class MeshParticle extends RenderNode {
         this.objectPool.ClearStandby();
     }
 
-    GetNodeName() {
-        return MeshParticleName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenRenderNode(this, src, (varName) => {
-            this.nodeFields.meshId.AutoGenerateField(`${varName}.nodeFields.meshId`, src);
-            this.nodeFields.textureId.AutoGenerateField(`${varName}.nodeFields.textureId`, src);
-            this.nodeFields.textureSize.AutoGenerateField(`${varName}.nodeFields.textureSize`, src);
-            this.nodeFields.spriteSheetRows.AutoGenerateField(`${varName}.nodeFields.spriteSheetRows`, src);
-            this.nodeFields.spriteSheetColumns.AutoGenerateField(`${varName}.nodeFields.spriteSheetColumns`, src);
-            this.nodeFields.spriteSheetFrameCount.AutoGenerateField(`${varName}.nodeFields.spriteSheetFrameCount`, src);
-        });
+    GetClassName() {
+        return MeshParticle.className;
     }
 }

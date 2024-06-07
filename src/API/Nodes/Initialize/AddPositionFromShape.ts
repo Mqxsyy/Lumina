@@ -5,20 +5,8 @@ import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
 import { StateField } from "API/Fields/StateField";
 import { Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { NodeGroups } from "../../NodeGroup";
 import { SpawnShapeType } from "../FieldStates";
-import { AutoGenInitializeNode, InitializeNode } from "./InitializeNode";
-
-export const AddPositionFromShapeName = "AddPositionFromShape";
-export const AddPositionFromShapeFieldNames = {
-    spawnShape: "spawnShape",
-    sizeVec2: "sizeVec2",
-    sizeVec3: "sizeVec3",
-    filled: "filled",
-    edgeWidth: "edgeWidth",
-    rotation: "rotation",
-};
+import { InitializeNode } from "./InitializeNode";
 
 function GetPositionSquare(width: number, height: number, edge: number, filled: boolean) {
     if (filled) {
@@ -156,7 +144,8 @@ function GetPositionSphere(width: number, height: number, depth: number, edgeWid
 }
 
 export class AddPositionFromShape extends InitializeNode {
-    nodeGroup: NodeGroups = NodeGroups.Initialize;
+    static className = "AddPositionFromShape";
+
     nodeFields = {
         spawnShape: new StateField(SpawnShapeType, SpawnShapeType.Square),
         sizeVec2: new ConnectableVector2Field(2, 2),
@@ -166,7 +155,7 @@ export class AddPositionFromShape extends InitializeNode {
         rotation: new ConnectableVector3Field(0, 0, 0),
     };
 
-    Initialize(data: ParticleData) {
+    Run(data: ParticleData) {
         const rotation = this.nodeFields.rotation.GetSimpleVector3(data);
         const rotationCF = CFrame.Angles(math.rad(rotation.x), math.rad(rotation.y), math.rad(rotation.z));
         let position = Vector3.zero;
@@ -210,18 +199,7 @@ export class AddPositionFromShape extends InitializeNode {
         data.particle.CFrame = data.particle.CFrame.mul(rotationCF.mul(new CFrame(position)));
     }
 
-    GetNodeName(): string {
-        return AddPositionFromShapeName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenInitializeNode(this, src, (varName) => {
-            this.nodeFields.spawnShape.AutoGenerateField(`${varName}.nodeFields.spawnShape`, src);
-            this.nodeFields.sizeVec2.AutoGenerateField(`${varName}.nodeFields.sizeVec2`, src);
-            this.nodeFields.sizeVec3.AutoGenerateField(`${varName}.nodeFields.sizeVec3`, src);
-            this.nodeFields.filled.AutoGenerateField(`${varName}.nodeFields.filled`, src);
-            this.nodeFields.edgeWidth.AutoGenerateField(`${varName}.nodeFields.edgeWidth`, src);
-            this.nodeFields.rotation.AutoGenerateField(`${varName}.nodeFields.rotation`, src);
-        });
+    GetClassName(): string {
+        return AddPositionFromShape.className;
     }
 }

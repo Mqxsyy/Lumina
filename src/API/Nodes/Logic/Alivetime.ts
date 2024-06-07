@@ -1,24 +1,16 @@
-import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenLogicNode, LogicNode } from "./LogicNode";
-
-export const AliveTimeName = "AliveTime";
-export const AliveTimeFieldNames = {};
+import { LogicNode } from "./LogicNode";
 
 export class AliveTime extends LogicNode {
-    nodeGroup: NodeGroups = NodeGroups.Logic;
+    static className = "AliveTime";
+
     nodeFields = {};
 
     Calculate = (data: ParticleData) => {
         return data.alivetime;
     };
 
-    GetNodeName(): string {
-        return AliveTimeName;
-    }
-
-    GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenLogicNode(this, src, wrapper);
+    GetClassName(): string {
+        return AliveTime.className;
     }
 }

@@ -1,12 +1,13 @@
 import { NodeGroups } from "API/NodeGroup";
 import { CalculationType } from "API/Nodes/FieldStates";
 import type { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
-import type { SetPosition } from "API/Nodes/Initialize/SetPosition";
-import type { SetVelocity } from "API/Nodes/Initialize/SetVelocity";
-import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
+import type { Position } from "API/Nodes/Mixed/Position";
+import type { Velocity } from "API/Nodes/Mixed/Velocity";
+import { CreatePosition } from "Components/Nodes/Initialize/Position";
+import { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
+import { CreateVelocity } from "Components/Nodes/Mixed/Velocity";
 import { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 import { CreateBurstSpawn } from "Components/Nodes/Spawn/BurstSpawn";
-import { CreateSetLifetime, CreateSetVelocity } from "Lists/NodeListCreateBarrel";
 import { CreateEmptySystem } from "./CreateEmptySystem";
 
 export function CreateBurstSystem() {
@@ -27,19 +28,19 @@ export function CreateBurstSystem() {
             (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetimeRandom.data.node.id);
         });
 
-        const positionNode = CreateSetPosition();
-        (positionNode.data.node as SetPosition).nodeFields.position.SetY(5);
-        positionNode.elementLoaded.Connect(() => {
-            (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(positionNode.data.node.id);
+        const position = CreatePosition();
+        (position.data.node as Position).nodeFields.position.SetY(5);
+        position.elementLoaded.Connect(() => {
+            (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(position.data.node.id);
         });
 
-        const setVelocityRandom = CreateSetVelocity();
-        (setVelocityRandom.data.node as SetVelocity).nodeFields.calculationType.SetState(CalculationType.Random);
-        (setVelocityRandom.data.node as SetVelocity).nodeFields.rangeX.SetVector2(-5, 5);
-        (setVelocityRandom.data.node as SetVelocity).nodeFields.rangeY.SetVector2(-5, 5);
-        (setVelocityRandom.data.node as SetVelocity).nodeFields.rangeZ.SetVector2(-5, 5);
-        setVelocityRandom.elementLoaded.Connect(() => {
-            (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setVelocityRandom.data.node.id);
+        const velocity = CreateVelocity();
+        (velocity.data.node as Velocity).nodeFields.calculationType.SetState(CalculationType.Random);
+        (velocity.data.node as Velocity).nodeFields.rangeX.SetVector2(-5, 5);
+        (velocity.data.node as Velocity).nodeFields.rangeY.SetVector2(-5, 5);
+        (velocity.data.node as Velocity).nodeFields.rangeZ.SetVector2(-5, 5);
+        velocity.elementLoaded.Connect(() => {
+            (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(velocity.data.node.id);
         });
 
         const particlePlane = CreatePlaneParticle();

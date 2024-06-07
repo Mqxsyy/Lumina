@@ -174,7 +174,7 @@ export default function ConnectionPointIn({
             }
 
             if (attempts >= maxAttempts) {
-                warn(`Failed to load connection for node: ${nodeData.node.GetNodeName()}`);
+                warn(`Failed to load connection for node: ${nodeData.node.GetClassName()}`);
             }
 
             nodeData.loadedConnectionsIn = undefined;

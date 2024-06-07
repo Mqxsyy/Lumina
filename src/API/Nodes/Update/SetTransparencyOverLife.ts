@@ -1,32 +1,20 @@
 import { LineGraphField } from "API/Fields/LineGraphField";
-import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenUpdateNode, UpdateNode } from "./UpdateNode";
-
-export const SetTransparencyOverLifeName = "SetTransparencyOverLife";
-export const SetTransparencyOverLifeFieldNames = {
-    graph: "graph",
-};
+import { UpdateNode } from "./UpdateNode";
 
 export class SetTransparencyOverLife extends UpdateNode {
-    nodeGroup: NodeGroups = NodeGroups.Update;
+    static className = "SetTransparencyOverLife";
+
     nodeFields = {
         graph: new LineGraphField(),
     };
 
-    Update(data: ParticleData) {
+    Run(data: ParticleData) {
         const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
         data.transparency = this.nodeFields.graph.GetNumber(lifetime);
     }
 
-    GetNodeName(): string {
-        return SetTransparencyOverLifeName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenUpdateNode(this, src, (varName) => {
-            this.nodeFields.graph.AutoGenerateField(`${varName}.nodeFields.graph`, src);
-        });
+    GetClassName(): string {
+        return SetTransparencyOverLife.className;
     }
 }

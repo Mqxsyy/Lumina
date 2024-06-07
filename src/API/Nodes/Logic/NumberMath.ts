@@ -1,24 +1,22 @@
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { StateField } from "API/Fields/StateField";
-import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
 import { MathOperationType } from "../FieldStates";
-import { AutoGenLogicNode, LogicNode } from "./LogicNode";
+import { LogicNode } from "./LogicNode";
 
-export const BasicMathOperationName = "BasicMathOperation";
-export const BasicMathOperationFieldNames = {
-    a: "a",
-    b: "b",
-};
+export class NumberMath extends LogicNode {
+    static className = "NumberMath";
 
-export class BasicMathOperation extends LogicNode {
-    nodeGroup: NodeGroups = NodeGroups.Logic;
     nodeFields = {
         operationType: new StateField(MathOperationType, MathOperationType.Add),
         a: new ConnectableNumberField(1),
         b: new ConnectableNumberField(0),
     };
+
+    constructor(operationType: string) {
+        super();
+        this.nodeFields.operationType.SetState(operationType);
+    }
 
     Calculate = (data: ParticleData) => {
         const a = this.nodeFields.a.GetNumber(data);
@@ -43,15 +41,7 @@ export class BasicMathOperation extends LogicNode {
         return result;
     };
 
-    GetNodeName(): string {
-        return BasicMathOperationName;
-    }
-
-    GetAutoGenerationCode(src: Src, wrapper: string) {
-        AutoGenLogicNode(this, src, wrapper, (varName) => {
-            this.nodeFields.operationType.AutoGenerateField(`${varName}.nodeFields.operationType`, src);
-            this.nodeFields.a.AutoGenerateField(`${varName}.nodeFields.a`, src);
-            this.nodeFields.b.AutoGenerateField(`${varName}.nodeFields.b`, src);
-        });
+    GetClassName(): string {
+        return NumberMath.className;
     }
 }

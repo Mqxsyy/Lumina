@@ -7,12 +7,10 @@ import { GetPlaneParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { NodeGroups } from "../../NodeGroup";
 import { OrientationType } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
-import { AutoGenRenderNode, RenderNode } from "./RenderNode";
+import { RenderNode } from "./RenderNode";
 
 const DEFAULT_SIZE = new Vector3(1, 1, 0.001);
 
@@ -24,17 +22,6 @@ const DEAD_PARTICLES_CFRAME = new CFrame(0, 10000, 0);
 
 const CANVAS_SIZE = new Vector2(1000, 1000);
 const IMAGE_LABEL_SIZE = new UDim2(1, 0, 1, 0);
-
-export const PlaneParticleName = "PlaneParticle";
-export const PlaneParticleFieldNames = {
-    orientation: "orientation",
-    assetId: "assetId",
-    doubleSided: "doubleSided",
-    imageSize: "imageSize",
-    spriteSheetRows: "spriteSheetRows",
-    spriteSheetColumns: "spriteSheetColumns",
-    spriteSheetFrameCount: "spriteSheetFrameCount",
-};
 
 interface Texture extends SurfaceGui {
     ImageLabel: ImageLabel;
@@ -174,7 +161,8 @@ function UpdateParticleProperties(data: ParticleData) {
 }
 
 export class PlaneParticle extends RenderNode {
-    nodeGroup: NodeGroups = NodeGroups.Render;
+    static className = "PlaneParticle";
+
     nodeFields = {
         orientation: new StateField(OrientationType, OrientationType.FacingCamera),
         assetId: new NumberField(7848741169),
@@ -236,11 +224,11 @@ export class PlaneParticle extends RenderNode {
         }
 
         for (let i = 0; i < orderedInitializeNodes.size(); i++) {
-            orderedInitializeNodes[i].Initialize(data);
+            orderedInitializeNodes[i].Run(data);
         }
 
         for (let i = 0; i < orderedUpdateNodes.size(); i++) {
-            orderedUpdateNodes[i].Update(data, 0.0167); // ideal 60 fps dt
+            orderedUpdateNodes[i].Run(data, 0.0167); // ideal 60 fps dt
         }
 
         const orientation = this.nodeFields.orientation.GetState();
@@ -305,7 +293,7 @@ export class PlaneParticle extends RenderNode {
                 }
 
                 for (let i = 0; i < aliveParticleData.updateNodes.size(); i++) {
-                    aliveParticleData.updateNodes[i].Update(aliveParticleData, dt);
+                    aliveParticleData.updateNodes[i].Run(aliveParticleData, dt);
                 }
 
                 UpdateParticleProperties(aliveParticleData);
@@ -363,20 +351,8 @@ export class PlaneParticle extends RenderNode {
         });
     };
 
-    GetNodeName(): string {
-        return PlaneParticleName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenRenderNode(this, src, (varName) => {
-            this.nodeFields.orientation.AutoGenerateField(`${varName}.nodeFields.orientation`, src);
-            this.nodeFields.assetId.AutoGenerateField(`${varName}.nodeFields.assetId`, src);
-            this.nodeFields.doubleSided.AutoGenerateField(`${varName}.nodeFields.doubleSided`, src);
-            this.nodeFields.imageSize.AutoGenerateField(`${varName}.nodeFields.imageSize`, src);
-            this.nodeFields.spriteSheetRows.AutoGenerateField(`${varName}.nodeFields.spriteSheetRows`, src);
-            this.nodeFields.spriteSheetColumns.AutoGenerateField(`${varName}.nodeFields.spriteSheetColumns`, src);
-            this.nodeFields.spriteSheetFrameCount.AutoGenerateField(`${varName}.nodeFields.spriteSheetFrameCount`, src);
-        });
+    GetClassName(): string {
+        return PlaneParticle.className;
     }
 
     Destroy() {

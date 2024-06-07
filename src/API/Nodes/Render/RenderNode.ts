@@ -1,20 +1,15 @@
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenAddToSystem, AutoGenImport } from "../AutoGenLib";
+import { NodeGroups } from "API/NodeGroup";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import { Node } from "../Node";
 import type { UpdateNode } from "../Update/UpdateNode";
 
 export abstract class RenderNode extends Node {
-    abstract Render: (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => void;
-    abstract Destroy(): void;
-}
+    static nodeGroups = [NodeGroups.Render];
 
-export function AutoGenRenderNode(node: RenderNode, src: Src, createFields?: (varName: string) => void) {
-    const varName = AutoGenImport(node, src);
-
-    if (createFields !== undefined) {
-        createFields(varName);
+    GetNodeGroups(): NodeGroups[] {
+        return RenderNode.nodeGroups;
     }
 
-    AutoGenAddToSystem(varName, src);
+    abstract Render: (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => void;
+    abstract Destroy(): void;
 }

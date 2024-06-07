@@ -3,7 +3,7 @@ import type { Src } from "API/VFXScriptCreator";
 import type { Node } from "./Node";
 
 export function AutoGenImport(node: Node, src: Src) {
-    const nodeName = node.GetNodeName();
+    const nodeName = node.GetClassName();
 
     const className = `${nodeName}${node.id}`;
     const varName = `${LowerFirstLetter(nodeName)}${node.id}`;

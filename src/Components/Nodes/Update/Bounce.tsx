@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "@rbxts/react";
-import { Bounce as BounceAPI, BounceFieldNames } from "API/Nodes/Update/Bounce";
+import { Bounce as BounceAPI } from "API/Nodes/Update/Bounce";
 import BooleanField from "Components/NodeFields/BooleanField";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import NumberField from "Components/NodeFields/NumberField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -35,7 +34,7 @@ function Bounce({ data }: { data: NodeData }) {
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as BounceAPI).nodeFields.velocityMultiplier}
-                NodeFieldName={BounceFieldNames.velocityMultiplier}
+                NodeFieldName={"velocityMultiplier"}
                 Label={"Velocity Multiplier"}
             />
             <BooleanField NodeField={(data.node as BounceAPI).nodeFields.limitBounces} Label={"Limit Bounces"} />
@@ -43,7 +42,7 @@ function Bounce({ data }: { data: NodeData }) {
                 <ConnectableNumberField
                     NodeId={data.node.id}
                     NodeField={(data.node as BounceAPI).nodeFields.maxBounces}
-                    NodeFieldName={BounceFieldNames.maxBounces}
+                    NodeFieldName={"maxBounces"}
                     Label={"Max Bounces"}
                 />
             )}

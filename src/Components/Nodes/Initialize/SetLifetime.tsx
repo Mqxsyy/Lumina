@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { CapitalizeFirstLetter } from "API/Lib";
 import { CalculationType } from "API/Nodes/FieldStates";
-import { SetLifetime as SetLifetimeAPI, SetLifetimeFieldNames } from "API/Nodes/Initialize/SetLifetime";
+import { SetLifetime as SetLifetimeAPI } from "API/Nodes/Initialize/SetLifetime";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import StateField from "Components/NodeFields/StateField";
@@ -47,16 +46,16 @@ function SetLifetime({ data }: { data: NodeData }) {
                 <ConnectableNumberField
                     NodeId={data.node.id}
                     NodeField={(data.node as SetLifetimeAPI).nodeFields.time}
-                    NodeFieldName={SetLifetimeFieldNames.time}
-                    Label={CapitalizeFirstLetter(SetLifetimeFieldNames.time)}
+                    NodeFieldName={"time"}
+                    Label={"Time"}
                 />
             ) : (
                 <ConnectableVector2Field
                     NodeId={data.node.id}
                     NodeField={(data.node as SetLifetimeAPI).nodeFields.range}
-                    NodeFieldName={SetLifetimeFieldNames.range}
-                    ValueLabels={["Min", "Max"]}
+                    NodeFieldName={"range"}
                     Label="Range"
+                    ValueLabels={["Min", "Max"]}
                 />
             )}
         </Node>

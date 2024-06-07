@@ -1,5 +1,5 @@
 import React from "@rbxts/react";
-import { DirectVelocity as DirectVelocityAPI, DirectVelocityFieldNames } from "API/Nodes/Initialize/DirectVelocity";
+import { DirectVelocity as DirectVelocityAPI } from "API/Nodes/Mixed/DirectVelocity";
 import ConnectableVector3Field from "Components/NodeFields/ConnectableVector3Field";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
@@ -25,8 +25,8 @@ function DirectVelocity({ data }: { data: NodeData }) {
         >
             <ConnectableVector3Field
                 NodeId={data.node.id}
-                NodeField={(data.node as DirectVelocityAPI).nodeFields.directon}
-                NodeFieldName={DirectVelocityFieldNames.directon}
+                NodeField={(data.node as DirectVelocityAPI).nodeFields.direction}
+                NodeFieldName={"direction"}
                 Label="Direction"
             />
         </Node>

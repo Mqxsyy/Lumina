@@ -1,7 +1,6 @@
 import React from "@rbxts/react";
 import { ValueType } from "API/Nodes/FieldStates";
-import { Clamp as ClampAPI, ClampFieldNames } from "API/Nodes/Logic/Clamp";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import { Clamp as ClampAPI } from "API/Nodes/Logic/Clamp";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import { AddNode, type NodeData } from "Services/NodesService";
@@ -30,14 +29,14 @@ function Clamp({ data }: { data: NodeData }) {
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as ClampAPI).nodeFields.input}
-                NodeFieldName={ClampFieldNames.input}
+                NodeFieldName={"input"}
                 Label="Input"
                 AllowNegative={true}
             />
             <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as ClampAPI).nodeFields.range}
-                NodeFieldName={ClampFieldNames.range}
+                NodeFieldName={"range"}
                 ValueLabels={["Min", "Max"]}
                 AllowNegatives={[true, true]}
                 Label="Range"
