@@ -88,9 +88,16 @@ export class NodeSystem {
                 });
             } else if (this.spawnNode.GetClassName() === BurstSpawn.className) {
                 const amount = this.spawnNode.GetValue();
-                for (let i = 0; i < amount; i++) {
-                    this.SpawnParticle();
-                }
+                const delay = (this.spawnNode as BurstSpawn).nodeFields.delay.GetNumber();
+
+                task.spawn(() => {
+                    for (let i = 0; i < amount; i++) {
+                        this.SpawnParticle();
+                        if (delay > 0) {
+                            task.wait(delay);
+                        }
+                    }
+                });
             }
         }
     }

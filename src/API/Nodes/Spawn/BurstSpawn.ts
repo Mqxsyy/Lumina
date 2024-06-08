@@ -6,6 +6,7 @@ export class BurstSpawn extends SpawnNode {
 
     nodeFields = {
         amount: new NumberField(20),
+        delay: new NumberField(0),
     };
 
     GetValue = () => {

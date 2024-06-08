@@ -24,6 +24,7 @@ function BurstSpawn({ data }: { data: NodeData }) {
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
             <NumberField NodeId={data.node.id} NodeField={(data.node as BurstSpawnAPI).nodeFields.amount} Label={"Amount"} />
+            <NumberField NodeId={data.node.id} NodeField={(data.node as BurstSpawnAPI).nodeFields.delay} Label={"Delay"} />
         </Node>
     );
 }
