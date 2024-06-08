@@ -204,9 +204,13 @@ export class PlaneParticle extends RenderNode {
             return a.updateOrder < b.updateOrder;
         });
 
-        const orderedUpdateNodes = updateNodes
-            .sort((a, b) => a.updateOrder < b.updateOrder)
-            .sort((a, b) => a.updatePriority < b.updatePriority);
+        const orderedUpdateNodes = updateNodes.sort((a, b) => {
+            if (a.updatePriority !== b.updatePriority) {
+                return a.updatePriority < b.updatePriority;
+            }
+
+            return a.updateOrder < b.updateOrder;
+        });
 
         if (!doubleSided) {
             particle = this.objectPoolOneSided.GetItem() as OneSidedPlaneParticle;
@@ -233,7 +237,7 @@ export class PlaneParticle extends RenderNode {
         }
 
         for (let i = 0; i < orderedUpdateNodes.size(); i++) {
-            orderedUpdateNodes[i].Run(data, 0.0167); // ideal 60 fps dt
+            orderedUpdateNodes[i].Run(data, 1);
         }
 
         UpdateParticleProperties(data);
@@ -295,7 +299,28 @@ export class PlaneParticle extends RenderNode {
                     aliveParticleData.updateNodes[i].Run(aliveParticleData, dt);
                 }
 
-                UpdateParticleProperties(aliveParticleData);
+                if (
+                    aliveParticleData.nextPos !== undefined ||
+                    aliveParticleData.velocityNormal !== Vector3.zero ||
+                    aliveParticleData.rotation !== CFrameZero
+                ) {
+                    let pos: Vector3;
+
+                    if (aliveParticleData.nextPos !== undefined) {
+                        pos = aliveParticleData.nextPos;
+                        aliveParticleData.nextPos = undefined;
+                    } else {
+                        const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
+                        pos = aliveParticleData.particle.Position.add(velocity.mul(dt));
+                    }
+
+                    const cf = CheckOrientation(orientation, pos, aliveParticleData);
+
+                    if (aliveParticleData.particle.CFrame !== cf) {
+                        movedParticles.push(aliveParticleData.particle);
+                        movedParticlesCFrames.push(cf);
+                    }
+                }
 
                 // sprite sheet
                 if (this.nodeFields.spriteSheetFrameCount.GetNumber() >= 1) {
@@ -325,24 +350,7 @@ export class PlaneParticle extends RenderNode {
                     }
                 }
 
-                let cframe = aliveParticleData.particle.CFrame;
-                if (aliveParticleData.nextPos === undefined) {
-                    if (aliveParticleData.velocityNormal !== Vector3.zero) {
-                        const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier).mul(dt);
-                        cframe = new CFrame(aliveParticleData.particle.Position.add(velocity));
-                    }
-                } else {
-                    cframe = new CFrame(aliveParticleData.nextPos);
-                    aliveParticleData.nextPos = undefined;
-                }
-
-                cframe = CheckOrientation(orientation, cframe.Position, aliveParticleData);
-
-                if (aliveParticleData.particle.CFrame !== cframe) {
-                    movedParticles.push(aliveParticleData.particle);
-                    movedParticlesCFrames.push(cframe);
-                }
-
+                UpdateParticleProperties(aliveParticleData);
                 aliveParticleData.alivetime += dt;
             }
 
