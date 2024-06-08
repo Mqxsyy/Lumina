@@ -1,4 +1,3 @@
-import { BooleanField } from "API/Fields/BooleanField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
@@ -9,17 +8,22 @@ export class RandomNumber extends LogicNode {
 
     nodeFields = {
         range: new ConnectableVector2Field(0, 0),
-        isInt: new BooleanField(false),
-        randomizeOnce: new BooleanField(false),
     };
 
-    Calculate = (data: ParticleData) => {
-        const range = this.nodeFields.range.GetSimpleVector2(data);
-        let value = range.x + Rand.NextNumber() * (range.y - range.x);
+    storedValues: Map<number, number> = new Map();
 
-        if (this.nodeFields.isInt.GetBoolean()) {
-            value = math.round(value);
-        }
+    Calculate = (data: ParticleData) => {
+        let value = this.storedValues.get(data.particleId);
+        if (value !== undefined) return value;
+
+        const range = this.nodeFields.range.GetSimpleVector2(data);
+        value = range.x + Rand.NextNumber() * (range.y - range.x);
+
+        this.storedValues.set(data.particleId, value);
+
+        data.isRemoving.Connect(() => {
+            this.storedValues.delete(data.particleId);
+        });
 
         return value;
     };

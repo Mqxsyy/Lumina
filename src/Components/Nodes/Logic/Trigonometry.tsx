@@ -1,13 +1,13 @@
 import React from "@rbxts/react";
-import { ValueType } from "API/Nodes/FieldStates";
+import { TrigonometryType, ValueType } from "API/Nodes/FieldStates";
 import { Trigonometry as TrigonometryAPI } from "API/Nodes/Logic/Trigonometry";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
-export function CreateTrigonometry() {
-    return AddNode(new TrigonometryAPI(), (data: NodeData) => {
+export function CreateTrigonometry(trigonometryType = TrigonometryType.Sin) {
+    return AddNode(new TrigonometryAPI(trigonometryType), (data: NodeData) => {
         return (
             <Trigonometry
                 key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}

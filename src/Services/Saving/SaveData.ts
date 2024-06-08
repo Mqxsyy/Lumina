@@ -23,6 +23,7 @@ export interface SerializedConnection {
 export interface SerializedNode {
     connections?: SerializedConnection[];
     className: string;
+    nodeName?: string; // backwards comaptibility 0.1.2 -> 0.2.0
     fields: SerializedField[];
     order: number;
 }

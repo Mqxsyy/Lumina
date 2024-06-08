@@ -1,5 +1,4 @@
-import { MathOperationType } from "API/Nodes/FieldStates";
-import { AddPositionFromShape } from "API/Nodes/Initialize/AddPositionFromShape";
+import { MathOperationType, TrigonometryType } from "API/Nodes/FieldStates";
 import { SetColor } from "API/Nodes/Initialize/SetColor";
 import { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
 import { AliveTime } from "API/Nodes/Logic/Alivetime";
@@ -8,6 +7,7 @@ import { GetParentProperty } from "API/Nodes/Logic/GetParentProperty";
 import { NumberMath } from "API/Nodes/Logic/NumberMath";
 import { RandomNumber } from "API/Nodes/Logic/RandomNumber";
 import { Remap } from "API/Nodes/Logic/Remap";
+import { Shape } from "API/Nodes/Logic/Shape";
 import { Time } from "API/Nodes/Logic/Time";
 import { Trigonometry } from "API/Nodes/Logic/Trigonometry";
 import { ValueOut } from "API/Nodes/Logic/ValueOut";
@@ -35,7 +35,6 @@ import { MultiplyVelocityOverLife } from "API/Nodes/Update/MultiplyVelocityOverL
 import { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
 import { SetSizeOverLife } from "API/Nodes/Update/SetSizeOverLife";
 import { SetTransparencyOverLife } from "API/Nodes/Update/SetTransparencyOverLife";
-import { CreateAddPositionFromShape } from "Components/Nodes/Initialize/AddPositionFromShape";
 import { CreatePosition } from "Components/Nodes/Initialize/Position";
 import { CreateSetColor } from "Components/Nodes/Initialize/SetColor";
 import { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
@@ -45,6 +44,7 @@ import { CreateClamp } from "Components/Nodes/Logic/Clamp";
 import { CreateGetParentProperty } from "Components/Nodes/Logic/GetParentProperty";
 import { CreateRandomNumber } from "Components/Nodes/Logic/RandomNumber";
 import { CreateRemap } from "Components/Nodes/Logic/Remap";
+import { CreateShape } from "Components/Nodes/Logic/Shape";
 import { CreateTime } from "Components/Nodes/Logic/Time";
 import { CreateTrigonometry } from "Components/Nodes/Logic/Trigonometry";
 import { CreateValueOut } from "Components/Nodes/Logic/ValueOut";
@@ -119,16 +119,16 @@ export const NodeList: SelectionEntry[] = [
         className: Position.className,
         nodeGroups: Position.nodeGroups,
         defaultEntry: {
-            name: "Set Position",
+            name: "Position",
             create: () => CreatePosition(),
         },
     },
     {
-        className: AddPositionFromShape.className,
-        nodeGroups: AddPositionFromShape.nodeGroups,
+        className: Shape.className,
+        nodeGroups: Shape.nodeGroups,
         defaultEntry: {
-            name: "Add Position From Shape",
-            create: () => CreateAddPositionFromShape(),
+            name: "Shape",
+            create: () => CreateShape(),
         },
     },
     {
@@ -292,19 +292,19 @@ export const NodeList: SelectionEntry[] = [
         },
         alternativeEntries: [
             {
-                name: "Add",
+                name: "Add (number)",
                 create: () => CreateNumberMath(MathOperationType.Add),
             },
             {
-                name: "Subtract",
+                name: "Subtract (number)",
                 create: () => CreateNumberMath(MathOperationType.Subtract),
             },
             {
-                name: "Multiply",
+                name: "Multiply (number)",
                 create: () => CreateNumberMath(MathOperationType.Multiply),
             },
             {
-                name: "Divide",
+                name: "Divide (number)",
                 create: () => CreateNumberMath(MathOperationType.Divide),
             },
         ],
@@ -316,6 +316,20 @@ export const NodeList: SelectionEntry[] = [
             name: "Trigonometry",
             create: () => CreateTrigonometry(),
         },
+        alternativeEntries: [
+            {
+                name: "Sin",
+                create: () => CreateTrigonometry(TrigonometryType.Sin),
+            },
+            {
+                name: "Cos",
+                create: () => CreateTrigonometry(TrigonometryType.Cos),
+            },
+            {
+                name: "Tan",
+                create: () => CreateTrigonometry(TrigonometryType.Tan),
+            },
+        ],
     },
     {
         className: Clamp.className,
@@ -364,6 +378,24 @@ export const NodeList: SelectionEntry[] = [
             name: "Vector Math",
             create: () => CreateVectorMath(),
         },
+        alternativeEntries: [
+            {
+                name: "Add (vector)",
+                create: () => CreateVectorMath(MathOperationType.Add),
+            },
+            {
+                name: "Subtract (vector)",
+                create: () => CreateVectorMath(MathOperationType.Subtract),
+            },
+            {
+                name: "Multiply (vector)",
+                create: () => CreateVectorMath(MathOperationType.Multiply),
+            },
+            {
+                name: "Divide (vector)",
+                create: () => CreateVectorMath(MathOperationType.Divide),
+            },
+        ],
     },
     {
         className: GetParentProperty.className,

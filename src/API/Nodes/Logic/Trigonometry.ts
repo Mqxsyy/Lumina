@@ -12,6 +12,11 @@ export class Trigonometry extends LogicNode {
         input: new ConnectableNumberField(0),
     };
 
+    constructor(trigonometryType: string) {
+        super();
+        this.nodeFields.trigonometryType.SetState(trigonometryType);
+    }
+
     Calculate = (data: ParticleData) => {
         const number = this.nodeFields.input.GetNumber(data);
         let result = 0;

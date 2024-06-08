@@ -227,13 +227,14 @@ export class PlaneParticle extends RenderNode {
             orderedInitializeNodes[i].Run(data);
         }
 
+        const orientation = this.nodeFields.orientation.GetState();
+        if (data.nextPos !== undefined) {
+            particle.CFrame = CheckOrientation(orientation, data.nextPos, data);
+        }
+
         for (let i = 0; i < orderedUpdateNodes.size(); i++) {
             orderedUpdateNodes[i].Run(data, 0.0167); // ideal 60 fps dt
         }
-
-        const orientation = this.nodeFields.orientation.GetState();
-
-        particle.CFrame = CheckOrientation(orientation, particle.CFrame.Position, data);
 
         UpdateParticleProperties(data);
 
@@ -278,9 +279,7 @@ export class PlaneParticle extends RenderNode {
                     movedParticles.push(aliveParticleData.particle);
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
-                    for (const updateNode of aliveParticleData.updateNodes) {
-                        updateNode.ClearCache(aliveParticleData.particleId);
-                    }
+                    aliveParticleData.isRemoving.Fire();
 
                     if (this.aliveParticles.size() === 0) {
                         if (this.updateLoop === undefined) continue;

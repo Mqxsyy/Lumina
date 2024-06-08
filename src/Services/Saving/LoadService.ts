@@ -74,9 +74,9 @@ export function LoadFromFile() {
 
     // floating nodes
     for (const node of data.floatingNodes) {
-        const nodeCollectionEntry = CreateNode(node.className, node.fields, node.order);
+        const nodeCollectionEntry = CreateNode(node.className || (node.nodeName as string), node.fields, node.order);
         if (nodeCollectionEntry === undefined) {
-            warn(`Node ${node.className} does not exist. Save data may be outdated or corrupted.`);
+            warn(`Node ${node.className || (node.nodeName as string)} does not exist. Save data may be outdated or corrupted.`);
             continue;
         }
 
@@ -171,9 +171,13 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
         for (let i = 0; i < sortedNodes.size(); i++) {
             const node = sortedNodes[i];
 
-            const nodeCollectionEntry = CreateNode(node.className, node.fields, node.order);
+            const nodeCollectionEntry = CreateNode(node.className || (node.nodeName as string), node.fields, node.order);
             if (nodeCollectionEntry === undefined) {
-                warn(`Node ${node.className} does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`);
+                warn(
+                    `Node ${
+                        node.className || (node.nodeName as string)
+                    } does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`,
+                );
                 continue;
             }
 

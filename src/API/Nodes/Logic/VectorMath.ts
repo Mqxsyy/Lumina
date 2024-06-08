@@ -21,6 +21,11 @@ export class VectorMath extends LogicNode {
         vector3B: new ConnectableVector3Field(0, 0, 0),
     };
 
+    constructor(operationType: string) {
+        super();
+        this.nodeFields.operationType.SetState(operationType);
+    }
+
     Calculate = (data: ParticleData) => {
         const valueTypeA = this.nodeFields.valueTypeA.GetState();
         const operationType = this.nodeFields.operationType.GetState();

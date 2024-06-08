@@ -1,3 +1,4 @@
+import { FastEvent } from "./Bindables/FastEvent";
 import { IdPool } from "./IdPool";
 import { CFrameZero } from "./Lib";
 import type { UpdateNode } from "./Nodes/Update/UpdateNode";
@@ -31,6 +32,7 @@ export interface ParticleData {
     spriteSheetFrame: number;
 
     updateNodes: UpdateNode[];
+    isRemoving: FastEvent;
 }
 
 const idPool = new IdPool();
@@ -64,6 +66,7 @@ export function CreateParticleData(
         transparency: 0,
         color: new Color3(1, 1, 1),
         updateNodes,
+        isRemoving: new FastEvent(),
     };
 
     return particleData[particleId];

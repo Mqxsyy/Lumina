@@ -2,11 +2,12 @@ import { BooleanField } from "API/Fields/BooleanField";
 import { ConnectableNumberField } from "API/Fields/ConnectableNumberField";
 import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { ConnectableVector3Field } from "API/Fields/ConnectableVector3Field";
+import { NumberField } from "API/Fields/NumberField";
 import { StateField } from "API/Fields/StateField";
-import { Rand } from "API/Lib";
+import { CFrameZero, Rand } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import { SpawnShapeType } from "../FieldStates";
-import { InitializeNode } from "./InitializeNode";
+import { LogicNode } from "./LogicNode";
 
 function GetPositionSquare(width: number, height: number, edge: number, filled: boolean) {
     if (filled) {
@@ -94,7 +95,7 @@ function GetPositionCube(width: number, height: number, depth: number, edge: num
     return new Vector3(positionX, positionY, positionZ);
 }
 
-function GetPositionEllipse(width: number, height: number, edgeWidth: number, filled: boolean) {
+function GetPositionEllipse(width: number, height: number, radius: number, spacing: number, edgeWidth: number, filled: boolean) {
     let adjustedWidth = width;
     let adjustedHeight = height;
 
@@ -108,12 +109,20 @@ function GetPositionEllipse(width: number, height: number, edgeWidth: number, fi
         adjustedHeight = Rand.NextNumber(height, height + edgeWidth);
     }
 
-    const theta = Rand.NextNumber(0, 1) * 2 * math.pi;
+    let theta = 0;
+
+    const angleRangeInRadians = (radius / 360) * 2 * math.pi;
+
+    if (spacing === -1) {
+        theta = Rand.NextNumber(0, 1) * angleRangeInRadians;
+    } else {
+        theta = (spacing / math.deg(angleRangeInRadians)) * angleRangeInRadians;
+    }
 
     const x = adjustedWidth * 0.5 * math.cos(theta);
     const y = adjustedHeight * 0.5 * math.sin(theta);
 
-    return new Vector3(x, 0, y);
+    return [new Vector3(x, 0, y), spacing % math.deg(angleRangeInRadians)] as [Vector3, number];
 }
 
 function GetPositionSphere(width: number, height: number, depth: number, edgeWidth: number, filled: boolean) {
@@ -143,32 +152,39 @@ function GetPositionSphere(width: number, height: number, depth: number, edgeWid
     return new Vector3(x, y, z);
 }
 
-export class AddPositionFromShape extends InitializeNode {
-    static className = "AddPositionFromShape";
+export class Shape extends LogicNode {
+    static className = "Shape";
 
     nodeFields = {
         spawnShape: new StateField(SpawnShapeType, SpawnShapeType.Square),
         sizeVec2: new ConnectableVector2Field(2, 2),
         sizeVec3: new ConnectableVector3Field(2, 2, 2),
+        radius: new NumberField(360),
+        spacing: new NumberField(0),
         filled: new BooleanField(false),
-        edgeWidth: new ConnectableNumberField(0),
+        edgeWidth: new NumberField(0),
         rotation: new ConnectableVector3Field(0, 0, 0),
     };
 
-    Run(data: ParticleData) {
+    storedOffsets: Map<number, CFrame> = new Map();
+    storedAngle = 0;
+
+    Calculate = (data: ParticleData) => {
         const rotation = this.nodeFields.rotation.GetSimpleVector3(data);
         const rotationCF = CFrame.Angles(math.rad(rotation.x), math.rad(rotation.y), math.rad(rotation.z));
-        let position = Vector3.zero;
+
+        let offset = this.storedOffsets.get(data.particleId);
+        if (offset !== undefined) return rotationCF.mul(offset).Position;
 
         const filled = this.nodeFields.filled.GetBoolean();
-        const edgeWidth = this.nodeFields.edgeWidth.GetNumber(data);
+        const edgeWidth = this.nodeFields.edgeWidth.GetNumber();
 
         switch (this.nodeFields.spawnShape.GetState()) {
             case SpawnShapeType.Square: {
                 const width = this.nodeFields.sizeVec2.GetX(data);
                 const height = this.nodeFields.sizeVec2.GetY(data);
 
-                position = GetPositionSquare(width, height, edgeWidth, filled);
+                offset = new CFrame(GetPositionSquare(width, height, edgeWidth, filled));
                 break;
             }
             case SpawnShapeType.Cube: {
@@ -176,14 +192,24 @@ export class AddPositionFromShape extends InitializeNode {
                 const height = this.nodeFields.sizeVec3.GetY(data);
                 const depth = this.nodeFields.sizeVec3.GetZ(data);
 
-                position = GetPositionCube(width, height, depth, edgeWidth, filled);
+                offset = new CFrame(GetPositionCube(width, height, depth, edgeWidth, filled));
                 break;
             }
             case SpawnShapeType.Ellipse: {
                 const width = this.nodeFields.sizeVec2.GetX(data);
                 const height = this.nodeFields.sizeVec2.GetY(data);
+                const radius = this.nodeFields.radius.GetNumber();
+                const spacing = this.nodeFields.spacing.GetNumber();
 
-                position = GetPositionEllipse(width, height, edgeWidth, filled);
+                if (filled || edgeWidth !== 0 || spacing === 0) {
+                    offset = new CFrame(GetPositionEllipse(width, height, radius, -1, edgeWidth, filled)[0]);
+                    break;
+                }
+
+                const [pos, newAngle] = GetPositionEllipse(width, height, radius, this.storedAngle + spacing, edgeWidth, filled);
+                this.storedAngle = newAngle;
+                offset = new CFrame(pos);
+
                 break;
             }
             case SpawnShapeType.Sphere: {
@@ -191,15 +217,22 @@ export class AddPositionFromShape extends InitializeNode {
                 const height = this.nodeFields.sizeVec3.GetY(data);
                 const depth = this.nodeFields.sizeVec3.GetZ(data);
 
-                position = GetPositionSphere(width, height, depth, edgeWidth, filled);
+                offset = new CFrame(GetPositionSphere(width, height, depth, edgeWidth, filled));
                 break;
             }
+            default:
+                offset = CFrameZero;
         }
 
-        data.particle.CFrame = data.particle.CFrame.mul(rotationCF.mul(new CFrame(position)));
-    }
+        data.isRemoving.Connect(() => {
+            this.storedOffsets.delete(data.particleId);
+        });
+
+        this.storedOffsets.set(data.particleId, offset);
+        return rotationCF.mul(offset).Position;
+    };
 
     GetClassName(): string {
-        return AddPositionFromShape.className;
+        return Shape.className;
     }
 }

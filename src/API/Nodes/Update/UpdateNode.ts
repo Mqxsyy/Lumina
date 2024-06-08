@@ -10,5 +10,4 @@ export abstract class UpdateNode extends Node {
     }
 
     abstract Run(data: ParticleData, dt: number): void;
-    ClearCache(id: number) {}
 }

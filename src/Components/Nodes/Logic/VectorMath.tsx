@@ -8,8 +8,8 @@ import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
-export function CreateVectorMath() {
-    return AddNode(new VectorMathAPI(), (data: NodeData) => {
+export function CreateVectorMath(operationType: string = MathOperationType.Add) {
+    return AddNode(new VectorMathAPI(operationType), (data: NodeData) => {
         return (
             <VectorMath
                 key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
