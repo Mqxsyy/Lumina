@@ -25,11 +25,14 @@ export function InitializeLineGraph() {
 
 let loadedGraphAPI: LineGraphField;
 let maxValue = 1;
+let minValue = 0;
 const graphAPILoaded = new Event();
 
-export function LoadGraph(graph: LineGraphField, max?: number) {
+export function LoadGraph(graph: LineGraphField, max = 1, min = 0) {
     loadedGraphAPI = graph;
-    maxValue = max === undefined ? 1 : max;
+    maxValue = max;
+    minValue = min;
+
     graphAPILoaded.Fire();
 }
 
@@ -43,7 +46,7 @@ function LineGraph() {
     // need ref cuz state won't update properly inside a function
     const selectedPointRef = useRef(undefined as GraphPoint | undefined);
 
-    const getPointPositionPercent = () => {
+    const getMousePositionPercent = () => {
         const window = GetWindow(Windows.ValueGraph);
         const mousePosition = window.GetRelativeMousePosition();
 
@@ -59,8 +62,8 @@ function LineGraph() {
     const updatePoint = (id: number) => {
         if (graphAPIRef.current === undefined) return;
 
-        const [time, valuePercent] = getPointPositionPercent();
-        const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
+        const [time, valuePercent] = getMousePositionPercent();
+        const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, minValue, maxValue));
 
         graphAPIRef.current.UpdatePoint(id, time, value);
     };
@@ -71,8 +74,8 @@ function LineGraph() {
 
     const onBackgroundClick = () => {
         if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
-            const [time, valuePercent] = getPointPositionPercent();
-            const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, 0, maxValue));
+            const [time, valuePercent] = getMousePositionPercent();
+            const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, minValue, maxValue));
 
             const newPoint = (graphAPIRef.current as LineGraphField).AddPoint(time, value);
             selectPoint(newPoint.id);
@@ -109,6 +112,10 @@ function LineGraph() {
         let validatedValue = value;
         if (validatedValue > maxValue) {
             validatedValue = maxValue;
+        }
+
+        if (validatedValue < minValue) {
+            validatedValue = minValue;
         }
 
         graphAPIRef.current.UpdatePoint(selectedPointRef.current.id, selectedPointRef.current.time, validatedValue);
@@ -158,40 +165,54 @@ function LineGraph() {
             {/* Background */}
             <Div BackgroundColor={StyleColors.Background} onMouseButton1Down={onBackgroundClick}>
                 {/* Horizontal */}
-                <frame
-                    AnchorPoint={new Vector2(0, 0.5)}
-                    Position={UDim2.fromScale(0, 0.1)}
-                    Size={UDim2.fromOffset(windowSize.X, 1)}
-                    BackgroundColor3={StyleColors.FullWhite}
-                    BackgroundTransparency={0.75}
-                    BorderSizePixel={0}
-                />
-                <frame
-                    AnchorPoint={new Vector2(0, 0.5)}
-                    Position={new UDim2(0, 0, 0.9, -BOTTOM_SIZE)}
-                    Size={UDim2.fromOffset(windowSize.X, 1)}
-                    BackgroundColor3={StyleColors.FullWhite}
-                    BackgroundTransparency={0.75}
-                    BorderSizePixel={0}
-                />
+                <Div>
+                    <frame
+                        AnchorPoint={new Vector2(0, 0.5)}
+                        Position={UDim2.fromScale(0, 0.1)}
+                        Size={UDim2.fromOffset(windowSize.X, 1)}
+                        BackgroundColor3={StyleColors.FullWhite}
+                        BackgroundTransparency={0.75}
+                        BorderSizePixel={0}
+                    />
+                    {minValue !== 0 && (
+                        <frame
+                            AnchorPoint={new Vector2(0, 0.5)}
+                            Position={new UDim2(0, 0, 0.5, -BOTTOM_SIZE * 0.5)}
+                            Size={UDim2.fromOffset(windowSize.X, 1)}
+                            BackgroundColor3={StyleColors.FullWhite}
+                            BackgroundTransparency={0.75}
+                            BorderSizePixel={0}
+                        />
+                    )}
+                    <frame
+                        AnchorPoint={new Vector2(0, 0.5)}
+                        Position={new UDim2(0, 0, 0.9, -BOTTOM_SIZE)}
+                        Size={UDim2.fromOffset(windowSize.X, 1)}
+                        BackgroundColor3={StyleColors.FullWhite}
+                        BackgroundTransparency={0.75}
+                        BorderSizePixel={0}
+                    />
+                </Div>
                 {/* Vertical */}
-                <frame
-                    AnchorPoint={new Vector2(0.5, 0)}
-                    Position={UDim2.fromOffset(0.1 * windowSize.X, 0)}
-                    Size={new UDim2(0, 1, 1, -BOTTOM_SIZE)}
-                    BackgroundColor3={StyleColors.FullWhite}
-                    BackgroundTransparency={0.75}
-                    BorderSizePixel={0}
-                />
-                <frame
-                    AnchorPoint={new Vector2(0.5, 0)}
-                    Position={UDim2.fromOffset(0.9 * windowSize.X, 0)}
-                    Size={new UDim2(0, 1, 1, -BOTTOM_SIZE)}
-                    BackgroundColor3={StyleColors.FullWhite}
-                    BackgroundTransparency={0.75}
-                    BorderSizePixel={0}
-                />
-                {/* Top Left Text */}
+                <Div>
+                    <frame
+                        AnchorPoint={new Vector2(0.5, 0)}
+                        Position={UDim2.fromOffset(0.1 * windowSize.X, 0)}
+                        Size={new UDim2(0, 1, 1, -BOTTOM_SIZE)}
+                        BackgroundColor3={StyleColors.FullWhite}
+                        BackgroundTransparency={0.75}
+                        BorderSizePixel={0}
+                    />
+                    <frame
+                        AnchorPoint={new Vector2(0.5, 0)}
+                        Position={UDim2.fromOffset(0.9 * windowSize.X, 0)}
+                        Size={new UDim2(0, 1, 1, -BOTTOM_SIZE)}
+                        BackgroundColor3={StyleColors.FullWhite}
+                        BackgroundTransparency={0.75}
+                        BorderSizePixel={0}
+                    />
+                </Div>
+                {/* Max Value */}
                 <BasicTextLabel
                     AnchorPoint={new Vector2(1, 0)}
                     Position={new UDim2(0.1, -4, 0.1, 0)}
@@ -200,102 +221,117 @@ function LineGraph() {
                     TextXAlignment={"Right"}
                     IsAffectedByZoom={false}
                 />
-                {/* Bottom Left Text */}
+                {/* Time Start */}
                 <BasicTextLabel
                     AnchorPoint={new Vector2(1, 0)}
-                    Position={new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE)}
+                    Position={minValue === 0 ? new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE) : new UDim2(0.1, -4, 0.5, -BOTTOM_SIZE * 0.5)}
                     Size={new UDim2(0.1, 0, 0, 20)}
                     Text={"0"}
                     TextXAlignment={"Right"}
                     IsAffectedByZoom={false}
                 />
-                {/* Bottom Right Text */}
+                {/* Time End */}
                 <BasicTextLabel
                     AnchorPoint={new Vector2(1, 0)}
-                    Position={new UDim2(0.9, -4, 0.9, -BOTTOM_SIZE)}
+                    Position={minValue === 0 ? new UDim2(0.9, -4, 0.9, -BOTTOM_SIZE) : new UDim2(0.9, -4, 0.5, -BOTTOM_SIZE * 0.5)}
                     Size={new UDim2(0.1, 0, 0, 20)}
                     Text={"1"}
                     TextXAlignment={"Right"}
                     IsAffectedByZoom={false}
                 />
+                {/* Min Value */}
+                {minValue !== 0 && (
+                    <BasicTextLabel
+                        AnchorPoint={new Vector2(1, 0)}
+                        Position={new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE)}
+                        Size={new UDim2(0.1, 0, 0, 20)}
+                        Text={tostring(minValue)}
+                        TextXAlignment={"Right"}
+                        IsAffectedByZoom={false}
+                    />
+                )}
             </Div>
             {/* Points */}
-            {graphAPIRef.current?.GetAllPoints().map((point, index) => {
-                const positionPercent = new Vector2(
-                    RemapValue(point.time, 0, 1, 0.1, 0.9),
-                    RemapValue(maxValue - point.value, 0, maxValue, 0.1, 0.9),
-                );
+            <Div>
+                {graphAPIRef.current?.GetAllPoints().map((point, index) => {
+                    const positionPercent = new Vector2(
+                        RemapValue(point.time, 0, 1, 0.1, 0.9),
+                        RemapValue(-point.value, minValue, maxValue, 0.1, 0.9),
+                    );
 
-                const position = UDim2.fromOffset(
-                    positionPercent.X * windowSize.X,
-                    positionPercent.Y * windowSize.Y - RemapValue(maxValue - point.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
-                );
+                    const position = UDim2.fromOffset(
+                        positionPercent.X * windowSize.X,
+                        positionPercent.Y * windowSize.Y - RemapValue(-point.value, minValue, maxValue, 0, 1) * BOTTOM_SIZE,
+                    );
 
-                if (index === 0 || index === (graphAPIRef.current as LineGraphField).GetAllPoints().size() - 1) {
+                    if (index === 0 || index === (graphAPIRef.current as LineGraphField).GetAllPoints().size() - 1) {
+                        return (
+                            <LineGraphPoint
+                                key={`endpoint_${point.id}`}
+                                Id={point.id}
+                                Position={position}
+                                OnSelect={selectPoint}
+                                UpdatePoint={updatePoint}
+                            />
+                        );
+                    }
+
                     return (
                         <LineGraphPoint
-                            key={`endpoint_${point.id}`}
+                            key={`point_${point.id}`}
                             Id={point.id}
                             Position={position}
                             OnSelect={selectPoint}
                             UpdatePoint={updatePoint}
+                            RemovePoint={removePoint}
                         />
                     );
-                }
-
-                return (
-                    <LineGraphPoint
-                        key={`point_${point.id}`}
-                        Id={point.id}
-                        Position={position}
-                        OnSelect={selectPoint}
-                        UpdatePoint={updatePoint}
-                        RemovePoint={removePoint}
-                    />
-                );
-            })}
+                })}
+            </Div>
             {/* Lines */}
-            {graphAPIRef.current?.GetAllPoints().map((point, index) => {
-                const allPoints = (graphAPIRef.current as LineGraphField).GetAllPoints();
+            <Div>
+                {graphAPIRef.current?.GetAllPoints().map((point, index) => {
+                    const allPoints = (graphAPIRef.current as LineGraphField).GetAllPoints();
 
-                if (index === allPoints.size() - 1) return;
+                    if (index === allPoints.size() - 1) return;
 
-                const p1 = allPoints[index];
-                const p2 = allPoints[index + 1];
+                    const p1 = allPoints[index];
+                    const p2 = allPoints[index + 1];
 
-                const startTimePercent = RemapValue(p1.time, 0, 1, 0.1, 0.9);
-                const startValuePercent = RemapValue(maxValue - p1.value, 0, maxValue, 0.1, 0.9);
-                const startPos = new Vector2(
-                    startTimePercent * windowSize.X,
-                    startValuePercent * windowSize.Y - RemapValue(maxValue - p1.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
-                );
+                    const startTimePercent = RemapValue(p1.time, 0, 1, 0.1, 0.9);
+                    const startValuePercent = RemapValue(-p1.value, minValue, maxValue, 0.1, 0.9);
+                    const startPos = new Vector2(
+                        startTimePercent * windowSize.X,
+                        startValuePercent * windowSize.Y - RemapValue(-p1.value, minValue, maxValue, 0, 1) * BOTTOM_SIZE,
+                    );
 
-                const endTimePercent = RemapValue(p2.time, 0, 1, 0.1, 0.9);
-                const endValuePercent = RemapValue(maxValue - p2.value, 0, maxValue, 0.1, 0.9);
-                const endPos = new Vector2(
-                    endTimePercent * windowSize.X,
-                    endValuePercent * windowSize.Y - RemapValue(maxValue - p2.value, 0, maxValue, 0, 1) * BOTTOM_SIZE,
-                );
+                    const endTimePercent = RemapValue(p2.time, 0, 1, 0.1, 0.9);
+                    const endValuePercent = RemapValue(-p2.value, minValue, maxValue, 0.1, 0.9);
+                    const endPos = new Vector2(
+                        endTimePercent * windowSize.X,
+                        endValuePercent * windowSize.Y - RemapValue(-p2.value, minValue, maxValue, 0, 1) * BOTTOM_SIZE,
+                    );
 
-                const position = startPos.add(endPos.sub(startPos).mul(0.5));
+                    const position = startPos.add(endPos.sub(startPos).mul(0.5));
 
-                const vectorDiff = endPos.sub(startPos);
-                const rotationRad = math.atan2(vectorDiff.Y, vectorDiff.X);
-                const rotation = RoundDecimal(math.deg(rotationRad), 0.01);
+                    const vectorDiff = endPos.sub(startPos);
+                    const rotationRad = math.atan2(vectorDiff.Y, vectorDiff.X);
+                    const rotation = RoundDecimal(math.deg(rotationRad), 0.01);
 
-                const length = endPos.sub(startPos).Magnitude;
+                    const length = endPos.sub(startPos).Magnitude;
 
-                return (
-                    <Div
-                        key={`Line_${point.id}`}
-                        AnchorPoint={new Vector2(0.5, 0.5)}
-                        Position={UDim2.fromOffset(position.X, position.Y)}
-                        Size={UDim2.fromOffset(length, 2)}
-                        BackgroundColor={StyleColors.Highlight}
-                        Rotation={rotation}
-                    />
-                );
-            })}
+                    return (
+                        <Div
+                            key={`Line_${point.id}`}
+                            AnchorPoint={new Vector2(0.5, 0.5)}
+                            Position={UDim2.fromOffset(position.X, position.Y)}
+                            Size={UDim2.fromOffset(length, 2)}
+                            BackgroundColor={StyleColors.Highlight}
+                            Rotation={rotation}
+                        />
+                    );
+                })}
+            </Div>
             {/* Controls */}
             <Div
                 AnchorPoint={new Vector2(0, 1)}
@@ -339,6 +375,7 @@ function LineGraph() {
                         NumberChanged={controlsValueChanged}
                         Disabled={selectedPointRef.current === undefined}
                         IsAffectedByZoom={false}
+                        AllowNegative={minValue !== 0}
                     />
                 </Div>
             </Div>

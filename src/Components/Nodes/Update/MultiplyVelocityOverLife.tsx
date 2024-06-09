@@ -23,7 +23,12 @@ function MultiplyVelocityOverLife({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <LineGraphField Label={"Graph"} Graph={(data.node as MultiplyVelocityOverLifeAPI).nodeFields.graph} MaxValue={10} />
+            <LineGraphField
+                Label={"Graph"}
+                Graph={(data.node as MultiplyVelocityOverLifeAPI).nodeFields.graph}
+                MaxValue={10}
+                MinValue={-10}
+            />
         </Node>
     );
 }

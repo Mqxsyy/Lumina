@@ -22,9 +22,10 @@ export interface ParticleData {
     sizeMultiplier: Vector3;
     velocityNormal: Vector3;
     velocityMultiplier: Vector3;
+    rotation: CFrame;
+    rotationMultiplier: Vector3;
     nextPos: Vector3 | undefined;
 
-    rotation: CFrame;
     transparency: number;
     color: Color3;
     emission: number;
@@ -61,8 +62,9 @@ export function CreateParticleData(
         sizeMultiplier: Vector3.zero,
         velocityNormal: Vector3.zero,
         velocityMultiplier: Vector3.one,
-        nextPos: undefined,
         rotation: CFrameZero,
+        rotationMultiplier: Vector3.one,
+        nextPos: undefined,
         transparency: 0,
         color: new Color3(1, 1, 1),
         updateNodes,
