@@ -7,10 +7,14 @@ interface Props {
     Position?: UDim2;
     Size?: UDim2;
 
+    HideBackground?: boolean;
+
     TextSize?: number;
     FontWeight?: Enum.FontWeight;
     TextColor?: Color3;
-    TextXAlignment?: Enum.TextXAlignment;
+    TextXAlignment?: "Left" | "Center" | "Right";
+    TextWrapped?: boolean;
+    TextTruncate?: "None" | "AtEnd" | "SplitWord";
     PlaceholderText?: string;
     Text?: string | (() => string);
 
@@ -26,10 +30,13 @@ export function NumberInput({
     AnchorPoint = Vector2.zero,
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromScale(1, 1),
+    HideBackground = false,
     TextSize = StyleText.FontSize,
     FontWeight = StyleText.FontWeight,
     TextColor = StyleColors.TextDark,
-    TextXAlignment = Enum.TextXAlignment.Left,
+    TextXAlignment = "Left",
+    TextWrapped = true,
+    TextTruncate = "AtEnd",
     PlaceholderText = "",
     Text = "",
     IsAffectedByZoom = true,
@@ -89,10 +96,13 @@ export function NumberInput({
             AnchorPoint={AnchorPoint}
             Position={Position}
             Size={Size}
+            HideBackground={HideBackground}
             TextSize={TextSize}
             FontWeight={FontWeight}
             TextColor={TextColor}
             TextXAlignment={TextXAlignment}
+            TextWrapped={TextWrapped}
+            TextTruncate={TextTruncate}
             PlaceholderText={PlaceholderText}
             Text={getDefaultText()}
             IsAffectedByZoom={IsAffectedByZoom}

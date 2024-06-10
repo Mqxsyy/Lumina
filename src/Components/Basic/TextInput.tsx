@@ -13,7 +13,9 @@ interface Props {
     FontWeight?: Enum.FontWeight;
     TextSize?: number;
     TextColor?: Color3;
-    TextXAlignment?: Enum.TextXAlignment;
+    TextXAlignment?: "Left" | "Center" | "Right";
+    TextWrapped?: boolean;
+    TextTruncate?: "None" | "AtEnd" | "SplitWord";
     PlaceholderText?: string;
     Text?: string | (() => string);
 
@@ -24,7 +26,6 @@ interface Props {
     Disabled?: boolean;
     TextChanged?: (text: string) => string | undefined;
     LostFocus?: (text: string) => string | undefined;
-    GetRef?: (textBox: TextBox) => void;
 }
 
 export function TextInput({
@@ -35,7 +36,9 @@ export function TextInput({
     TextSize = StyleText.FontSize,
     FontWeight = StyleText.FontWeight,
     TextColor = StyleColors.TextDark,
-    TextXAlignment = Enum.TextXAlignment.Left,
+    TextXAlignment = "Left",
+    TextWrapped = true,
+    TextTruncate = "AtEnd",
     Text = "",
     ClearTextOnFocus = true,
     AutoFocus = false,
@@ -43,7 +46,6 @@ export function TextInput({
     Disabled = false,
     TextChanged = undefined,
     LostFocus = undefined,
-    GetRef = undefined,
     children,
 }: PropsWithChildren<Props>) {
     const textBoxRef = useRef<TextBox>();
@@ -60,17 +62,13 @@ export function TextInput({
     };
 
     useEffect(() => {
-        if (textBoxRef.current === undefined) return;
+        const textBox = textBoxRef.current as TextBox;
 
         let textChangedConnection: RBXScriptConnection;
         let focusLostConnection: RBXScriptConnection;
 
-        if (GetRef !== undefined) {
-            GetRef(textBoxRef.current);
-        }
-
         if (!Disabled) {
-            textChangedConnection = textBoxRef.current.GetPropertyChangedSignal("Text").Connect(() => {
+            textChangedConnection = textBox.GetPropertyChangedSignal("Text").Connect(() => {
                 let text = (textBoxRef.current as TextBox).Text;
                 if (text === " ") {
                     text = "";
@@ -90,7 +88,7 @@ export function TextInput({
                 }
             });
 
-            focusLostConnection = textBoxRef.current.FocusLost.Connect(() => {
+            focusLostConnection = textBox.FocusLost.Connect(() => {
                 if (LostFocus === undefined) return;
 
                 const newText = LostFocus((textBoxRef.current as TextBox).Text);
@@ -101,7 +99,7 @@ export function TextInput({
         }
 
         if (AutoFocus && !Disabled) {
-            textBoxRef.current.CaptureFocus();
+            textBox.CaptureFocus();
         }
 
         return () => {
@@ -113,7 +111,7 @@ export function TextInput({
                 focusLostConnection.Disconnect();
             }
         };
-    }, [textBoxRef.current, textLabelRef.current, Disabled]);
+    }, [Disabled]);
 
     // hacky scuffed annoying just to separate user input from code input; also removes cursor, yay
     return (
@@ -145,9 +143,9 @@ export function TextInput({
                 FontFace={new Font(StyleText.FontId, FontWeight)}
                 TextColor3={Disabled ? StyleColors.TextLight : TextColor}
                 TextXAlignment={TextXAlignment}
-                TextWrapped={true}
+                TextWrapped={TextWrapped}
+                TextTruncate={TextTruncate}
                 Text={Disabled ? "-" : getText()}
-                TextTruncate={Enum.TextTruncate.AtEnd}
                 ref={textLabelRef}
             />
 

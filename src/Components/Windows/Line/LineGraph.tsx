@@ -1,10 +1,12 @@
 import React, { StrictMode, useEffect, useRef, useState } from "@rbxts/react";
 import { createRoot } from "@rbxts/react-roblox";
 import { Event } from "API/Bindables/Event";
+import { FastEvent } from "API/Bindables/FastEvent";
 import type { GraphPoint, LineGraphField } from "API/Fields/LineGraphField";
-import { FixFloatingPointError, RemapValue, RoundDecimal } from "API/Lib";
+import { LerpNumber, ReduceDecimals, RemapValue, RoundDecimal } from "API/Lib";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
+import { TextInput } from "Components/Basic/TextInput";
 import Div from "Components/Div";
 import { StyleColors } from "Style";
 import { GetWindow, Windows } from "Windows/WindowSevice";
@@ -27,6 +29,7 @@ let loadedGraphAPI: LineGraphField;
 let maxValue = 1;
 let minValue = 0;
 const graphAPILoaded = new Event();
+const graphAPIChanged = new FastEvent();
 
 export function LoadGraph(graph: LineGraphField, max = 1, min = 0) {
     loadedGraphAPI = graph;
@@ -63,7 +66,7 @@ function LineGraph() {
         if (graphAPIRef.current === undefined) return;
 
         const [time, valuePercent] = getMousePositionPercent();
-        const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, minValue, maxValue));
+        const value = ReduceDecimals(RemapValue(valuePercent, 0, 1, minValue, maxValue));
 
         graphAPIRef.current.UpdatePoint(id, time, value);
     };
@@ -75,7 +78,7 @@ function LineGraph() {
     const onBackgroundClick = () => {
         if (os.clock() - lastClickTime.current < DOUBLE_CLICK_TIME) {
             const [time, valuePercent] = getMousePositionPercent();
-            const value = FixFloatingPointError(RemapValue(valuePercent, 0, 1, minValue, maxValue));
+            const value = ReduceDecimals(RemapValue(valuePercent, 0, 1, minValue, maxValue));
 
             const newPoint = (graphAPIRef.current as LineGraphField).AddPoint(time, value);
             selectPoint(newPoint.id);
@@ -122,13 +125,72 @@ function LineGraph() {
         return validatedValue;
     };
 
+    const maxValueChanged = (number: number) => {
+        let newValue = number;
+
+        if (newValue <= 0) {
+            newValue = 0.1;
+        }
+
+        newValue = ReduceDecimals(newValue, 2);
+
+        const graph = graphAPIRef.current as LineGraphField;
+        for (const point of graph.GetAllPoints()) {
+            if (point.value < 0) continue;
+
+            const pointValue = ReduceDecimals(RemapValue(point.value, 0, maxValue, 0, newValue), 1);
+            graph.UpdatePoint(point.id, point.time, pointValue, false);
+        }
+
+        maxValue = newValue;
+        graphAPIChanged.Fire();
+        return newValue;
+    };
+
+    const minValueChanged = (number: number) => {
+        let newValue = number;
+
+        if (newValue >= 0) {
+            newValue = -0.1;
+        }
+
+        newValue = ReduceDecimals(newValue, 2);
+
+        const graph = graphAPIRef.current as LineGraphField;
+        for (const point of graph.GetAllPoints()) {
+            if (point.value > 0) continue;
+
+            const pointValue = ReduceDecimals(RemapValue(point.value, minValue, 0, newValue, 0), 1);
+            graph.UpdatePoint(point.id, point.time, pointValue, false);
+        }
+
+        minValue = newValue;
+        graphAPIChanged.Fire();
+        return newValue;
+    };
+
     useEffect(() => {
         const loadedConnection = graphAPILoaded.Connect(() => {
-            if (loadedGraphAPI !== undefined) {
-                graphAPIRef.current = loadedGraphAPI;
-                selectedPointRef.current = undefined;
-                setForceRender((prev) => prev + 1);
+            if (loadedGraphAPI === undefined) return;
+
+            graphAPIRef.current = loadedGraphAPI;
+            selectedPointRef.current = undefined;
+
+            for (const point of loadedGraphAPI.GetAllPoints()) {
+                if (point.value > maxValue) {
+                    maxValue = point.value;
+                }
+
+                if (point.value < minValue) {
+                    minValue = point.value;
+                }
             }
+
+            setForceRender((prev) => prev + 1);
+        });
+
+        const connection = graphAPIChanged.Connect(() => {
+            setForceRender((prev) => prev + 1);
         });
 
         const window = GetWindow(Windows.ValueGraph);
@@ -143,6 +205,7 @@ function LineGraph() {
 
         return () => {
             loadedConnection.Disconnect();
+            connection.Disconnect();
 
             if (resizeConnection !== undefined) {
                 resizeConnection.Disconnect();
@@ -177,7 +240,14 @@ function LineGraph() {
                     {minValue !== 0 && (
                         <frame
                             AnchorPoint={new Vector2(0, 0.5)}
-                            Position={new UDim2(0, 0, 0.5, -BOTTOM_SIZE * 0.5)}
+                            Position={
+                                new UDim2(
+                                    0,
+                                    0,
+                                    LerpNumber(0.1, 0.9, maxValue / (maxValue - minValue)),
+                                    LerpNumber(0, -BOTTOM_SIZE, maxValue / (maxValue - minValue)),
+                                )
+                            }
                             Size={UDim2.fromOffset(windowSize.X, 1)}
                             BackgroundColor3={StyleColors.FullWhite}
                             BackgroundTransparency={0.75}
@@ -213,39 +283,59 @@ function LineGraph() {
                     />
                 </Div>
                 {/* Max Value */}
-                <BasicTextLabel
+                <NumberInput
                     AnchorPoint={new Vector2(1, 0)}
                     Position={new UDim2(0.1, -4, 0.1, 0)}
                     Size={new UDim2(0.1, 0, 0, 20)}
-                    Text={tostring(maxValue)}
+                    HideBackground={true}
+                    Text={() => tostring(maxValue)}
+                    TextColor={StyleColors.TextLight}
                     TextXAlignment={"Right"}
+                    TextWrapped={false}
+                    TextTruncate="None"
                     IsAffectedByZoom={false}
+                    NumberChanged={maxValueChanged}
                 />
                 {/* Time Start */}
                 <BasicTextLabel
-                    AnchorPoint={new Vector2(1, 0)}
-                    Position={minValue === 0 ? new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE) : new UDim2(0.1, -4, 0.5, -BOTTOM_SIZE * 0.5)}
+                    AnchorPoint={new Vector2(0, 0)}
+                    Position={new UDim2(0.1, 4, 0.9, -BOTTOM_SIZE)}
                     Size={new UDim2(0.1, 0, 0, 20)}
                     Text={"0"}
-                    TextXAlignment={"Right"}
+                    TextXAlignment={"Left"}
                     IsAffectedByZoom={false}
                 />
                 {/* Time End */}
                 <BasicTextLabel
                     AnchorPoint={new Vector2(1, 0)}
-                    Position={minValue === 0 ? new UDim2(0.9, -4, 0.9, -BOTTOM_SIZE) : new UDim2(0.9, -4, 0.5, -BOTTOM_SIZE * 0.5)}
+                    Position={new UDim2(0.9, -4, 0.9, -BOTTOM_SIZE)}
                     Size={new UDim2(0.1, 0, 0, 20)}
                     Text={"1"}
                     TextXAlignment={"Right"}
                     IsAffectedByZoom={false}
                 />
                 {/* Min Value */}
-                {minValue !== 0 && (
+                {minValue !== 0 ? (
+                    <NumberInput
+                        AnchorPoint={new Vector2(1, 0)}
+                        Position={new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE - 20)}
+                        Size={new UDim2(0.1, 0, 0, 20)}
+                        HideBackground={true}
+                        Text={() => tostring(minValue)}
+                        TextColor={StyleColors.TextLight}
+                        TextXAlignment={"Right"}
+                        TextWrapped={false}
+                        TextTruncate="None"
+                        IsAffectedByZoom={false}
+                        NumberChanged={minValueChanged}
+                        AllowNegative={true}
+                    />
+                ) : (
                     <BasicTextLabel
                         AnchorPoint={new Vector2(1, 0)}
-                        Position={new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE)}
+                        Position={new UDim2(0.1, -4, 0.9, -BOTTOM_SIZE - 20)}
                         Size={new UDim2(0.1, 0, 0, 20)}
-                        Text={tostring(minValue)}
+                        Text={"0"}
                         TextXAlignment={"Right"}
                         IsAffectedByZoom={false}
                     />
@@ -256,12 +346,12 @@ function LineGraph() {
                 {graphAPIRef.current?.GetAllPoints().map((point, index) => {
                     const positionPercent = new Vector2(
                         RemapValue(point.time, 0, 1, 0.1, 0.9),
-                        RemapValue(-point.value, minValue, maxValue, 0.1, 0.9),
+                        1 - RemapValue(point.value, minValue, maxValue, 0.1, 0.9),
                     );
 
                     const position = UDim2.fromOffset(
                         positionPercent.X * windowSize.X,
-                        positionPercent.Y * windowSize.Y - RemapValue(-point.value, minValue, maxValue, 0, 1) * BOTTOM_SIZE,
+                        positionPercent.Y * windowSize.Y - (1 - RemapValue(point.value, minValue, maxValue, 0, 1)) * BOTTOM_SIZE,
                     );
 
                     if (index === 0 || index === (graphAPIRef.current as LineGraphField).GetAllPoints().size() - 1) {
@@ -299,17 +389,17 @@ function LineGraph() {
                     const p2 = allPoints[index + 1];
 
                     const startTimePercent = RemapValue(p1.time, 0, 1, 0.1, 0.9);
-                    const startValuePercent = RemapValue(-p1.value, minValue, maxValue, 0.1, 0.9);
+                    const startValuePercent = 1 - RemapValue(p1.value, minValue, maxValue, 0.1, 0.9);
                     const startPos = new Vector2(
                         startTimePercent * windowSize.X,
-                        startValuePercent * windowSize.Y - RemapValue(-p1.value, minValue, maxValue, 0, 1) * BOTTOM_SIZE,
+                        startValuePercent * windowSize.Y - (1 - RemapValue(p1.value, minValue, maxValue, 0, 1)) * BOTTOM_SIZE,
                     );
 
                     const endTimePercent = RemapValue(p2.time, 0, 1, 0.1, 0.9);
-                    const endValuePercent = RemapValue(-p2.value, minValue, maxValue, 0.1, 0.9);
+                    const endValuePercent = 1 - RemapValue(p2.value, minValue, maxValue, 0.1, 0.9);
                     const endPos = new Vector2(
                         endTimePercent * windowSize.X,
-                        endValuePercent * windowSize.Y - RemapValue(-p2.value, minValue, maxValue, 0, 1) * BOTTOM_SIZE,
+                        endValuePercent * windowSize.Y - (1 - RemapValue(p2.value, minValue, maxValue, 0, 1)) * BOTTOM_SIZE,
                     );
 
                     const position = startPos.add(endPos.sub(startPos).mul(0.5));

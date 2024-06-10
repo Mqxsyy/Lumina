@@ -35,10 +35,16 @@ export class LineGraphField extends NodeField {
         id: this.idPool.GetNextId(),
         canEditTime: false,
         time: 1,
-        value: 1,
+        value: 0,
     };
 
     graphPoints: GraphPoint[] = [];
+
+    constructor(startValue = 0, endValue = 0) {
+        super();
+        this.startPoint.value = startValue;
+        this.endPoint.value = endValue;
+    }
 
     GetAllPoints() {
         const points = [];
@@ -88,7 +94,7 @@ export class LineGraphField extends NodeField {
         return data;
     }
 
-    UpdatePoint(id: number, time: number, value: number) {
+    UpdatePoint(id: number, time: number, value: number, fireEvent = true) {
         if (id === this.startPoint.id) {
             this.UpdatePointValues(this.startPoint, time, value);
         } else if (id === this.endPoint.id) {
@@ -101,7 +107,10 @@ export class LineGraphField extends NodeField {
         }
 
         this.graphPoints.sort((a, b) => a.time < b.time);
-        this.FieldChanged.Fire();
+
+        if (fireEvent) {
+            this.FieldChanged.Fire();
+        }
     }
 
     RemovePoint(id: number) {

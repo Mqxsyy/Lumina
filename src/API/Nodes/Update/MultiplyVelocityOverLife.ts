@@ -6,7 +6,7 @@ export class MultiplyVelocityOverLife extends UpdateNode {
     static className = "MultiplyVelocityOverLife";
 
     nodeFields = {
-        graph: new LineGraphField(),
+        graph: new LineGraphField(0, 0),
     };
 
     Run(data: ParticleData) {
