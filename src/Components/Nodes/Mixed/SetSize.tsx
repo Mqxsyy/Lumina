@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { CalculationType } from "API/Nodes/FieldStates";
+import { CalculationType1 } from "API/Nodes/FieldStates";
 import { IsAxisX, IsAxisY, IsAxisZ } from "API/Nodes/FieldStatesLib";
 import { SetSize as SetSizeAPI } from "API/Nodes/Mixed/SetSize";
 import Div from "Components/Div";
@@ -44,19 +44,19 @@ function SetSize({ data }: { data: NodeData }) {
     }, []);
 
     const isUniformConnected = () => {
-        return calculationTypeRef.current.GetState() === CalculationType.UniformConnected;
+        return calculationTypeRef.current.GetState() === CalculationType1.UniformConnected;
     };
 
     const isUniform = () => {
-        return calculationTypeRef.current.GetState() === CalculationType.Uniform;
+        return calculationTypeRef.current.GetState() === CalculationType1.Uniform;
     };
 
     const isRandom = () => {
-        return calculationTypeRef.current.GetState() === CalculationType.Random;
+        return calculationTypeRef.current.GetState() === CalculationType1.Random;
     };
 
     const isRandomConnected = () => {
-        return calculationTypeRef.current.GetState() === CalculationType.RandomConncted;
+        return calculationTypeRef.current.GetState() === CalculationType1.RandomConncted;
     };
 
     const axisType = axisTypeRef.current.GetState();

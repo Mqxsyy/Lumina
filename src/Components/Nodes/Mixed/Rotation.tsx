@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { CalculationType } from "API/Nodes/FieldStates";
+import { CalculationType1 } from "API/Nodes/FieldStates";
 import { IsAxisX, IsAxisY, IsAxisZ } from "API/Nodes/FieldStatesLib";
 import { Rotation as RotationAPI } from "API/Nodes/Mixed/Rotation";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
@@ -43,11 +43,11 @@ function Rotation({ data }: { data: NodeData }) {
     }, []);
 
     const isUniform = () => {
-        return calculationTypeRef.current.GetState() === CalculationType.Uniform;
+        return calculationTypeRef.current.GetState() === CalculationType1.Uniform;
     };
 
     const isRandom = () => {
-        return calculationTypeRef.current.GetState() === CalculationType.Random;
+        return calculationTypeRef.current.GetState() === CalculationType1.Random;
     };
 
     const axisType = axisTypeRef.current.GetState();

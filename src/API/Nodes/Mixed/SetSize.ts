@@ -3,7 +3,7 @@ import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { StateField } from "API/Fields/StateField";
 import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
-import { AxisType, CalculationType } from "../FieldStates";
+import { AxisType, CalculationType1 } from "../FieldStates";
 import { IsAxisX, IsAxisY, IsAxisZ } from "../FieldStatesLib";
 import { MixedNode } from "./MixedNode";
 
@@ -11,7 +11,7 @@ export class SetSize extends MixedNode {
     static className = "SetSize";
 
     nodeFields = {
-        calculationType: new StateField(CalculationType, CalculationType.Uniform),
+        calculationType: new StateField(CalculationType1, CalculationType1.Uniform),
         axisType: new StateField(AxisType, AxisType.XYZ, [AxisType.X, AxisType.Y, AxisType.Z]),
         size: new ConnectableNumberField(1),
         sizeX: new ConnectableNumberField(1),
@@ -25,13 +25,13 @@ export class SetSize extends MixedNode {
 
     Run(data: ParticleData) {
         const calculationType = this.nodeFields.calculationType.GetState();
-        if (calculationType === CalculationType.UniformConnected) {
+        if (calculationType === CalculationType1.UniformConnected) {
             const size = this.nodeFields.size.GetNumber(data);
             data.sizeNormal = new Vector3(size, size, size);
             return;
         }
 
-        if (calculationType === CalculationType.RandomConncted) {
+        if (calculationType === CalculationType1.RandomConncted) {
             const range = this.nodeFields.range.GetSimpleVector2(data);
             const size = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
             data.sizeNormal = new Vector3(size, size, size);
@@ -44,7 +44,7 @@ export class SetSize extends MixedNode {
         let z = 0;
 
         if (IsAxisX(axisType)) {
-            if (calculationType === CalculationType.Uniform) {
+            if (calculationType === CalculationType1.Uniform) {
                 x = this.nodeFields.sizeX.GetNumber(data);
             } else {
                 const range = this.nodeFields.rangeX.GetSimpleVector2(data);
@@ -53,7 +53,7 @@ export class SetSize extends MixedNode {
         }
 
         if (IsAxisY(axisType)) {
-            if (calculationType === CalculationType.Uniform) {
+            if (calculationType === CalculationType1.Uniform) {
                 y = this.nodeFields.sizeY.GetNumber(data);
             } else {
                 const range = this.nodeFields.rangeY.GetSimpleVector2(data);
@@ -62,7 +62,7 @@ export class SetSize extends MixedNode {
         }
 
         if (IsAxisZ(axisType)) {
-            if (calculationType === CalculationType.Uniform) {
+            if (calculationType === CalculationType1.Uniform) {
                 z = this.nodeFields.sizeZ.GetNumber(data);
             } else {
                 const range = this.nodeFields.rangeZ.GetSimpleVector2(data);

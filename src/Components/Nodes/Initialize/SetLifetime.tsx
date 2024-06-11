@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { CalculationType } from "API/Nodes/FieldStates";
+import { CalculationType1 } from "API/Nodes/FieldStates";
 import { SetLifetime as SetLifetimeAPI } from "API/Nodes/Initialize/SetLifetime";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
@@ -42,7 +42,7 @@ function SetLifetime({ data }: { data: NodeData }) {
         >
             <StateField NodeField={calculationTypeRef.current} />
 
-            {calculationTypeRef.current.GetState() === CalculationType.Uniform ? (
+            {calculationTypeRef.current.GetState() === CalculationType1.Uniform ? (
                 <ConnectableNumberField
                     NodeId={data.node.id}
                     NodeField={(data.node as SetLifetimeAPI).nodeFields.time}

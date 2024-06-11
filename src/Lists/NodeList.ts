@@ -30,6 +30,7 @@ import { Bounce } from "API/Nodes/Update/Bounce";
 import { Drag } from "API/Nodes/Update/Drag";
 import { LookTowards } from "API/Nodes/Update/LookTowards";
 import { MoveTowards } from "API/Nodes/Update/MoveTowards";
+import { MultiplyRotationOverLife } from "API/Nodes/Update/MultiplyRotationOverLife";
 import { MultiplySizeOverLife } from "API/Nodes/Update/MultiplySizeOverLife";
 import { MultiplyVelocityOverLife } from "API/Nodes/Update/MultiplyVelocityOverLife";
 import { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
@@ -65,6 +66,7 @@ import { CreateBounce } from "Components/Nodes/Update/Bounce";
 import { CreateDrag } from "Components/Nodes/Update/Drag";
 import { CreateLookTowards } from "Components/Nodes/Update/LookTowards";
 import { CreateMoveTowards } from "Components/Nodes/Update/MoveTowards";
+import { CreateMultiplyRotationOverLife } from "Components/Nodes/Update/MultiplyRotationOverLife";
 import { CreateMultiplySizeOverLife } from "Components/Nodes/Update/MultiplySizeOverLife";
 import { CreateMultiplyVelocityOverLife } from "Components/Nodes/Update/MultiplyVelocityOverLife";
 import { CreateSetColorOverLife } from "Components/Nodes/Update/SetColorOverLife";
@@ -403,6 +405,14 @@ export const NodeList: SelectionEntry[] = [
         defaultEntry: {
             name: "Get Parent Property",
             create: () => CreateGetParentProperty(),
+        },
+    },
+    {
+        className: MultiplyRotationOverLife.className,
+        nodeGroups: MultiplyRotationOverLife.nodeGroups,
+        defaultEntry: {
+            name: "Multiply Rotation Over Life",
+            create: () => CreateMultiplyRotationOverLife(),
         },
     },
 ];

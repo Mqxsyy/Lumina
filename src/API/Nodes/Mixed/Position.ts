@@ -8,7 +8,7 @@ export class Position extends MixedNode {
     static className = "Position";
 
     nodeFields = {
-        nodeOperationType: new StateField(NodeOperationType, NodeOperationType.Set),
+        nodeOperationType: new StateField(NodeOperationType, NodeOperationType.Set, [NodeOperationType.Multiply]),
         position: new ConnectableVector3Field(0, 0, 0),
     };
 

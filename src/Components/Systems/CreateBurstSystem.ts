@@ -1,5 +1,5 @@
 import { NodeGroups } from "API/NodeGroup";
-import { CalculationType } from "API/Nodes/FieldStates";
+import { CalculationType1 } from "API/Nodes/FieldStates";
 import type { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
 import type { Position } from "API/Nodes/Mixed/Position";
 import type { Velocity } from "API/Nodes/Mixed/Velocity";
@@ -22,7 +22,7 @@ export function CreateBurstSystem() {
         });
 
         const setLifetimeRandom = CreateSetLifetime();
-        (setLifetimeRandom.data.node as SetLifetime).nodeFields.calculationType.SetState(CalculationType.Random);
+        (setLifetimeRandom.data.node as SetLifetime).nodeFields.calculationType.SetState(CalculationType1.Random);
         (setLifetimeRandom.data.node as SetLifetime).nodeFields.range.SetVector2(0.4, 0.8);
         setLifetimeRandom.elementLoaded.Connect(() => {
             (systemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetimeRandom.data.node.id);
@@ -35,7 +35,7 @@ export function CreateBurstSystem() {
         });
 
         const velocity = CreateVelocity();
-        (velocity.data.node as Velocity).nodeFields.calculationType.SetState(CalculationType.Random);
+        (velocity.data.node as Velocity).nodeFields.calculationType.SetState(CalculationType1.Random);
         (velocity.data.node as Velocity).nodeFields.rangeX.SetVector2(-5, 5);
         (velocity.data.node as Velocity).nodeFields.rangeY.SetVector2(-5, 5);
         (velocity.data.node as Velocity).nodeFields.rangeZ.SetVector2(-5, 5);

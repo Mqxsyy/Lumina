@@ -3,16 +3,16 @@ import { StateField } from "API/Fields/StateField";
 import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
 import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
-import { CalculationType } from "../FieldStates";
+import { CalculationType1 } from "../FieldStates";
 import { InitializeNode } from "./InitializeNode";
 
 export class SetLifetime extends InitializeNode {
     static className = "SetLifetime";
 
     nodeFields = {
-        calculationType: new StateField(CalculationType, CalculationType.Uniform, [
-            CalculationType.RandomConncted,
-            CalculationType.UniformConnected,
+        calculationType: new StateField(CalculationType1, CalculationType1.Uniform, [
+            CalculationType1.RandomConncted,
+            CalculationType1.UniformConnected,
         ]),
         time: new ConnectableNumberField(1),
         range: new ConnectableVector2Field(0.5, 1),
@@ -21,7 +21,7 @@ export class SetLifetime extends InitializeNode {
     Run(data: ParticleData) {
         const calculationType = this.nodeFields.calculationType.GetState();
 
-        if (calculationType === CalculationType.Uniform) {
+        if (calculationType === CalculationType1.Uniform) {
             data.lifetime = this.nodeFields.time.GetNumber(data);
             return;
         }

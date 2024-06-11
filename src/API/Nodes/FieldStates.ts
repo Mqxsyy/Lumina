@@ -1,10 +1,15 @@
 export type FieldState = { [key: string]: string };
 
-export const CalculationType = {
+export const CalculationType1 = {
     Uniform: "Uniform",
     UniformConnected: "Uniform Connected",
     Random: "Random",
     RandomConncted: "Random Connected",
+};
+
+export const CalculationType2 = {
+    Connected: "Connected",
+    Individual: "Individual",
 };
 
 export const AxisType = {
@@ -33,6 +38,7 @@ export const TrigonometryType = {
 export const NodeOperationType = {
     Set: "Set",
     Add: "Add",
+    Multiply: "Multiply",
 };
 
 export const SpaceType = {

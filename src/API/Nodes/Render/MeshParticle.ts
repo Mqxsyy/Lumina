@@ -198,7 +198,14 @@ export class MeshParticle extends RenderNode {
                     let cf = new CFrame(pos);
 
                     if (aliveParticleData.rotation !== CFrameZero) {
-                        cf = cf.mul(aliveParticleData.rotation);
+                        if (aliveParticleData.rotationMultiplier !== Vector3.one) {
+                            const [rx, ry, rz] = aliveParticleData.rotation.ToEulerAnglesXYZ();
+                            const multiplier = aliveParticleData.rotationMultiplier;
+                            const rotation = CFrame.fromEulerAnglesXYZ(rx * multiplier.X, ry * multiplier.Y, rz * multiplier.Z);
+                            cf = cf.mul(rotation);
+                        } else {
+                            cf = cf.mul(aliveParticleData.rotation);
+                        }
                     }
 
                     if (aliveParticleData.particle.CFrame !== cf) {

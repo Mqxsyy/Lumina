@@ -3,7 +3,7 @@ import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
 import { StateField } from "API/Fields/StateField";
 import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
-import { AxisType, CalculationType, NodeOperationType } from "../FieldStates";
+import { AxisType, CalculationType1, NodeOperationType } from "../FieldStates";
 import { IsAxisX, IsAxisY, IsAxisZ } from "../FieldStatesLib";
 import { MixedNode } from "./MixedNode";
 
@@ -11,10 +11,10 @@ export class Rotation extends MixedNode {
     static className = "Rotation";
 
     nodeFields = {
-        nodeOperationType: new StateField(NodeOperationType, NodeOperationType.Set),
-        calculationType: new StateField(CalculationType, CalculationType.Uniform, [
-            CalculationType.UniformConnected,
-            CalculationType.RandomConncted,
+        nodeOperationType: new StateField(NodeOperationType, NodeOperationType.Set, [NodeOperationType.Multiply]),
+        calculationType: new StateField(CalculationType1, CalculationType1.Uniform, [
+            CalculationType1.UniformConnected,
+            CalculationType1.RandomConncted,
         ]),
         axisType: new StateField(AxisType, AxisType.XYZ),
         rotationX: new ConnectableNumberField(0),
@@ -30,7 +30,7 @@ export class Rotation extends MixedNode {
     storedValuesZ = new Map<number, number>();
 
     GetRotation(calculationType: string, data: ParticleData, rotationField: ConnectableNumberField, storedValues: Map<number, number>) {
-        if (calculationType === CalculationType.Uniform) return rotationField.GetNumber(data);
+        if (calculationType === CalculationType1.Uniform) return rotationField.GetNumber(data);
 
         const storedRotation = storedValues.get(data.particleId);
         if (storedRotation !== undefined) return storedRotation;
