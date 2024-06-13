@@ -139,7 +139,7 @@ export default function ShowUpdateLog() {
 
                             <FeatureDetail Text="- Connections now have a static start and end length" />
                             <FeatureDetail Text="- Auto generation looks better" />
-                            <FeatureDetail Text="- nged how saves are handled (old savedata is now broken)" />
+                            <FeatureDetail Text="- Changed how saves are handled (old savedata is now broken)" />
                         </Div>
                     </Div>
                 </scrollingframe>
