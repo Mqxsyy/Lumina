@@ -6,7 +6,7 @@ interface Data {
     version: number;
 }
 
-const localVersion = 5;
+const localVersion = 6;
 
 export default function CheckForUpdates(plugin: Plugin) {
     if (RunService.IsRunning()) return;
@@ -16,7 +16,7 @@ export default function CheckForUpdates(plugin: Plugin) {
 
     if (data !== undefined) {
         if (data.version !== localVersion) {
-            // RequestUpdate();
+            RequestUpdate();
             return;
         }
     }
