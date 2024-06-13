@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
-import { Remap as RemapAPI, RemapFieldNames } from "API/Nodes/Logic/Remap";
+import { ValueType } from "API/Nodes/FieldStates";
+import { Remap as RemapAPI } from "API/Nodes/Logic/Remap";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import { AddNode, type NodeData } from "Services/NodesService";
@@ -8,7 +8,12 @@ import Node from "../Node";
 
 export function CreateRemap() {
     return AddNode(new RemapAPI(), (data: NodeData) => {
-        return <Remap key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <Remap
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 
@@ -19,19 +24,19 @@ function Remap({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectioNode={data.node as LogicNode}
+            ConnectionValueType={ValueType.Number}
         >
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as RemapAPI).nodeFields.input}
-                NodeFieldName={RemapFieldNames.input}
+                NodeFieldName={"input"}
                 Label="Input"
                 AllowNegative={true}
             />
             <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as RemapAPI).nodeFields.oldRange}
-                NodeFieldName={RemapFieldNames.oldRange}
+                NodeFieldName={"oldRange"}
                 ValueLabels={["Min", "Max"]}
                 AllowNegatives={[true, true]}
                 Label="From Range"
@@ -39,7 +44,7 @@ function Remap({ data }: { data: NodeData }) {
             <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as RemapAPI).nodeFields.newRange}
-                NodeFieldName={RemapFieldNames.newRange}
+                NodeFieldName={"newRange"}
                 ValueLabels={["Min", "Max"]}
                 AllowNegatives={[true, true]}
                 Label="To Range"

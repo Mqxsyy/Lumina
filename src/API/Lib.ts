@@ -24,12 +24,13 @@ export function LerpNumber(a: number, b: number, t: number): number {
 }
 
 export function RoundDecimal(x: number, decimal: number) {
-    return FixFloatingPointError(math.round(x / decimal) * decimal);
+    return ReduceDecimals(math.round(x / decimal) * decimal);
 }
 
-export function FixFloatingPointError(value: number) {
-    const shortened = string.format("%.3f", tostring(value));
-    return tonumber(shortened.gsub("%.?0+$", "")[0]) as number;
+// Also a fix for floating point errors
+export function ReduceDecimals(value: number, decimals = 3) {
+    const shortened = string.format(`%.${decimals}f`, tostring(value));
+    return tonumber(shortened.gsub("(%..-)0+$", "%1")[0]) as number;
 }
 
 export function CapitalizeFirstLetter(text: string) {

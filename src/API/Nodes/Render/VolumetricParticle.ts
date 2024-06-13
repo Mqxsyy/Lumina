@@ -1,20 +1,13 @@
 import { RunService, Workspace } from "@rbxts/services";
-import { VolumetricParticleShapeField, VolumetricParticleShapes } from "API/Fields/VolumetricParticleShapeField";
+import { StateField } from "API/Fields/StateField";
 import { GetVolumetricParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
-import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenVolumetricParticle } from "../AutoGeneration/RenderNodes/AutoGenVolumetricParticle";
+import { VolumetricParticleShapeType } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
-
-export const VolumetricParticleName = "VolumetricParticle";
-export const VolumetricParticleFieldNames = {
-    shape: "shape",
-};
 
 const DEFAULT_SIZE = new Vector3(1, 1, 1);
 const DEFAULT_MATERIAL = Enum.Material.SmoothPlastic;
@@ -60,9 +53,10 @@ function UpdateParticleProperties(data: ParticleData) {
 }
 
 export class VolumetricParticle extends RenderNode {
-    nodeGroup = NodeGroups.Render;
+    static className = "VolumetricParticle";
+
     nodeFields = {
-        shape: new VolumetricParticleShapeField(VolumetricParticleShapes.Cube),
+        shape: new StateField(VolumetricParticleShapeType, VolumetricParticleShapeType.Cube),
     };
 
     objectPool: ObjectPool;
@@ -81,31 +75,55 @@ export class VolumetricParticle extends RenderNode {
         const particle = this.objectPool.GetItem() as Part;
         particle.CFrame = CFrameZero;
 
-        const shape = this.nodeFields.shape.GetShape();
-        if (shape === VolumetricParticleShapes.Cube) {
+        const shape = this.nodeFields.shape.GetState();
+        if (shape === VolumetricParticleShapeType.Cube) {
             if (particle.Shape !== Enum.PartType.Block) {
                 particle.Shape = Enum.PartType.Block;
             }
-        } else if (shape === VolumetricParticleShapes.Sphere) {
+        } else if (shape === VolumetricParticleShapeType.Sphere) {
             if (particle.Shape !== Enum.PartType.Ball) {
                 particle.Shape = Enum.PartType.Ball;
             }
         }
 
-        const data = CreateParticleData(id, ParticleTypes.Cube, particle, updateNodes);
+        const orderedInitializeNodes = initializeNodes.sort((a, b) => {
+            if (a.updatePriority !== b.updatePriority) {
+                return a.updatePriority < b.updatePriority;
+            }
 
-        for (const node of initializeNodes) {
-            node.Initialize(data);
+            return a.updateOrder < b.updateOrder;
+        });
+
+        const orderedUpdateNodes = updateNodes.sort((a, b) => {
+            if (a.updatePriority !== b.updatePriority) {
+                return a.updatePriority < b.updatePriority;
+            }
+
+            return a.updateOrder < b.updateOrder;
+        });
+
+        const data = CreateParticleData(id, ParticleTypes.Cube, particle, orderedUpdateNodes);
+        for (let i = 0; i < orderedInitializeNodes.size(); i++) {
+            orderedInitializeNodes[i].Run(data);
         }
 
-        for (const node of updateNodes) {
-            node.Update(data);
+        if (data.nextPos !== undefined || data.rotation !== CFrameZero) {
+            let pos = Vector3.zero;
+            let rot = CFrameZero;
+
+            if (data.nextPos !== undefined) {
+                pos = data.nextPos;
+            }
+
+            if (data.rotation !== CFrameZero) {
+                rot = data.rotation;
+            }
+
+            particle.CFrame = new CFrame(pos).mul(rot);
         }
 
-        if (data.rotation !== Vector3.zero) {
-            const rot = data.rotation;
-            const [x, y, z] = [math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z)];
-            particle.CFrame = particle.CFrame.mul(CFrame.Angles(x, y, z));
+        for (let i = 0; i < orderedUpdateNodes.size(); i++) {
+            orderedUpdateNodes[i].Run(data, 1);
         }
 
         UpdateParticleProperties(data);
@@ -127,6 +145,8 @@ export class VolumetricParticle extends RenderNode {
                     movedParticles.push(aliveParticleData.particle);
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
+                    aliveParticleData.isRemoving.Fire();
+
                     if (this.aliveParticles.size() === 0) {
                         if (this.updateLoop === undefined) continue;
 
@@ -137,28 +157,38 @@ export class VolumetricParticle extends RenderNode {
                     continue;
                 }
 
-                for (const updateNode of aliveParticleData.updateNodes) {
-                    updateNode.Update(aliveParticleData);
+                for (let i = 0; i < aliveParticleData.updateNodes.size(); i++) {
+                    aliveParticleData.updateNodes[i].Run(aliveParticleData, dt);
                 }
 
-                if (aliveParticleData.velocityNormal !== Vector3.zero) {
-                    const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
-                    const pos = aliveParticleData.particle.Position.add(velocity.mul(dt));
+                if (
+                    aliveParticleData.nextPos !== undefined ||
+                    aliveParticleData.velocityNormal !== Vector3.zero ||
+                    aliveParticleData.rotation !== CFrameZero
+                ) {
+                    let pos: Vector3;
+
+                    if (aliveParticleData.nextPos !== undefined) {
+                        pos = aliveParticleData.nextPos;
+                        aliveParticleData.nextPos = undefined;
+                    } else {
+                        const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
+                        pos = aliveParticleData.particle.Position.add(velocity.mul(dt));
+                    }
 
                     let cf = new CFrame(pos);
 
-                    if (aliveParticleData.rotation !== Vector3.zero) {
-                        const rot = aliveParticleData.rotation;
-                        const [x, y, z] = [math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z)];
-                        cf = cf.mul(CFrame.Angles(x, y, z));
+                    if (aliveParticleData.rotation !== CFrameZero) {
+                        cf = cf.mul(aliveParticleData.rotation);
                     }
 
-                    movedParticles.push(aliveParticleData.particle);
-                    movedParticlesCFrames.push(cf);
+                    if (aliveParticleData.particle.CFrame !== cf) {
+                        movedParticles.push(aliveParticleData.particle);
+                        movedParticlesCFrames.push(cf);
+                    }
                 }
 
                 UpdateParticleProperties(aliveParticleData);
-
                 aliveParticleData.alivetime += dt;
             }
 
@@ -178,11 +208,7 @@ export class VolumetricParticle extends RenderNode {
         this.objectPool.ClearStandby();
     }
 
-    GetNodeName() {
-        return VolumetricParticleName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenVolumetricParticle(this, src);
+    GetClassName() {
+        return VolumetricParticle.className;
     }
 }

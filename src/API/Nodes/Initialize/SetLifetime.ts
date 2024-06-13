@@ -1,38 +1,38 @@
+import { ConnectableVector2Field } from "API/Fields/ConnectableVector2Field";
+import { StateField } from "API/Fields/StateField";
+import { Rand, RoundDecimal } from "API/Lib";
 import type { ParticleData } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
 import { ConnectableNumberField } from "../../Fields/ConnectableNumberField";
-import { NodeGroups } from "../../NodeGroup";
-import { AutoGenSetLifetime } from "../AutoGeneration/InitializeNodes/AutoGenSetLifetime";
+import { CalculationType1 } from "../FieldStates";
 import { InitializeNode } from "./InitializeNode";
 
-export const SetLifetimeName = "SetLifetime";
-export const SetLifetimeFieldNames = {
-    time: "time",
-};
-
 export class SetLifetime extends InitializeNode {
-    nodeGroup: NodeGroups = NodeGroups.Initialize;
-    nodeFields: {
-        time: ConnectableNumberField;
+    static className = "SetLifetime";
+
+    nodeFields = {
+        calculationType: new StateField(CalculationType1, CalculationType1.Uniform, [
+            CalculationType1.RandomConncted,
+            CalculationType1.UniformConnected,
+        ]),
+        time: new ConnectableNumberField(1),
+        range: new ConnectableVector2Field(0.5, 1),
     };
 
-    constructor() {
-        super();
+    Run(data: ParticleData) {
+        const calculationType = this.nodeFields.calculationType.GetState();
 
-        this.nodeFields = {
-            time: new ConnectableNumberField(1),
-        };
+        if (calculationType === CalculationType1.Uniform) {
+            data.lifetime = this.nodeFields.time.GetNumber(data);
+            return;
+        }
+
+        const range = this.nodeFields.range.GetSimpleVector2(data);
+        const lifetime = RoundDecimal(Rand.NextNumber(range.x, range.y), 0.01);
+
+        data.lifetime = lifetime;
     }
 
-    Initialize(data: ParticleData) {
-        data.lifetime = this.nodeFields.time.GetNumber(data);
-    }
-
-    GetNodeName(): string {
-        return SetLifetimeName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenSetLifetime(this, src);
+    GetClassName(): string {
+        return SetLifetime.className;
     }
 }

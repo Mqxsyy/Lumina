@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from "@rbxts/react";
 import Div from "Components/Div";
+import { ReloadConnectionVisuals } from "Components/Events";
+import { DestroyConnection } from "Services/ConnectionsService";
 import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
@@ -7,43 +9,53 @@ interface Props {
     AnchorPoint?: Vector2;
     Position?: UDim2;
     Size?: UDim2;
-    ConnectionId?: number;
     ConnectionIds?: number[];
     GetElementRef?: (element: ImageButton) => void;
     MouseButton1Down?: () => void;
     MouseButton1Up?: () => void;
-    UpdateConnecton?: (element: ImageButton) => void;
 }
 
 export default function ConnectionPoint({
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromScale(1, 1),
-    ConnectionId = undefined,
     ConnectionIds = undefined,
     GetElementRef = undefined,
     MouseButton1Down = undefined,
     MouseButton1Up = undefined,
-    UpdateConnecton = undefined,
 }: Props) {
     const connectionPointRef = useRef<ImageButton>();
-
     const zoomScale = GetZoomScale();
 
-    useEffect(() => {
-        if (GetElementRef === undefined) return;
-        if (connectionPointRef.current === undefined) return;
-
-        GetElementRef(connectionPointRef.current);
-    }, [connectionPointRef.current]);
+    const connectionIdsRef = useRef<number[]>([]);
 
     useEffect(() => {
-        if (ConnectionId === undefined) return;
+        if (GetElementRef !== undefined) {
+            GetElementRef(connectionPointRef.current as ImageButton);
+        }
+
+        return () => {
+            if (connectionIdsRef.current === undefined) return;
+
+            for (const id of connectionIdsRef.current) {
+                DestroyConnection(id);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        connectionIdsRef.current = ConnectionIds || [];
+
         if (ConnectionIds === undefined) return;
-        if (UpdateConnecton === undefined) return;
 
-        UpdateConnecton(connectionPointRef.current as ImageButton);
-    }, [connectionPointRef.current?.AbsolutePosition, ConnectionId, ConnectionIds]);
+        const connection = (connectionPointRef.current as ImageButton).GetPropertyChangedSignal("AbsolutePosition").Connect(() => {
+            ReloadConnectionVisuals.Fire();
+        });
+
+        return () => {
+            connection.Disconnect();
+        };
+    }, [ConnectionIds]);
 
     return (
         <imagebutton
@@ -83,7 +95,7 @@ export default function ConnectionPoint({
                 <uistroke Color={StyleColors.Highlight} Thickness={math.clamp(2 * zoomScale, 1, math.huge)} />
             </Div>
 
-            {(ConnectionId !== undefined || ConnectionIds !== undefined) && (
+            {ConnectionIds !== undefined && (
                 <Div
                     AnchorPoint={new Vector2(0.5, 0.5)}
                     Position={UDim2.fromScale(0.5, 0.5)}

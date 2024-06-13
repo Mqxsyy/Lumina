@@ -1,27 +1,63 @@
 import type { NodeField } from "API/Fields/NodeField";
+import { LowerFirstLetter } from "API/Lib";
 import type { Src } from "API/VFXScriptCreator";
-import type { NodeGroups } from "../NodeGroup";
+import { NodeGroups } from "../NodeGroup";
+import { AutoGenAddToSystem, AutoGenImport } from "./AutoGenLib";
 import { NodeIdPool } from "./NodeIdPool";
+
+export enum UpdatePrioriy {
+    First = 1,
+    Default = 2,
+    Last = 3,
+    PostMove = 4,
+}
 
 export abstract class Node {
     id: number;
 
-    abstract nodeGroup: NodeGroups;
+    updatePriority = UpdatePrioriy.Default;
+    updateOrder = -1;
+
     abstract nodeFields: { [key: string]: NodeField };
     connectedSystemId?: number;
+    systemGroup?: NodeGroups;
 
     constructor() {
         this.id = NodeIdPool.GetNextId();
     }
 
-    ConnectToSystem(systemId: number) {
-        this.connectedSystemId = systemId;
-    }
+    abstract GetClassName(): string;
+    abstract GetNodeGroups(): NodeGroups[];
+    abstract GetNodeFolderName(): string;
 
-    RemoveSystemConnection() {
-        this.connectedSystemId = undefined;
-    }
+    GetAutoGenerationCode(src: Src, wrapper?: string) {
+        if (this.GetNodeGroups().findIndex((g) => g === NodeGroups.Logic) !== -1 && wrapper !== undefined) {
+            const nodeName = this.GetClassName();
 
-    abstract GetNodeName(): string;
-    abstract GetAutoGenerationCode(src: Src, wrapper?: string): void;
+            const className = `${nodeName}${this.id}`;
+            const varName = `${LowerFirstLetter(nodeName)}${this.id}`;
+
+            if (string.match(src.value, className)[0] === undefined) {
+                src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "${this.GetNodeFolderName()}", "${nodeName}").${nodeName} \n`;
+                src.value += `local ${varName} = ${className}.new() \n\n`;
+
+                for (const [fieldName, fieldValue] of pairs(this.nodeFields)) {
+                    fieldValue.AutoGenerateField(`${varName}.nodeFields.${fieldName}`, src);
+                }
+
+                src.value += "\n";
+            }
+
+            src.value += `${wrapper.gsub("%.%.", `${varName}`)[0]}\n`;
+            return;
+        }
+
+        const varName = AutoGenImport(this, src);
+
+        for (const [fieldName, fieldValue] of pairs(this.nodeFields)) {
+            fieldValue.AutoGenerateField(`${varName}.nodeFields.${fieldName}`, src);
+        }
+
+        AutoGenAddToSystem(varName, this.systemGroup as NodeGroups, src);
+    }
 }

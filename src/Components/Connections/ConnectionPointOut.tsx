@@ -17,6 +17,7 @@ interface Props {
     Position?: UDim2;
     Size?: UDim2;
     NodeId: number;
+    ValueType: string;
 }
 
 export default function ConnectionPointOut({
@@ -24,8 +25,8 @@ export default function ConnectionPointOut({
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
+    ValueType,
 }: Props) {
-    const [_, setForceRender] = useState(0);
     const [connectionIds, setConnectionIds] = useState<number[]>([]);
     const elementRef = useRef<ImageButton>();
 
@@ -36,7 +37,7 @@ export default function ConnectionPointOut({
         if (elementRef.current === undefined) return;
         if (node.element === undefined) return;
 
-        const connectionData = CreateConnection(nodeData, elementRef.current, loadedId);
+        const connectionData = CreateConnection(nodeData, elementRef.current, ValueType, loadedId);
         setConnectionIds((prev) => [...prev, connectionData.id]);
 
         UpdateNodeData(NodeId, (data) => {
@@ -73,37 +74,6 @@ export default function ConnectionPointOut({
         const connectionData = createConnection() as ConnectionData;
         StartMovingConnection(connectionData.id);
     };
-
-    useEffect(() => {
-        const connection = node.elementLoaded.Connect(() => {
-            setForceRender((prev) => prev + 1);
-        });
-
-        return () => {
-            connection.Disconnect();
-        };
-    }, []);
-
-    useEffect(() => {
-        let destroyConnection: FastEventConnection | undefined = nodeData.onDestroy.Connect(() => {
-            if (destroyConnection === undefined) return;
-
-            destroyConnection.Disconnect();
-            destroyConnection = undefined;
-            if (connectionIds.size() !== 0) {
-                UnbindMovingConnection();
-
-                for (const connectionId of connectionIds) {
-                    DestroyConnection(connectionId);
-                }
-            }
-        });
-
-        return () => {
-            if (destroyConnection === undefined) return;
-            destroyConnection.Disconnect();
-        };
-    }, [nodeData.onDestroy, connectionIds]);
 
     useEffect(() => {
         if (elementRef.current === undefined) return;

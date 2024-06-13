@@ -1,24 +1,24 @@
-import type { SelectionEntry } from "API/Nodes/AutoGeneration/SelectionEntry";
+import type { Entry } from "API/Nodes/SelectionEntry";
 import { CreateBasicSystem } from "Components/Systems/CreateBasicSystem";
 import { CreateBurstSystem } from "Components/Systems/CreateBurstSystem";
 import { CreateEmptySystem } from "Components/Systems/CreateEmptySystem";
 import { CreateFlameSystem } from "Components/Systems/CreateFlame";
 
-export const NodeSystems: { [key: string]: SelectionEntry } = {
-    Empty: {
+export const NodeSystems: Entry[] = [
+    {
         name: "Create Empty",
         create: () => CreateEmptySystem(),
     },
-    Basic: {
+    {
         name: "Create Basic",
         create: () => CreateBasicSystem(),
     },
-    Burst: {
+    {
         name: "Create Burst",
         create: () => CreateBurstSystem(),
     },
-    Flame: {
+    {
         name: "Create Flame",
         create: () => CreateFlameSystem(),
     },
-};
+];

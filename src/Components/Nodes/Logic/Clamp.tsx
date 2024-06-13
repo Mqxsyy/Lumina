@@ -1,14 +1,19 @@
 import React from "@rbxts/react";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
-import { Clamp as ClampAPI, ClampFieldNames } from "API/Nodes/Logic/Clamp";
+import { ValueType } from "API/Nodes/FieldStates";
+import { Clamp as ClampAPI } from "API/Nodes/Logic/Clamp";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
+import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
-import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 
 export function CreateClamp() {
     return AddNode(new ClampAPI(), (data: NodeData) => {
-        return <Clamp key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <Clamp
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 
@@ -19,21 +24,22 @@ function Clamp({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectioNode={data.node as LogicNode}
+            ConnectionValueType={ValueType.Number}
         >
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as ClampAPI).nodeFields.input}
-                NodeFieldName={ClampFieldNames.input}
+                NodeFieldName={"input"}
                 Label="Input"
                 AllowNegative={true}
             />
             <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as ClampAPI).nodeFields.range}
-                NodeFieldName={ClampFieldNames.range}
+                NodeFieldName={"range"}
                 ValueLabels={["Min", "Max"]}
                 AllowNegatives={[true, true]}
+                Label="Range"
             />
         </Node>
     );

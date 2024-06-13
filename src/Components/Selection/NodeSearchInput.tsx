@@ -13,7 +13,7 @@ export function NodeSearchInput({ TextChanged }: Props) {
 
             <TextInput
                 PlaceholderText={"Search..."}
-                TextXAlignment={Enum.TextXAlignment.Center}
+                TextXAlignment={"Center"}
                 ClearTextOnFocus={false}
                 AutoFocus={true}
                 TextChanged={TextChanged as (text: string) => undefined}

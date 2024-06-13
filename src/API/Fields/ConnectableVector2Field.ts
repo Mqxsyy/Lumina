@@ -11,20 +11,34 @@ interface SerializedData {
 
 export class ConnectableVector2Field extends NodeField {
     vector2Field: Vector2Field;
+    connectedNodeVector2: undefined | LogicNode;
     connectedNodeX: undefined | LogicNode;
     connectedNodeY: undefined | LogicNode;
 
     constructor(x: number, y: number) {
         super();
-
         this.vector2Field = new Vector2Field(x, y);
     }
 
-    GetVector2(data: ParticleData): SimpleVector2 {
+    GetSimpleVector2(data: ParticleData): SimpleVector2 {
+        if (this.connectedNodeVector2 !== undefined) {
+            const vec2 = this.connectedNodeVector2.Calculate(data) as Vector2;
+            return { x: vec2.X, y: vec2.Y };
+        }
+
         const x = this.GetX(data);
         const y = this.GetY(data);
 
         return { x, y };
+    }
+
+    GetVector2(data: ParticleData) {
+        if (this.connectedNodeVector2 !== undefined) return this.connectedNodeVector2.Calculate(data) as Vector2;
+
+        const x = this.GetX(data);
+        const y = this.GetY(data);
+
+        return new Vector2(x, y);
     }
 
     GetXAsText = () => {
@@ -52,6 +66,8 @@ export class ConnectableVector2Field extends NodeField {
     };
 
     SetVector2 = (x: number, y: number) => {
+        this.connectedNodeVector2 = undefined;
+
         this.SetX(x, true);
         this.SetY(y, true);
 
@@ -71,6 +87,16 @@ export class ConnectableVector2Field extends NodeField {
         this.connectedNodeY = undefined;
 
         if (!ignoreFieldChange) return;
+        this.FieldChanged.Fire();
+    };
+
+    ConnectVector2 = (node: LogicNode) => {
+        this.connectedNodeVector2 = node;
+        this.FieldChanged.Fire();
+    };
+
+    DisconnectVector2 = () => {
+        this.connectedNodeVector2 = undefined;
         this.FieldChanged.Fire();
     };
 

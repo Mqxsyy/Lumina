@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "@rbxts/react";
 import type { ConnectableNumberField as NumberFieldAPI } from "API/Fields/ConnectableNumberField";
+import { ValueType } from "API/Nodes/FieldStates";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
@@ -12,7 +13,7 @@ interface Props {
     NodeField: NumberFieldAPI;
     NodeFieldName: string;
 
-    Label: string;
+    Label?: string;
     AllowNegative?: boolean;
 
     OverrideSetNumber?: (number: number) => undefined;
@@ -22,7 +23,7 @@ export default function ConnectableNumberField({
     NodeId,
     NodeField,
     NodeFieldName,
-    Label,
+    Label = undefined,
     AllowNegative = false,
     OverrideSetNumber = undefined,
 }: Props) {
@@ -52,10 +53,15 @@ export default function ConnectableNumberField({
             <ConnectionPointIn
                 NodeId={NodeId}
                 NodeFieldName={NodeFieldName}
+                ValueType={ValueType.Number}
                 BindNode={NodeField.ConnectNode}
                 UnbindNode={NodeField.DisconnectNode}
             />
-            <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
+
+            {Label !== undefined && (
+                <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
+            )}
+
             <NumberInput
                 AnchorPoint={new Vector2(1, 0)}
                 Position={UDim2.fromScale(1, 0)}

@@ -23,7 +23,6 @@ export interface NodeData {
     loadedConnectionsOut?: NodeConnectionOut[];
     connectionsIn: NodeConnectionIn[];
     loadedConnectionsIn?: NodeConnectionIn[];
-    order: number;
     node: Node;
     dataChanged: FastEvent;
     onDestroy: FastEvent<[NodeData]>;
@@ -53,7 +52,6 @@ export function AddNode(api: Node, create: (data: NodeData) => React.Element) {
             anchorPoint: GetMousePositionOnCanvas().div(GetZoomScale()),
             connectionsOut: [],
             connectionsIn: [],
-            order: -1,
             node: api,
             dataChanged: new FastEvent(),
             onDestroy: new FastEvent(),
@@ -106,7 +104,7 @@ export function RemoveNode(id: number) {
     const index = NodeCollection.findIndex((collection) => collection.data.node.id === id);
     if (index !== -1) {
         const node = NodeCollection[index];
-        if (node.data.node.nodeGroup === NodeGroups.Render) {
+        if (node.data.node.GetNodeGroups().findIndex((g) => g === NodeGroups.Render) !== -1) {
             (node.data.node as RenderNode).Destroy();
         }
 

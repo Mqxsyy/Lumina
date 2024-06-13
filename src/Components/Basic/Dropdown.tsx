@@ -13,7 +13,7 @@ export default function Dropdown() {
             BackgroundColor3={StyleColors.Primary}
             ImageTransparency={1}
             AutoButtonColor={false}
-            ZIndex={20}
+            ZIndex={9}
         >
             <uicorner CornerRadius={StyleProperties.CornerRadius} />
             <uipadding

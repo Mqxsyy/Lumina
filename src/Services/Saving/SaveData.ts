@@ -22,13 +22,13 @@ export interface SerializedConnection {
 
 export interface SerializedNode {
     connections?: SerializedConnection[];
-    nodeName: string;
+    className: string;
+    nodeName?: string; // backwards comaptibility 0.1.2 -> 0.2.0
     fields: SerializedField[];
     order: number;
 }
 
 export interface SerializedFloatingNode extends SerializedNode {
-    nodeGroup: number;
     anchorPoint: { x: number; y: number };
 }
 

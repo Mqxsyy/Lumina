@@ -11,14 +11,15 @@ interface Props {
     Label: string;
     Graph: LineGraphFieldAPI;
     MaxValue?: number;
+    MinValue?: number;
 }
 
-export function LineGraphField({ Label, Graph, MaxValue = 1 }: Props) {
+export function LineGraphField({ Label, Graph, MaxValue = 1, MinValue = 0 }: Props) {
     const windowRef = useRef(GetWindow(Windows.ValueGraph));
     const zoomScale = GetZoomScale();
 
     const OnMouseButton1Down = () => {
-        LoadGraph(Graph, MaxValue);
+        LoadGraph(Graph, MaxValue, MinValue);
         windowRef.current.Enabled = !windowRef.current.Enabled;
     };
 

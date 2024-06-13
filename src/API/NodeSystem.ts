@@ -4,8 +4,8 @@ import { NodeGroup, NodeGroups } from "./NodeGroup";
 import type { InitializeNode } from "./Nodes/Initialize/InitializeNode";
 import type { Node } from "./Nodes/Node";
 import type { RenderNode } from "./Nodes/Render/RenderNode";
-import { BurstSpawnName } from "./Nodes/Spawn/BurstSpawn";
-import { ConstantSpawnName } from "./Nodes/Spawn/ConstantSpawn";
+import { BurstSpawn } from "./Nodes/Spawn/BurstSpawn";
+import { ConstantSpawn } from "./Nodes/Spawn/ConstantSpawn";
 import type { SpawnNode } from "./Nodes/Spawn/SpawnNode";
 import type { UpdateNode } from "./Nodes/Update/UpdateNode";
 
@@ -37,13 +37,13 @@ export class NodeSystem {
         };
     }
 
-    AddNode(node: Node) {
-        this.NodeGroups[node.nodeGroup as NodeGroups].AddNode(node);
+    AddNode(node: Node, nodeGroup: NodeGroups) {
+        this.NodeGroups[nodeGroup].AddNode(node);
         this.UpdateNodes();
     }
 
-    RemoveNode(node: Node) {
-        this.NodeGroups[node.nodeGroup as NodeGroups].RemoveNode(node);
+    RemoveNode(node: Node, nodeGroup: NodeGroups) {
+        this.NodeGroups[nodeGroup].RemoveNode(node);
         this.UpdateNodes();
     }
 
@@ -74,7 +74,7 @@ export class NodeSystem {
         }
 
         if (this.spawnNode && this.renderNode) {
-            if (this.spawnNode.GetNodeName() === ConstantSpawnName) {
+            if (this.spawnNode.GetClassName() === ConstantSpawn.className) {
                 let passedTime = 0;
 
                 this.SpawnConnection = RunService.RenderStepped.Connect((dt) => {
@@ -86,11 +86,18 @@ export class NodeSystem {
                         passedTime -= interval;
                     }
                 });
-            } else if (this.spawnNode.GetNodeName() === BurstSpawnName) {
+            } else if (this.spawnNode.GetClassName() === BurstSpawn.className) {
                 const amount = this.spawnNode.GetValue();
-                for (let i = 0; i < amount; i++) {
-                    this.SpawnParticle();
-                }
+                const delay = (this.spawnNode as BurstSpawn).nodeFields.delay.GetNumber();
+
+                task.spawn(() => {
+                    for (let i = 0; i < amount; i++) {
+                        this.SpawnParticle();
+                        if (delay > 0) {
+                            task.wait(delay);
+                        }
+                    }
+                });
             }
         }
     }

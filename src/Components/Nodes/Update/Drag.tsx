@@ -1,13 +1,17 @@
 import React from "@rbxts/react";
-import { CapitalizeFirstLetter } from "API/Lib";
-import { Drag as DragAPI, DragFieldNames } from "API/Nodes/Update/Drag";
+import { Drag as DragAPI } from "API/Nodes/Update/Drag";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
 export function CreateDrag() {
     return AddNode(new DragAPI(), (data: NodeData) => {
-        return <Drag key={data.order === -1 ? `node_${data.node.id}` : `node_${data.order}_${data.node.id}`} data={data} />;
+        return (
+            <Drag
+                key={data.node.updateOrder === -1 ? `node_${data.node.id}` : `node_${data.node.updateOrder}_${data.node.id}`}
+                data={data}
+            />
+        );
     });
 }
 
@@ -22,8 +26,8 @@ function Drag({ data }: { data: NodeData }) {
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as DragAPI).nodeFields.drag}
-                NodeFieldName={DragFieldNames.drag}
-                Label={CapitalizeFirstLetter(DragFieldNames.drag)}
+                NodeFieldName={"drag"}
+                Label={"Drag"}
             />
         </Node>
     );

@@ -1,32 +1,29 @@
 import { NodeGroups } from "API/NodeGroup";
-import type { SetEmission } from "API/Nodes/Initialize/SetEmission";
-import type { SetLifetimeRandom } from "API/Nodes/Initialize/SetLifetimeRandom";
-import type { SetPosition } from "API/Nodes/Initialize/SetPosition";
-import type { SetRotationZRandom } from "API/Nodes/Initialize/SetRotationZRandom";
-import type { SetSizeRandom } from "API/Nodes/Initialize/SetSizeRandom";
-import type { SetVelocityRandom } from "API/Nodes/Initialize/SetVelocityRandom";
+import { AxisType, CalculationType1, NodeOperationType } from "API/Nodes/FieldStates";
+import type { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
+import type { Position } from "API/Nodes/Mixed/Position";
+import type { Rotation } from "API/Nodes/Mixed/Rotation";
+import type { SetEmission } from "API/Nodes/Mixed/SetEmission";
+import type { SetSize } from "API/Nodes/Mixed/SetSize";
+import type { Velocity } from "API/Nodes/Mixed/Velocity";
 import type { PlaneParticle } from "API/Nodes/Render/PlaneParticle";
 import type { ConstantSpawn } from "API/Nodes/Spawn/ConstantSpawn";
-import type { AddRotationZRandom } from "API/Nodes/Update/AddRotationZRandom";
 import type { Drag } from "API/Nodes/Update/Drag";
 import type { MultiplySizeOverLife } from "API/Nodes/Update/MultiplySizeOverLife";
 import type { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
 import type { SetTransparencyOverLife } from "API/Nodes/Update/SetTransparencyOverLife";
-import { CreateSetPosition } from "Components/Nodes/Initialize/SetPosition";
-import { CreateSetRotationZRandom } from "Components/Nodes/Initialize/SetRotationZRandom";
+import { CreatePosition } from "Components/Nodes/Initialize/Position";
+import { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
+import { CreateRotation } from "Components/Nodes/Mixed/Rotation";
+import { CreateSetEmission } from "Components/Nodes/Mixed/SetEmission";
+import { CreateSetSize } from "Components/Nodes/Mixed/SetSize";
+import { CreateVelocity } from "Components/Nodes/Mixed/Velocity";
 import { CreatePlaneParticle } from "Components/Nodes/Render/PlaneParticle";
 import { CreateConstantSpawn } from "Components/Nodes/Spawn/ConstantSpawn";
-import {
-    CreateAddRotationZRandom,
-    CreateDrag,
-    CreateMultiplySizeOverLife,
-    CreateSetColorOverLife,
-    CreateSetEmission,
-    CreateSetLifetimeRandom,
-    CreateSetSizeRandom,
-    CreateSetTransparencyOverLife,
-    CreateSetVelocityRandom,
-} from "Lists/NodeListCreateBarrel";
+import { CreateDrag } from "Components/Nodes/Update/Drag";
+import { CreateMultiplySizeOverLife } from "Components/Nodes/Update/MultiplySizeOverLife";
+import { CreateSetColorOverLife } from "Components/Nodes/Update/SetColorOverLife";
+import { CreateSetTransparencyOverLife } from "Components/Nodes/Update/SetTransparencyOverLife";
 import { CreateEmptySystem } from "./CreateEmptySystem";
 
 export function CreateFlameSystem() {
@@ -44,20 +41,22 @@ export function CreateFlameSystem() {
         });
 
         // init
-        const setLifetimeRandom = CreateSetLifetimeRandom();
-        (setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.8, 1.2);
-        setLifetimeRandom.elementLoaded.Connect(() => {
-            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetimeRandom.data.node.id);
+        const setLifetime = CreateSetLifetime();
+        (setLifetime.data.node as SetLifetime).nodeFields.calculationType.SetState(CalculationType1.Random);
+        (setLifetime.data.node as SetLifetime).nodeFields.range.SetVector2(0.8, 1.2);
+        setLifetime.elementLoaded.Connect(() => {
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetime.data.node.id);
         });
 
-        const setPosition = CreateSetPosition();
-        (setPosition.data.node as SetPosition).nodeFields.position.SetY(5);
-        setPosition.elementLoaded.Connect(() => {
-            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setPosition.data.node.id);
+        const position = CreatePosition();
+        (position.data.node as Position).nodeFields.position.SetY(5);
+        position.elementLoaded.Connect(() => {
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(position.data.node.id);
         });
 
-        const setSizeRandom = CreateSetSizeRandom();
-        (setSizeRandom.data.node as SetSizeRandom).nodeFields.range.SetVector2(1, 2);
+        const setSizeRandom = CreateSetSize();
+        (setSizeRandom.data.node as SetSize).nodeFields.calculationType.SetState(CalculationType1.RandomConncted);
+        (setSizeRandom.data.node as SetSize).nodeFields.range.SetVector2(1, 2);
         setSizeRandom.elementLoaded.Connect(() => {
             (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setSizeRandom.data.node.id);
         });
@@ -68,18 +67,21 @@ export function CreateFlameSystem() {
             (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setEmission.data.node.id);
         });
 
-        const setRotationZRandom = CreateSetRotationZRandom();
-        (setRotationZRandom.data.node as SetRotationZRandom).nodeFields.range.SetVector2(-360, 360);
-        setRotationZRandom.elementLoaded.Connect(() => {
-            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setRotationZRandom.data.node.id);
+        const rotation = CreateRotation();
+        (rotation.data.node as Rotation).nodeFields.calculationType.SetState(CalculationType1.Random);
+        (rotation.data.node as Rotation).nodeFields.axisType.SetState(AxisType.Z);
+        (rotation.data.node as Rotation).nodeFields.rangeZ.SetVector2(-360, 360);
+        rotation.elementLoaded.Connect(() => {
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(rotation.data.node.id);
         });
 
-        const setVelocityRandom = CreateSetVelocityRandom();
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-0.5, 0.5);
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(10, 15);
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-0.5, 0.5);
-        setVelocityRandom.elementLoaded.Connect(() => {
-            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setVelocityRandom.data.node.id);
+        const velocity = CreateVelocity();
+        (velocity.data.node as Velocity).nodeFields.calculationType.SetState(CalculationType1.Random);
+        (velocity.data.node as Velocity).nodeFields.rangeX.SetVector2(-0.5, 0.5);
+        (velocity.data.node as Velocity).nodeFields.rangeY.SetVector2(10, 15);
+        (velocity.data.node as Velocity).nodeFields.rangeZ.SetVector2(-0.5, 0.5);
+        velocity.elementLoaded.Connect(() => {
+            (flameSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(velocity.data.node.id);
         });
 
         // upd
@@ -120,10 +122,13 @@ export function CreateFlameSystem() {
             (flameSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(drag.data.node.id);
         });
 
-        const addRotationZRandom = CreateAddRotationZRandom();
-        (addRotationZRandom.data.node as AddRotationZRandom).nodeFields.range.SetVector2(-360, 360);
-        addRotationZRandom.elementLoaded.Connect(() => {
-            (flameSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(addRotationZRandom.data.node.id);
+        const rotation2 = CreateRotation();
+        (rotation2.data.node as Rotation).nodeFields.nodeOperationType.SetState(NodeOperationType.Add);
+        (rotation2.data.node as Rotation).nodeFields.calculationType.SetState(CalculationType1.Random);
+        (rotation2.data.node as Rotation).nodeFields.axisType.SetState(AxisType.Z);
+        (rotation2.data.node as Rotation).nodeFields.rangeZ.SetVector2(-360, 360);
+        rotation2.elementLoaded.Connect(() => {
+            (flameSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(rotation.data.node.id);
         });
 
         // rend
@@ -152,30 +157,34 @@ export function CreateFlameSystem() {
         });
 
         // init
-        const setLifetimeRandom = CreateSetLifetimeRandom();
-        (setLifetimeRandom.data.node as SetLifetimeRandom).nodeFields.range.SetVector2(0.75, 1.5);
+        const setLifetimeRandom = CreateSetLifetime();
+        (setLifetimeRandom.data.node as SetLifetime).nodeFields.calculationType.SetState(CalculationType1.Random);
+        (setLifetimeRandom.data.node as SetLifetime).nodeFields.range.SetVector2(0.75, 1.5);
         setLifetimeRandom.elementLoaded.Connect(() => {
             (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setLifetimeRandom.data.node.id);
         });
 
-        const setPosition = CreateSetPosition();
-        (setPosition.data.node as SetPosition).nodeFields.position.SetY(5);
-        setPosition.elementLoaded.Connect(() => {
-            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setPosition.data.node.id);
+        const position = CreatePosition();
+        (position.data.node as Position).nodeFields.position.SetY(5);
+        position.elementLoaded.Connect(() => {
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(position.data.node.id);
         });
 
-        const setVelocityRandom = CreateSetVelocityRandom();
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeX.SetVector2(-0.4, 0.4);
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeY.SetVector2(15, 20);
-        (setVelocityRandom.data.node as SetVelocityRandom).nodeFields.rangeZ.SetVector2(-0.4, 0.4);
-        setVelocityRandom.elementLoaded.Connect(() => {
-            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setVelocityRandom.data.node.id);
+        const velocity = CreateVelocity();
+        (velocity.data.node as Velocity).nodeFields.calculationType.SetState(CalculationType1.Random);
+        (velocity.data.node as Velocity).nodeFields.rangeX.SetVector2(-0.4, 0.4);
+        (velocity.data.node as Velocity).nodeFields.rangeY.SetVector2(15, 20);
+        (velocity.data.node as Velocity).nodeFields.rangeZ.SetVector2(-0.4, 0.4);
+        velocity.elementLoaded.Connect(() => {
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(velocity.data.node.id);
         });
 
-        const setRotationZRandom = CreateSetRotationZRandom();
-        (setRotationZRandom.data.node as SetRotationZRandom).nodeFields.range.SetVector2(-360, 360);
-        setRotationZRandom.elementLoaded.Connect(() => {
-            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setRotationZRandom.data.node.id);
+        const rotation = CreateRotation();
+        (rotation.data.node as Rotation).nodeFields.calculationType.SetState(CalculationType1.Random);
+        (rotation.data.node as Rotation).nodeFields.axisType.SetState(AxisType.Z);
+        (rotation.data.node as Rotation).nodeFields.rangeZ.SetVector2(-360, 360);
+        rotation.elementLoaded.Connect(() => {
+            (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(rotation.data.node.id);
         });
 
         const setEmission = CreateSetEmission();
@@ -184,8 +193,9 @@ export function CreateFlameSystem() {
             (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setEmission.data.node.id);
         });
 
-        const setSizeRandom = CreateSetSizeRandom();
-        (setSizeRandom.data.node as SetSizeRandom).nodeFields.range.SetVector2(1, 2);
+        const setSizeRandom = CreateSetSize();
+        (setSizeRandom.data.node as SetSize).nodeFields.calculationType.SetState(CalculationType1.RandomConncted);
+        (setSizeRandom.data.node as SetSize).nodeFields.range.SetVector2(1, 2);
         setSizeRandom.elementLoaded.Connect(() => {
             (smokeSystemData.addToNodeGroup[NodeGroups.Initialize] as (id: number) => void)(setSizeRandom.data.node.id);
         });
@@ -217,10 +227,12 @@ export function CreateFlameSystem() {
             (smokeSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(multiplySizeOverLife.data.node.id);
         });
 
-        const addRotationZRandom = CreateAddRotationZRandom();
-        (addRotationZRandom.data.node as AddRotationZRandom).nodeFields.range.SetVector2(-180, 180);
-        addRotationZRandom.elementLoaded.Connect(() => {
-            (smokeSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(addRotationZRandom.data.node.id);
+        const rotation2 = CreateRotation();
+        (rotation2.data.node as Rotation).nodeFields.calculationType.SetState(CalculationType1.Random);
+        (rotation2.data.node as Rotation).nodeFields.axisType.SetState(AxisType.Z);
+        (rotation2.data.node as Rotation).nodeFields.rangeZ.SetVector2(-180, 180);
+        rotation2.elementLoaded.Connect(() => {
+            (smokeSystemData.addToNodeGroup[NodeGroups.Update] as (id: number) => void)(rotation2.data.node.id);
         });
 
         //rend

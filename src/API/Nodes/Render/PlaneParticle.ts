@@ -1,16 +1,15 @@
 import { RunService, Workspace } from "@rbxts/services";
 import { BooleanField } from "API/Fields/BooleanField";
 import { NumberField } from "API/Fields/NumberField";
-import { Orientation, OrientationField } from "API/Fields/OrientationField";
+import { StateField } from "API/Fields/StateField";
 import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetPlaneParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { NodeGroups } from "../../NodeGroup";
-import { AutoGenPlaneParticle } from "../AutoGeneration/RenderNodes/AutoGenParticlePlane";
+import { OrientationType } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
+import { UpdatePrioriy } from "../Node";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
@@ -24,17 +23,6 @@ const DEAD_PARTICLES_CFRAME = new CFrame(0, 10000, 0);
 
 const CANVAS_SIZE = new Vector2(1000, 1000);
 const IMAGE_LABEL_SIZE = new UDim2(1, 0, 1, 0);
-
-export const PlaneParticleName = "PlaneParticle";
-export const PlaneParticleFieldNames = {
-    orientation: "orientation",
-    assetId: "assetId",
-    doubleSided: "doubleSided",
-    imageSize: "imageSize",
-    spriteSheetRows: "spriteSheetRows",
-    spriteSheetColumns: "spriteSheetColumns",
-    spriteSheetFrameCount: "spriteSheetFrameCount",
-};
 
 interface Texture extends SurfaceGui {
     ImageLabel: ImageLabel;
@@ -115,14 +103,14 @@ function CreateDoubleSidedParticle(): DoubleSidedPlaneParticle {
     return particleBase as DoubleSidedPlaneParticle;
 }
 
-function CheckOrientation(orientation: Orientation, position: Vector3, data: ParticleData): CFrame {
+function CheckOrientation(orientation: string, position: Vector3, data: ParticleData): CFrame {
     switch (orientation) {
-        case Orientation.FacingCamera: {
+        case OrientationType.FacingCamera: {
             return CFrame.lookAt(position, (game.Workspace.CurrentCamera as Camera).CFrame.Position).mul(
                 CFrame.Angles(0, 0, math.rad(data.rotation.Z)),
             );
         }
-        case Orientation.VelocityParallel: {
+        case OrientationType.VelocityParallel: {
             const velocity = data.velocityNormal.Unit;
             if (velocity === Vector3.zero) return new CFrame(position);
 
@@ -144,15 +132,18 @@ function CheckOrientation(orientation: Orientation, position: Vector3, data: Par
 
             return velocityAligned.mul(CFrame.Angles(angle, 0, 0)).mul(CFrame.Angles(0, 0, math.rad(data.rotation.Z)));
         }
-        case Orientation.VelocityPerpendicular: {
+        case OrientationType.VelocityPerpendicular: {
             const nextPosition = position.add(data.velocityNormal);
             return CFrame.lookAt(position, nextPosition).mul(CFrame.Angles(0, 0, math.rad(data.rotation.Z)));
         }
     }
+
+    warn(`Orientation check failed, returning CFrameZero. (${orientation})`);
+    return CFrameZero;
 }
 
 function UpdateImageProperties(texture: Texture, data: ParticleData) {
-    // texture.ImageLabel.Rotation = data.rotation.Z;
+    texture.ImageLabel.Rotation = math.deg(data.rotation.ToEulerAnglesXYZ()[2]);
     texture.ImageLabel.ImageTransparency = data.transparency;
     texture.ImageLabel.ImageColor3 = data.color;
     texture.Brightness = data.emission;
@@ -171,9 +162,10 @@ function UpdateParticleProperties(data: ParticleData) {
 }
 
 export class PlaneParticle extends RenderNode {
-    nodeGroup: NodeGroups = NodeGroups.Render;
+    static className = "PlaneParticle";
+
     nodeFields = {
-        orientation: new OrientationField(Orientation.FacingCamera),
+        orientation: new StateField(OrientationType, OrientationType.FacingCamera),
         assetId: new NumberField(7848741169),
         doubleSided: new BooleanField(false),
         imageSize: new Vector2Field(1024, 1024),
@@ -205,31 +197,55 @@ export class PlaneParticle extends RenderNode {
         const doubleSided = this.nodeFields.doubleSided.GetBoolean();
         const imageId = `rbxassetid://${this.nodeFields.assetId.GetNumber()}`;
 
+        const orderedInitializeNodes = initializeNodes.sort((a, b) => {
+            if (a.updatePriority !== b.updatePriority) {
+                return a.updatePriority < b.updatePriority;
+            }
+
+            return a.updateOrder < b.updateOrder;
+        });
+
+        const orderedUpdateNodes = updateNodes.sort((a, b) => {
+            if (a.updatePriority !== b.updatePriority) {
+                return a.updatePriority < b.updatePriority;
+            }
+
+            return a.updateOrder < b.updateOrder;
+        });
+
         if (!doubleSided) {
             particle = this.objectPoolOneSided.GetItem() as OneSidedPlaneParticle;
             particle.Front.ImageLabel.Image = imageId;
             particle.CFrame = CFrameZero;
 
-            data = CreateParticleData(id, ParticleTypes.OneSidedPlane, particle, updateNodes);
+            data = CreateParticleData(id, ParticleTypes.OneSidedPlane, particle, orderedUpdateNodes);
         } else {
             particle = this.objectPoolDoubleSided.GetItem() as DoubleSidedPlaneParticle;
             particle.Front.ImageLabel.Image = imageId;
             (particle as DoubleSidedPlaneParticle).Back.ImageLabel.Image = imageId;
             particle.CFrame = CFrameZero;
 
-            data = CreateParticleData(id, ParticleTypes.DoubleSidedPlane, particle, updateNodes);
+            data = CreateParticleData(id, ParticleTypes.DoubleSidedPlane, particle, orderedUpdateNodes);
         }
 
-        for (const node of initializeNodes) {
-            node.Initialize(data);
+        const firstInitializeNodes = orderedInitializeNodes.filter((node) => node.updatePriority !== UpdatePrioriy.PostMove);
+        for (let i = 0; i < firstInitializeNodes.size(); i++) {
+            firstInitializeNodes[i].Run(data);
         }
 
-        for (const node of updateNodes) {
-            node.Update(data);
+        const orientation = this.nodeFields.orientation.GetState();
+        if (data.nextPos !== undefined) {
+            particle.CFrame = CheckOrientation(orientation, data.nextPos, data);
         }
 
-        const orientation = this.nodeFields.orientation.GetOrientation();
-        particle.CFrame = CheckOrientation(orientation, particle.CFrame.Position, data);
+        const lastInitializeNodes = orderedInitializeNodes.filter((node) => node.updatePriority === UpdatePrioriy.PostMove);
+        for (let i = 0; i < lastInitializeNodes.size(); i++) {
+            lastInitializeNodes[i].Run(data);
+        }
+
+        for (let i = 0; i < orderedUpdateNodes.size(); i++) {
+            orderedUpdateNodes[i].Run(data, 0.0167);
+        }
 
         UpdateParticleProperties(data);
 
@@ -274,6 +290,8 @@ export class PlaneParticle extends RenderNode {
                     movedParticles.push(aliveParticleData.particle);
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
+                    aliveParticleData.isRemoving.Fire();
+
                     if (this.aliveParticles.size() === 0) {
                         if (this.updateLoop === undefined) continue;
 
@@ -284,11 +302,32 @@ export class PlaneParticle extends RenderNode {
                     continue;
                 }
 
-                for (const updateNode of aliveParticleData.updateNodes) {
-                    updateNode.Update(aliveParticleData);
+                for (let i = 0; i < aliveParticleData.updateNodes.size(); i++) {
+                    aliveParticleData.updateNodes[i].Run(aliveParticleData, dt);
                 }
 
-                UpdateParticleProperties(aliveParticleData);
+                if (
+                    aliveParticleData.nextPos !== undefined ||
+                    aliveParticleData.velocityNormal !== Vector3.zero ||
+                    aliveParticleData.rotation !== CFrameZero
+                ) {
+                    let pos: Vector3;
+
+                    if (aliveParticleData.nextPos !== undefined) {
+                        pos = aliveParticleData.nextPos;
+                        aliveParticleData.nextPos = undefined;
+                    } else {
+                        const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
+                        pos = aliveParticleData.particle.Position.add(velocity.mul(dt));
+                    }
+
+                    const cf = CheckOrientation(orientation, pos, aliveParticleData);
+
+                    if (aliveParticleData.particle.CFrame !== cf) {
+                        movedParticles.push(aliveParticleData.particle);
+                        movedParticlesCFrames.push(cf);
+                    }
+                }
 
                 // sprite sheet
                 if (this.nodeFields.spriteSheetFrameCount.GetNumber() >= 1) {
@@ -318,27 +357,7 @@ export class PlaneParticle extends RenderNode {
                     }
                 }
 
-                let position: Vector3 | undefined;
-                if (aliveParticleData.velocityNormal !== Vector3.zero) {
-                    const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
-                    position = aliveParticleData.particle.Position.add(velocity.mul(dt));
-                }
-
-                let cframe: CFrame;
-                if (position !== undefined) {
-                    cframe = CheckOrientation(orientation, position, aliveParticleData);
-                } else {
-                    cframe = CheckOrientation(orientation, aliveParticleData.particle.Position, aliveParticleData);
-                }
-
-                if (cframe !== undefined) {
-                    movedParticles.push(aliveParticleData.particle);
-                    movedParticlesCFrames.push(cframe);
-                } else if (position !== undefined) {
-                    movedParticles.push(aliveParticleData.particle);
-                    movedParticlesCFrames.push(new CFrame(position));
-                }
-
+                UpdateParticleProperties(aliveParticleData);
                 aliveParticleData.alivetime += dt;
             }
 
@@ -346,12 +365,8 @@ export class PlaneParticle extends RenderNode {
         });
     };
 
-    GetNodeName(): string {
-        return PlaneParticleName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenPlaneParticle(this, src);
+    GetClassName(): string {
+        return PlaneParticle.className;
     }
 
     Destroy() {

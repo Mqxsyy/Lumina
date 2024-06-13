@@ -79,7 +79,6 @@ function LocalSerializeNode() {
 
     return {
         ...SerializeNode(data.node, true),
-        nodeGroup: data.node.nodeGroup,
         anchorPoint: { x: data.anchorPoint.X, y: data.anchorPoint.Y },
     };
 }
@@ -90,7 +89,7 @@ function LocalSerializeSystem() {
 }
 
 function LocalLoadNode(serializedNode: SerializedFloatingNode) {
-    CreateNode(serializedNode.nodeGroup, serializedNode.nodeName, serializedNode.fields, serializedNode.order);
+    CreateNode(serializedNode.className, serializedNode.fields, serializedNode.order);
 }
 
 function LocalLoadSystem(serializedSystem: SerializedSystem) {

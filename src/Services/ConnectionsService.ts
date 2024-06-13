@@ -3,16 +3,19 @@ import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
 import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
+import { ReloadConnectionVisuals } from "Components/Events";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import type { NodeData } from "./NodesService";
 
 export interface ConnectionData {
     id: number;
+    valueType: string;
     loadedId?: number;
     startNode: NodeData;
     startElement: ImageButton;
     endPos?: Vector2;
     endElement?: ImageButton;
+    isDestroying: boolean;
     onDestroy: Event;
 }
 
@@ -26,8 +29,6 @@ let movingConnectionId = -1;
 const idPool = new IdPool();
 const ConnectionCollection = [] as ConnectionCollectionEntry[];
 
-export const ConnectionsChanged = new Event();
-
 export function GetNextConnectionId(): number {
     return idPool.GetNextId();
 }
@@ -40,21 +41,21 @@ export function GetConnectionById(id: number) {
     return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
-export function CreateConnection(startNode: NodeData, startElement: ImageButton, loadedId?: number) {
+export function CreateConnection(startNode: NodeData, startElement: ImageButton, valueType: string, loadedId?: number) {
     const connection: ConnectionCollectionEntry = {
         data: {
             id: idPool.GetNextId(),
+            valueType,
             loadedId,
             startNode,
             startElement,
+            isDestroying: false,
             onDestroy: new Event(),
         },
         create: CreateConnectionLine,
     };
 
     ConnectionCollection.push(connection);
-    ConnectionsChanged.Fire();
-
     return connection.data;
 }
 
@@ -65,16 +66,26 @@ export function UpdateConnectionData(id: number, fn: (data: ConnectionData) => C
         return;
     }
 
+    connection.data.isDestroying = false;
     connection.data = fn(connection.data);
-    ConnectionsChanged.Fire();
+    ReloadConnectionVisuals.Fire();
 }
 
 export function DestroyConnection(id: number) {
     const index = ConnectionCollection.findIndex((connection) => connection.data.id === id);
     if (index !== -1) {
-        const connection = ConnectionCollection.remove(index) as ConnectionCollectionEntry;
-        connection.data.onDestroy.Fire();
-        ConnectionsChanged.Fire();
+        ConnectionCollection[index].data.isDestroying = true;
+
+        coroutine.wrap(() => {
+            RunService.RenderStepped.Wait();
+            const removingIndex = ConnectionCollection.findIndex((connection) => connection.data.id === id);
+            if (ConnectionCollection[removingIndex].data.isDestroying === false) return;
+
+            const connection = ConnectionCollection.remove(removingIndex) as ConnectionCollectionEntry;
+            connection.data.onDestroy.Fire();
+            ReloadConnectionVisuals.Fire();
+        })();
+
         return;
     }
 

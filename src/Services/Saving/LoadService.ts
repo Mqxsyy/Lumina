@@ -1,4 +1,4 @@
-import { HttpService } from "@rbxts/services";
+import { HttpService, RunService } from "@rbxts/services";
 import { FastEvent } from "API/Bindables/FastEvent";
 import { API_VERSION } from "API/ExportAPI";
 import { NodeGroups } from "API/NodeGroup";
@@ -74,9 +74,9 @@ export function LoadFromFile() {
 
     // floating nodes
     for (const node of data.floatingNodes) {
-        const nodeCollectionEntry = CreateNode(node.nodeGroup, node.nodeName, node.fields, node.order);
+        const nodeCollectionEntry = CreateNode(node.className || (node.nodeName as string), node.fields, node.order);
         if (nodeCollectionEntry === undefined) {
-            warn(`Node ${node.nodeName} does not exist in group ${node.nodeGroup}. Save data may be outdated or corrupted.`);
+            warn(`Node ${node.className || (node.nodeName as string)} does not exist. Save data may be outdated or corrupted.`);
             continue;
         }
 
@@ -171,9 +171,13 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
         for (let i = 0; i < sortedNodes.size(); i++) {
             const node = sortedNodes[i];
 
-            const nodeCollectionEntry = CreateNode(nodeGroup, node.nodeName, node.fields, node.order);
+            const nodeCollectionEntry = CreateNode(node.className || (node.nodeName as string), node.fields, node.order);
             if (nodeCollectionEntry === undefined) {
-                warn(`Node ${node.nodeName} does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`);
+                warn(
+                    `Node ${
+                        node.className || (node.nodeName as string)
+                    } does not exist in group ${nodeGroup}. Save data may be outdated or corrupted.`,
+                );
                 continue;
             }
 
@@ -205,16 +209,17 @@ export function CreateSystem(system: SerializedSystem): [SerializedSystem, { Ser
     return [system, cachedNodes];
 }
 
-export function CreateNode(group: NodeGroups, nodeName: string, fields: SerializedField[], order: number): NodeCollectionEntry | undefined {
-    if (NodeList[group][nodeName] === undefined) return undefined;
+export function CreateNode(nodeClassName: string, fields: SerializedField[], order: number): NodeCollectionEntry | undefined {
+    const nodeEntry = NodeList.find((e) => e.className === nodeClassName);
+    if (nodeEntry === undefined) return undefined;
 
-    const node = (NodeList[group][nodeName].create as () => NodeCollectionEntry)();
+    const node = nodeEntry.defaultEntry.create() as NodeCollectionEntry;
 
     for (const field of fields) {
+        if (node.data.node.nodeFields[field.name] === undefined) continue;
         node.data.node.nodeFields[field.name].ReadSerializedData(field.data);
     }
 
-    node.data.order = order;
-
+    node.data.node.updateOrder = order;
     return node;
 }

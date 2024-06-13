@@ -10,13 +10,13 @@ interface Props {
     NodeId: number;
     NodeField: NumberFieldAPI;
 
-    Label: string;
+    Label?: string;
     AllowNegative?: boolean;
 
     OverrideSetNumber?: (number: number) => undefined;
 }
 
-export default function NumberField({ NodeId, NodeField, Label, AllowNegative = false, OverrideSetNumber = undefined }: Props) {
+export default function NumberField({ NodeId, NodeField, Label = undefined, AllowNegative = false, OverrideSetNumber = undefined }: Props) {
     const [_, setForceRender] = useState(0);
 
     const zoomScale = GetZoomScale();
@@ -38,9 +38,13 @@ export default function NumberField({ NodeId, NodeField, Label, AllowNegative = 
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-            <uilistlayout FillDirection={"Horizontal"} VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
+            {Label !== undefined && (
+                <uilistlayout FillDirection={"Horizontal"} VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
+            )}
+            {Label !== undefined && (
+                <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
+            )}
 
-            <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} TextYAlignment="Bottom" />
             <NumberInput
                 AnchorPoint={new Vector2(1, 0)}
                 Position={UDim2.fromScale(1, 0)}

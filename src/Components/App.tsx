@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
-import { ConnectionsChanged, GetAllConnections, UnbindMovingConnection } from "Services/ConnectionsService";
+import { UnbindMovingConnection } from "Services/ConnectionsService";
 import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { DisableDropdown, DropdownDataChanged, GetDropdownData } from "Services/DropdownService";
@@ -17,6 +17,7 @@ import CanvasBackground from "./Background";
 import { BasicTextLabel } from "./Basic/BasicTextLabel";
 import Dropdown from "./Basic/Dropdown";
 import Controls from "./Controls/Controls";
+import DisplayConnections from "./DisplayConnections";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
 
@@ -127,10 +128,6 @@ export function App() {
             setForceRender((prev) => prev + 1);
         });
 
-        const connectionsChangedConnection = ConnectionsChanged.Connect(() => {
-            setForceRender((prev) => prev + 1);
-        });
-
         const dropdownDataChangedConnection = DropdownDataChanged.Connect(() => {
             setForceRender((prev) => prev + 1);
         });
@@ -150,7 +147,6 @@ export function App() {
             canvasDataChangedConnection.Disconnect();
             nodeSystemsChangedConnection.Disconnect();
             nodesChangedConnection.Disconnect();
-            connectionsChangedConnection.Disconnect();
             dropdownDataChangedConnection.Disconnect();
             loadServiceConnection.Disconnect();
         };
@@ -182,9 +178,7 @@ export function App() {
                 if (node.data.node.connectedSystemId !== undefined) return undefined;
                 return node.create(node.data);
             })}
-            {GetAllConnections().map((connection) => {
-                return connection.create(connection.data);
-            })}
+            <DisplayConnections />
             {nodeSelectionPosition !== undefined && (
                 <NodeSelection
                     key="NodeSelection"

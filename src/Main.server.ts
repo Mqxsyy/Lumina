@@ -8,7 +8,7 @@ import { InitializeColorPicker } from "Components/Windows/Pickers.tsx/ColorPicke
 import { InitializeColorRamp } from "Components/Windows/Ramps/ColorRamp";
 import { InitUI } from "UIHandler";
 
-const toolbar = plugin.CreateToolbar("Lumina 0.1.2");
+const toolbar = plugin.CreateToolbar("Lumina 0.2.0");
 
 // i guess I'll try to follow this versioning
 // MAJOR.MINOR.PATCH

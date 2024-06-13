@@ -1,30 +1,18 @@
 import { RunService, Workspace } from "@rbxts/services";
+import { NumberArrayField } from "API/Fields/NumberArrayField";
 import { NumberField } from "API/Fields/NumberField";
-import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetMeshParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
-import { NodeGroups } from "API/NodeGroup";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenMeshParticle } from "../AutoGeneration/RenderNodes/AutoGenMeshParticle";
 import type { InitializeNode } from "../Initialize/InitializeNode";
+import { UpdatePrioriy } from "../Node";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
-export const MeshParticleName = "MeshParticle";
-export const MeshParticleFieldNames = {
-    meshId: "meshId",
-    textureId: "textureId",
-    textureSize: "textureSize",
-    spriteSheetRows: "spriteSheetRows",
-    spriteSheetColumns: "spriteSheetColumns",
-    spriteSheetFrameCount: "spriteSheetFrameCount",
-};
-
 const BASE_SIZE = new Vector3(0.001, 0.001, 0.001);
 const DEFAULT_SIZE = new Vector3(1, 1, 1);
-const DEFAULT_MATERIAL = Enum.Material.SmoothPlastic;
+const DEFAULT_MATERIAL = Enum.Material.Asphalt; // reduces light reflection
 const DEAD_PARTICLES_CFRAME = new CFrame(0, 10000, 0);
 const DEFAULT_COLOR = new Color3(1, 1, 1);
 const DEFAULT_COLOR_VECTOR3 = new Vector3(1, 1, 1);
@@ -65,7 +53,7 @@ function CreateVolumetricParticle(): MeshParticlePart {
     return base as MeshParticlePart;
 }
 
-function UpdateParticleProperties(data: ParticleData) {
+function UpdateParticleProperties(data: ParticleData, textureIds: number[]) {
     const particle = data.particle as MeshParticlePart;
 
     const newScale = data.sizeNormal.add(data.sizeNormal.mul(data.sizeMultiplier));
@@ -81,17 +69,30 @@ function UpdateParticleProperties(data: ParticleData) {
     if (particle.Mesh.VertexColor !== newColor) {
         particle.Mesh.VertexColor = newColor;
     }
+
+    const totalTextures = textureIds.size();
+    if (totalTextures > 1) {
+        const alivePercent = data.alivetime / data.lifetime;
+        const texturePercent = 1 / textureIds.size();
+        const textureIndex = math.floor(alivePercent / texturePercent);
+        const textureId = textureIds[textureIndex];
+
+        if (particle.Mesh.TextureId !== `rbxassetid://${textureId}`) {
+            particle.Mesh.TextureId = `rbxassetid://${textureId}`;
+        }
+    } else if (totalTextures === 1) {
+        if (particle.Mesh.TextureId !== `rbxassetid://${textureIds[0]}`) {
+            particle.Mesh.TextureId = `rbxassetid://${textureIds[0]}`;
+        }
+    }
 }
 
 export class MeshParticle extends RenderNode {
-    nodeGroup = NodeGroups.Render;
+    static className = "MeshParticle";
+
     nodeFields = {
         meshId: new NumberField(DEFAULT_MESH_ID),
-        textureId: new NumberField(DEFAULT_TEXTURE_ID),
-        textureSize: new Vector2Field(1024, 1024),
-        spriteSheetRows: new NumberField(16),
-        spriteSheetColumns: new NumberField(4),
-        spriteSheetFrameCount: new NumberField(4),
+        textures: new NumberArrayField([DEFAULT_TEXTURE_ID]),
     };
 
     objectPool: ObjectPool;
@@ -116,23 +117,54 @@ export class MeshParticle extends RenderNode {
 
         particle.CFrame = CFrameZero;
 
-        const data = CreateParticleData(id, ParticleTypes.Cube, particle, updateNodes);
+        const orderedInitializeNodes = initializeNodes.sort((a, b) => {
+            if (a.updatePriority !== b.updatePriority) {
+                return a.updatePriority < b.updatePriority;
+            }
 
-        for (const node of initializeNodes) {
-            node.Initialize(data);
+            return a.updateOrder < b.updateOrder;
+        });
+
+        const orderedUpdateNodes = updateNodes.sort((a, b) => {
+            if (a.updatePriority !== b.updatePriority) {
+                return a.updatePriority < b.updatePriority;
+            }
+
+            return a.updateOrder < b.updateOrder;
+        });
+
+        const data = CreateParticleData(id, ParticleTypes.Cube, particle, orderedUpdateNodes);
+
+        const firstInitializeNodes = orderedInitializeNodes.filter((node) => node.updatePriority !== UpdatePrioriy.PostMove);
+        for (let i = 0; i < firstInitializeNodes.size(); i++) {
+            firstInitializeNodes[i].Run(data);
         }
 
-        for (const node of updateNodes) {
-            node.Update(data);
+        if (data.nextPos !== undefined || data.rotation !== CFrameZero) {
+            let pos = Vector3.zero;
+            let rot = CFrameZero;
+
+            if (data.nextPos !== undefined) {
+                pos = data.nextPos;
+            }
+
+            if (data.rotation !== CFrameZero) {
+                rot = data.rotation;
+            }
+
+            particle.CFrame = new CFrame(pos).mul(rot);
         }
 
-        if (data.rotation !== Vector3.zero) {
-            const rot = data.rotation;
-            const [x, y, z] = [math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z)];
-            particle.CFrame = particle.CFrame.mul(CFrame.Angles(x, y, z));
+        const lastInitializeNodes = orderedInitializeNodes.filter((node) => node.updatePriority === UpdatePrioriy.PostMove);
+        for (let i = 0; i < lastInitializeNodes.size(); i++) {
+            lastInitializeNodes[i].Run(data);
         }
 
-        UpdateParticleProperties(data);
+        for (let i = 0; i < orderedUpdateNodes.size(); i++) {
+            orderedUpdateNodes[i].Run(data, 1);
+        }
+
+        UpdateParticleProperties(data, this.nodeFields.textures.GetNumbers());
         this.aliveParticles.push(data);
 
         if (this.updateLoop !== undefined) return;
@@ -151,6 +183,8 @@ export class MeshParticle extends RenderNode {
                     movedParticles.push(aliveParticleData.particle);
                     movedParticlesCFrames.push(DEAD_PARTICLES_CFRAME);
 
+                    aliveParticleData.isRemoving.Fire();
+
                     if (this.aliveParticles.size() === 0) {
                         if (this.updateLoop === undefined) continue;
 
@@ -161,28 +195,45 @@ export class MeshParticle extends RenderNode {
                     continue;
                 }
 
-                for (const updateNode of aliveParticleData.updateNodes) {
-                    updateNode.Update(aliveParticleData);
+                for (let i = 0; i < aliveParticleData.updateNodes.size(); i++) {
+                    aliveParticleData.updateNodes[i].Run(aliveParticleData, dt);
                 }
 
-                if (aliveParticleData.velocityNormal !== Vector3.zero) {
-                    const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
-                    const pos = aliveParticleData.particle.Position.add(velocity.mul(dt));
+                if (
+                    aliveParticleData.nextPos !== undefined ||
+                    aliveParticleData.velocityNormal !== Vector3.zero ||
+                    aliveParticleData.rotation !== CFrameZero
+                ) {
+                    let pos: Vector3;
+
+                    if (aliveParticleData.nextPos !== undefined) {
+                        pos = aliveParticleData.nextPos;
+                        aliveParticleData.nextPos = undefined;
+                    } else {
+                        const velocity = aliveParticleData.velocityNormal.mul(aliveParticleData.velocityMultiplier);
+                        pos = aliveParticleData.particle.Position.add(velocity.mul(dt));
+                    }
 
                     let cf = new CFrame(pos);
 
-                    if (aliveParticleData.rotation !== Vector3.zero) {
-                        const rot = aliveParticleData.rotation;
-                        const [x, y, z] = [math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z)];
-                        cf = cf.mul(CFrame.Angles(x, y, z));
+                    if (aliveParticleData.rotation !== CFrameZero) {
+                        if (aliveParticleData.rotationMultiplier !== Vector3.one) {
+                            const [rx, ry, rz] = aliveParticleData.rotation.ToEulerAnglesXYZ();
+                            const multiplier = aliveParticleData.rotationMultiplier;
+                            const rotation = CFrame.fromEulerAnglesXYZ(rx * multiplier.X, ry * multiplier.Y, rz * multiplier.Z);
+                            cf = cf.mul(rotation);
+                        } else {
+                            cf = cf.mul(aliveParticleData.rotation);
+                        }
                     }
 
-                    movedParticles.push(aliveParticleData.particle);
-                    movedParticlesCFrames.push(cf);
+                    if (aliveParticleData.particle.CFrame !== cf) {
+                        movedParticles.push(aliveParticleData.particle);
+                        movedParticlesCFrames.push(cf);
+                    }
                 }
 
-                UpdateParticleProperties(aliveParticleData);
-
+                UpdateParticleProperties(aliveParticleData, this.nodeFields.textures.GetNumbers());
                 aliveParticleData.alivetime += dt;
             }
 
@@ -202,11 +253,7 @@ export class MeshParticle extends RenderNode {
         this.objectPool.ClearStandby();
     }
 
-    GetNodeName() {
-        return MeshParticleName;
-    }
-
-    GetAutoGenerationCode(src: Src) {
-        AutoGenMeshParticle(this, src);
+    GetClassName() {
+        return MeshParticle.className;
     }
 }

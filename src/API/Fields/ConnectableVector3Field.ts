@@ -12,6 +12,7 @@ interface SerializedData {
 
 export class ConnectableVector3Field extends NodeField {
     vector3Field: Vector3Field;
+    connectedNodeVector3: undefined | LogicNode;
     connectedNodeX: undefined | LogicNode;
     connectedNodeY: undefined | LogicNode;
     connectedNodeZ: undefined | LogicNode;
@@ -21,12 +22,27 @@ export class ConnectableVector3Field extends NodeField {
         this.vector3Field = new Vector3Field(x, y, z);
     }
 
-    GetVector3(data: ParticleData): SimpleVector3 {
+    GetSimpleVector3(data: ParticleData): SimpleVector3 {
+        if (this.connectedNodeVector3 !== undefined) {
+            const vec3 = this.connectedNodeVector3.Calculate(data) as Vector3;
+            return { x: vec3.X, y: vec3.Y, z: vec3.Z };
+        }
+
         const x = this.GetX(data);
         const y = this.GetY(data);
         const z = this.GetZ(data);
 
         return { x, y, z };
+    }
+
+    GetVector3(data: ParticleData) {
+        if (this.connectedNodeVector3 !== undefined) return this.connectedNodeVector3.Calculate(data) as Vector3;
+
+        const x = this.GetX(data);
+        const y = this.GetY(data);
+        const z = this.GetZ(data);
+
+        return new Vector3(x, y, z);
     }
 
     GetXAsText = () => {
@@ -66,6 +82,8 @@ export class ConnectableVector3Field extends NodeField {
     };
 
     SetVector3 = (x: number, y: number, z: number) => {
+        this.connectedNodeVector3 = undefined;
+
         this.SetX(x, true);
         this.SetY(y, true);
         this.SetZ(z, true);
@@ -94,6 +112,16 @@ export class ConnectableVector3Field extends NodeField {
         this.connectedNodeZ = undefined;
 
         if (!ignoreFieldChange) return;
+        this.FieldChanged.Fire();
+    };
+
+    ConnectVector3 = (node: LogicNode) => {
+        this.connectedNodeVector3 = node;
+        this.FieldChanged.Fire();
+    };
+
+    DisconnectVector3 = () => {
+        this.connectedNodeVector3 = undefined;
         this.FieldChanged.Fire();
     };
 
@@ -128,6 +156,11 @@ export class ConnectableVector3Field extends NodeField {
     };
 
     AutoGenerateField(fieldPath: string, src: Src) {
+        if (this.connectedNodeVector3 !== undefined) {
+            this.connectedNodeVector3.GetAutoGenerationCode(src, `${fieldPath}.ConnectVector3(..)`);
+            return;
+        }
+
         if (this.connectedNodeX !== undefined) {
             this.connectedNodeX.GetAutoGenerationCode(src, `${fieldPath}.ConnectX(..)`);
         } else {

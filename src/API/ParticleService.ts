@@ -1,4 +1,6 @@
+import { FastEvent } from "./Bindables/FastEvent";
 import { IdPool } from "./IdPool";
+import { CFrameZero } from "./Lib";
 import type { UpdateNode } from "./Nodes/Update/UpdateNode";
 
 export enum ParticleTypes {
@@ -20,8 +22,10 @@ export interface ParticleData {
     sizeMultiplier: Vector3;
     velocityNormal: Vector3;
     velocityMultiplier: Vector3;
+    rotation: CFrame;
+    rotationMultiplier: Vector3;
+    nextPos: Vector3 | undefined;
 
-    rotation: Vector3;
     transparency: number;
     color: Color3;
     emission: number;
@@ -29,6 +33,7 @@ export interface ParticleData {
     spriteSheetFrame: number;
 
     updateNodes: UpdateNode[];
+    isRemoving: FastEvent;
 }
 
 const idPool = new IdPool();
@@ -57,10 +62,13 @@ export function CreateParticleData(
         sizeMultiplier: Vector3.zero,
         velocityNormal: Vector3.zero,
         velocityMultiplier: Vector3.one,
-        rotation: Vector3.zero,
+        rotation: CFrameZero,
+        rotationMultiplier: Vector3.one,
+        nextPos: undefined,
         transparency: 0,
         color: new Color3(1, 1, 1),
         updateNodes,
+        isRemoving: new FastEvent(),
     };
 
     return particleData[particleId];

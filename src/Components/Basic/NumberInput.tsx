@@ -7,10 +7,14 @@ interface Props {
     Position?: UDim2;
     Size?: UDim2;
 
+    HideBackground?: boolean;
+
     TextSize?: number;
     FontWeight?: Enum.FontWeight;
     TextColor?: Color3;
-    TextXAlignment?: Enum.TextXAlignment;
+    TextXAlignment?: "Left" | "Center" | "Right";
+    TextWrapped?: boolean;
+    TextTruncate?: "None" | "AtEnd" | "SplitWord";
     PlaceholderText?: string;
     Text?: string | (() => string);
 
@@ -20,22 +24,27 @@ interface Props {
     Disabled?: boolean;
 
     NumberChanged?: (number: number) => undefined | number;
+    FocusLost?: (number: number) => void;
 }
 
 export function NumberInput({
     AnchorPoint = Vector2.zero,
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromScale(1, 1),
+    HideBackground = false,
     TextSize = StyleText.FontSize,
     FontWeight = StyleText.FontWeight,
     TextColor = StyleColors.TextDark,
-    TextXAlignment = Enum.TextXAlignment.Left,
+    TextXAlignment = "Left",
+    TextWrapped = true,
+    TextTruncate = "AtEnd",
     PlaceholderText = "",
     Text = "",
     IsAffectedByZoom = true,
     AllowNegative = false,
     Disabled = false,
     NumberChanged = undefined,
+    FocusLost = undefined,
     children,
 }: PropsWithChildren<Props>) {
     const validateNumber = (text: string) => {
@@ -81,6 +90,11 @@ export function NumberInput({
 
     const lostFocus = (text: string) => {
         const number = validateNumber(text);
+
+        if (FocusLost !== undefined && tonumber(number) !== undefined) {
+            FocusLost(tonumber(number) as number);
+        }
+
         if (number === undefined || number === "-") return getDefaultText();
     };
 
@@ -89,10 +103,13 @@ export function NumberInput({
             AnchorPoint={AnchorPoint}
             Position={Position}
             Size={Size}
+            HideBackground={HideBackground}
             TextSize={TextSize}
             FontWeight={FontWeight}
             TextColor={TextColor}
             TextXAlignment={TextXAlignment}
+            TextWrapped={TextWrapped}
+            TextTruncate={TextTruncate}
             PlaceholderText={PlaceholderText}
             Text={getDefaultText()}
             IsAffectedByZoom={IsAffectedByZoom}

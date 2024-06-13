@@ -1,37 +1,19 @@
 import { NumberField } from "API/Fields/NumberField";
-import { NodeGroups } from "API/NodeGroup";
-import type { Src } from "API/VFXScriptCreator";
-import { AutoGenBurstSpawn } from "../AutoGeneration/SpawnNodes/AutoGenBurstSpawn";
 import { SpawnNode } from "./SpawnNode";
 
-export const BurstSpawnName = "BurstSpawn";
-export const BurstSpawnFieldNames = {
-    amount: "amount",
-};
-
 export class BurstSpawn extends SpawnNode {
-    nodeGroup: NodeGroups = NodeGroups.Spawn;
-    nodeFields: {
-        amount: NumberField;
+    static className = "BurstSpawn";
+
+    nodeFields = {
+        amount: new NumberField(20),
+        delay: new NumberField(0),
     };
 
-    constructor() {
-        super();
-
-        this.nodeFields = {
-            amount: new NumberField(20),
-        };
-    }
-
-    GetNodeName() {
-        return BurstSpawnName;
-    }
-
-    GetValue = (): number => {
+    GetValue = () => {
         return this.nodeFields.amount.GetNumber();
     };
 
-    GetAutoGenerationCode(src: Src) {
-        AutoGenBurstSpawn(this, src);
+    GetClassName() {
+        return BurstSpawn.className;
     }
 }

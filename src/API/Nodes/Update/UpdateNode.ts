@@ -1,6 +1,17 @@
+import { NodeGroups } from "API/NodeGroup";
 import type { ParticleData } from "API/ParticleService";
 import { Node } from "../Node";
 
 export abstract class UpdateNode extends Node {
-    abstract Update(data: ParticleData): void;
+    static nodeGroups = [NodeGroups.Update];
+
+    GetNodeGroups(): NodeGroups[] {
+        return UpdateNode.nodeGroups;
+    }
+
+    GetNodeFolderName(): string {
+        return "Update";
+    }
+
+    abstract Run(data: ParticleData, dt: number): void;
 }
