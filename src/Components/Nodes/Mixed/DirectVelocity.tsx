@@ -29,6 +29,12 @@ function DirectVelocity({ data }: { data: NodeData }) {
                 NodeFieldName={"direction"}
                 Label="Direction"
             />
+            <ConnectableVector3Field
+                NodeId={data.node.id}
+                NodeField={(data.node as DirectVelocityAPI).nodeFields.upVector}
+                NodeFieldName={"upVector"}
+                Label="Up Vector"
+            />
         </Node>
     );
 }

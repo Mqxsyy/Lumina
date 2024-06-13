@@ -24,6 +24,7 @@ interface Props {
     Disabled?: boolean;
 
     NumberChanged?: (number: number) => undefined | number;
+    FocusLost?: (number: number) => void;
 }
 
 export function NumberInput({
@@ -43,6 +44,7 @@ export function NumberInput({
     AllowNegative = false,
     Disabled = false,
     NumberChanged = undefined,
+    FocusLost = undefined,
     children,
 }: PropsWithChildren<Props>) {
     const validateNumber = (text: string) => {
@@ -88,6 +90,11 @@ export function NumberInput({
 
     const lostFocus = (text: string) => {
         const number = validateNumber(text);
+
+        if (FocusLost !== undefined && tonumber(number) !== undefined) {
+            FocusLost(tonumber(number) as number);
+        }
+
         if (number === undefined || number === "-") return getDefaultText();
     };
 

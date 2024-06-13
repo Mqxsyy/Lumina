@@ -54,7 +54,7 @@ function Rotation({ data }: { data: NodeData }) {
 
     return (
         <Node
-            Name="Set Rotation"
+            Name="Rotation"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
@@ -68,6 +68,7 @@ function Rotation({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as RotationAPI).nodeFields.rotationX}
                     NodeFieldName={"rotationX"}
+                    AllowNegative={true}
                     Label="X"
                 />
             )}
@@ -86,6 +87,7 @@ function Rotation({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as RotationAPI).nodeFields.rotationY}
                     NodeFieldName={"rotationY"}
+                    AllowNegative={true}
                     Label="Y"
                 />
             )}
@@ -104,6 +106,7 @@ function Rotation({ data }: { data: NodeData }) {
                     NodeId={data.node.id}
                     NodeField={(data.node as RotationAPI).nodeFields.rotationZ}
                     NodeFieldName={"rotationZ"}
+                    AllowNegative={true}
                     Label="Z"
                 />
             )}

@@ -9,5 +9,9 @@ export abstract class MixedNode extends Node {
         return MixedNode.nodeGroups;
     }
 
+    GetNodeFolderName(): string {
+        return "Mixed";
+    }
+
     abstract Run(data: ParticleData, dt: number): void;
 }

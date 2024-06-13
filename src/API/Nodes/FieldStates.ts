@@ -78,3 +78,8 @@ export const PropertyType = {
     RightVector: "RightVector",
     UpVector: "UpVector",
 };
+
+export const RangeCount = {
+    SingleRange: "Single Range",
+    DoubleRange: "Double Range",
+};

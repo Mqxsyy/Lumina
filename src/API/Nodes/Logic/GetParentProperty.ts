@@ -1,5 +1,7 @@
 import { RunService } from "@rbxts/services";
 import { StateField } from "API/Fields/StateField";
+import { LowerFirstLetter } from "API/Lib";
+import type { Src } from "API/VFXScriptCreator";
 import { PropertyType } from "../FieldStates";
 import { LogicNode } from "./LogicNode";
 
@@ -77,5 +79,27 @@ export class GetParentProperty extends LogicNode {
 
     GetClassName(): string {
         return GetParentProperty.className;
+    }
+
+    GetAutoGenerationCode(src: Src, wrapper: string) {
+        const nodeName = this.GetClassName();
+
+        const className = `${nodeName}${this.id}`;
+        const varName = `${LowerFirstLetter(nodeName)}${this.id}`;
+
+        if (string.match(src.value, className)[0] === undefined) {
+            src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "${this.GetNodeFolderName()}", "${nodeName}").${nodeName} \n`;
+            src.value += `local ${varName} = ${className}.new() \n\n`;
+
+            for (const [fieldName, fieldValue] of pairs(this.nodeFields)) {
+                fieldValue.AutoGenerateField(`${varName}.nodeFields.${fieldName}`, src);
+            }
+
+            src.value += `${varName}.parent = script.Parent\n`;
+
+            src.value += "\n";
+        }
+
+        src.value += `${wrapper.gsub("%.%.", `${varName}`)[0]}\n`;
     }
 }

@@ -9,6 +9,7 @@ import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import { OrientationType } from "../FieldStates";
 import type { InitializeNode } from "../Initialize/InitializeNode";
+import { UpdatePrioriy } from "../Node";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
@@ -142,7 +143,7 @@ function CheckOrientation(orientation: string, position: Vector3, data: Particle
 }
 
 function UpdateImageProperties(texture: Texture, data: ParticleData) {
-    // texture.ImageLabel.Rotation = data.rotation.Z;
+    texture.ImageLabel.Rotation = math.deg(data.rotation.ToEulerAnglesXYZ()[2]);
     texture.ImageLabel.ImageTransparency = data.transparency;
     texture.ImageLabel.ImageColor3 = data.color;
     texture.Brightness = data.emission;
@@ -227,8 +228,9 @@ export class PlaneParticle extends RenderNode {
             data = CreateParticleData(id, ParticleTypes.DoubleSidedPlane, particle, orderedUpdateNodes);
         }
 
-        for (let i = 0; i < orderedInitializeNodes.size(); i++) {
-            orderedInitializeNodes[i].Run(data);
+        const firstInitializeNodes = orderedInitializeNodes.filter((node) => node.updatePriority !== UpdatePrioriy.PostMove);
+        for (let i = 0; i < firstInitializeNodes.size(); i++) {
+            firstInitializeNodes[i].Run(data);
         }
 
         const orientation = this.nodeFields.orientation.GetState();
@@ -236,8 +238,13 @@ export class PlaneParticle extends RenderNode {
             particle.CFrame = CheckOrientation(orientation, data.nextPos, data);
         }
 
+        const lastInitializeNodes = orderedInitializeNodes.filter((node) => node.updatePriority === UpdatePrioriy.PostMove);
+        for (let i = 0; i < lastInitializeNodes.size(); i++) {
+            lastInitializeNodes[i].Run(data);
+        }
+
         for (let i = 0; i < orderedUpdateNodes.size(); i++) {
-            orderedUpdateNodes[i].Run(data, 1);
+            orderedUpdateNodes[i].Run(data, 0.0167);
         }
 
         UpdateParticleProperties(data);

@@ -86,6 +86,7 @@ function SetSize({ data }: { data: NodeData }) {
                     NodeField={(data.node as SetSizeAPI).nodeFields.range}
                     NodeFieldName={"range"}
                     ValueLabels={["Min", "Max"]}
+                    AllowNegatives={[false, false]}
                     Label="Range"
                 />
             )}
@@ -106,6 +107,7 @@ function SetSize({ data }: { data: NodeData }) {
                             NodeField={(data.node as SetSizeAPI).nodeFields.rangeX}
                             NodeFieldName={"rangeX"}
                             Label="X"
+                            AllowNegatives={[false, false]}
                             ValueLabels={["Min", "Max"]}
                         />
                     )}
@@ -128,6 +130,7 @@ function SetSize({ data }: { data: NodeData }) {
                             NodeField={(data.node as SetSizeAPI).nodeFields.rangeY}
                             NodeFieldName={"rangeY"}
                             Label="Y"
+                            AllowNegatives={[false, false]}
                             ValueLabels={["Min", "Max"]}
                         />
                     )}
@@ -150,6 +153,7 @@ function SetSize({ data }: { data: NodeData }) {
                             NodeField={(data.node as SetSizeAPI).nodeFields.rangeZ}
                             NodeFieldName={"rangeZ"}
                             Label="Z"
+                            AllowNegatives={[false, false]}
                             ValueLabels={["Min", "Max"]}
                         />
                     )}

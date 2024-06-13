@@ -41,7 +41,7 @@ export class Rotation extends MixedNode {
         return rotation;
     }
 
-    Run(data: ParticleData, dt: number) {
+    Run(data: ParticleData, dt = 1) {
         const nodeOperationType = this.nodeFields.nodeOperationType.GetState();
         const calculationType = this.nodeFields.calculationType.GetState();
         const axisType = this.nodeFields.axisType.GetState();
@@ -61,12 +61,11 @@ export class Rotation extends MixedNode {
         }
 
         if (nodeOperationType === NodeOperationType.Set) {
-            data.rotation = CFrame.Angles(x, y, z);
+            data.rotation = CFrame.Angles(math.rad(x), math.rad(y), math.rad(z));
             return;
         }
 
-        const currentRotation = data.rotation;
-        data.rotation = CFrame.Angles(currentRotation.X + x * dt, currentRotation.Y + y * dt, currentRotation.Z + z * dt);
+        data.rotation = data.rotation.mul(CFrame.Angles(math.rad(x * dt), math.rad(y * dt), math.rad(z * dt)));
     }
 
     GetClassName(): string {

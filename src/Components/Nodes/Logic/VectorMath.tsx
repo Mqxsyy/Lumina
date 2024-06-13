@@ -101,6 +101,7 @@ function VectorMath({ data }: { data: NodeData }) {
                     NodeField={(data.node as VectorMathAPI).nodeFields.numberB}
                     NodeFieldName={"numberB"}
                     Label={"B"}
+                    AllowNegative={true}
                 />
             )}
             {valueTypeA === ValueType.Vector2 && valueTypeB1 === ValueType.Vector2 && (

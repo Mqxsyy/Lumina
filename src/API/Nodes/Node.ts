@@ -9,6 +9,7 @@ export enum UpdatePrioriy {
     First = 1,
     Default = 2,
     Last = 3,
+    PostMove = 4,
 }
 
 export abstract class Node {
@@ -19,31 +20,25 @@ export abstract class Node {
 
     abstract nodeFields: { [key: string]: NodeField };
     connectedSystemId?: number;
+    systemGroup?: NodeGroups;
 
     constructor() {
         this.id = NodeIdPool.GetNextId();
     }
 
-    ConnectToSystem(systemId: number) {
-        this.connectedSystemId = systemId;
-    }
-
-    RemoveSystemConnection() {
-        this.connectedSystemId = undefined;
-    }
-
     abstract GetClassName(): string;
     abstract GetNodeGroups(): NodeGroups[];
+    abstract GetNodeFolderName(): string;
 
     GetAutoGenerationCode(src: Src, wrapper?: string) {
-        if (this.GetNodeGroups().findIndex((g) => g === NodeGroups.Logic) === -1 && wrapper !== undefined) {
+        if (this.GetNodeGroups().findIndex((g) => g === NodeGroups.Logic) !== -1 && wrapper !== undefined) {
             const nodeName = this.GetClassName();
 
             const className = `${nodeName}${this.id}`;
             const varName = `${LowerFirstLetter(nodeName)}${this.id}`;
 
             if (string.match(src.value, className)[0] === undefined) {
-                src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "Logic", "${nodeName}").${nodeName} \n`;
+                src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "${this.GetNodeFolderName()}", "${nodeName}").${nodeName} \n`;
                 src.value += `local ${varName} = ${className}.new() \n\n`;
 
                 for (const [fieldName, fieldValue] of pairs(this.nodeFields)) {
@@ -63,6 +58,6 @@ export abstract class Node {
             fieldValue.AutoGenerateField(`${varName}.nodeFields.${fieldName}`, src);
         }
 
-        AutoGenAddToSystem(varName, src);
+        AutoGenAddToSystem(varName, this.systemGroup as NodeGroups, src);
     }
 }

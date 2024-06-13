@@ -8,5 +8,9 @@ export abstract class SpawnNode extends Node {
         return SpawnNode.nodeGroups;
     }
 
+    GetNodeFolderName(): string {
+        return "Spawn";
+    }
+
     abstract GetValue: () => number;
 }

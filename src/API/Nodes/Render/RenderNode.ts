@@ -10,6 +10,10 @@ export abstract class RenderNode extends Node {
         return RenderNode.nodeGroups;
     }
 
+    GetNodeFolderName(): string {
+        return "Render";
+    }
+
     abstract Render: (initializeNodes: InitializeNode[], updateNodes: UpdateNode[]) => void;
     abstract Destroy(): void;
 }

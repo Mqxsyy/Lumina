@@ -9,5 +9,9 @@ export abstract class UpdateNode extends Node {
         return UpdateNode.nodeGroups;
     }
 
+    GetNodeFolderName(): string {
+        return "Update";
+    }
+
     abstract Run(data: ParticleData, dt: number): void;
 }

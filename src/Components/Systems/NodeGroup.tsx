@@ -131,7 +131,9 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
 
         addToChildNodes(node);
 
-        node.data.node.ConnectToSystem(SystemId);
+        node.data.node.connectedSystemId = SystemId;
+        node.data.node.systemGroup = NodeGroup;
+
         SystemAPI.AddNode(node.data.node, NodeGroup);
 
         nodeDestroyConnectionsRef.current[id] = node.data.onDestroy.Connect((nodeData) => {
@@ -153,7 +155,9 @@ function NodeGroup({ SystemId, SystemAPI, SystemDestroyEvent, NodeGroup, Gradien
             if (node !== undefined) {
                 removeFromChildNodes(nodeId);
 
-                node.data.node.RemoveSystemConnection();
+                node.data.node.connectedSystemId = undefined;
+                node.data.node.systemGroup = undefined;
+
                 SystemAPI.RemoveNode(node.data.node, NodeGroup);
 
                 if (nodeDestroyConnectionsRef.current[nodeId] !== undefined) {

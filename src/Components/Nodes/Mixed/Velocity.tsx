@@ -54,7 +54,7 @@ function Velocity({ data }: { data: NodeData }) {
 
     return (
         <Node
-            Name="Set Velocity"
+            Name="Velocity"
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}

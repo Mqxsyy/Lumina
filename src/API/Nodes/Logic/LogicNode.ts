@@ -9,5 +9,9 @@ export abstract class LogicNode extends Node {
         return LogicNode.nodeGroups;
     }
 
+    GetNodeFolderName(): string {
+        return "Logic";
+    }
+
     abstract Calculate: (data: ParticleData) => unknown;
 }

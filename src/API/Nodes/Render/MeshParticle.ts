@@ -1,17 +1,18 @@
 import { RunService, Workspace } from "@rbxts/services";
+import { NumberArrayField } from "API/Fields/NumberArrayField";
 import { NumberField } from "API/Fields/NumberField";
-import { Vector2Field } from "API/Fields/Vector2Field";
 import { GetMeshParticlesFolder } from "API/FolderLocations";
 import { CFrameZero } from "API/Lib";
 import { ObjectPool } from "API/ObjectPool";
 import { CreateParticleData, GetNextParticleId, type ParticleData, ParticleTypes } from "API/ParticleService";
 import type { InitializeNode } from "../Initialize/InitializeNode";
+import { UpdatePrioriy } from "../Node";
 import type { UpdateNode } from "../Update/UpdateNode";
 import { RenderNode } from "./RenderNode";
 
 const BASE_SIZE = new Vector3(0.001, 0.001, 0.001);
 const DEFAULT_SIZE = new Vector3(1, 1, 1);
-const DEFAULT_MATERIAL = Enum.Material.SmoothPlastic;
+const DEFAULT_MATERIAL = Enum.Material.Asphalt; // reduces light reflection
 const DEAD_PARTICLES_CFRAME = new CFrame(0, 10000, 0);
 const DEFAULT_COLOR = new Color3(1, 1, 1);
 const DEFAULT_COLOR_VECTOR3 = new Vector3(1, 1, 1);
@@ -52,7 +53,7 @@ function CreateVolumetricParticle(): MeshParticlePart {
     return base as MeshParticlePart;
 }
 
-function UpdateParticleProperties(data: ParticleData) {
+function UpdateParticleProperties(data: ParticleData, textureIds: number[]) {
     const particle = data.particle as MeshParticlePart;
 
     const newScale = data.sizeNormal.add(data.sizeNormal.mul(data.sizeMultiplier));
@@ -68,6 +69,22 @@ function UpdateParticleProperties(data: ParticleData) {
     if (particle.Mesh.VertexColor !== newColor) {
         particle.Mesh.VertexColor = newColor;
     }
+
+    const totalTextures = textureIds.size();
+    if (totalTextures > 1) {
+        const alivePercent = data.alivetime / data.lifetime;
+        const texturePercent = 1 / textureIds.size();
+        const textureIndex = math.floor(alivePercent / texturePercent);
+        const textureId = textureIds[textureIndex];
+
+        if (particle.Mesh.TextureId !== `rbxassetid://${textureId}`) {
+            particle.Mesh.TextureId = `rbxassetid://${textureId}`;
+        }
+    } else if (totalTextures === 1) {
+        if (particle.Mesh.TextureId !== `rbxassetid://${textureIds[0]}`) {
+            particle.Mesh.TextureId = `rbxassetid://${textureIds[0]}`;
+        }
+    }
 }
 
 export class MeshParticle extends RenderNode {
@@ -75,11 +92,7 @@ export class MeshParticle extends RenderNode {
 
     nodeFields = {
         meshId: new NumberField(DEFAULT_MESH_ID),
-        textureId: new NumberField(DEFAULT_TEXTURE_ID),
-        textureSize: new Vector2Field(1024, 1024),
-        spriteSheetRows: new NumberField(1),
-        spriteSheetColumns: new NumberField(1),
-        spriteSheetFrameCount: new NumberField(1),
+        textures: new NumberArrayField([DEFAULT_TEXTURE_ID]),
     };
 
     objectPool: ObjectPool;
@@ -122,8 +135,9 @@ export class MeshParticle extends RenderNode {
 
         const data = CreateParticleData(id, ParticleTypes.Cube, particle, orderedUpdateNodes);
 
-        for (let i = 0; i < orderedInitializeNodes.size(); i++) {
-            orderedInitializeNodes[i].Run(data);
+        const firstInitializeNodes = orderedInitializeNodes.filter((node) => node.updatePriority !== UpdatePrioriy.PostMove);
+        for (let i = 0; i < firstInitializeNodes.size(); i++) {
+            firstInitializeNodes[i].Run(data);
         }
 
         if (data.nextPos !== undefined || data.rotation !== CFrameZero) {
@@ -141,11 +155,16 @@ export class MeshParticle extends RenderNode {
             particle.CFrame = new CFrame(pos).mul(rot);
         }
 
+        const lastInitializeNodes = orderedInitializeNodes.filter((node) => node.updatePriority === UpdatePrioriy.PostMove);
+        for (let i = 0; i < lastInitializeNodes.size(); i++) {
+            lastInitializeNodes[i].Run(data);
+        }
+
         for (let i = 0; i < orderedUpdateNodes.size(); i++) {
             orderedUpdateNodes[i].Run(data, 1);
         }
 
-        UpdateParticleProperties(data);
+        UpdateParticleProperties(data, this.nodeFields.textures.GetNumbers());
         this.aliveParticles.push(data);
 
         if (this.updateLoop !== undefined) return;
@@ -214,7 +233,7 @@ export class MeshParticle extends RenderNode {
                     }
                 }
 
-                UpdateParticleProperties(aliveParticleData);
+                UpdateParticleProperties(aliveParticleData, this.nodeFields.textures.GetNumbers());
                 aliveParticleData.alivetime += dt;
             }
 

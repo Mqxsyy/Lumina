@@ -9,5 +9,9 @@ export abstract class InitializeNode extends Node {
         return InitializeNode.nodeGroups;
     }
 
+    GetNodeFolderName(): string {
+        return "Initialize";
+    }
+
     abstract Run(data: ParticleData): void;
 }
