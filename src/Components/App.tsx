@@ -16,10 +16,10 @@ import { GetAllNodes, NodesChanged } from "../Services/NodesService";
 import CanvasBackground from "./Background";
 import { BasicTextLabel } from "./Basic/BasicTextLabel";
 import Dropdown from "./Basic/Dropdown";
-import Controls from "./Controls/Controls";
 import DisplayConnections from "./DisplayConnections";
 import Div from "./Div";
 import { NodeSelection } from "./Selection/NodeSelection";
+import Toolbar, { CloseToolbar } from "./Toolbar/Toolbar";
 
 // yes it's bad architecture (the way it handles rerenders) but too late to change :p
 
@@ -187,7 +187,6 @@ export function App() {
                 />
             )}
             {dropdownData.position !== undefined && <Dropdown key={"Dropdown"} />}
-            <Controls key={"Controls"} />
             {useMemo(
                 () => (
                     <BasicTextLabel
@@ -202,6 +201,7 @@ export function App() {
                 ),
                 [zoomScale],
             )}
+            <Toolbar key={"Controls"} />
             <frame
                 key={"InputListener"}
                 Size={UDim2.fromScale(1, 1)}
@@ -209,6 +209,8 @@ export function App() {
                 ZIndex={10}
                 Event={{
                     InputBegan: (_, input: InputObject) => {
+                        CloseToolbar.Fire();
+
                         switch (input.KeyCode) {
                             case Enum.KeyCode.Space: {
                                 const mousePositionVec2 = GetMousePosition();

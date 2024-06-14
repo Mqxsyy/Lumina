@@ -8,7 +8,9 @@ interface Props {
     AutomaticSize?: "X" | "Y" | "XY" | "None";
     SizeConstaint?: "RelativeXY" | "RelativeXX" | "RelativeYY";
     Rotation?: number;
-    BackgroundColor?: Color3 | undefined;
+    BackgroundColor?: Color3;
+    BorderColor?: Color3;
+    BorderSize?: number;
     ZIndex?: number;
     // Active?: boolean;
     getFrame?: (frame: Frame) => void;
@@ -29,6 +31,8 @@ export default function Div({
     Size = UDim2.fromScale(1, 1),
     AutomaticSize = "None",
     BackgroundColor = undefined,
+    BorderColor = Color3.fromHex("000000"),
+    BorderSize = 0,
     Rotation = 0,
     SizeConstaint = "RelativeXY",
     ZIndex = 1,
@@ -64,7 +68,8 @@ export default function Div({
             Rotation={Rotation}
             BackgroundColor3={BackgroundColor === undefined ? Color3.fromHex("#FFFFFF") : BackgroundColor}
             BackgroundTransparency={BackgroundColor === undefined ? 1 : 0}
-            BorderSizePixel={0}
+            BorderSizePixel={BorderSize}
+            BorderColor3={BorderColor}
             ZIndex={ZIndex}
             key={ElementName}
             ref={frameRef}

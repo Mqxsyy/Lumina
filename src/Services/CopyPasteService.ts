@@ -10,8 +10,10 @@ import { GetIsHoldingControl, GetSelectedNodeId, GetSelectedSystemId } from "./S
 let serializedNode: SerializedFloatingNode | undefined;
 let serializedSystem: SerializedSystem | undefined;
 
-export function Copy() {
-    if (!GetIsHoldingControl()) return;
+export function Copy(isForced = false) {
+    if (!isForced) {
+        if (!GetIsHoldingControl()) return;
+    }
 
     const selectedNodeId = GetSelectedNodeId();
     if (selectedNodeId !== -1) {
@@ -28,9 +30,10 @@ export function Copy() {
     }
 }
 
-export function Paste() {
-    if (!GetIsHoldingControl()) return;
-
+export function Paste(isForced = false) {
+    if (!isForced) {
+        if (!GetIsHoldingControl()) return;
+    }
     if (serializedNode !== undefined) {
         LocalLoadNode(serializedNode);
         return;
@@ -42,9 +45,10 @@ export function Paste() {
     }
 }
 
-export function Duplicate() {
-    if (!GetIsHoldingControl()) return;
-
+export function Duplicate(isForced = false) {
+    if (!isForced) {
+        if (!GetIsHoldingControl()) return;
+    }
     const selectedNodeId = GetSelectedNodeId();
     if (selectedNodeId !== -1) {
         LocalLoadNode(LocalSerializeNode());
@@ -58,8 +62,10 @@ export function Duplicate() {
     }
 }
 
-export function Cut() {
-    if (!GetIsHoldingControl()) return;
+export function Cut(isForced = false) {
+    if (!isForced) {
+        if (!GetIsHoldingControl()) return;
+    }
 
     Copy();
 
