@@ -67,7 +67,7 @@ export function Cut(isForced = false) {
         if (!GetIsHoldingControl()) return;
     }
 
-    Copy();
+    Copy(isForced);
 
     const selectedNodeId = GetSelectedNodeId();
     if (serializedNode !== undefined && selectedNodeId !== -1) {
