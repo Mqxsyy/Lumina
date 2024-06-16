@@ -24,10 +24,22 @@ function Trigonometry({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Number}
             Width={175}
+            Types={[
+                {
+                    field: (data.node as TrigonometryAPI).nodeFields.trigonometryType,
+                    order: 1,
+                },
+            ]}
+            Outputs={[
+                {
+                    order: 1,
+                    valueType: ValueType.Number,
+                    valueName: "Number",
+                    fn: (particleData) => (data.node as TrigonometryAPI).Calculate(particleData) as number,
+                },
+            ]}
         >
-            <StateField NodeField={(data.node as TrigonometryAPI).nodeFields.trigonometryType} />
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as TrigonometryAPI).nodeFields.input}

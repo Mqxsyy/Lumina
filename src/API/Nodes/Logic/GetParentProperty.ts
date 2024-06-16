@@ -1,6 +1,8 @@
 import { RunService } from "@rbxts/services";
+import { NodeField } from "API/Fields/NodeField";
 import { StateField } from "API/Fields/StateField";
 import { LowerFirstLetter } from "API/Lib";
+import { ParticleData } from "API/ParticleService";
 import type { Src } from "API/VFXScriptCreator";
 import { PropertyType } from "../FieldStates";
 import { LogicNode } from "./LogicNode";
@@ -12,7 +14,6 @@ if (RunService.IsStudio()) {
 
 export class GetParentProperty extends LogicNode {
     static className = "GetParentProperty";
-
     nodeFields = {
         propertyType: new StateField(PropertyType, PropertyType.Position),
     };
@@ -90,10 +91,6 @@ export class GetParentProperty extends LogicNode {
         if (string.match(src.value, className)[0] === undefined) {
             src.value += `local ${className} = TS.import(script, APIFolder, "Nodes", "${this.GetNodeFolderName()}", "${nodeName}").${nodeName} \n`;
             src.value += `local ${varName} = ${className}.new() \n\n`;
-
-            for (const [fieldName, fieldValue] of pairs(this.nodeFields)) {
-                fieldValue.AutoGenerateField(`${varName}.nodeFields.${fieldName}`, src);
-            }
 
             src.value += `${varName}.parent = script.Parent\n`;
 

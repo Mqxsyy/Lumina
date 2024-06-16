@@ -4,7 +4,6 @@ import { VectorMath as VectorMathAPI } from "API/Nodes/Logic/VectorMath";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import ConnectableVector3Field from "Components/NodeFields/ConnectableVector3Field";
-import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -67,16 +66,107 @@ function VectorMath({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Vector3}
-            Width={150}
+            Types={
+                (operationType === MathOperationType.Multiply || operationType === MathOperationType.Divide) &&
+                valueTypeA === ValueType.Vector2
+                    ? [
+                          {
+                              field: valueTypeARef.current,
+                              order: 1,
+                          },
+                          {
+                              field: operationTypeRef.current,
+                              order: 2,
+                          },
+                          {
+                              field: valueTypeB1Ref.current,
+                              order: 3,
+                          },
+                      ]
+                    : (operationType === MathOperationType.Multiply || operationType === MathOperationType.Divide) &&
+                        valueTypeA === ValueType.Vector3
+                      ? [
+                            {
+                                field: valueTypeARef.current,
+                                order: 1,
+                            },
+                            {
+                                field: operationTypeRef.current,
+                                order: 2,
+                            },
+                            {
+                                field: valueTypeB2Ref.current,
+                                order: 3,
+                            },
+                        ]
+                      : [
+                            {
+                                field: valueTypeARef.current,
+                                order: 1,
+                            },
+                            {
+                                field: operationTypeRef.current,
+                                order: 2,
+                            },
+                        ]
+            }
+            Outputs={
+                valueTypeA === ValueType.Vector2
+                    ? [
+                          {
+                              order: 1,
+                              valueType: ValueType.Vector2,
+                              valueName: "Vec2",
+                              fn: (particleData) => (data.node as VectorMathAPI).Calculate(particleData) as Vector2,
+                              label: "Vec2",
+                          },
+                          {
+                              order: 2,
+                              valueType: ValueType.Number,
+                              valueName: "X",
+                              fn: (particleData) => ((data.node as VectorMathAPI).Calculate(particleData) as Vector2).X,
+                              label: "X",
+                          },
+                          {
+                              order: 3,
+                              valueType: ValueType.Number,
+                              valueName: "Y",
+                              fn: (particleData) => ((data.node as VectorMathAPI).Calculate(particleData) as Vector2).Y,
+                              label: "Y",
+                          },
+                      ]
+                    : [
+                          {
+                              order: 1,
+                              valueType: ValueType.Vector3,
+                              valueName: "Vec3",
+                              fn: (particleData) => (data.node as VectorMathAPI).Calculate(particleData) as Vector3,
+                              label: "Vec3",
+                          },
+                          {
+                              order: 2,
+                              valueType: ValueType.Number,
+                              valueName: "X",
+                              fn: (particleData) => ((data.node as VectorMathAPI).Calculate(particleData) as Vector3).X,
+                              label: "X",
+                          },
+                          {
+                              order: 3,
+                              valueType: ValueType.Number,
+                              valueName: "Y",
+                              fn: (particleData) => ((data.node as VectorMathAPI).Calculate(particleData) as Vector3).Y,
+                              label: "Y",
+                          },
+                          {
+                              order: 4,
+                              valueType: ValueType.Number,
+                              valueName: "Z",
+                              fn: (particleData) => ((data.node as VectorMathAPI).Calculate(particleData) as Vector3).Z,
+                              label: "Z",
+                          },
+                      ]
+            }
         >
-            <StateField NodeId={data.node.id} NodeField={operationTypeRef.current} />
-            <StateField NodeId={data.node.id} NodeField={valueTypeARef.current} />
-            {(operationType === MathOperationType.Multiply || operationType === MathOperationType.Divide) &&
-                valueTypeA === ValueType.Vector2 && <StateField NodeId={data.node.id} NodeField={valueTypeB1Ref.current} />}
-            {(operationType === MathOperationType.Multiply || operationType === MathOperationType.Divide) &&
-                valueTypeA === ValueType.Vector3 && <StateField NodeId={data.node.id} NodeField={valueTypeB2Ref.current} />}
-
             {valueTypeA === ValueType.Vector2 && (
                 <ConnectableVector2Field
                     NodeId={data.node.id}

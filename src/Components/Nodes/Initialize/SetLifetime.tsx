@@ -39,9 +39,13 @@ function SetLifetime({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+            Types={[
+                {
+                    field: calculationTypeRef.current,
+                    order: 1,
+                },
+            ]}
         >
-            <StateField NodeField={calculationTypeRef.current} />
-
             {calculationTypeRef.current.GetState() === CalculationType1.Uniform ? (
                 <ConnectableNumberField
                     NodeId={data.node.id}

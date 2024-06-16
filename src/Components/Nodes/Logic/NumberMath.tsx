@@ -1,8 +1,8 @@
 import React from "@rbxts/react";
 import { ValueType } from "API/Nodes/FieldStates";
 import { NumberMath as NumberMathAPI } from "API/Nodes/Logic/NumberMath";
+import type { ParticleData } from "API/ParticleService";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
-import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
 
@@ -24,10 +24,17 @@ function NumberMath({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Number}
             Width={175}
+            Types={[{ order: 1, field: (data.node as NumberMathAPI).nodeFields.operationType }]}
+            Outputs={[
+                {
+                    order: 1,
+                    valueType: ValueType.Number,
+                    valueName: "Number",
+                    fn: (particleData: ParticleData) => (data.node as NumberMathAPI).Calculate(particleData),
+                },
+            ]}
         >
-            <StateField NodeField={(data.node as NumberMathAPI).nodeFields.operationType} />
             <ConnectableNumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as NumberMathAPI).nodeFields.a}

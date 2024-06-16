@@ -67,10 +67,26 @@ function SetSize({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+            Types={
+                !isRandomConnected() && !isUniformConnected()
+                    ? [
+                          {
+                              field: calculationTypeRef.current,
+                              order: 1,
+                          },
+                          {
+                              field: axisTypeRef.current,
+                              order: 2,
+                          },
+                      ]
+                    : [
+                          {
+                              field: calculationTypeRef.current,
+                              order: 1,
+                          },
+                      ]
+            }
         >
-            <StateField NodeField={calculationTypeRef.current} />
-            {!isRandomConnected() && !isUniformConnected() && <StateField NodeField={axisTypeRef.current} />}
-
             {isUniformConnected() && (
                 <ConnectableNumberField
                     NodeId={data.node.id}

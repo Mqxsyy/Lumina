@@ -1,6 +1,6 @@
 import React, { useState } from "@rbxts/react";
-import InputSinker from "Components/Basic/InputSinker";
 import Div from "Components/Div";
+import StyleConfig from "Components/StyleConfig";
 
 interface Props {
     Size?: UDim2;
@@ -8,16 +8,14 @@ interface Props {
     AutomaticTextSize?: boolean;
 
     Text: string;
-    Padding: number;
     OnClick?: () => void;
 }
 
 export function ToolbarButton({
     Size = UDim2.fromScale(0, 1),
-    BackgroundColor = Color3.fromHex("2e2e2e"),
+    BackgroundColor = StyleConfig.Toolbar.DropdownColor,
     AutomaticTextSize = true,
     Text,
-    Padding,
     OnClick,
 }: Props) {
     const [isHovering, setIsHovering] = useState(false);
@@ -34,15 +32,15 @@ export function ToolbarButton({
                 OnClick();
             }}
         >
-            <uipadding PaddingLeft={new UDim(0, Padding)} PaddingRight={new UDim(0, Padding)} />
+            <uipadding PaddingLeft={new UDim(0, StyleConfig.Toolbar.Padding)} PaddingRight={new UDim(0, StyleConfig.Toolbar.Padding)} />
 
             <textlabel
                 Size={AutomaticTextSize ? UDim2.fromScale(0, 1) : UDim2.fromScale(1, 1)}
                 AutomaticSize={"X"}
                 BackgroundTransparency={1}
-                FontFace={new Font("SourceSans", Enum.FontWeight.Regular)}
-                TextSize={16}
-                TextColor3={Color3.fromHex("aaaaaa")}
+                FontFace={StyleConfig.Toolbar.Font}
+                TextSize={StyleConfig.Toolbar.FontSize}
+                TextColor3={StyleConfig.Toolbar.FontColor}
                 Text={Text}
             />
         </Div>

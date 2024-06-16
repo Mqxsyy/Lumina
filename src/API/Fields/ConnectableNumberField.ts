@@ -9,7 +9,8 @@ interface SerializedData {
 }
 
 export class ConnectableNumberField extends NodeField {
-    numberField: NumberField;
+    private numberField: NumberField;
+    private connectedFn: undefined | ((data: ParticleData) => number);
     connectedNode: undefined | LogicNode;
 
     constructor(number: number) {
@@ -22,8 +23,8 @@ export class ConnectableNumberField extends NodeField {
     };
 
     GetNumber = (data: ParticleData) => {
-        if (this.connectedNode !== undefined) {
-            return this.connectedNode.Calculate(data) as number;
+        if (this.connectedFn !== undefined) {
+            return this.connectedFn(data);
         }
 
         return this.numberField.GetNumber();
@@ -35,13 +36,15 @@ export class ConnectableNumberField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    ConnectNode = (node: LogicNode) => {
+    ConnectNode = (node: LogicNode, fn: (data: ParticleData) => number | Vector2 | Vector3) => {
         this.connectedNode = node;
+        this.connectedFn = fn as (data: ParticleData) => number;
         this.FieldChanged.Fire();
     };
 
     DisconnectNode = () => {
         this.connectedNode = undefined;
+        this.connectedFn = undefined;
         this.FieldChanged.Fire();
     };
 

@@ -1,5 +1,4 @@
-import React, { type PropsWithChildren } from "@rbxts/react";
-import { useEffect, useRef } from "@rbxts/react";
+import React, { useEffect, useRef, type PropsWithChildren } from "@rbxts/react";
 import { StyleColors, StyleProperties, StyleText } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
@@ -49,7 +48,6 @@ export function TextInput({
     children,
 }: PropsWithChildren<Props>) {
     const textBoxRef = useRef<TextBox>();
-    const textLabelRef = useRef<TextLabel>();
 
     const zoomScale = IsAffectedByZoom ? GetZoomScale() : 1;
 
@@ -62,44 +60,39 @@ export function TextInput({
     };
 
     useEffect(() => {
-        const textBox = textBoxRef.current as TextBox;
+        const textbox = textBoxRef.current as TextBox;
 
         let textChangedConnection: RBXScriptConnection;
         let focusLostConnection: RBXScriptConnection;
 
         if (!Disabled) {
-            textChangedConnection = textBox.GetPropertyChangedSignal("Text").Connect(() => {
-                let text = (textBoxRef.current as TextBox).Text;
-                if (text === " ") {
-                    text = "";
-                }
-
-                if (text.sub(1, 1) === " ") {
-                    text = text.sub(2);
-                }
-
-                (textLabelRef.current as TextLabel).Text = text;
-
+            textChangedConnection = textbox.GetPropertyChangedSignal("Text").Connect(() => {
                 if (TextChanged === undefined) return;
 
-                const newText = TextChanged((textLabelRef.current as TextLabel).Text);
-                if (newText !== undefined && newText !== (textLabelRef.current as TextLabel).Text) {
-                    (textLabelRef.current as TextLabel).Text = newText;
+                if (textbox.GetAttribute("IgnoreTextChange") === true) {
+                    textbox.SetAttribute("IgnoreTextChange", false);
+                    return;
+                }
+
+                const validatedText = TextChanged(textbox.Text);
+                if (validatedText !== undefined && validatedText !== textbox.Text) {
+                    textbox.SetAttribute("IgnoreTextChange", true);
+                    textbox.Text = validatedText;
                 }
             });
 
-            focusLostConnection = textBox.FocusLost.Connect(() => {
+            focusLostConnection = textbox.FocusLost.Connect(() => {
                 if (LostFocus === undefined) return;
 
-                const newText = LostFocus((textBoxRef.current as TextBox).Text);
-                if (newText !== undefined && newText !== (textBoxRef.current as TextBox).Text) {
-                    (textBoxRef.current as TextBox).Text = newText;
+                const validatedText = LostFocus(textbox.Text);
+                if (validatedText !== undefined && validatedText !== textbox.Text) {
+                    textbox.Text = validatedText;
                 }
             });
         }
 
         if (AutoFocus && !Disabled) {
-            textBox.CaptureFocus();
+            textbox.CaptureFocus();
         }
 
         return () => {
@@ -113,7 +106,6 @@ export function TextInput({
         };
     }, [Disabled]);
 
-    // hacky scuffed annoying just to separate user input from code input; also removes cursor, yay
     return (
         <textbox
             AnchorPoint={AnchorPoint}
@@ -128,26 +120,13 @@ export function TextInput({
             TextColor3={Disabled ? StyleColors.TextLight : TextColor}
             FontFace={new Font(StyleText.FontId, FontWeight)}
             TextXAlignment={TextXAlignment}
-            TextWrapped={true}
-            TextTransparency={1}
-            TextTruncate={Enum.TextTruncate.AtEnd}
-            Text={" "}
+            TextWrapped={TextWrapped}
+            TextTruncate={TextTruncate}
+            Text={Disabled ? "-" : getText()}
             ref={textBoxRef}
         >
             <uipadding PaddingLeft={new UDim(0, math.clamp(5 * zoomScale, 1, math.huge))} />
             <uicorner CornerRadius={StyleProperties.CornerRadius} />
-            <textlabel
-                Size={UDim2.fromScale(1, 1)}
-                BackgroundTransparency={1}
-                TextSize={IsAffectedByZoom ? TextSize * zoomScale : TextSize}
-                FontFace={new Font(StyleText.FontId, FontWeight)}
-                TextColor3={Disabled ? StyleColors.TextLight : TextColor}
-                TextXAlignment={TextXAlignment}
-                TextWrapped={TextWrapped}
-                TextTruncate={TextTruncate}
-                Text={Disabled ? "-" : getText()}
-                ref={textLabelRef}
-            />
 
             {children}
         </textbox>

@@ -12,6 +12,7 @@ interface Props {
     BorderColor?: Color3;
     BorderSize?: number;
     ZIndex?: number;
+    ClipsDescendants?: boolean;
     // Active?: boolean;
     getFrame?: (frame: Frame) => void;
     onHover?: () => void;
@@ -36,6 +37,7 @@ export default function Div({
     Rotation = 0,
     SizeConstaint = "RelativeXY",
     ZIndex = 1,
+    ClipsDescendants = false,
     // Active = false,
     onHover = undefined,
     onUnhover = undefined,
@@ -71,6 +73,7 @@ export default function Div({
             BorderSizePixel={BorderSize}
             BorderColor3={BorderColor}
             ZIndex={ZIndex}
+            ClipsDescendants={ClipsDescendants}
             key={ElementName}
             ref={frameRef}
             Event={{

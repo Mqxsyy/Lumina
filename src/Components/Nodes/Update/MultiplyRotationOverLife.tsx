@@ -37,8 +37,13 @@ function MultiplyRotationOverLife({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+            Types={[
+                {
+                    field: (data.node as MultiplyRotationOverLifeAPI).nodeFields.calculationType,
+                    order: 1,
+                },
+            ]}
         >
-            <StateField NodeField={(data.node as MultiplyRotationOverLifeAPI).nodeFields.calculationType} />
             {calculationType === CalculationType2.Connected && (
                 <LineGraphField
                     Label={"Graph"}

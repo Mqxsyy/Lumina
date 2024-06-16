@@ -39,9 +39,21 @@ function RandomNumber({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Number}
+            Types={[
+                {
+                    field: rangeCountFieldRef.current,
+                    order: 1,
+                },
+            ]}
+            Outputs={[
+                {
+                    order: 1,
+                    valueType: ValueType.Number,
+                    valueName: "Number",
+                    fn: (particleData) => (data.node as RandomNumberAPI).Calculate(particleData) as number,
+                },
+            ]}
         >
-            <StateField NodeField={rangeCountFieldRef.current} />
             <ConnectableVector2Field
                 NodeId={data.node.id}
                 NodeField={(data.node as RandomNumberAPI).nodeFields.range1}

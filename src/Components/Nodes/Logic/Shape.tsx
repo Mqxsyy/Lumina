@@ -64,10 +64,43 @@ function Shape({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Vector3}
+            Types={[
+                {
+                    field: (data.node as ShapeAPI).nodeFields.spawnShape,
+                    order: 1,
+                },
+            ]}
+            Outputs={[
+                {
+                    order: 1,
+                    valueType: ValueType.Vector3,
+                    valueName: "Vector3",
+                    fn: (particleData) => (data.node as ShapeAPI).Calculate(particleData) as Vector3,
+                    label: "Vec3",
+                },
+                {
+                    order: 2,
+                    valueType: ValueType.Number,
+                    valueName: "X",
+                    fn: (particleData) => (data.node as ShapeAPI).Calculate(particleData).X as number,
+                    label: "X",
+                },
+                {
+                    order: 3,
+                    valueType: ValueType.Number,
+                    valueName: "Y",
+                    fn: (particleData) => (data.node as ShapeAPI).Calculate(particleData).Y as number,
+                    label: "Y",
+                },
+                {
+                    order: 4,
+                    valueType: ValueType.Number,
+                    valueName: "Z",
+                    fn: (particleData) => (data.node as ShapeAPI).Calculate(particleData).Z as number,
+                    label: "Z",
+                },
+            ]}
         >
-            <StateField NodeField={(data.node as ShapeAPI).nodeFields.spawnShape} />
-
             <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                 <uilistlayout Padding={new UDim(0, 5 * zoomScale)} HorizontalAlignment={"Center"} />
 

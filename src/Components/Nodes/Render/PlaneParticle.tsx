@@ -1,11 +1,9 @@
 import React from "@rbxts/react";
-import { CapitalizeFirstLetter } from "API/Lib";
 import { PlaneParticle as PlaneParticleAPI } from "API/Nodes/Render/PlaneParticle";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import BooleanField from "Components/NodeFields/BooleanField";
 import NumberField from "Components/NodeFields/NumberField";
-import StateField from "Components/NodeFields/StateField";
 import { Vector2Field } from "Components/NodeFields/Vector2Field";
 import { AddNode, type NodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
@@ -31,8 +29,13 @@ function PlaneParticle({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+            Types={[
+                {
+                    field: (data.node as PlaneParticleAPI).nodeFields.orientation,
+                    order: 1,
+                },
+            ]}
         >
-            <StateField NodeField={(data.node as PlaneParticleAPI).nodeFields.orientation} Label={"Orientation"} />
             <NumberField
                 NodeId={data.node.id}
                 NodeField={(data.node as PlaneParticleAPI).nodeFields.assetId}

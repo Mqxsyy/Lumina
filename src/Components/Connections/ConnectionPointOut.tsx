@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import type { FastEventConnection } from "API/Bindables/FastEvent";
-import {
-    type ConnectionData,
-    CreateConnection,
-    DestroyConnection,
-    GetMovingConnectionId,
-    StartMovingConnection,
-    UnbindMovingConnection,
-} from "Services/ConnectionsService";
+import type { ParticleData } from "API/ParticleService";
+import { type ConnectionData, CreateConnection, GetMovingConnectionId, StartMovingConnection } from "Services/ConnectionsService";
 import { GetNodeById, type NodeCollectionEntry, type NodeConnectionOut, UpdateNodeData } from "Services/NodesService";
 import { GetZoomScale } from "ZoomScale";
 import ConnectionPoint from "./ConnectionPoint";
@@ -16,16 +9,21 @@ interface Props {
     AnchorPoint?: Vector2;
     Position?: UDim2;
     Size?: UDim2;
+
     NodeId: number;
     ValueType: string;
+    ValueName: string;
+    Fn: (particleData: ParticleData) => number | Vector2 | Vector3;
 }
 
 export default function ConnectionPointOut({
-    NodeId,
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),
+    NodeId,
     ValueType,
+    ValueName,
+    Fn,
 }: Props) {
     const [connectionIds, setConnectionIds] = useState<number[]>([]);
     const elementRef = useRef<ImageButton>();
@@ -37,7 +35,7 @@ export default function ConnectionPointOut({
         if (elementRef.current === undefined) return;
         if (node.element === undefined) return;
 
-        const connectionData = CreateConnection(nodeData, elementRef.current, ValueType, loadedId);
+        const connectionData = CreateConnection(nodeData, elementRef.current, ValueType, Fn, loadedId);
         setConnectionIds((prev) => [...prev, connectionData.id]);
 
         UpdateNodeData(NodeId, (data) => {
@@ -97,6 +95,7 @@ export default function ConnectionPointOut({
             AnchorPoint={AnchorPoint}
             Position={Position}
             Size={Size}
+            ValueType={ValueType}
             ConnectionIds={connectionIds.size() === 0 ? undefined : connectionIds}
             GetElementRef={(element) => {
                 elementRef.current = element;

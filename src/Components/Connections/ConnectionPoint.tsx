@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "@rbxts/react";
+import { GetConnectionColor } from "Components/ColorLib";
 import Div from "Components/Div";
 import { ReloadConnectionVisuals } from "Components/Events";
 import { DestroyConnection } from "Services/ConnectionsService";
-import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
     Position?: UDim2;
     Size?: UDim2;
     ConnectionIds?: number[];
+    ValueType: string;
     GetElementRef?: (element: ImageButton) => void;
     MouseButton1Down?: () => void;
     MouseButton1Up?: () => void;
@@ -20,6 +21,7 @@ export default function ConnectionPoint({
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromScale(1, 1),
     ConnectionIds = undefined,
+    ValueType,
     GetElementRef = undefined,
     MouseButton1Down = undefined,
     MouseButton1Up = undefined,
@@ -92,7 +94,7 @@ export default function ConnectionPoint({
 
             <Div>
                 <uicorner CornerRadius={new UDim(2, 0)} />
-                <uistroke Color={StyleColors.Highlight} Thickness={math.clamp(2 * zoomScale, 1, math.huge)} />
+                <uistroke Color={GetConnectionColor(ValueType)} Thickness={math.clamp(2 * zoomScale, 1, math.huge)} />
             </Div>
 
             {ConnectionIds !== undefined && (
@@ -100,7 +102,7 @@ export default function ConnectionPoint({
                     AnchorPoint={new Vector2(0.5, 0.5)}
                     Position={UDim2.fromScale(0.5, 0.5)}
                     Size={new UDim2(1, -4 * zoomScale, 1, -4 * zoomScale)}
-                    BackgroundColor={StyleColors.Highlight}
+                    BackgroundColor={GetConnectionColor(ValueType)}
                 >
                     <uicorner CornerRadius={new UDim(2, 0)} />
                 </Div>

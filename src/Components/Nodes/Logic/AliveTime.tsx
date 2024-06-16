@@ -1,6 +1,7 @@
 import React from "@rbxts/react";
 import { ValueType } from "API/Nodes/FieldStates";
 import { AliveTime as AliveTimeAPI } from "API/Nodes/Logic/Alivetime";
+import type { ParticleData } from "API/ParticleService";
 import Div from "Components/Div";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
@@ -24,9 +25,14 @@ function AliveTime({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Number}
-        >
-            <Div Size={UDim2.fromOffset(0, 0)} />
-        </Node>
+            Outputs={[
+                {
+                    order: 1,
+                    valueType: ValueType.Number,
+                    valueName: "Number",
+                    fn: (particleData: ParticleData) => (data.node as AliveTimeAPI).Calculate(particleData),
+                },
+            ]}
+        />
     );
 }

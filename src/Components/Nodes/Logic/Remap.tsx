@@ -24,7 +24,14 @@ function Remap({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Number}
+            Outputs={[
+                {
+                    order: 1,
+                    valueType: ValueType.Number,
+                    valueName: "Number",
+                    fn: (particleData) => (data.node as RemapAPI).Calculate(particleData) as number,
+                },
+            ]}
         >
             <ConnectableNumberField
                 NodeId={data.node.id}

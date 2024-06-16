@@ -24,8 +24,13 @@ function LookTowards({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+            Types={[
+                {
+                    field: (data.node as LookTowardsAPI).nodeFields.axisType,
+                    order: 1,
+                },
+            ]}
         >
-            <StateField NodeField={(data.node as LookTowardsAPI).nodeFields.axisType} />
             <ConnectableVector3Field
                 NodeId={data.node.id}
                 NodeField={(data.node as LookTowardsAPI).nodeFields.target}

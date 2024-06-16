@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
+import { GetConnectionColor } from "Components/ColorLib";
 import { GetCanvasData } from "Services/CanvasService";
 import type { ConnectionData } from "Services/ConnectionsService";
-import { StyleColors } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
 export const CreateConnectionLine = (connectionData: ConnectionData) => {
@@ -76,7 +76,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 Position={UDim2.fromOffset(startSegment.position.X, startSegment.position.Y)}
                 Rotation={startSegment.rotation}
                 Size={UDim2.fromOffset(startSegment.length + 1, math.clamp(3 * zoomScale, 1, math.huge))}
-                BackgroundColor3={StyleColors.Highlight}
+                BackgroundColor3={GetConnectionColor(data.valueType)}
                 BackgroundTransparency={0}
                 BorderSizePixel={0}
                 ZIndex={3}
@@ -89,7 +89,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 Position={UDim2.fromOffset(middleSegment.position.X, middleSegment.position.Y)}
                 Rotation={middleSegment.rotation}
                 Size={UDim2.fromOffset(middleSegment.length + 2, math.clamp(3 * zoomScale, 1, math.huge))}
-                BackgroundColor3={StyleColors.Highlight}
+                BackgroundColor3={GetConnectionColor(data.valueType)}
                 BackgroundTransparency={0}
                 BorderSizePixel={0}
                 ZIndex={3}
@@ -102,7 +102,7 @@ function ConnectionLine({ data }: { data: ConnectionData }) {
                 Position={UDim2.fromOffset(endSegment.position.X, endSegment.position.Y)}
                 Rotation={endSegment.rotation}
                 Size={UDim2.fromOffset(endSegment.length + 1, math.clamp(3 * zoomScale, 1, math.huge))}
-                BackgroundColor3={StyleColors.Highlight}
+                BackgroundColor3={GetConnectionColor(data.valueType)}
                 BackgroundTransparency={0}
                 BorderSizePixel={0}
                 ZIndex={3}

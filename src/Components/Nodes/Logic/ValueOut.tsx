@@ -29,11 +29,79 @@ function ValueOut({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={valueType}
             Width={150}
+            Types={[
+                {
+                    field: valueTypeRef.current,
+                    order: 1,
+                },
+            ]}
+            Outputs={
+                valueType === ValueType.Number
+                    ? [
+                          {
+                              order: 1,
+                              valueType: ValueType.Number,
+                              valueName: "Number",
+                              fn: () => (data.node as ValueOutAPI).Calculate() as number,
+                          },
+                      ]
+                    : valueType === ValueType.Vector2
+                      ? [
+                            {
+                                order: 1,
+                                valueType: ValueType.Vector2,
+                                valueName: "Vec2",
+                                fn: () => (data.node as ValueOutAPI).Calculate() as Vector2,
+                                label: "Vec2",
+                            },
+                            {
+                                order: 2,
+                                valueType: ValueType.Number,
+                                valueName: "X",
+                                fn: () => ((data.node as ValueOutAPI).Calculate() as Vector2).X,
+                                label: "X",
+                            },
+                            {
+                                order: 3,
+                                valueType: ValueType.Number,
+                                valueName: "Y",
+                                fn: () => ((data.node as ValueOutAPI).Calculate() as Vector2).Y,
+                                label: "Y",
+                            },
+                        ]
+                      : [
+                            {
+                                order: 1,
+                                valueType: ValueType.Vector3,
+                                valueName: "Vec3",
+                                fn: () => (data.node as ValueOutAPI).Calculate() as Vector3,
+                                label: "Vec3",
+                            },
+                            {
+                                order: 2,
+                                valueType: ValueType.Number,
+                                valueName: "X",
+                                fn: () => ((data.node as ValueOutAPI).Calculate() as Vector3).X,
+                                label: "X",
+                            },
+                            {
+                                order: 3,
+                                valueType: ValueType.Number,
+                                valueName: "Y",
+                                fn: () => ((data.node as ValueOutAPI).Calculate() as Vector3).Y,
+                                label: "Y",
+                            },
+                            {
+                                order: 4,
+                                valueType: ValueType.Number,
+                                valueName: "Z",
+                                fn: () => ((data.node as ValueOutAPI).Calculate() as Vector3).Z,
+                                label: "Z",
+                            },
+                        ]
+            }
         >
-            <StateField NodeId={data.node.id} NodeField={valueTypeRef.current} />
-
             {valueType === ValueType.Number && (
                 <NumberField NodeId={data.node.id} NodeField={(data.node as ValueOutAPI).nodeFields.numberIn} AllowNegative={true} />
             )}

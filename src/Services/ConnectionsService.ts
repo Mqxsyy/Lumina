@@ -2,19 +2,24 @@ import type React from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import { Event } from "API/Bindables/Event";
 import { IdPool } from "API/IdPool";
+import { ValueType } from "API/Nodes/FieldStates";
+import type { ParticleData } from "API/ParticleService";
 import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { ReloadConnectionVisuals } from "Components/Events";
+import StyleConfig from "Components/StyleConfig";
+import { StyleColors } from "Style";
 import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import type { NodeData } from "./NodesService";
 
 export interface ConnectionData {
     id: number;
-    valueType: string;
     loadedId?: number;
+    valueType: string;
     startNode: NodeData;
     startElement: ImageButton;
     endPos?: Vector2;
     endElement?: ImageButton;
+    fn: (data: ParticleData) => number | Vector2 | Vector3;
     isDestroying: boolean;
     onDestroy: Event;
 }
@@ -41,7 +46,13 @@ export function GetConnectionById(id: number) {
     return ConnectionCollection.find((connection) => connection.data.id === id);
 }
 
-export function CreateConnection(startNode: NodeData, startElement: ImageButton, valueType: string, loadedId?: number) {
+export function CreateConnection(
+    startNode: NodeData,
+    startElement: ImageButton,
+    valueType: string,
+    fn: (data: ParticleData) => number | Vector2 | Vector3,
+    loadedId?: number,
+) {
     const connection: ConnectionCollectionEntry = {
         data: {
             id: idPool.GetNextId(),
@@ -49,6 +60,7 @@ export function CreateConnection(startNode: NodeData, startElement: ImageButton,
             loadedId,
             startNode,
             startElement,
+            fn,
             isDestroying: false,
             onDestroy: new Event(),
         },

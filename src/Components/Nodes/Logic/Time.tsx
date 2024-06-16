@@ -24,9 +24,14 @@ function Time({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Number}
-        >
-            <Div Size={UDim2.fromOffset(0, 0)} />
-        </Node>
+            Outputs={[
+                {
+                    order: 1,
+                    valueType: ValueType.Number,
+                    valueName: "Number",
+                    fn: () => (data.node as TimeAPI).Calculate() as number,
+                },
+            ]}
+        />
     );
 }

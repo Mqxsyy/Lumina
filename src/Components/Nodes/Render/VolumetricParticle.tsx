@@ -22,8 +22,12 @@ function VolumetricParticle({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-        >
-            <StateField NodeField={(data.node as VolumetricParticleAPI).nodeFields.shape} Label={"Shape"} />
-        </Node>
+            Types={[
+                {
+                    field: (data.node as VolumetricParticleAPI).nodeFields.shape,
+                    order: 1,
+                },
+            ]}
+        />
     );
 }

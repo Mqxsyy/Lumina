@@ -1,6 +1,7 @@
 import React from "@rbxts/react";
 import { ValueType } from "API/Nodes/FieldStates";
 import { Clamp as ClampAPI } from "API/Nodes/Logic/Clamp";
+import type { ParticleData } from "API/ParticleService";
 import ConnectableNumberField from "Components/NodeFields/ConnectableNumberField";
 import { ConnectableVector2Field } from "Components/NodeFields/ConnectableVector2Field";
 import { AddNode, type NodeData } from "Services/NodesService";
@@ -24,7 +25,14 @@ function Clamp({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
-            ConnectionValueType={ValueType.Number}
+            Outputs={[
+                {
+                    order: 1,
+                    valueType: ValueType.Number,
+                    valueName: "Number",
+                    fn: (particleData: ParticleData) => (data.node as ClampAPI).Calculate(particleData),
+                },
+            ]}
         >
             <ConnectableNumberField
                 NodeId={data.node.id}

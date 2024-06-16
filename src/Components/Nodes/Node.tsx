@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from "@rbxts/react";
+import React, { type Element, useEffect, useRef, useState, type PropsWithChildren } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import type { FastEventConnection } from "API/Bindables/FastEvent";
-import { NodeField } from "API/Fields/NodeField";
-import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { StateField as StateFieldAPI } from "API/Fields/StateField";
+import type { ParticleData } from "API/ParticleService";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
 import Div from "Components/Div";
+import StateField from "Components/NodeFields/StateField";
 import { NODE_WIDTH } from "Components/SizeConfig";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
@@ -23,7 +24,15 @@ interface Props {
     NodeId: number;
     NodeAnchorPoint: Vector2;
     IsConnectedToSystem: boolean;
-    ConnectionValueType?: string;
+    Types?: Array<{ field: StateFieldAPI; order: number; name?: string }>;
+    TypesExtras?: Array<() => Element>;
+    Outputs?: Array<{
+        order: number;
+        valueType: string;
+        valueName: string;
+        fn: (data: ParticleData) => number | Vector2 | Vector3;
+        label?: string;
+    }>;
 }
 
 function Node({
@@ -32,9 +41,11 @@ function Node({
     NodeId,
     NodeAnchorPoint,
     IsConnectedToSystem,
-    ConnectionValueType = undefined,
+    Types = undefined,
+    TypesExtras = undefined,
+    Outputs = undefined,
     children,
-}: React.PropsWithChildren<Props>) {
+}: PropsWithChildren<Props>) {
     const [_, setForceRender] = useState(0);
     const [zoomScale, setZoomScale] = useState(GetZoomScale());
 
@@ -166,30 +177,142 @@ function Node({
             }}
         >
             <uicorner CornerRadius={StyleProperties.CornerRadius} />
-            <uilistlayout Padding={new UDim(0, 5 * zoomScale)} HorizontalAlignment={"Center"} />
-            <uipadding
-                PaddingLeft={new UDim(0, 1 + 5 * zoomScale)}
-                PaddingRight={new UDim(0, 1 + 5 * zoomScale)}
-                PaddingTop={new UDim(0, 1 + 5 * zoomScale)}
-                PaddingBottom={new UDim(0, 1 + 5 * zoomScale)}
-            />
+            <uilistlayout FillDirection={"Vertical"} />
 
             {GetSelectedNodeId() === NodeId && (
                 <uistroke Thickness={math.clamp(3 * zoomScale, 1, math.huge)} Color={StyleColors.Selection} />
             )}
-            <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                <uilistlayout FillDirection={"Horizontal"} Padding={new UDim(0, 10 * zoomScale)} VerticalAlignment={"Center"} />
 
-                <BasicTextLabel Size={new UDim2(1, 0, 0, 20)} Text={Name}>
-                    <uiflexitem FlexMode={"Fill"} />
-                </BasicTextLabel>
-                {ConnectionValueType !== undefined && <ConnectionPointOut NodeId={NodeId} ValueType={ConnectionValueType} />}
+            {/* Header */}
+            <Div Size={new UDim2(1, 0, 0, 24)} ClipsDescendants={true}>
+                <Div Size={new UDim2(1, 0, 0, 30)} BackgroundColor={(GetNodeById(NodeId) as NodeCollectionEntry).data.node.GetColor()}>
+                    <uicorner CornerRadius={StyleProperties.CornerRadius} />
+                    <uipadding PaddingLeft={new UDim(0, 10)} PaddingBottom={new UDim(0, 9)} PaddingTop={new UDim(0, 5)} />
+
+                    <BasicTextLabel
+                        Size={UDim2.fromScale(1, 1)}
+                        FontWeight={Enum.FontWeight.SemiBold}
+                        TextColor={StyleColors.TextDark}
+                        Text={Name}
+                    />
+                </Div>
             </Div>
-            <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-                <uilistlayout Padding={new UDim(0, 5 * zoomScale)} />
-                <uipadding PaddingLeft={new UDim(0, 10 * zoomScale)} />
 
-                {children}
+            <Div Size={new UDim2(1, 0, 0, 2)} BackgroundColor={Color3.fromHex("15161E")} />
+
+            {/* Types */}
+            {(Types !== undefined || TypesExtras !== undefined) && (
+                <Div Size={UDim2.fromScale(0, 0)} AutomaticSize="XY">
+                    <uilistlayout FillDirection={"Vertical"} />
+
+                    <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+                        <uilistlayout FillDirection={"Vertical"} Padding={new UDim(0, 5)} />
+
+                        <uipadding
+                            PaddingBottom={new UDim(0, 5)}
+                            PaddingRight={new UDim(0, 5)}
+                            PaddingLeft={new UDim(0, 5)}
+                            PaddingTop={new UDim(0, 5)}
+                        />
+
+                        {Types?.map((t) => (
+                            <StateField key={t.order} NodeId={NodeId} NodeField={t.field} Label={t.name} />
+                        ))}
+
+                        {TypesExtras?.map((extra) => extra())}
+                    </Div>
+
+                    <Div Size={new UDim2(1, 0, 0, 2)} BackgroundColor={Color3.fromHex("15161E")} />
+                </Div>
+            )}
+
+            <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
+                <uilistlayout FillDirection={"Horizontal"} VerticalFlex={"Fill"} />
+
+                {/* Inputs */}
+                {children !== undefined && (
+                    <Div Size={UDim2.fromOffset(0, 0)} AutomaticSize="Y">
+                        <uiflexitem FlexMode={"Fill"} />
+                        <uilistlayout FillDirection={"Vertical"} Padding={new UDim(0, 5)} />
+                        <uipadding
+                            PaddingLeft={new UDim(0, 5)}
+                            PaddingRight={new UDim(0, 5)}
+                            PaddingTop={new UDim(0, 5)}
+                            PaddingBottom={new UDim(0, 5)}
+                        />
+
+                        {children}
+                    </Div>
+                )}
+
+                {Outputs !== undefined && children !== undefined && (
+                    <Div Size={new UDim2(0, 2, 0, 0)} BackgroundColor={Color3.fromHex("15161E")} />
+                )}
+
+                {/* Outputs */}
+                {Outputs !== undefined && (
+                    <Div Size={UDim2.fromScale(children !== undefined ? 0 : 1, 0)} AutomaticSize={children !== undefined ? "XY" : "Y"}>
+                        <uilistlayout FillDirection={"Horizontal"} HorizontalAlignment={"Center"} VerticalFlex={"Fill"} />
+
+                        <Div
+                            Size={new UDim2(children !== undefined ? 0 : 1, children !== undefined ? -2 : 0, 0, 0)}
+                            AutomaticSize={children !== undefined ? "XY" : "Y"}
+                            BackgroundColor={Color3.fromHex("1B1D2D")}
+                        >
+                            <uilistlayout
+                                FillDirection={"Vertical"}
+                                HorizontalFlex={Outputs[0].label === undefined && children === undefined ? "None" : "Fill"}
+                                HorizontalAlignment={"Right"}
+                                Padding={new UDim(0, 2)}
+                            />
+                            <uipadding
+                                PaddingBottom={new UDim(0, 2)}
+                                PaddingTop={new UDim(0, 2)}
+                                PaddingLeft={new UDim(0, 4)}
+                                PaddingRight={new UDim(0, 4)}
+                            />
+
+                            {Outputs.map((output) => {
+                                if (output.label === undefined) {
+                                    return (
+                                        <ConnectionPointOut
+                                            key={output.order}
+                                            NodeId={NodeId}
+                                            ValueType={output.valueType}
+                                            ValueName={output.valueName}
+                                            Fn={output.fn}
+                                        />
+                                    );
+                                }
+
+                                return (
+                                    <Div key={output.order} Size={UDim2.fromScale(0, 0)} AutomaticSize="XY">
+                                        <uilistlayout
+                                            FillDirection={"Horizontal"}
+                                            VerticalFlex={"Fill"}
+                                            HorizontalAlignment={"Right"}
+                                            Padding={new UDim(0, 5)}
+                                        />
+                                        <uipadding PaddingLeft={new UDim(0, 2)} />
+
+                                        <BasicTextLabel
+                                            Size={UDim2.fromOffset(0, 20)}
+                                            AutomaticSize="X"
+                                            TextColor={StyleColors.TextLight}
+                                            Text={output.label as string}
+                                        />
+                                        <ConnectionPointOut
+                                            NodeId={NodeId}
+                                            ValueType={output.valueType}
+                                            ValueName={output.valueName}
+                                            Fn={output.fn}
+                                        />
+                                    </Div>
+                                );
+                            })}
+                        </Div>
+                    </Div>
+                )}
             </Div>
         </imagebutton>
     );

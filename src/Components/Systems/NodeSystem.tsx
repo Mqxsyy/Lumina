@@ -167,7 +167,7 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
                             Color={
                                 new ColorSequence([
                                     new ColorSequenceKeypoint(0, StyleColors.SpawnGroup),
-                                    new ColorSequenceKeypoint(1, StyleColors.EndGroup),
+                                    new ColorSequenceKeypoint(1, StyleColors.RenderGroup),
                                 ])
                             }
                             Rotation={90}
@@ -211,23 +211,23 @@ function NodeSystem({ anchorPoint, canvasPosition, systemId, systemAPI, systemDe
                         SystemDestroyEvent={systemDestroyEvent}
                         NodeGroup={NodeGroups.Initialize}
                         GradientStart={StyleColors.InitializeGroup}
-                        GradientEnd={StyleColors.UpdateGroup}
+                        GradientEnd={StyleColors.MixedGroup}
                     />
                     <NodeGroup
                         SystemId={systemId}
                         SystemAPI={systemAPI}
                         SystemDestroyEvent={systemDestroyEvent}
                         NodeGroup={NodeGroups.Update}
-                        GradientStart={StyleColors.UpdateGroup}
-                        GradientEnd={StyleColors.RenderGroup}
+                        GradientStart={StyleColors.MixedGroup}
+                        GradientEnd={StyleColors.UpdateGroup}
                     />
                     <NodeGroup
                         SystemId={systemId}
                         SystemAPI={systemAPI}
                         SystemDestroyEvent={systemDestroyEvent}
                         NodeGroup={NodeGroups.Render}
-                        GradientStart={StyleColors.RenderGroup}
-                        GradientEnd={StyleColors.EndGroup}
+                        GradientStart={StyleColors.UpdateGroup}
+                        GradientEnd={StyleColors.RenderGroup}
                     />
                 </Div>
             </Div>

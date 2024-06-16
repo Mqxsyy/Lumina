@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import type { FastEvent, FastEventConnection } from "API/Bindables/FastEvent";
 import type { LogicNode } from "API/Nodes/Logic/LogicNode";
+import type { ParticleData } from "API/ParticleService";
 import { ReloadConnectionVisuals } from "Components/Events";
 import {
     type ConnectionCollectionEntry,
@@ -20,11 +21,13 @@ interface Props {
     AnchorPoint?: Vector2;
     Position?: UDim2;
     Size?: UDim2;
+
     NodeId: number;
     NodeFieldName: string;
     ValueName?: string;
     ValueType: string;
-    BindNode: (boundNode: LogicNode) => void;
+
+    BindNode: (boundNode: LogicNode, fn: (data: ParticleData) => number | Vector2 | Vector3) => void;
     UnbindNode: () => void;
 }
 
@@ -95,7 +98,7 @@ export default function ConnectionPointIn({
             });
         });
 
-        BindNode(connectionData.startNode.node as LogicNode);
+        BindNode(connectionData.startNode.node as LogicNode, connectionData.fn);
 
         coroutine.wrap(() => {
             task.wait();
@@ -188,6 +191,7 @@ export default function ConnectionPointIn({
             Position={Position}
             Size={Size}
             ConnectionIds={connectionId === -1 ? undefined : [connectionId]}
+            ValueType={ValueType}
             GetElementRef={(element) => {
                 elementRef.current = element;
             }}

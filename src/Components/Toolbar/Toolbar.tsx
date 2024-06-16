@@ -4,6 +4,7 @@ import ExportAPI from "API/ExportAPI";
 import { GetExportsFolder } from "API/FolderLocations";
 import ExportAsScript from "API/VFXScriptCreator";
 import InputSinker from "Components/Basic/InputSinker";
+import StyleConfig from "Components/StyleConfig";
 import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 import { GetAllSystems } from "Services/NodeSystemService";
 import { LoadFromFile } from "Services/Saving/LoadService";
@@ -14,7 +15,6 @@ import Div from "../Div";
 import { ToolbarButton } from "./ToolbarButton";
 import { ToolbarDropdownButton } from "./ToolbarDropdown";
 
-const PADDING = 8;
 export const CloseToolbar = new FastEvent();
 
 function Toolbar() {
@@ -96,10 +96,10 @@ function Toolbar() {
         <Div
             AnchorPoint={new Vector2(0, 0)}
             Position={UDim2.fromOffset(1, 0)}
-            Size={UDim2.fromOffset(windowSize.X - 2, 21)}
-            BackgroundColor={Color3.fromHex("353535")}
+            Size={UDim2.fromOffset(windowSize.X - 1, 21)}
+            BackgroundColor={StyleConfig.Toolbar.BackgroundColor}
             BorderSize={1}
-            BorderColor={Color3.fromHex("222222")}
+            BorderColor={StyleConfig.Toolbar.BorderColor}
             ZIndex={100}
         >
             <InputSinker />
@@ -114,7 +114,6 @@ function Toolbar() {
                         SelectedId={selectedDropdown}
                         SetSelectedId={selectDropdown}
                         Text={"File"}
-                        Padding={PADDING}
                         Buttons={[
                             {
                                 Text: "Load",
@@ -144,7 +143,6 @@ function Toolbar() {
                         SelectedId={selectedDropdown}
                         SetSelectedId={selectDropdown}
                         Text={"Actions"}
-                        Padding={PADDING}
                         Buttons={[
                             {
                                 Text: "Copy",
@@ -181,7 +179,6 @@ function Toolbar() {
                         SelectedId={selectedDropdown}
                         SetSelectedId={selectDropdown}
                         Text={"Extras"}
-                        Padding={PADDING}
                         Buttons={[
                             {
                                 Text: "Show Update Log",
@@ -197,8 +194,8 @@ function Toolbar() {
                 <Div>
                     <uilistlayout FillDirection={"Horizontal"} HorizontalAlignment={"Right"} />
 
-                    <ToolbarButton Text={"Run"} Padding={PADDING} OnClick={Start} />
-                    <ToolbarButton Text={"Stop"} Padding={PADDING} OnClick={Stop} />
+                    <ToolbarButton Text={"Run"} OnClick={Start} />
+                    <ToolbarButton Text={"Stop"} OnClick={Stop} />
                 </Div>
             </Div>
         </Div>

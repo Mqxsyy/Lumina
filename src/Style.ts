@@ -16,11 +16,13 @@ export const StyleColorHexes = {
     Selection: "#00ccdc",
 
     // Node Group
-    SpawnGroup: "#7FFF7F",
-    InitializeGroup: "#00FF00",
-    UpdateGroup: "#FFFF00",
-    RenderGroup: "#FFA500",
-    EndGroup: "#FF0000",
+    SpawnGroup: "#44ce1b",
+    InitializeGroup: "#bbdb44",
+    MixedGroup: "#f7e379",
+    UpdateGroup: "#f2a134",
+    RenderGroup: "#e51f1f",
+
+    LogicGroup: "#A74AC7",
 };
 
 export const StyleColors = {
@@ -45,7 +47,9 @@ export const StyleColors = {
     InitializeGroup: Color3.fromHex(StyleColorHexes.InitializeGroup),
     UpdateGroup: Color3.fromHex(StyleColorHexes.UpdateGroup),
     RenderGroup: Color3.fromHex(StyleColorHexes.RenderGroup),
-    EndGroup: Color3.fromHex(StyleColorHexes.EndGroup),
+
+    MixedGroup: Color3.fromHex(StyleColorHexes.MixedGroup),
+    LogicGroup: Color3.fromHex(StyleColorHexes.LogicGroup),
 };
 
 export const StyleProperties = {

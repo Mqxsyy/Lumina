@@ -1,5 +1,6 @@
 import React from "@rbxts/react";
 import Div from "Components/Div";
+import StyleConfig from "Components/StyleConfig";
 
 interface Props {
     Text: string;
@@ -15,9 +16,9 @@ export default function ToolbarDropdownButton({ Text, OnClick }: Props) {
                 Size={UDim2.fromScale(1, 1)}
                 AutomaticSize={"X"}
                 BackgroundTransparency={1}
-                FontFace={new Font("SourceSans", Enum.FontWeight.Regular)}
-                TextSize={16}
-                TextColor3={Color3.fromHex("aaaaaa")}
+                FontFace={StyleConfig.Toolbar.Font}
+                TextSize={StyleConfig.Toolbar.FontSize}
+                TextColor3={StyleConfig.Toolbar.FontColor}
                 Text={Text}
                 Event={{
                     MouseEnter: () => setIsHovering(true),

@@ -81,7 +81,6 @@ export default function StateField({ NodeId, NodeField, Label }: Props) {
                 Event={{ MouseButton1Down: enableDropdown }}
                 ref={elementRef}
             >
-                <uipadding PaddingRight={new UDim(0, 4 * zoomScale)} PaddingTop={new UDim(0, 4 * zoomScale)} />
                 <uiflexitem FlexMode="Fill" />
                 <uicorner CornerRadius={StyleProperties.CornerRadius} />
 

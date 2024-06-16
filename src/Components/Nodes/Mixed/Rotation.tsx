@@ -58,11 +58,21 @@ function Rotation({ data }: { data: NodeData }) {
             NodeId={data.node.id}
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
+            Types={[
+                {
+                    field: (data.node as RotationAPI).nodeFields.nodeOperationType,
+                    order: 1,
+                },
+                {
+                    field: calculationTypeRef.current,
+                    order: 2,
+                },
+                {
+                    field: axisTypeRef.current,
+                    order: 3,
+                },
+            ]}
         >
-            <StateField NodeField={(data.node as RotationAPI).nodeFields.nodeOperationType} />
-            <StateField NodeField={calculationTypeRef.current} />
-            <StateField NodeField={axisTypeRef.current} />
-
             {IsAxisX(axisType) && isUniform() && (
                 <ConnectableNumberField
                     NodeId={data.node.id}
