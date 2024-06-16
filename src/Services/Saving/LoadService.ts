@@ -106,6 +106,7 @@ export function LoadFromFile() {
                         UpdateNodeData(cachedNode1.NodeData.node.id, (data) => {
                             const connection: NodeConnectionOut = {
                                 id: serializedConnection1.id,
+                                valueName: serializedConnection1.valueName,
                             };
 
                             if (data.loadedConnectionsOut === undefined) {
@@ -120,11 +121,8 @@ export function LoadFromFile() {
                             const connection: NodeConnectionIn = {
                                 id: serializedConnection2.id,
                                 fieldName: serializedField.name,
+                                valueName: serializedConnection2.valueName,
                             };
-
-                            if (serializedConnection2.valueName !== undefined) {
-                                connection.valueName = serializedConnection2.valueName;
-                            }
 
                             if (data.loadedConnectionsIn === undefined) {
                                 data.loadedConnectionsIn = [];

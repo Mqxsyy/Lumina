@@ -54,6 +54,7 @@ export default function ConnectableNumberField({
                 NodeId={NodeId}
                 NodeFieldName={NodeFieldName}
                 ValueType={ValueType.Number}
+                ValueName="Number"
                 BindNode={NodeField.ConnectNode}
                 UnbindNode={NodeField.DisconnectNode}
             />

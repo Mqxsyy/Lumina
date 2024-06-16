@@ -17,7 +17,7 @@ export interface SerializedSystem {
 
 export interface SerializedConnection {
     id: number;
-    valueName?: string;
+    valueName: string;
 }
 
 export interface SerializedNode {

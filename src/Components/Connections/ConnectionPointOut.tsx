@@ -41,6 +41,7 @@ export default function ConnectionPointOut({
         UpdateNodeData(NodeId, (data) => {
             const connection: NodeConnectionOut = {
                 id: connectionData.id,
+                valueName: ValueName,
             };
 
             data.connectionsOut.push(connection);
@@ -81,13 +82,20 @@ export default function ConnectionPointOut({
         if (nodeData.loadedConnectionsOut.size() === 0) return;
 
         for (const connection of nodeData.loadedConnectionsOut) {
-            createConnection(connection.id);
-        }
+            if (connection.valueName === ValueName) {
+                createConnection(connection.id);
 
-        UpdateNodeData(NodeId, (data) => {
-            data.loadedConnectionsOut = undefined;
-            return data;
-        });
+                UpdateNodeData(NodeId, (data) => {
+                    if (data.loadedConnectionsOut !== undefined) {
+                        data.loadedConnectionsOut = data.loadedConnectionsOut.filter(
+                            (loadedConnection) => loadedConnection.id !== connection.id,
+                        );
+                    }
+
+                    return data;
+                });
+            }
+        }
     }, [elementRef.current, node.element, nodeData.loadedConnectionsOut]);
 
     return (

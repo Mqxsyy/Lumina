@@ -9,12 +9,13 @@ import { GetZoomScale } from "ZoomScale";
 
 export interface NodeConnectionOut {
     id: number;
+    valueName: string;
 }
 
 export interface NodeConnectionIn {
     id: number;
     fieldName: string;
-    valueName?: string;
+    valueName: string;
 }
 
 export interface NodeData {

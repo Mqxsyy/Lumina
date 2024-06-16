@@ -24,7 +24,7 @@ interface Props {
 
     NodeId: number;
     NodeFieldName: string;
-    ValueName?: string;
+    ValueName: string;
     ValueType: string;
 
     BindNode: (boundNode: LogicNode, fn: (data: ParticleData) => number | Vector2 | Vector3) => void;
@@ -34,7 +34,7 @@ interface Props {
 export default function ConnectionPointIn({
     NodeId,
     NodeFieldName,
-    ValueName = undefined,
+    ValueName,
     AnchorPoint = new Vector2(0, 0),
     Position = UDim2.fromScale(0, 0),
     Size = UDim2.fromOffset(20 * GetZoomScale(), 20 * GetZoomScale()),

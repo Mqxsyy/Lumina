@@ -2,7 +2,6 @@ import { HttpService } from "@rbxts/services";
 import { API_VERSION } from "API/ExportAPI";
 import type { NodeField } from "API/Fields/NodeField";
 import { GetSavesFolder } from "API/FolderLocations";
-import { NodeGroups } from "API/NodeGroup";
 import type { Node } from "API/Nodes/Node";
 import { GetAllSystems, type NodeSystemData } from "Services/NodeSystemService";
 import { GetAllNodes, GetNodeById, type NodeConnectionIn } from "Services/NodesService";
@@ -109,7 +108,7 @@ export function SerializeNode(node: Node, ignoreConnections = false): Serialized
         serializedNode.connections = [];
 
         for (const connection of nodeData.connectionsOut) {
-            serializedNode.connections.push({ id: connection.id });
+            serializedNode.connections.push({ id: connection.id, valueName: connection.valueName });
         }
     }
 
@@ -134,11 +133,8 @@ function SerializeFields(fields: { [key: string]: NodeField }, connectionsIn?: N
                 if (serializedField.name === connection.fieldName) {
                     const serializedConnection: SerializedConnection = {
                         id: connection.id,
+                        valueName: connection.valueName,
                     };
-
-                    if (connection.valueName !== undefined) {
-                        serializedConnection.valueName = connection.valueName;
-                    }
 
                     if (serializedField.connections === undefined) {
                         serializedField.connections = [];
