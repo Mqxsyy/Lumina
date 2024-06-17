@@ -1,13 +1,13 @@
 import React, { StrictMode, useEffect, useState } from "@rbxts/react";
 import { createRoot } from "@rbxts/react-roblox";
 import { GetImagesFolder } from "API/FolderLocations";
-import { TextInput } from "Components/Basic/TextInput";
 import Div from "Components/Div";
 import StyleConfig from "Components/StyleConfig";
 import Toolbar from "Components/Toolbar/Toolbar";
 import { ToolbarButton } from "Components/Toolbar/ToolbarButton";
 import { GetWindow, Windows } from "Services/WindowSevice";
-import { StyleColors } from "Style";
+import { type ImageData, InitializeImageEditor } from "./ImageUploader";
+import UploadedImage from "./UploadedImage";
 
 export function InitializeImageBrowser() {
     const window = GetWindow(Windows.ImageBrowser);
@@ -21,16 +21,13 @@ export function InitializeImageBrowser() {
             <ImageBrowser />
         </StrictMode>,
     );
-}
 
-interface UploadedImage {
-    name: string;
-    id: number;
+    InitializeImageEditor();
 }
 
 function ImageBrowser() {
     const [_, setForceRender] = useState(-1);
-    const [images, setImages] = useState<UploadedImage[]>([]);
+    const [images, setImages] = useState<ImageData[]>([]);
 
     useEffect(() => {
         const window = GetWindow(Windows.ImageBrowser);
@@ -39,10 +36,8 @@ function ImageBrowser() {
         });
 
         const imagesFolder = GetImagesFolder();
-        const foundImages: UploadedImage[] = [];
+        const foundImages: ImageData[] = [];
         for (const [_, image] of pairs(imagesFolder.GetChildren())) {
-            print(image);
-            print(image.IsA("NumberValue"));
             if (!image.IsA("NumberValue")) continue;
             foundImages.push({ name: image.Name, id: image.Value });
         }
@@ -91,25 +86,41 @@ function ImageBrowser() {
                     </Div>
                 </Div>
             </Toolbar>
-            <Div>
-                <uiflexitem FlexMode={"Fill"} />
 
-                {images.size() === 0 ? (
-                    <textlabel
-                        Size={UDim2.fromScale(1, 1)}
-                        BackgroundTransparency={1}
-                        TextColor3={StyleConfig.Studio.FontColorPlaceholder}
-                        TextSize={StyleConfig.Studio.FontSize}
-                        FontFace={StyleConfig.Studio.Font}
-                        Text="No Images Found"
-                    />
-                ) : (
-                    images.map((image) => (
-                        <Div key={image.name} Size={UDim2.fromOffset(100, 100)}>
-                            <imagelabel Size={UDim2.fromScale(1, 1)} BackgroundTransparency={1} Image={`rbxassetid://${image.id}`} />
-                        </Div>
-                    ))
-                )}
+            <Div Size={UDim2.fromScale(1, 0)}>
+                <uiflexitem FlexMode={"Fill"} />
+                <uipadding
+                    PaddingBottom={new UDim(0, 5)}
+                    PaddingLeft={new UDim(0, 5)}
+                    PaddingRight={new UDim(0, 5)}
+                    PaddingTop={new UDim(0, 5)}
+                />
+
+                <scrollingframe
+                    Size={UDim2.fromScale(1, 1)}
+                    BackgroundTransparency={1}
+                    BorderSizePixel={0}
+                    ScrollBarImageColor3={StyleConfig.Studio.FontColor}
+                    ScrollBarThickness={4}
+                    ScrollingDirection={"Y"}
+                    CanvasSize={UDim2.fromScale(0, 0)}
+                    AutomaticCanvasSize={"Y"}
+                >
+                    <uilistlayout FillDirection={"Horizontal"} Padding={new UDim(0, 5)} Wraps={true} />
+
+                    {images.size() === 0 ? (
+                        <textlabel
+                            Size={UDim2.fromScale(1, 1)}
+                            BackgroundTransparency={1}
+                            TextColor3={StyleConfig.Studio.FontColorPlaceholder}
+                            TextSize={StyleConfig.Studio.FontSize}
+                            FontFace={StyleConfig.Studio.Font}
+                            Text="No Images Found"
+                        />
+                    ) : (
+                        images.map((image) => <UploadedImage key={image.name} Name={image.name} ImageId={image.id} />)
+                    )}
+                </scrollingframe>
             </Div>
         </Div>
     );

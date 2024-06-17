@@ -6,6 +6,7 @@ export enum Windows {
     RequestUpdate = "Lumina Update Checker",
     UpdateLog = "Lumina Update Log",
     ImageBrowser = "Lumina Image Browser",
+    ImageEditor = "Lumina Image Editor",
 }
 
 interface Window {
@@ -40,7 +41,11 @@ const windows: { [key in Windows]: Window } = {
     },
     [Windows.ImageBrowser]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
-        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 600, 500, 300, 200),
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 637, 500, 300, 200),
+    },
+    [Windows.ImageEditor]: {
+        Widget: undefined as DockWidgetPluginGui | undefined,
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 450, 300, 300, 200),
     },
 };
 

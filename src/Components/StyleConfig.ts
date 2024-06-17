@@ -1,6 +1,7 @@
 const StyleConfig = {
     Studio: {
         Font: new Font("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular),
+        FontSemiBold: new Font("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.SemiBold),
         FontSize: 16,
         FontColor: Color3.fromHex("aaaaaa"),
         FontColorPlaceholder: Color3.fromHex("767676"),
