@@ -5,6 +5,7 @@ export enum Windows {
     ColorRamp = "Lumina Color Ramp",
     RequestUpdate = "Lumina Update Checker",
     UpdateLog = "Lumina Update Log",
+    ImageBrowser = "Lumina Image Browser",
 }
 
 interface Window {
@@ -36,6 +37,10 @@ const windows: { [key in Windows]: Window } = {
     [Windows.UpdateLog]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
         Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 600, 800, 400, 200),
+    },
+    [Windows.ImageBrowser]: {
+        Widget: undefined as DockWidgetPluginGui | undefined,
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 600, 500, 300, 200),
     },
 };
 

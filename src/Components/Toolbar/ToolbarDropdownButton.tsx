@@ -16,9 +16,9 @@ export default function ToolbarDropdownButton({ Text, OnClick }: Props) {
                 Size={UDim2.fromScale(1, 1)}
                 AutomaticSize={"X"}
                 BackgroundTransparency={1}
-                FontFace={StyleConfig.Toolbar.Font}
-                TextSize={StyleConfig.Toolbar.FontSize}
-                TextColor3={StyleConfig.Toolbar.FontColor}
+                FontFace={StyleConfig.Studio.Font}
+                TextSize={StyleConfig.Studio.FontSize}
+                TextColor3={StyleConfig.Studio.FontColor}
                 Text={Text}
                 Event={{
                     MouseEnter: () => setIsHovering(true),

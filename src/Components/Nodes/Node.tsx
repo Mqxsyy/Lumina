@@ -8,12 +8,12 @@ import ConnectionPointOut from "Components/Connections/ConnectionPointOut";
 import Div from "Components/Div";
 import StateField from "Components/NodeFields/StateField";
 import { NODE_WIDTH } from "Components/SizeConfig";
+import { GetMousePosition, GetMousePositionOnCanvas } from "MainWindow";
 import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { GetNodeById, type NodeCollectionEntry, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
 import { GetSelectedNodeId, SetSelectNodeId, selectedNodeIdChanged } from "Services/SelectionService";
 import { StyleColors, StyleProperties } from "Style";
-import { GetMousePosition, GetMousePositionOnCanvas } from "Windows/MainWindow";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 
 const NODE_SELECT_TIME = 0.1;

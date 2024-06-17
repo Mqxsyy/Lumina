@@ -4,7 +4,7 @@ import { FastEvent } from "API/Bindables/FastEvent";
 import { IdPool } from "API/IdPool";
 import { NodeGroups } from "API/NodeGroup";
 import type { NodeSystem } from "API/NodeSystem";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { GetMousePositionOnCanvas } from "MainWindow";
 import { GetZoomScale } from "ZoomScale";
 
 type AllowedNodeGroups = NodeGroups.Spawn | NodeGroups.Initialize | NodeGroups.Update | NodeGroups.Render;

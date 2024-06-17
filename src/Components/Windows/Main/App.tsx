@@ -1,27 +1,40 @@
-import React, { useEffect, useMemo, useRef, useState } from "@rbxts/react";
+import React, { StrictMode, useEffect, useMemo, useRef, useState } from "@rbxts/react";
+import { createRoot } from "@rbxts/react-roblox";
 import { RunService } from "@rbxts/services";
+import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
+import Dropdown from "Components/Basic/Dropdown";
+import Div from "Components/Div";
+import { NodeSelection } from "Components/Selection/NodeSelection";
+import Toolbar from "Components/Toolbar/Toolbar";
+import { GetMousePosition, GetMousePositionOnCanvas, WidgetSizeChanged } from "MainWindow";
 import { CanvasDataChanged, GetCanvasData, UpdateCanvasData } from "Services/CanvasService";
 import { UnbindMovingConnection } from "Services/ConnectionsService";
 import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { DisableDropdown, DropdownDataChanged, GetDropdownData } from "Services/DropdownService";
+import { GetAllSystems, NodeSystemsChanged } from "Services/NodeSystemService";
+import { GetAllNodes, NodesChanged } from "Services/NodesService";
 import { LoadingFinished } from "Services/Saving/LoadService";
 import { SetIsHoldingControl, SetSelectNodeId, SetSelectSystemId } from "Services/SelectionService";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors } from "Style";
-import { GetMousePosition, GetMousePositionOnCanvas, WidgetSizeChanged } from "Windows/MainWindow";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale, UpdateZoomScale } from "ZoomScale";
-import { GetAllSystems, NodeSystemsChanged } from "../Services/NodeSystemService";
-import { GetAllNodes, NodesChanged } from "../Services/NodesService";
 import CanvasBackground from "./Background";
-import { BasicTextLabel } from "./Basic/BasicTextLabel";
-import Dropdown from "./Basic/Dropdown";
 import DisplayConnections from "./DisplayConnections";
-import Div from "./Div";
-import { NodeSelection } from "./Selection/NodeSelection";
-import Toolbar, { CloseToolbar } from "./Toolbar/Toolbar";
+import MainToolbar, { CloseMainToolbar } from "./MainToolbar";
 
 // yes it's bad architecture (the way it handles rerenders) but too late to change :p
+
+export function InitializeMain() {
+    const window = GetWindow(Windows.Lumina);
+    const root = createRoot(window);
+
+    root.render(
+        <StrictMode>
+            <App />
+        </StrictMode>,
+    );
+}
 
 export function App() {
     const [widgetSize, setWidgetSize] = useState(GetWindow(Windows.Lumina).AbsoluteSize);
@@ -201,7 +214,7 @@ export function App() {
                 ),
                 [zoomScale],
             )}
-            <Toolbar key={"Controls"} />
+            <MainToolbar key={"Toolbar"} />
             <frame
                 key={"InputListener"}
                 Size={UDim2.fromScale(1, 1)}
@@ -209,7 +222,7 @@ export function App() {
                 ZIndex={10}
                 Event={{
                     InputBegan: (_, input: InputObject) => {
-                        CloseToolbar.Fire();
+                        CloseMainToolbar.Fire();
 
                         switch (input.KeyCode) {
                             case Enum.KeyCode.Space: {

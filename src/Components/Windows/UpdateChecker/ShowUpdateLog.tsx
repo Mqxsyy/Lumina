@@ -2,8 +2,8 @@ import React, { StrictMode } from "@rbxts/react";
 import { createRoot } from "@rbxts/react-roblox";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors } from "Style";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 import FeatureDetail from "./FeatureDetail";
 import FeatureHeader from "./FeatureHeader";
 

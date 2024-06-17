@@ -3,7 +3,7 @@ import { RunService } from "@rbxts/services";
 import type { ColorPoint } from "API/Fields/ColorRampField";
 import { RoundDecimal } from "API/Lib";
 import Div from "Components/Div";
-import { GetWindow, Windows } from "Windows/WindowSevice";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { LoadColorPickerAPI } from "../Pickers.tsx/ColorPicker";
 
 const DOUBLE_CLICK_TIME = 0.25;

@@ -1,0 +1,116 @@
+import React, { StrictMode, useEffect, useState } from "@rbxts/react";
+import { createRoot } from "@rbxts/react-roblox";
+import { GetImagesFolder } from "API/FolderLocations";
+import { TextInput } from "Components/Basic/TextInput";
+import Div from "Components/Div";
+import StyleConfig from "Components/StyleConfig";
+import Toolbar from "Components/Toolbar/Toolbar";
+import { ToolbarButton } from "Components/Toolbar/ToolbarButton";
+import { GetWindow, Windows } from "Services/WindowSevice";
+import { StyleColors } from "Style";
+
+export function InitializeImageBrowser() {
+    const window = GetWindow(Windows.ImageBrowser);
+    window.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
+
+    const root = createRoot(window);
+    window.Enabled = true;
+
+    root.render(
+        <StrictMode>
+            <ImageBrowser />
+        </StrictMode>,
+    );
+}
+
+interface UploadedImage {
+    name: string;
+    id: number;
+}
+
+function ImageBrowser() {
+    const [_, setForceRender] = useState(-1);
+    const [images, setImages] = useState<UploadedImage[]>([]);
+
+    useEffect(() => {
+        const window = GetWindow(Windows.ImageBrowser);
+        const connection = window.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+            setForceRender((prev) => prev + 1);
+        });
+
+        const imagesFolder = GetImagesFolder();
+        const foundImages: UploadedImage[] = [];
+        for (const [_, image] of pairs(imagesFolder.GetChildren())) {
+            print(image);
+            print(image.IsA("NumberValue"));
+            if (!image.IsA("NumberValue")) continue;
+            foundImages.push({ name: image.Name, id: image.Value });
+        }
+
+        if (foundImages.size() > 0) {
+            setImages(foundImages);
+        }
+
+        return () => {
+            connection.Disconnect();
+        };
+    }, []);
+
+    return (
+        <Div BackgroundColor={StyleConfig.Studio.ColorDarker}>
+            <uilistlayout FillDirection={"Vertical"} />
+
+            <Toolbar Window={Windows.ImageBrowser}>
+                <uilistlayout FillDirection="Horizontal" HorizontalFlex={"Fill"} />
+
+                <Div>
+                    <uilistlayout FillDirection="Horizontal" HorizontalAlignment={"Left"} />
+
+                    <ToolbarButton Text={"New"} />
+                    <ToolbarButton Text={"Delete"} />
+                </Div>
+                <Div>
+                    <uilistlayout FillDirection="Horizontal" HorizontalAlignment={"Right"} />
+
+                    <Div Size={UDim2.fromScale(0.75, 1)} BackgroundColor={StyleConfig.Studio.ColorDarkest}>
+                        <uipadding PaddingLeft={new UDim(0, 5)} PaddingRight={new UDim(0, 5)} />
+
+                        <textbox
+                            Size={UDim2.fromScale(1, 1)}
+                            BackgroundTransparency={1}
+                            TextColor3={StyleConfig.Studio.FontColor}
+                            TextSize={StyleConfig.Studio.FontSize}
+                            FontFace={StyleConfig.Studio.Font}
+                            TextXAlignment={"Left"}
+                            Text={""}
+                            PlaceholderText={"Search"}
+                            PlaceholderColor3={StyleConfig.Studio.FontColorPlaceholder}
+                            TextTruncate={"AtEnd"}
+                            ClearTextOnFocus={false}
+                        />
+                    </Div>
+                </Div>
+            </Toolbar>
+            <Div>
+                <uiflexitem FlexMode={"Fill"} />
+
+                {images.size() === 0 ? (
+                    <textlabel
+                        Size={UDim2.fromScale(1, 1)}
+                        BackgroundTransparency={1}
+                        TextColor3={StyleConfig.Studio.FontColorPlaceholder}
+                        TextSize={StyleConfig.Studio.FontSize}
+                        FontFace={StyleConfig.Studio.Font}
+                        Text="No Images Found"
+                    />
+                ) : (
+                    images.map((image) => (
+                        <Div key={image.name} Size={UDim2.fromOffset(100, 100)}>
+                            <imagelabel Size={UDim2.fromScale(1, 1)} BackgroundTransparency={1} Image={`rbxassetid://${image.id}`} />
+                        </Div>
+                    ))
+                )}
+            </Div>
+        </Div>
+    );
+}

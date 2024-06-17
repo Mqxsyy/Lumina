@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "@rbxts/react";
+import { ReloadConnectionVisuals } from "Components/Events";
 import { GetAllConnections } from "Services/ConnectionsService";
-import { ReloadConnectionVisuals } from "./Events";
 
 function DisplayConnections() {
     const [_, setForceRender] = useState(0);

@@ -2,8 +2,8 @@ import React, { StrictMode } from "@rbxts/react";
 import { createRoot } from "@rbxts/react-roblox";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors } from "Style";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 
 export default function RequestUpdate() {
     const window = GetWindow(Windows.RequestUpdate);

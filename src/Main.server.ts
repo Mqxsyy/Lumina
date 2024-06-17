@@ -1,12 +1,13 @@
-import CheckForUpdates from "UpdateChecker/CheckForUpdates";
-import { GetWindow, InitializeWindows, Windows } from "Windows/WindowSevice";
+import CheckForUpdates from "Components/Windows/UpdateChecker/CheckForUpdates";
+import { GetWindow, InitializeWindows, Windows } from "Services/WindowSevice";
 InitializeWindows(plugin); // widgets are bloody annoying to work with
 CheckForUpdates(plugin);
 
+import { InitializeImageBrowser } from "Components/Windows/ImageBrowser/ImageBrowser";
 import { InitializeLineGraph } from "Components/Windows/Line/LineGraph";
+import { InitializeMain } from "Components/Windows/Main/App";
 import { InitializeColorPicker } from "Components/Windows/Pickers.tsx/ColorPicker";
 import { InitializeColorRamp } from "Components/Windows/Ramps/ColorRamp";
-import { InitUI } from "UIHandler";
 
 const toolbar = plugin.CreateToolbar("Lumina 0.2.0");
 
@@ -25,8 +26,8 @@ mainButton.Click.Connect(() => {
     window.Enabled = !window.Enabled;
 });
 
-InitUI();
-
+InitializeMain();
+InitializeImageBrowser();
 InitializeLineGraph();
 InitializeColorPicker();
 InitializeColorRamp();

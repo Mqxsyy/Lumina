@@ -3,8 +3,8 @@ import type { ColorField } from "API/Fields/ColorField";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { LoadColorPickerAPI } from "Components/Windows/Pickers.tsx/ColorPicker";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleProperties } from "Style";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

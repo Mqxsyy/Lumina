@@ -13,7 +13,7 @@ interface Props {
 
 export function ToolbarButton({
     Size = UDim2.fromScale(0, 1),
-    BackgroundColor = StyleConfig.Toolbar.DropdownColor,
+    BackgroundColor = StyleConfig.Studio.ColorDarker,
     AutomaticTextSize = true,
     Text,
     OnClick,
@@ -32,15 +32,15 @@ export function ToolbarButton({
                 OnClick();
             }}
         >
-            <uipadding PaddingLeft={new UDim(0, StyleConfig.Toolbar.Padding)} PaddingRight={new UDim(0, StyleConfig.Toolbar.Padding)} />
+            <uipadding PaddingLeft={new UDim(0, StyleConfig.Studio.Padding)} PaddingRight={new UDim(0, StyleConfig.Studio.Padding)} />
 
             <textlabel
                 Size={AutomaticTextSize ? UDim2.fromScale(0, 1) : UDim2.fromScale(1, 1)}
                 AutomaticSize={"X"}
                 BackgroundTransparency={1}
-                FontFace={StyleConfig.Toolbar.Font}
-                TextSize={StyleConfig.Toolbar.FontSize}
-                TextColor3={StyleConfig.Toolbar.FontColor}
+                FontFace={StyleConfig.Studio.Font}
+                TextSize={StyleConfig.Studio.FontSize}
+                TextColor3={StyleConfig.Studio.FontColor}
                 Text={Text}
             />
         </Div>

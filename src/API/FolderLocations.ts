@@ -78,3 +78,16 @@ export function GetSavesFolder(): Folder {
 
     return savesFolder as Folder;
 }
+
+export function GetImagesFolder(): Folder {
+    const folderName = "Lumina Images";
+
+    let imagesFolder = ServerStorage.FindFirstChild(folderName);
+    if (imagesFolder === undefined) {
+        imagesFolder = new Instance("Folder");
+        imagesFolder.Name = folderName;
+        imagesFolder.Parent = ServerStorage;
+    }
+
+    return imagesFolder as Folder;
+}

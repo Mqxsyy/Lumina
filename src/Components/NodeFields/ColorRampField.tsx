@@ -3,8 +3,8 @@ import type { ColorRampField as ColorRampFieldAPI } from "API/Fields/ColorRampFi
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { LoadColorRampAPI } from "Components/Windows/Ramps/ColorRamp";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors, StyleProperties } from "Style";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

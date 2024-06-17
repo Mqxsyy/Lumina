@@ -1,4 +1,4 @@
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { GetMousePositionOnCanvas } from "MainWindow";
 import { GetZoomScale } from "ZoomScale";
 import { GetSystemById, type NodeSystemCollectioEntry, RemoveNodeSystem } from "./NodeSystemService";
 import { GetNodeById, type NodeCollectionEntry, RemoveNode } from "./NodesService";

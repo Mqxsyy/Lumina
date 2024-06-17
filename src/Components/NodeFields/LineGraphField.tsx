@@ -3,8 +3,8 @@ import type { LineGraphField as LineGraphFieldAPI } from "API/Fields/LineGraphFi
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { LoadGraph } from "Components/Windows/Line/LineGraph";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors } from "Style";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

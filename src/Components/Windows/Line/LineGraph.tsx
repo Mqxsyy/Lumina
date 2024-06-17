@@ -6,10 +6,9 @@ import type { GraphPoint, LineGraphField } from "API/Fields/LineGraphField";
 import { LerpNumber, ReduceDecimals, RemapValue, RoundDecimal } from "API/Lib";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
-import { TextInput } from "Components/Basic/TextInput";
 import Div from "Components/Div";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors } from "Style";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 import LineGraphPoint from "./LineGraphPoint";
 
 const DOUBLE_CLICK_TIME = 0.25;

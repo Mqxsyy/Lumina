@@ -6,8 +6,8 @@ import { RoundDecimal } from "API/Lib";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import Div from "Components/Div";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors } from "Style";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 import { LoadColorPickerAPI } from "../Pickers.tsx/ColorPicker";
 import ColorRampPoint from "./ColorRampPoint";
 

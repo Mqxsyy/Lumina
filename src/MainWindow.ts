@@ -1,6 +1,6 @@
 import { Event } from "API/Bindables/Event";
 import { GetCanvasData } from "Services/CanvasService";
-import { GetWindow, Windows } from "./WindowSevice";
+import { GetWindow, Windows } from "./Services/WindowSevice";
 
 export const WidgetSizeChanged = new Event<[Vector2]>();
 

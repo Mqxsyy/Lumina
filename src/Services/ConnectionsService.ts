@@ -7,8 +7,8 @@ import type { ParticleData } from "API/ParticleService";
 import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { ReloadConnectionVisuals } from "Components/Events";
 import StyleConfig from "Components/StyleConfig";
+import { GetMousePositionOnCanvas } from "MainWindow";
 import { StyleColors } from "Style";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
 import type { NodeData } from "./NodesService";
 
 export interface ConnectionData {

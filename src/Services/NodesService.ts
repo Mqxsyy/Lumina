@@ -4,7 +4,7 @@ import { FastEvent } from "API/Bindables/FastEvent";
 import { NodeGroups } from "API/NodeGroup";
 import type { Node } from "API/Nodes/Node";
 import type { RenderNode } from "API/Nodes/Render/RenderNode";
-import { GetMousePositionOnCanvas } from "Windows/MainWindow";
+import { GetMousePositionOnCanvas } from "MainWindow";
 import { GetZoomScale } from "ZoomScale";
 
 export interface NodeConnectionOut {

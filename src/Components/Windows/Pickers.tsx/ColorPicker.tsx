@@ -7,8 +7,8 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import { TextInput } from "Components/Basic/TextInput";
 import Div from "Components/Div";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors } from "Style";
-import { GetWindow, Windows } from "Windows/WindowSevice";
 import PickerCursor from "./PickerCursor";
 
 // colors are bloody awful to work with due to their loss of accuracy on conversion
