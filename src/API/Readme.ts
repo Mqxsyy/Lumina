@@ -1,5 +1,5 @@
 /*
-- Lumina 0.2.0
+- Lumina 0.2.1
 - Made by Mqxsyy
 - Made using TypeScript & React
 - Thank you for using my plugin!

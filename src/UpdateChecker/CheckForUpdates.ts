@@ -6,7 +6,7 @@ interface Data {
     version: number;
 }
 
-const localVersion = 7;
+const localVersion = 8;
 
 export default function CheckForUpdates(plugin: Plugin) {
     if (RunService.IsRunning()) return;
@@ -23,8 +23,8 @@ export default function CheckForUpdates(plugin: Plugin) {
 
     const savedVersion = plugin.GetSetting("Version");
     if (savedVersion !== localVersion && savedVersion !== undefined) {
-        plugin.SetSetting("Version", localVersion);
         ShowUpdateLog();
+        plugin.SetSetting("Version", localVersion);
     }
 }
 
@@ -38,5 +38,3 @@ export default function CheckForUpdates(plugin: Plugin) {
 // new release in git
 // post in devforum
 // post in disc
-
-// ENABLE UPDATE WARNING!!!
