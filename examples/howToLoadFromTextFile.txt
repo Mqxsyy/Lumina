@@ -1,0 +1,7 @@
+Before loading make sure that you don't have any unsaved work.
+
+To load from a text file:
+0. Make sure that the plugin does not have any existing systems or nodes
+1. Copy the entire text file
+2. In studio create a `StringValue` and paste the copied text into it's `Value` property
+3. Select created `StringValue` and press load in the plugin
