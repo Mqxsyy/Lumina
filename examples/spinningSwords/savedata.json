@@ -1,0 +1,332 @@
+{
+    "systems": [
+        {
+            "anchorPoint": { "y": -100, "x": 46.666664123535159 },
+            "groups": {
+                "render": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "textures", "data": [16403621767] }, { "name": "meshId", "data": { "number": 4479541866 } }],
+                        "className": "MeshParticle"
+                    }
+                ],
+                "initialize": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Uniform" } },
+                            { "name": "time", "data": { "number": 10 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } }
+                        ],
+                        "className": "SetLifetime"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 32, "valueName": "XYZ" },
+                                    { "id": 32, "valueName": "XYZ" },
+                                    { "id": 32, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 0, "x": 0, "z": 0 },
+                                "name": "position"
+                            },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } }
+                        ],
+                        "className": "Position"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Uniform Connected" } },
+                            { "name": "axisType", "data": { "currentState": "XYZ" } },
+                            { "name": "sizeY", "data": { "number": 1 } },
+                            { "name": "rangeZ", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeY", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeX", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "sizeZ", "data": { "number": 1 } },
+                            { "name": "sizeX", "data": { "number": 1 } },
+                            { "name": "size", "data": { "number": 0.2 } }
+                        ],
+                        "className": "SetSize"
+                    },
+                    {
+                        "order": 3,
+                        "fields": [{ "name": "color", "data": { "hue": 0.11437908560037613, "saturation": 1, "value": 1 } }],
+                        "className": "SetColor"
+                    },
+                    { "order": 4, "fields": [{ "name": "emission", "data": { "number": 2 } }], "className": "SetEmission" }
+                ],
+                "update": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" },
+                                    { "id": 15, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 0, "x": 0, "z": 0 },
+                                "name": "target"
+                            },
+                            { "name": "intensity", "data": { "number": 0.1 } },
+                            { "name": "speed", "data": { "number": 0.1 } }
+                        ],
+                        "className": "MoveTowards"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" },
+                                    { "id": 4, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 0, "x": 0, "z": 0 },
+                                "name": "target"
+                            },
+                            { "name": "intensity", "data": { "number": 0.5 } },
+                            { "name": "axisType", "data": { "currentState": "XY" } },
+                            { "name": "rotationAdjustment", "data": { "y": 0, "x": 90, "z": 0 } }
+                        ],
+                        "className": "LookTowards"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 1 },
+                                    "endPoint": { "time": 1, "value": 1 },
+                                    "graphPoints": [{ "time": 0.05, "value": 0 }, { "time": 0.95, "value": 0 }]
+                                }
+                            }
+                        ],
+                        "className": "SetTransparencyOverLife"
+                    }
+                ],
+                "spawn": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "delay", "data": { "number": 0.02 } }, { "name": "amount", "data": { "number": 18 } }],
+                        "className": "BurstSpawn"
+                    }
+                ]
+            },
+            "systemName": "Basic System"
+        }
+    ],
+    "version": 102,
+    "floatingNodes": [
+        {
+            "anchorPoint": { "y": 720.0000610351563, "x": -1125.5556640625 },
+            "connections": [{ "id": 0 }, { "id": 1 }],
+            "className": "Time",
+            "order": -1,
+            "fields": []
+        },
+        {
+            "anchorPoint": { "y": 679.5, "x": -810.5 },
+            "connections": [{ "id": 2 }],
+            "className": "NumberMath",
+            "order": -1,
+            "fields": [
+                { "connections": [{ "id": 0 }], "data": { "number": 1 }, "name": "a" },
+                { "name": "operationType", "data": { "currentState": "Multiply" } },
+                { "name": "b", "data": { "number": -15 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 463, "x": -566.5 },
+            "connections": [
+                { "id": 3 },
+                { "id": 4 },
+                { "id": 5 },
+                { "id": 6 },
+                { "id": 7 },
+                { "id": 8 },
+                { "id": 9 },
+                { "id": 10 },
+                { "id": 11 },
+                { "id": 12 },
+                { "id": 13 }
+            ],
+            "className": "GetParentProperty",
+            "order": -1,
+            "fields": [{ "name": "propertyType", "data": { "currentState": "Position" } }]
+        },
+        {
+            "anchorPoint": { "y": 344, "x": -324 },
+            "connections": [{ "id": 14 }],
+            "className": "VectorMath",
+            "order": -1,
+            "fields": [
+                { "name": "valueTypeA", "data": { "currentState": "Vector3" } },
+                { "name": "vector2B", "data": { "y": 0, "x": 0 } },
+                { "name": "operationType", "data": { "currentState": "Add" } },
+                { "name": "valueTypeB1", "data": { "currentState": "Vector2" } },
+                { "name": "valueTypeB2", "data": { "currentState": "Vector3" } },
+                { "name": "numberB", "data": { "number": 0 } },
+                { "connections": [{ "id": 42, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3B" },
+                { "connections": [{ "id": 3, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3A" },
+                { "name": "vector2A", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 342.5, "x": -153 },
+            "connections": [
+                { "id": 15 },
+                { "id": 16 },
+                { "id": 17 },
+                { "id": 18 },
+                { "id": 19 },
+                { "id": 20 },
+                { "id": 21 },
+                { "id": 22 },
+                { "id": 23 },
+                { "id": 24 },
+                { "id": 25 },
+                { "id": 26 },
+                { "id": 27 },
+                { "id": 28 },
+                { "id": 29 },
+                { "id": 30 },
+                { "id": 31 },
+                { "id": 32 },
+                { "id": 33 },
+                { "id": 34 }
+            ],
+            "className": "VectorMath",
+            "order": -1,
+            "fields": [
+                { "name": "valueTypeA", "data": { "currentState": "Vector3" } },
+                { "name": "vector2B", "data": { "y": 0, "x": 0 } },
+                { "name": "operationType", "data": { "currentState": "Add" } },
+                { "name": "valueTypeB1", "data": { "currentState": "Vector2" } },
+                { "name": "valueTypeB2", "data": { "currentState": "Vector3" } },
+                { "name": "numberB", "data": { "number": 0 } },
+                { "connections": [{ "id": 40, "valueName": "Y" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3B" },
+                { "connections": [{ "id": 14, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3A" },
+                { "name": "vector2A", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 872, "x": -550.5 },
+            "connections": [{ "id": 35 }],
+            "className": "Trigonometry",
+            "order": -1,
+            "fields": [
+                { "name": "trigonometryType", "data": { "currentState": "Sin" } },
+                { "connections": [{ "id": 36 }], "data": { "number": 0 }, "name": "input" }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 857.5, "x": -768.5 },
+            "connections": [{ "id": 36 }],
+            "className": "NumberMath",
+            "order": -1,
+            "fields": [
+                { "connections": [{ "id": 37 }], "data": { "number": 1 }, "name": "a" },
+                { "name": "operationType", "data": { "currentState": "Multiply" } },
+                { "connections": [{ "id": 39 }], "data": { "number": 2.5 }, "name": "b" }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 818.5, "x": -959.5 },
+            "connections": [{ "id": 37 }],
+            "className": "NumberMath",
+            "order": -1,
+            "fields": [
+                { "connections": [{ "id": 1 }], "data": { "number": 1 }, "name": "a" },
+                { "name": "operationType", "data": { "currentState": "Add" } },
+                { "connections": [{ "id": 38 }], "data": { "number": 0 }, "name": "b" }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 833.3333740234375, "x": -1267.2222900390626 },
+            "connections": [{ "id": 38 }],
+            "className": "RandomNumber",
+            "order": -1,
+            "fields": [
+                { "name": "range2", "data": { "y": 0, "x": 0 } },
+                { "name": "rangeCount", "data": { "currentState": "Single Range" } },
+                { "name": "range1", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 966.5, "x": -1053 },
+            "connections": [{ "id": 39 }],
+            "className": "RandomNumber",
+            "order": -1,
+            "fields": [
+                { "name": "range2", "data": { "y": 0, "x": 0 } },
+                { "name": "rangeCount", "data": { "currentState": "Single Range" } },
+                { "name": "range1", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 884.5, "x": -351.5 },
+            "connections": [{ "id": 40 }],
+            "className": "NumberMath",
+            "order": -1,
+            "fields": [
+                { "connections": [{ "id": 35 }], "data": { "number": 1 }, "name": "a" },
+                { "name": "operationType", "data": { "currentState": "Multiply" } },
+                { "connections": [{ "id": 41 }], "data": { "number": 0 }, "name": "b" }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 983.5, "x": -662 },
+            "connections": [{ "id": 41 }],
+            "className": "RandomNumber",
+            "order": -1,
+            "fields": [
+                { "name": "range2", "data": { "y": 0, "x": 0 } },
+                { "name": "rangeCount", "data": { "currentState": "Single Range" } },
+                { "name": "range1", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 559, "x": -608 },
+            "connections": [{ "id": 42 }],
+            "className": "Shape",
+            "order": -1,
+            "fields": [
+                { "name": "edgeWidth", "data": { "number": 0 } },
+                { "name": "radius", "data": { "number": 360 } },
+                { "name": "filled", "data": { "boolean": false } },
+                { "name": "sizeVec2", "data": { "y": 25, "x": 25 } },
+                { "name": "spawnShape", "data": { "currentState": "Ellipse" } },
+                { "name": "sizeVec3", "data": { "y": 2, "x": 2, "z": 2 } },
+                { "connections": [{ "id": 2, "valueName": "Y" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "rotation" },
+                { "name": "spacing", "data": { "number": 20 } }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,99 @@
+{
+    "systems": [
+        {
+            "anchorPoint": { "y": -436, "x": -101 },
+            "groups": {
+                "render": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "spriteSheetFrameCount", "data": { "number": 1 } },
+                            { "name": "assetId", "data": { "number": 17646544879 } },
+                            { "name": "imageSize", "data": { "y": 1024, "x": 1024 } },
+                            { "name": "orientation", "data": { "currentState": "Velocity Parallel" } },
+                            { "name": "doubleSided", "data": { "boolean": false } },
+                            { "name": "spriteSheetRows", "data": { "number": 1 } },
+                            { "name": "spriteSheetColumns", "data": { "number": 1 } }
+                        ],
+                        "className": "PlaneParticle"
+                    }
+                ],
+                "initialize": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "time", "data": { "number": 1 } },
+                            { "name": "range", "data": { "y": 4, "x": 3 } }
+                        ],
+                        "className": "SetLifetime"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            { "name": "position", "data": { "y": 20, "x": 0, "z": 0 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } }
+                        ],
+                        "className": "Position"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "XYZ" } },
+                            { "name": "rangeX", "data": { "y": 50, "x": -50 } },
+                            { "name": "velocityY", "data": { "number": 0 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } },
+                            { "name": "rangeZ", "data": { "y": 50, "x": -50 } },
+                            { "name": "rangeY", "data": { "y": 50, "x": -50 } },
+                            { "name": "velocityX", "data": { "number": 0 } },
+                            { "name": "velocityZ", "data": { "number": 0 } }
+                        ],
+                        "className": "Velocity"
+                    },
+                    {
+                        "order": 3,
+                        "fields": [{ "name": "color", "data": { "hue": 0, "saturation": 1, "value": 1 } }],
+                        "className": "SetColor"
+                    },
+                    { "order": 4, "fields": [{ "name": "emission", "data": { "number": 5 } }], "className": "SetEmission" }
+                ],
+                "update": [
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 1 },
+                                    "endPoint": { "time": 1, "value": 1 },
+                                    "graphPoints": [{ "time": 0.05, "value": 0 }, { "time": 0.8, "value": 0 }]
+                                }
+                            }
+                        ],
+                        "className": "SetTransparencyOverLife"
+                    },
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "limitBounces", "data": { "boolean": false } },
+                            { "name": "velocityMultiplier", "data": { "number": 0.8 } },
+                            { "name": "maxBounces", "data": { "number": 3 } }
+                        ],
+                        "className": "Bounce"
+                    }
+                ],
+                "spawn": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "delay", "data": { "number": 0 } }, { "name": "amount", "data": { "number": 100 } }],
+                        "className": "BurstSpawn"
+                    }
+                ]
+            },
+            "systemName": "Burst System"
+        }
+    ],
+    "version": 102,
+    "floatingNodes": []
+}

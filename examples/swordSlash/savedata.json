@@ -1,0 +1,1204 @@
+{
+    "systems": [
+        {
+            "anchorPoint": { "y": -86, "x": -44 },
+            "groups": {
+                "render": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            {
+                                "name": "textures",
+                                "data": [
+                                    13748901618, 13748900876, 13748900418, 13748900046, 13748899622, 13748899004, 13748898507, 13748898093,
+                                    13748897355, 13748896953, 13748896472, 13748896153, 13748895517
+                                ]
+                            },
+                            { "name": "meshId", "data": { "number": 13757057900 } }
+                        ],
+                        "className": "MeshParticle"
+                    }
+                ],
+                "initialize": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Uniform" } },
+                            { "name": "time", "data": { "number": 0.38 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } }
+                        ],
+                        "className": "SetLifetime"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 43, "valueName": "XYZ" },
+                                    { "id": 43, "valueName": "XYZ" },
+                                    { "id": 43, "valueName": "XYZ" },
+                                    { "id": 43, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 5, "x": 0, "z": 0 },
+                                "name": "position"
+                            },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } }
+                        ],
+                        "className": "Position"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "rotationY", "data": { "number": 0 } },
+                            { "name": "calculationType", "data": { "currentState": "Uniform" } },
+                            { "name": "axisType", "data": { "currentState": "XYZ" } },
+                            { "name": "rangeX", "data": { "y": 0, "x": 0 } },
+                            { "name": "rangeZ", "data": { "y": 0, "x": 0 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } },
+                            { "name": "rotationZ", "data": { "number": 0 } },
+                            { "name": "rangeY", "data": { "y": 0, "x": 0 } },
+                            { "name": "rotationX", "data": { "number": -45 } }
+                        ],
+                        "className": "Rotation"
+                    },
+                    { "order": 3, "fields": [{ "name": "transparency", "data": { "number": 0.02 } }], "className": "SetTransparency" },
+                    {
+                        "order": 4,
+                        "fields": [{ "name": "color", "data": { "hue": 1, "saturation": 1, "value": 1 } }],
+                        "className": "SetColor"
+                    },
+                    { "order": 5, "fields": [{ "name": "emission", "data": { "number": 3 } }], "className": "SetEmission" }
+                ],
+                "update": [],
+                "spawn": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "delay", "data": { "number": 0 } }, { "name": "amount", "data": { "number": 1 } }],
+                        "className": "BurstSpawn"
+                    }
+                ]
+            },
+            "systemName": "Slash Inside"
+        },
+        {
+            "anchorPoint": { "y": 1290, "x": 280 },
+            "groups": {
+                "render": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            {
+                                "name": "textures",
+                                "data": [
+                                    13748901618, 13748900876, 13748900418, 13748900046, 13748899622, 13748899004, 13748898507, 13748898093,
+                                    13748897355, 13748896953, 13748896472, 13748896153, 13748895517
+                                ]
+                            },
+                            { "name": "meshId", "data": { "number": 13757058057 } }
+                        ],
+                        "className": "MeshParticle"
+                    }
+                ],
+                "initialize": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Uniform" } },
+                            { "name": "time", "data": { "number": 0.38 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } }
+                        ],
+                        "className": "SetLifetime"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 46, "valueName": "XYZ" },
+                                    { "id": 46, "valueName": "XYZ" },
+                                    { "id": 46, "valueName": "XYZ" },
+                                    { "id": 46, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 5, "x": 0, "z": 0 },
+                                "name": "position"
+                            },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } }
+                        ],
+                        "className": "Position"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "rotationY", "data": { "number": 0 } },
+                            { "name": "calculationType", "data": { "currentState": "Uniform" } },
+                            { "name": "axisType", "data": { "currentState": "XYZ" } },
+                            { "name": "rangeX", "data": { "y": 0, "x": 0 } },
+                            { "name": "rangeZ", "data": { "y": 0, "x": 0 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } },
+                            { "name": "rotationZ", "data": { "number": 0 } },
+                            { "name": "rangeY", "data": { "y": 0, "x": 0 } },
+                            { "name": "rotationX", "data": { "number": -45 } }
+                        ],
+                        "className": "Rotation"
+                    },
+                    { "order": 3, "fields": [{ "name": "transparency", "data": { "number": 0.02 } }], "className": "SetTransparency" },
+                    {
+                        "order": 4,
+                        "fields": [{ "name": "color", "data": { "hue": 1, "saturation": 1, "value": 1 } }],
+                        "className": "SetColor"
+                    },
+                    { "order": 5, "fields": [{ "name": "emission", "data": { "number": 3 } }], "className": "SetEmission" },
+                    {
+                        "order": 6,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Uniform Connected" } },
+                            { "name": "axisType", "data": { "currentState": "XYZ" } },
+                            { "name": "sizeY", "data": { "number": 1 } },
+                            { "name": "rangeZ", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeY", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeX", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "sizeZ", "data": { "number": 2 } },
+                            { "name": "sizeX", "data": { "number": 2 } },
+                            { "name": "size", "data": { "number": 0.99 } }
+                        ],
+                        "className": "SetSize"
+                    }
+                ],
+                "update": [],
+                "spawn": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "delay", "data": { "number": 0 } }, { "name": "amount", "data": { "number": 1 } }],
+                        "className": "BurstSpawn"
+                    }
+                ]
+            },
+            "systemName": "Slash Outside"
+        },
+        {
+            "anchorPoint": { "y": -270, "x": 825 },
+            "groups": {
+                "render": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "spriteSheetFrameCount", "data": { "number": 1 } },
+                            { "name": "assetId", "data": { "number": 8072200945 } },
+                            { "name": "imageSize", "data": { "y": 1024, "x": 1024 } },
+                            { "name": "orientation", "data": { "currentState": "Velocity Parallel" } },
+                            { "name": "doubleSided", "data": { "boolean": false } },
+                            { "name": "spriteSheetRows", "data": { "number": 1 } },
+                            { "name": "spriteSheetColumns", "data": { "number": 1 } }
+                        ],
+                        "className": "PlaneParticle"
+                    }
+                ],
+                "initialize": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "time", "data": { "number": 1 } },
+                            { "name": "range", "data": { "y": 0.5, "x": 0.3 } }
+                        ],
+                        "className": "SetLifetime"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" },
+                                    { "id": 111, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 5, "x": 0, "z": 0 },
+                                "name": "position"
+                            },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } }
+                        ],
+                        "className": "Position"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "X" } },
+                            { "name": "rangeX", "data": { "y": -40, "x": -25 } },
+                            { "name": "velocityY", "data": { "number": 5 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } },
+                            { "name": "rangeZ", "data": { "y": 10, "x": 5 } },
+                            { "name": "rangeY", "data": { "y": 0, "x": 0 } },
+                            { "name": "velocityX", "data": { "number": -25 } },
+                            { "name": "velocityZ", "data": { "number": 20 } }
+                        ],
+                        "className": "Velocity"
+                    },
+                    {
+                        "order": 4,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "XY" } },
+                            { "name": "sizeY", "data": { "number": 1 } },
+                            { "name": "rangeZ", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeY", "data": { "y": 1.5, "x": 1 } },
+                            { "name": "rangeX", "data": { "y": 2.5, "x": 2 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "sizeZ", "data": { "number": 1 } },
+                            { "name": "sizeX", "data": { "number": 1 } },
+                            { "name": "size", "data": { "number": 3 } }
+                        ],
+                        "className": "SetSize"
+                    },
+                    {
+                        "order": 5,
+                        "fields": [{ "name": "color", "data": { "hue": 1, "saturation": 1, "value": 1 } }],
+                        "className": "SetColor"
+                    },
+                    { "order": 6, "fields": [{ "name": "emission", "data": { "number": 5 } }], "className": "SetEmission" },
+                    {
+                        "order": 3,
+                        "fields": [
+                            { "name": "upVector", "data": { "y": 1, "x": 0, "z": -1 } },
+                            {
+                                "connections": [
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" },
+                                    { "id": 50, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 0, "x": 0, "z": 0 },
+                                "name": "direction"
+                            }
+                        ],
+                        "className": "DirectVelocity"
+                    }
+                ],
+                "update": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 0.25 },
+                                    "endPoint": { "time": 1, "value": 0.5 },
+                                    "graphPoints": [{ "time": 0.1, "value": 1 }, { "time": 0.75, "value": 0.9 }]
+                                }
+                            }
+                        ],
+                        "className": "MultiplySizeOverLife"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 1 },
+                                    "endPoint": { "time": 1, "value": 1 },
+                                    "graphPoints": [{ "time": 0.1, "value": 0 }, { "time": 0.7, "value": 0 }]
+                                }
+                            }
+                        ],
+                        "className": "SetTransparencyOverLife"
+                    },
+                    { "order": 2, "fields": [{ "name": "drag", "data": { "number": 5 } }], "className": "Drag" }
+                ],
+                "spawn": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "delay", "data": { "number": 0 } }, { "name": "amount", "data": { "number": 30 } }],
+                        "className": "BurstSpawn"
+                    }
+                ]
+            },
+            "systemName": "Sparks 1"
+        },
+        {
+            "anchorPoint": { "y": 1035, "x": 1220 },
+            "groups": {
+                "render": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "spriteSheetFrameCount", "data": { "number": 1 } },
+                            { "name": "assetId", "data": { "number": 8072200945 } },
+                            { "name": "imageSize", "data": { "y": 1024, "x": 1024 } },
+                            { "name": "orientation", "data": { "currentState": "Velocity Parallel" } },
+                            { "name": "doubleSided", "data": { "boolean": false } },
+                            { "name": "spriteSheetRows", "data": { "number": 1 } },
+                            { "name": "spriteSheetColumns", "data": { "number": 1 } }
+                        ],
+                        "className": "PlaneParticle"
+                    }
+                ],
+                "initialize": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "time", "data": { "number": 1 } },
+                            { "name": "range", "data": { "y": 0.5, "x": 0.3 } }
+                        ],
+                        "className": "SetLifetime"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 129, "valueName": "XYZ" },
+                                    { "id": 129, "valueName": "XYZ" },
+                                    { "id": 129, "valueName": "XYZ" },
+                                    { "id": 129, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 5, "x": 0, "z": 0 },
+                                "name": "position"
+                            },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } }
+                        ],
+                        "className": "Position"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "X" } },
+                            { "name": "rangeX", "data": { "y": -35, "x": -25 } },
+                            { "name": "velocityY", "data": { "number": 5 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } },
+                            { "name": "rangeZ", "data": { "y": 10, "x": 5 } },
+                            { "name": "rangeY", "data": { "y": 0, "x": 0 } },
+                            { "name": "velocityX", "data": { "number": -25 } },
+                            { "name": "velocityZ", "data": { "number": 20 } }
+                        ],
+                        "className": "Velocity"
+                    },
+                    {
+                        "order": 4,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "XY" } },
+                            { "name": "sizeY", "data": { "number": 1 } },
+                            { "name": "rangeZ", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeY", "data": { "y": 1.5, "x": 1 } },
+                            { "name": "rangeX", "data": { "y": 2.5, "x": 2 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "sizeZ", "data": { "number": 1 } },
+                            { "name": "sizeX", "data": { "number": 1 } },
+                            { "name": "size", "data": { "number": 3 } }
+                        ],
+                        "className": "SetSize"
+                    },
+                    {
+                        "order": 5,
+                        "fields": [{ "name": "color", "data": { "hue": 1, "saturation": 1, "value": 0 } }],
+                        "className": "SetColor"
+                    },
+                    {
+                        "order": 3,
+                        "fields": [
+                            { "name": "upVector", "data": { "y": 1, "x": 0, "z": -1 } },
+                            {
+                                "connections": [
+                                    { "id": 135, "valueName": "XYZ" },
+                                    { "id": 135, "valueName": "XYZ" },
+                                    { "id": 135, "valueName": "XYZ" },
+                                    { "id": 135, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 0, "x": 0, "z": 0 },
+                                "name": "direction"
+                            }
+                        ],
+                        "className": "DirectVelocity"
+                    }
+                ],
+                "update": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 1 },
+                                    "endPoint": { "time": 1, "value": 1 },
+                                    "graphPoints": [{ "time": 0.1, "value": 0.5 }, { "time": 0.7, "value": 0.5 }]
+                                }
+                            }
+                        ],
+                        "className": "SetTransparencyOverLife"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 0.25 },
+                                    "endPoint": { "time": 1, "value": 0.5 },
+                                    "graphPoints": [{ "time": 0.1, "value": 1 }, { "time": 0.75, "value": 0.9 }]
+                                }
+                            }
+                        ],
+                        "className": "MultiplySizeOverLife"
+                    },
+                    { "order": 2, "fields": [{ "name": "drag", "data": { "number": 5 } }], "className": "Drag" }
+                ],
+                "spawn": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "delay", "data": { "number": 0 } }, { "name": "amount", "data": { "number": 15 } }],
+                        "className": "BurstSpawn"
+                    }
+                ]
+            },
+            "systemName": "Sparks 2"
+        },
+        {
+            "anchorPoint": { "y": -295, "x": 1895 },
+            "groups": {
+                "render": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "spriteSheetFrameCount", "data": { "number": 16 } },
+                            { "name": "assetId", "data": { "number": 14151781963 } },
+                            { "name": "imageSize", "data": { "y": 1024, "x": 1024 } },
+                            { "name": "orientation", "data": { "currentState": "Facing Camera" } },
+                            { "name": "doubleSided", "data": { "boolean": false } },
+                            { "name": "spriteSheetRows", "data": { "number": 4 } },
+                            { "name": "spriteSheetColumns", "data": { "number": 4 } }
+                        ],
+                        "className": "PlaneParticle"
+                    }
+                ],
+                "initialize": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "time", "data": { "number": 1 } },
+                            { "name": "range", "data": { "y": 0.8, "x": 0.5 } }
+                        ],
+                        "className": "SetLifetime"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 139, "valueName": "XYZ" },
+                                    { "id": 139, "valueName": "XYZ" },
+                                    { "id": 139, "valueName": "XYZ" },
+                                    { "id": 139, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 5, "x": 0, "z": 0 },
+                                "name": "position"
+                            },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } }
+                        ],
+                        "className": "Position"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "X" } },
+                            { "name": "rangeX", "data": { "y": -15, "x": -10 } },
+                            { "name": "velocityY", "data": { "number": 5 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } },
+                            { "name": "rangeZ", "data": { "y": 10, "x": 5 } },
+                            { "name": "rangeY", "data": { "y": 0, "x": 0 } },
+                            { "name": "velocityX", "data": { "number": -25 } },
+                            { "name": "velocityZ", "data": { "number": 20 } }
+                        ],
+                        "className": "Velocity"
+                    },
+                    {
+                        "order": 4,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "XY" } },
+                            { "name": "sizeY", "data": { "number": 1 } },
+                            { "name": "rangeZ", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeY", "data": { "y": 4, "x": 3 } },
+                            { "name": "rangeX", "data": { "y": 4, "x": 3 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "sizeZ", "data": { "number": 1 } },
+                            { "name": "sizeX", "data": { "number": 1 } },
+                            { "name": "size", "data": { "number": 3 } }
+                        ],
+                        "className": "SetSize"
+                    },
+                    {
+                        "order": 5,
+                        "fields": [{ "name": "color", "data": { "hue": 1, "saturation": 1, "value": 0 } }],
+                        "className": "SetColor"
+                    },
+                    {
+                        "order": 6,
+                        "fields": [
+                            { "name": "rotationY", "data": { "number": 0 } },
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "Z" } },
+                            { "name": "rangeX", "data": { "y": 0, "x": 0 } },
+                            { "name": "rangeZ", "data": { "y": 360, "x": 0 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } },
+                            { "name": "rotationZ", "data": { "number": 0 } },
+                            { "name": "rangeY", "data": { "y": 0, "x": 0 } },
+                            { "name": "rotationX", "data": { "number": 0 } }
+                        ],
+                        "className": "Rotation"
+                    },
+                    {
+                        "order": 3,
+                        "fields": [
+                            { "name": "upVector", "data": { "y": 1, "x": 0, "z": -1 } },
+                            {
+                                "connections": [
+                                    { "id": 145, "valueName": "XYZ" },
+                                    { "id": 145, "valueName": "XYZ" },
+                                    { "id": 145, "valueName": "XYZ" },
+                                    { "id": 145, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 0, "x": 0, "z": 0 },
+                                "name": "direction"
+                            }
+                        ],
+                        "className": "DirectVelocity"
+                    }
+                ],
+                "update": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 1 },
+                                    "endPoint": { "time": 1, "value": 1 },
+                                    "graphPoints": [{ "time": 0.25, "value": 0.85 }, { "time": 0.7, "value": 0.9 }]
+                                }
+                            }
+                        ],
+                        "className": "SetTransparencyOverLife"
+                    },
+                    { "order": 1, "fields": [{ "name": "drag", "data": { "number": 5 } }], "className": "Drag" },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "rotationY", "data": { "number": 0 } },
+                            { "name": "calculationType", "data": { "currentState": "Uniform" } },
+                            { "name": "axisType", "data": { "currentState": "Z" } },
+                            { "name": "rangeX", "data": { "y": 0, "x": 0 } },
+                            { "name": "rangeZ", "data": { "y": 0, "x": 0 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Add" } },
+                            {
+                                "connections": [{ "id": 148 }, { "id": 148 }, { "id": 148 }, { "id": 148 }],
+                                "data": { "number": 1000 },
+                                "name": "rotationZ"
+                            },
+                            { "name": "rangeY", "data": { "y": 0, "x": 0 } },
+                            { "name": "rotationX", "data": { "number": 0 } }
+                        ],
+                        "className": "Rotation"
+                    }
+                ],
+                "spawn": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "delay", "data": { "number": 0 } }, { "name": "amount", "data": { "number": 20 } }],
+                        "className": "BurstSpawn"
+                    }
+                ]
+            },
+            "systemName": "Smoke"
+        },
+        {
+            "anchorPoint": { "y": 635, "x": 2815 },
+            "groups": {
+                "render": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            { "name": "spriteSheetFrameCount", "data": { "number": 1 } },
+                            { "name": "assetId", "data": { "number": 8072200945 } },
+                            { "name": "imageSize", "data": { "y": 1024, "x": 1024 } },
+                            { "name": "orientation", "data": { "currentState": "Velocity Parallel" } },
+                            { "name": "doubleSided", "data": { "boolean": false } },
+                            { "name": "spriteSheetRows", "data": { "number": 1 } },
+                            { "name": "spriteSheetColumns", "data": { "number": 1 } }
+                        ],
+                        "className": "PlaneParticle"
+                    }
+                ],
+                "initialize": [
+                    {
+                        "order": 0,
+                        "fields": [
+                            {
+                                "connections": [
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" },
+                                    { "id": 162, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 5, "x": 0, "z": 0 },
+                                "name": "position"
+                            },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } }
+                        ],
+                        "className": "Position"
+                    },
+                    {
+                        "order": 1,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "time", "data": { "number": 1 } },
+                            { "name": "range", "data": { "y": 1.5, "x": 1 } }
+                        ],
+                        "className": "SetLifetime"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "XYZ" } },
+                            { "name": "rangeX", "data": { "y": -30, "x": -20 } },
+                            { "name": "velocityY", "data": { "number": 0 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Set" } },
+                            { "name": "rangeZ", "data": { "y": 10, "x": -10 } },
+                            { "name": "rangeY", "data": { "y": 5, "x": -5 } },
+                            { "name": "velocityX", "data": { "number": 0 } },
+                            { "name": "velocityZ", "data": { "number": 0 } }
+                        ],
+                        "className": "Velocity"
+                    },
+                    {
+                        "order": 4,
+                        "fields": [{ "name": "color", "data": { "hue": 0, "saturation": 1, "value": 1 } }],
+                        "className": "SetColor"
+                    },
+                    { "order": 5, "fields": [{ "name": "emission", "data": { "number": 10 } }], "className": "SetEmission" },
+                    {
+                        "order": 6,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Random" } },
+                            { "name": "axisType", "data": { "currentState": "XY" } },
+                            { "name": "sizeY", "data": { "number": 1 } },
+                            { "name": "rangeZ", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeY", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "rangeX", "data": { "y": 3, "x": 2 } },
+                            { "name": "range", "data": { "y": 1, "x": 0.5 } },
+                            { "name": "sizeZ", "data": { "number": 1 } },
+                            { "name": "sizeX", "data": { "number": 1 } },
+                            { "name": "size", "data": { "number": 1 } }
+                        ],
+                        "className": "SetSize"
+                    },
+                    {
+                        "order": 3,
+                        "fields": [
+                            { "name": "upVector", "data": { "y": 1, "x": 0, "z": -1 } },
+                            {
+                                "connections": [
+                                    { "id": 151, "valueName": "XYZ" },
+                                    { "id": 151, "valueName": "XYZ" },
+                                    { "id": 151, "valueName": "XYZ" },
+                                    { "id": 151, "valueName": "XYZ" },
+                                    { "id": 151, "valueName": "XYZ" },
+                                    { "id": 151, "valueName": "XYZ" },
+                                    { "id": 151, "valueName": "XYZ" },
+                                    { "id": 151, "valueName": "XYZ" },
+                                    { "id": 151, "valueName": "XYZ" }
+                                ],
+                                "data": { "y": 0, "x": 0, "z": 0 },
+                                "name": "direction"
+                            }
+                        ],
+                        "className": "DirectVelocity"
+                    }
+                ],
+                "update": [
+                    { "order": 0, "fields": [{ "name": "drag", "data": { "number": 5 } }], "className": "Drag" },
+                    {
+                        "order": 1,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 1 },
+                                    "endPoint": { "time": 1, "value": 1 },
+                                    "graphPoints": [{ "time": 0.1, "value": 0 }, { "time": 0.8, "value": 0 }]
+                                }
+                            }
+                        ],
+                        "className": "SetTransparencyOverLife"
+                    },
+                    {
+                        "order": 2,
+                        "fields": [
+                            {
+                                "name": "graph",
+                                "data": {
+                                    "startPoint": { "time": 0, "value": 0.5 },
+                                    "endPoint": { "time": 1, "value": 0.5 },
+                                    "graphPoints": [{ "time": 0.2, "value": 1.5 }, { "time": 0.75, "value": 1.25 }]
+                                }
+                            }
+                        ],
+                        "className": "MultiplySizeOverLife"
+                    },
+                    {
+                        "order": 3,
+                        "fields": [
+                            { "name": "calculationType", "data": { "currentState": "Uniform" } },
+                            { "name": "axisType", "data": { "currentState": "Y" } },
+                            { "name": "rangeX", "data": { "y": 0, "x": 0 } },
+                            { "name": "velocityY", "data": { "number": -75 } },
+                            { "name": "nodeOperationType", "data": { "currentState": "Add" } },
+                            { "name": "rangeZ", "data": { "y": 0, "x": 0 } },
+                            { "name": "rangeY", "data": { "y": 0, "x": 0 } },
+                            { "name": "velocityX", "data": { "number": 0 } },
+                            { "name": "velocityZ", "data": { "number": 0 } }
+                        ],
+                        "className": "Velocity"
+                    },
+                    {
+                        "order": 4,
+                        "fields": [
+                            { "name": "limitBounces", "data": { "boolean": false } },
+                            { "name": "velocityMultiplier", "data": { "number": 0.75 } },
+                            { "name": "maxBounces", "data": { "number": 3 } }
+                        ],
+                        "className": "Bounce"
+                    }
+                ],
+                "spawn": [
+                    {
+                        "order": 0,
+                        "fields": [{ "name": "delay", "data": { "number": 0 } }, { "name": "amount", "data": { "number": 15 } }],
+                        "className": "BurstSpawn"
+                    }
+                ]
+            },
+            "systemName": "Hit Sparks"
+        }
+    ],
+    "version": 102,
+    "floatingNodes": [
+        {
+            "anchorPoint": { "y": 296, "x": -223 },
+            "connections": [{ "id": 43 }, { "id": 44 }, { "id": 45 }],
+            "className": "GetParentProperty",
+            "order": -1,
+            "fields": [{ "name": "propertyType", "data": { "currentState": "Position" } }]
+        },
+        {
+            "anchorPoint": { "y": 1615, "x": 57.5 },
+            "connections": [{ "id": 46 }, { "id": 47 }, { "id": 48 }],
+            "className": "GetParentProperty",
+            "order": -1,
+            "fields": [{ "name": "propertyType", "data": { "currentState": "Position" } }]
+        },
+        {
+            "anchorPoint": { "y": 405, "x": 392.5 },
+            "connections": [
+                { "id": 49 },
+                { "id": 50 },
+                { "id": 51 },
+                { "id": 52 },
+                { "id": 53 },
+                { "id": 54 },
+                { "id": 55 },
+                { "id": 56 },
+                { "id": 57 },
+                { "id": 58 },
+                { "id": 59 },
+                { "id": 60 },
+                { "id": 61 },
+                { "id": 62 },
+                { "id": 63 },
+                { "id": 64 },
+                { "id": 65 },
+                { "id": 66 },
+                { "id": 67 },
+                { "id": 68 },
+                { "id": 69 },
+                { "id": 70 },
+                { "id": 71 },
+                { "id": 72 },
+                { "id": 73 },
+                { "id": 74 },
+                { "id": 75 },
+                { "id": 76 },
+                { "id": 77 },
+                { "id": 78 },
+                { "id": 79 },
+                { "id": 80 },
+                { "id": 81 },
+                { "id": 82 },
+                { "id": 83 },
+                { "id": 84 },
+                { "id": 85 },
+                { "id": 86 },
+                { "id": 87 },
+                { "id": 88 },
+                { "id": 89 },
+                { "id": 90 },
+                { "id": 91 },
+                { "id": 92 },
+                { "id": 93 },
+                { "id": 94 },
+                { "id": 95 },
+                { "id": 96 },
+                { "id": 97 },
+                { "id": 98 },
+                { "id": 99 },
+                { "id": 100 },
+                { "id": 101 },
+                { "id": 102 },
+                { "id": 103 },
+                { "id": 104 },
+                { "id": 105 },
+                { "id": 106 },
+                { "id": 107 },
+                { "id": 108 },
+                { "id": 109 }
+            ],
+            "className": "GetParentProperty",
+            "order": -1,
+            "fields": [{ "name": "propertyType", "data": { "currentState": "Position" } }]
+        },
+        {
+            "anchorPoint": { "y": 30, "x": 325 },
+            "connections": [{ "id": 110 }],
+            "className": "Shape",
+            "order": -1,
+            "fields": [
+                { "name": "edgeWidth", "data": { "number": 0 } },
+                { "name": "radius", "data": { "number": 180 } },
+                { "name": "filled", "data": { "boolean": false } },
+                { "name": "sizeVec2", "data": { "y": 18, "x": 18 } },
+                { "name": "spawnShape", "data": { "currentState": "Ellipse" } },
+                { "name": "sizeVec3", "data": { "y": 2, "x": 2, "z": 2 } },
+                { "name": "rotation", "data": { "y": 115, "x": -45, "z": 0 } },
+                { "name": "spacing", "data": { "number": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 155, "x": 635 },
+            "connections": [
+                { "id": 111 },
+                { "id": 112 },
+                { "id": 113 },
+                { "id": 114 },
+                { "id": 115 },
+                { "id": 116 },
+                { "id": 117 },
+                { "id": 118 },
+                { "id": 119 },
+                { "id": 120 },
+                { "id": 121 },
+                { "id": 122 },
+                { "id": 123 },
+                { "id": 124 },
+                { "id": 125 },
+                { "id": 126 },
+                { "id": 127 }
+            ],
+            "className": "VectorMath",
+            "order": -1,
+            "fields": [
+                { "name": "valueTypeA", "data": { "currentState": "Vector3" } },
+                { "name": "vector2B", "data": { "y": 0, "x": 0 } },
+                { "name": "operationType", "data": { "currentState": "Add" } },
+                { "name": "valueTypeB1", "data": { "currentState": "Vector2" } },
+                { "name": "valueTypeB2", "data": { "currentState": "Vector3" } },
+                { "name": "numberB", "data": { "number": 0 } },
+                { "connections": [{ "id": 49, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3B" },
+                { "connections": [{ "id": 110, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3A" },
+                { "name": "vector2A", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 1615, "x": 695 },
+            "connections": [{ "id": 128 }],
+            "className": "Shape",
+            "order": -1,
+            "fields": [
+                { "name": "edgeWidth", "data": { "number": 0 } },
+                { "name": "radius", "data": { "number": 180 } },
+                { "name": "filled", "data": { "boolean": false } },
+                { "name": "sizeVec2", "data": { "y": 18, "x": 18 } },
+                { "name": "spawnShape", "data": { "currentState": "Ellipse" } },
+                { "name": "sizeVec3", "data": { "y": 2, "x": 2, "z": 2 } },
+                { "name": "rotation", "data": { "y": 115, "x": -45, "z": 0 } },
+                { "name": "spacing", "data": { "number": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 1635, "x": 1030 },
+            "connections": [{ "id": 129 }, { "id": 130 }, { "id": 131 }],
+            "className": "VectorMath",
+            "order": -1,
+            "fields": [
+                { "name": "valueTypeA", "data": { "currentState": "Vector3" } },
+                { "name": "vector2B", "data": { "y": 0, "x": 0 } },
+                { "name": "operationType", "data": { "currentState": "Add" } },
+                { "name": "valueTypeB1", "data": { "currentState": "Vector2" } },
+                { "name": "valueTypeB2", "data": { "currentState": "Vector3" } },
+                { "name": "numberB", "data": { "number": 0 } },
+                {
+                    "connections": [
+                        { "id": 132, "valueName": "XYZ" },
+                        { "id": 132, "valueName": "XYZ" },
+                        { "id": 132, "valueName": "XYZ" },
+                        { "id": 132, "valueName": "XYZ" }
+                    ],
+                    "data": { "y": 0, "x": 0, "z": 0 },
+                    "name": "vector3B"
+                },
+                { "connections": [{ "id": 128, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3A" },
+                { "name": "vector2A", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 2050, "x": 802.5 },
+            "connections": [{ "id": 132 }, { "id": 133 }, { "id": 134 }, { "id": 135 }, { "id": 136 }, { "id": 137 }],
+            "className": "GetParentProperty",
+            "order": -1,
+            "fields": [{ "name": "propertyType", "data": { "currentState": "Position" } }]
+        },
+        {
+            "anchorPoint": { "y": -122.5, "x": 1315 },
+            "connections": [{ "id": 138 }],
+            "className": "Shape",
+            "order": -1,
+            "fields": [
+                { "name": "edgeWidth", "data": { "number": 6 } },
+                { "name": "radius", "data": { "number": 140 } },
+                { "name": "filled", "data": { "boolean": false } },
+                { "name": "sizeVec2", "data": { "y": 14, "x": 14 } },
+                { "name": "spawnShape", "data": { "currentState": "Ellipse" } },
+                { "name": "sizeVec3", "data": { "y": 2, "x": 2, "z": 2 } },
+                { "name": "rotation", "data": { "y": 100, "x": -45, "z": 0 } },
+                { "name": "spacing", "data": { "number": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": -50, "x": 1695 },
+            "connections": [{ "id": 139 }, { "id": 140 }, { "id": 141 }],
+            "className": "VectorMath",
+            "order": -1,
+            "fields": [
+                { "name": "valueTypeA", "data": { "currentState": "Vector3" } },
+                { "name": "vector2B", "data": { "y": 0, "x": 0 } },
+                { "name": "operationType", "data": { "currentState": "Add" } },
+                { "name": "valueTypeB1", "data": { "currentState": "Vector2" } },
+                { "name": "valueTypeB2", "data": { "currentState": "Vector3" } },
+                { "name": "numberB", "data": { "number": 0 } },
+                {
+                    "connections": [
+                        { "id": 142, "valueName": "XYZ" },
+                        { "id": 142, "valueName": "XYZ" },
+                        { "id": 142, "valueName": "XYZ" },
+                        { "id": 142, "valueName": "XYZ" }
+                    ],
+                    "data": { "y": 0, "x": 0, "z": 0 },
+                    "name": "vector3B"
+                },
+                { "connections": [{ "id": 138, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3A" },
+                { "name": "vector2A", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 210, "x": 1387.5 },
+            "connections": [{ "id": 142 }, { "id": 143 }, { "id": 144 }, { "id": 145 }, { "id": 146 }, { "id": 147 }],
+            "className": "GetParentProperty",
+            "order": -1,
+            "fields": [{ "name": "propertyType", "data": { "currentState": "Position" } }]
+        },
+        {
+            "anchorPoint": { "y": 1152.5, "x": 1600 },
+            "connections": [{ "id": 148 }, { "id": 149 }, { "id": 150 }],
+            "className": "RandomNumber",
+            "order": -1,
+            "fields": [
+                { "name": "range2", "data": { "y": 180, "x": 90 } },
+                { "name": "rangeCount", "data": { "currentState": "Double Range" } },
+                { "name": "range1", "data": { "y": -90, "x": -180 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 1545, "x": 2437.5 },
+            "connections": [
+                { "id": 151 },
+                { "id": 152 },
+                { "id": 153 },
+                { "id": 154 },
+                { "id": 155 },
+                { "id": 156 },
+                { "id": 157 },
+                { "id": 158 },
+                { "id": 159 }
+            ],
+            "className": "GetParentProperty",
+            "order": -1,
+            "fields": [{ "name": "propertyType", "data": { "currentState": "Position" } }]
+        },
+        {
+            "anchorPoint": { "y": 1485, "x": 2247.5 },
+            "connections": [{ "id": 160 }],
+            "className": "GetParentProperty",
+            "order": -1,
+            "fields": [{ "name": "propertyType", "data": { "currentState": "RightVector" } }]
+        },
+        {
+            "anchorPoint": { "y": 1347.5, "x": 2430 },
+            "connections": [{ "id": 161 }],
+            "className": "VectorMath",
+            "order": -1,
+            "fields": [
+                { "name": "valueTypeA", "data": { "currentState": "Vector3" } },
+                { "name": "vector2B", "data": { "y": 0, "x": 0 } },
+                { "name": "operationType", "data": { "currentState": "Multiply" } },
+                { "name": "valueTypeB1", "data": { "currentState": "Vector2" } },
+                { "name": "valueTypeB2", "data": { "currentState": "Number" } },
+                { "name": "numberB", "data": { "number": 10 } },
+                { "name": "vector3B", "data": { "y": 0, "x": 0, "z": 0 } },
+                { "connections": [{ "id": 160, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3A" },
+                { "name": "vector2A", "data": { "y": 0, "x": 0 } }
+            ]
+        },
+        {
+            "anchorPoint": { "y": 1205, "x": 2615 },
+            "connections": [
+                { "id": 162 },
+                { "id": 163 },
+                { "id": 164 },
+                { "id": 165 },
+                { "id": 166 },
+                { "id": 167 },
+                { "id": 168 },
+                { "id": 169 },
+                { "id": 170 },
+                { "id": 171 },
+                { "id": 172 },
+                { "id": 173 },
+                { "id": 174 },
+                { "id": 175 },
+                { "id": 176 },
+                { "id": 177 },
+                { "id": 178 },
+                { "id": 179 },
+                { "id": 180 },
+                { "id": 181 }
+            ],
+            "className": "VectorMath",
+            "order": -1,
+            "fields": [
+                { "name": "valueTypeA", "data": { "currentState": "Vector3" } },
+                { "name": "vector2B", "data": { "y": 0, "x": 0 } },
+                { "name": "operationType", "data": { "currentState": "Add" } },
+                { "name": "valueTypeB1", "data": { "currentState": "Vector2" } },
+                { "name": "valueTypeB2", "data": { "currentState": "Vector3" } },
+                { "name": "numberB", "data": { "number": 0 } },
+                { "connections": [{ "id": 159, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3B" },
+                { "connections": [{ "id": 161, "valueName": "XYZ" }], "data": { "y": 0, "x": 0, "z": 0 }, "name": "vector3A" },
+                { "name": "vector2A", "data": { "y": 0, "x": 0 } }
+            ]
+        }
+    ]
+}
