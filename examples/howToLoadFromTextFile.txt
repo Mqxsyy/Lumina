@@ -1,4 +1,4 @@
-**Before loading make sure that you don't have any unsaved work.**
+Before loading make sure that you don't have any unsaved work.
 
 To load from a text file:
 0. Make sure that the plugin does not have any existing systems or nodes
