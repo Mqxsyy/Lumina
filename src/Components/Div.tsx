@@ -53,12 +53,12 @@ export default function Div({
     const frameRef = useRef<Frame>();
 
     useEffect(() => {
-        if (frameRef.current === undefined) return;
+        const frame = frameRef.current as Frame;
 
         if (getFrame !== undefined) {
-            getFrame(frameRef.current);
+            getFrame(frame);
         }
-    }, [frameRef.current]);
+    }, []);
 
     return (
         <frame

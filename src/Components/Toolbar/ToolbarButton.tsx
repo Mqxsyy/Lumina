@@ -13,7 +13,7 @@ interface Props {
 
 export function ToolbarButton({
     Size = UDim2.fromScale(0, 1),
-    BackgroundColor = StyleConfig.Studio.ColorDarker,
+    BackgroundColor = StyleConfig.Studio.Colors.Darker,
     AutomaticTextSize = true,
     Text,
     OnClick,

@@ -13,8 +13,15 @@ function Toolbar({ Window, children }: PropsWithChildren<Props>) {
     const [windowSize, setWindowSize] = useState(windowRef.current.AbsoluteSize);
 
     useEffect(() => {
-        const connection = windowRef.current.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
-            setWindowSize(windowRef.current.AbsoluteSize);
+        const window = windowRef.current;
+
+        const connection = window.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+            setWindowSize(window.AbsoluteSize);
+        });
+
+        task.spawn(() => {
+            task.wait(0.1);
+            setWindowSize(window.AbsoluteSize);
         });
 
         return () => {
@@ -27,9 +34,9 @@ function Toolbar({ Window, children }: PropsWithChildren<Props>) {
             AnchorPoint={new Vector2(0, 0)}
             Position={UDim2.fromOffset(1, 0)}
             Size={UDim2.fromOffset(windowSize.X - 1, 21)}
-            BackgroundColor={StyleConfig.Studio.ColorDark}
+            BackgroundColor={StyleConfig.Studio.Colors.Dark}
             BorderSize={1}
-            BorderColor={StyleConfig.Studio.BorderColor}
+            BorderColor={StyleConfig.Studio.Colors.Border}
             ZIndex={100}
         >
             <InputSinker />

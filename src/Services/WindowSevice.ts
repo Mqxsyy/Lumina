@@ -45,7 +45,7 @@ const windows: { [key in Windows]: Window } = {
     },
     [Windows.ImageEditor]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
-        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 450, 300, 300, 200),
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 450, 320, 300, 200),
     },
 };
 

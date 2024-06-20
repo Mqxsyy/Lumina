@@ -8,19 +8,20 @@ interface Props {
     Text: string;
     Id: number;
     SelectedId: number;
+    UseBorder?: boolean;
     SetSelectedId: (id: number) => void;
     Buttons: Array<{ Text: string; Order: number; OnClick: () => void }>;
 }
 
-export function ToolbarDropdownButton({ Text, Id, SelectedId, SetSelectedId, Buttons }: Props) {
+export function ToolbarDropdown({ Text, Id, SelectedId, UseBorder = false, SetSelectedId, Buttons }: Props) {
     const [isHovering, setIsHovering] = useState(false);
     const [buttonWidth, setButtonWidth] = useState(0);
     const buttonRef = useRef<Frame>();
 
     useEffect(() => {
-        if (buttonRef.current === undefined) return;
-        setButtonWidth(buttonRef.current.AbsoluteSize.X);
-    }, [buttonRef.current]);
+        const button = buttonRef.current as Frame;
+        setButtonWidth(button.AbsoluteSize.X);
+    }, []);
 
     return (
         <Div
@@ -30,7 +31,7 @@ export function ToolbarDropdownButton({ Text, Id, SelectedId, SetSelectedId, But
             <Div
                 Size={UDim2.fromScale(0, 1)}
                 AutomaticSize="X"
-                BackgroundColor={isHovering || SelectedId === Id ? StyleConfig.Studio.ColorDarker : undefined}
+                BackgroundColor={isHovering || SelectedId === Id ? StyleConfig.Studio.Colors.Darker : undefined}
                 getFrame={(frame) => {
                     buttonRef.current = frame;
                 }}
@@ -68,9 +69,12 @@ export function ToolbarDropdownButton({ Text, Id, SelectedId, SetSelectedId, But
             {SelectedId === Id && (
                 <Div
                     Size={UDim2.fromOffset(0, 0)}
-                    Position={UDim2.fromScale(0, 1)}
+                    Position={UseBorder ? new UDim2(0, 1, 1, 0) : UDim2.fromScale(0, 1)}
                     AutomaticSize="XY"
-                    BackgroundColor={StyleConfig.Studio.ColorDarker}
+                    BackgroundColor={StyleConfig.Studio.Colors.Darker}
+                    BorderSize={UseBorder ? 1 : 0}
+                    BorderColor={StyleConfig.Studio.Colors.Border}
+                    ZIndex={0}
                 >
                     <uilistlayout FillDirection={"Vertical"} />
 
@@ -79,7 +83,7 @@ export function ToolbarDropdownButton({ Text, Id, SelectedId, SetSelectedId, But
                             <InputSinker />
                             <ToolbarButton
                                 Size={UDim2.fromScale(1, 1)}
-                                BackgroundColor={StyleConfig.Studio.ColorDarkest}
+                                BackgroundColor={StyleConfig.Studio.Colors.Darkest}
                                 AutomaticTextSize={false}
                                 Text={button.Text}
                                 OnClick={button.OnClick}

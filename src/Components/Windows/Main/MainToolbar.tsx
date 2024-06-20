@@ -6,7 +6,7 @@ import ExportAsScript from "API/VFXScriptCreator";
 import Div from "Components/Div";
 import Toolbar from "Components/Toolbar/Toolbar";
 import { ToolbarButton } from "Components/Toolbar/ToolbarButton";
-import { ToolbarDropdownButton } from "Components/Toolbar/ToolbarDropdown";
+import { ToolbarDropdown } from "Components/Toolbar/ToolbarDropdown";
 import ShowUpdateLog from "Components/Windows/UpdateChecker/ShowUpdateLog";
 import { Copy, Cut, Duplicate, Paste } from "Services/CopyPasteService";
 import { GetAllSystems } from "Services/NodeSystemService";
@@ -91,7 +91,7 @@ function MainToolbar() {
             <Div>
                 <uilistlayout FillDirection={"Horizontal"} HorizontalAlignment={"Left"} />
 
-                <ToolbarDropdownButton
+                <ToolbarDropdown
                     Id={1}
                     SelectedId={selectedDropdown}
                     SetSelectedId={selectDropdown}
@@ -120,7 +120,7 @@ function MainToolbar() {
                         },
                     ]}
                 />
-                <ToolbarDropdownButton
+                <ToolbarDropdown
                     Id={2}
                     SelectedId={selectedDropdown}
                     SetSelectedId={selectDropdown}
@@ -156,7 +156,7 @@ function MainToolbar() {
                         },
                     ]}
                 />
-                <ToolbarDropdownButton
+                <ToolbarDropdown
                     Id={3}
                     SelectedId={selectedDropdown}
                     SetSelectedId={selectDropdown}

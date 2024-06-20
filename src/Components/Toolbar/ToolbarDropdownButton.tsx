@@ -1,4 +1,4 @@
-import React from "@rbxts/react";
+import React, { useState } from "@rbxts/react";
 import Div from "Components/Div";
 import StyleConfig from "Components/StyleConfig";
 
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function ToolbarDropdownButton({ Text, OnClick }: Props) {
-    const [isHovering, setIsHovering] = React.useState(false);
+    const [isHovering, setIsHovering] = useState(false);
 
     return (
         <Div Size={UDim2.fromScale(0, 1)} AutomaticSize="X" BackgroundColor={isHovering ? Color3.fromHex("252525") : undefined}>

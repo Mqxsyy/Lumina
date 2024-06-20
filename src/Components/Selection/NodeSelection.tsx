@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "@rbxts/react";
 import { NodeGroups } from "API/NodeGroup";
-import type { Entry, SelectionEntry } from "API/Nodes/SelectionEntry";
+import type { Entry } from "API/Nodes/SelectionEntry";
 import { NodeList } from "Lists/NodeList";
 import { NodeSystems } from "Lists/SystemsList";
 import { StyleColors, StyleProperties } from "Style";

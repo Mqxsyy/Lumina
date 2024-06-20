@@ -46,3 +46,12 @@ export function ArraySwap(arr: unknown[], index1: number, index2: number) {
     arr[index1] = arr[index2];
     arr[index2] = temp;
 }
+
+export type JSObject = { [key: string | number]: unknown };
+export function ShallowObjectCompare(obj1: JSObject, obj2: JSObject) {
+    for (const [key, _] of pairs(obj1)) {
+        if (obj1[key] !== obj2[key]) return false;
+    }
+
+    return true;
+}
