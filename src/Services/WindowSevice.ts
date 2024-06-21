@@ -7,6 +7,8 @@ export enum Windows {
     UpdateLog = "Lumina Update Log",
     ImageBrowser = "Lumina Image Browser",
     ImageEditor = "Lumina Image Editor",
+    MeshBrowser = "Lumina Mesh Browser",
+    MeshEditor = "Lumina Mesh Editor",
 }
 
 interface Window {
@@ -44,6 +46,14 @@ const windows: { [key in Windows]: Window } = {
         Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 637, 500, 300, 200),
     },
     [Windows.ImageEditor]: {
+        Widget: undefined as DockWidgetPluginGui | undefined,
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 450, 320, 300, 200),
+    },
+    [Windows.MeshBrowser]: {
+        Widget: undefined as DockWidgetPluginGui | undefined,
+        Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 637, 500, 300, 200),
+    },
+    [Windows.MeshEditor]: {
         Widget: undefined as DockWidgetPluginGui | undefined,
         Info: new DockWidgetPluginGuiInfo(Enum.InitialDockState.Float, false, false, 450, 320, 300, 200),
     },

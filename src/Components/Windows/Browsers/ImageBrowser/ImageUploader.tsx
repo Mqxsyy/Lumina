@@ -3,6 +3,8 @@ import { createRoot } from "@rbxts/react-roblox";
 import { GetImagesFolder } from "API/FolderLocations";
 import type { JSObject } from "API/Lib";
 import Div from "Components/Div";
+import StudioLabelledTextInput from "Components/Studio/LabelledTextInput";
+import StudioPrimaryButton from "Components/Studio/StudioPrimaryButton";
 import StyleConfig from "Components/StyleConfig";
 import { GetWindow, Windows } from "Services/WindowSevice";
 import { ReloadImageBrowser, ToggleImageUploader } from "./Events";
@@ -34,102 +36,6 @@ export interface ImageData extends JSObject {
     columns: number;
     rows: number;
     frameCount: number;
-}
-
-interface InputProps {
-    Title: string;
-    Placeholder?: string;
-    TextChanged?: (text: string) => void;
-}
-
-function Input({ Title, Placeholder = "", TextChanged }: InputProps) {
-    const textBoxRef = useRef<TextBox>();
-
-    useEffect(() => {
-        const textbox = textBoxRef.current as TextBox;
-
-        const conneciton = textbox.GetPropertyChangedSignal("Text").Connect(() => {
-            if (TextChanged === undefined) return;
-            TextChanged(textbox.Text);
-        });
-
-        return () => {
-            conneciton.Disconnect();
-        };
-    }, []);
-
-    return (
-        <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-            <uilistlayout FillDirection={"Horizontal"} Padding={new UDim(0, 5)} />
-
-            <textlabel
-                Size={UDim2.fromOffset(0, 20)}
-                AutomaticSize={"X"}
-                BackgroundTransparency={1}
-                TextColor3={StyleConfig.Studio.FontColor}
-                TextSize={StyleConfig.Studio.FontSize}
-                FontFace={StyleConfig.Studio.Font}
-                Text={`${Title}:`}
-                TextXAlignment={"Left"}
-            />
-            <Div Size={UDim2.fromOffset(0, 20)} BackgroundColor={StyleConfig.Studio.Colors.Darkest}>
-                <uiflexitem FlexMode={"Fill"} />
-                <uipadding PaddingLeft={new UDim(0, 5)} PaddingRight={new UDim(0, 5)} />
-
-                <textbox
-                    Size={UDim2.fromScale(1, 1)}
-                    BackgroundTransparency={1}
-                    TextColor3={StyleConfig.Studio.FontColor}
-                    TextSize={StyleConfig.Studio.FontSize}
-                    FontFace={StyleConfig.Studio.Font}
-                    TextXAlignment={"Left"}
-                    Text={""}
-                    PlaceholderText={Placeholder}
-                    PlaceholderColor3={StyleConfig.Studio.FontColorPlaceholder}
-                    TextTruncate={"AtEnd"}
-                    ClearTextOnFocus={false}
-                    ref={textBoxRef}
-                />
-            </Div>
-        </Div>
-    );
-}
-
-interface CreateButtonProps {
-    MouseButton1Down: () => void;
-}
-
-function CreateButton({ MouseButton1Down }: CreateButtonProps) {
-    const [color, setColor] = useState(StyleConfig.Studio.Colors.ButtonPrimary);
-
-    return (
-        <Div
-            Size={UDim2.fromOffset(0, 0)}
-            AutomaticSize="XY"
-            BackgroundColor={color}
-            onHover={() => setColor(StyleConfig.Studio.Colors.ButtonPrimaryHighlight)}
-            onUnhover={() => setColor(StyleConfig.Studio.Colors.ButtonPrimary)}
-            onMouseButton1Down={MouseButton1Down}
-        >
-            <uipadding
-                PaddingLeft={new UDim(0, 10)}
-                PaddingRight={new UDim(0, 10)}
-                PaddingTop={new UDim(0, 3)}
-                PaddingBottom={new UDim(0, 3)}
-            />
-            <uicorner CornerRadius={new UDim(0, 5)} />
-
-            <textlabel
-                Size={UDim2.fromOffset(0, 0)}
-                AutomaticSize={"XY"}
-                BackgroundTransparency={1}
-                TextColor3={Color3.fromHex("FFFFFF")}
-                TextSize={StyleConfig.Studio.FontSize}
-                FontFace={StyleConfig.Studio.FontBold}
-                Text={"Create"}
-            />
-        </Div>
-    );
 }
 
 function ImageEditor() {
@@ -199,11 +105,11 @@ function ImageEditor() {
                         TextColor3={StyleConfig.Studio.FontColor}
                         TextSize={StyleConfig.Studio.FontSize}
                         FontFace={StyleConfig.Studio.FontSemiBold}
-                        Text="Main Options"
+                        Text="Main Settings"
                         TextXAlignment={"Left"}
                     />
 
-                    <Input
+                    <StudioLabelledTextInput
                         Title="Image Id"
                         TextChanged={(text) => {
                             if (text === "") {
@@ -215,7 +121,7 @@ function ImageEditor() {
                             setForceRender((prev) => prev + 1);
                         }}
                     />
-                    <Input
+                    <StudioLabelledTextInput
                         Title="Name"
                         TextChanged={(text) => {
                             imageNameRef.current = text;
@@ -234,11 +140,11 @@ function ImageEditor() {
                         TextColor3={StyleConfig.Studio.FontColor}
                         TextSize={StyleConfig.Studio.FontSize}
                         FontFace={StyleConfig.Studio.FontSemiBold}
-                        Text="SpriteSheet Options"
+                        Text="SpriteSheet Settings"
                         TextXAlignment={"Left"}
                     />
 
-                    <Input
+                    <StudioLabelledTextInput
                         Title={"Image Width (px)"}
                         Placeholder={"1024"}
                         TextChanged={(text) => {
@@ -250,7 +156,7 @@ function ImageEditor() {
                             imageWidthRef.current = text;
                         }}
                     />
-                    <Input
+                    <StudioLabelledTextInput
                         Title={"Image Height (px)"}
                         Placeholder={"1024"}
                         TextChanged={(text) => {
@@ -262,7 +168,7 @@ function ImageEditor() {
                             imageHeightRef.current = text;
                         }}
                     />
-                    <Input
+                    <StudioLabelledTextInput
                         Title={"Columns"}
                         Placeholder={"1"}
                         TextChanged={(text) => {
@@ -274,7 +180,7 @@ function ImageEditor() {
                             imageColumnsRef.current = text;
                         }}
                     />
-                    <Input
+                    <StudioLabelledTextInput
                         Title={"Rows"}
                         Placeholder={"1"}
                         TextChanged={(text) => {
@@ -286,7 +192,7 @@ function ImageEditor() {
                             imageRowsRef.current = text;
                         }}
                     />
-                    <Input
+                    <StudioLabelledTextInput
                         Title={"Frame Count"}
                         Placeholder={"1"}
                         TextChanged={(text) => {
@@ -304,7 +210,7 @@ function ImageEditor() {
 
                 <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
                     <uilistlayout FillDirection={"Horizontal"} HorizontalAlignment={"Right"} />
-                    <CreateButton MouseButton1Down={CreateImage} />
+                    <StudioPrimaryButton MouseButton1Down={CreateImage} />
                 </Div>
             </Div>
         </Div>

@@ -27,8 +27,6 @@ export default function UploadedImage({ ImageData, SelectedImage, Framerate, Mou
     const startAnimation = () => {
         if (ImageData.frameCount < 2) return;
 
-        print("CREAE");
-
         let currentFrame = 1;
         let passedTime = 0;
         const frameTime = 1 / Framerate;

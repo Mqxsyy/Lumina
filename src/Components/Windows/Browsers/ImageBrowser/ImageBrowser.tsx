@@ -3,6 +3,7 @@ import { createRoot } from "@rbxts/react-roblox";
 import { GetImagesFolder } from "API/FolderLocations";
 import { ShallowObjectCompare } from "API/Lib";
 import Div from "Components/Div";
+import StudioUnlabelledTextInput from "Components/Studio/StudioUnlabelledTextInput";
 import StyleConfig from "Components/StyleConfig";
 import Toolbar from "Components/Toolbar/Toolbar";
 import { ToolbarButton } from "Components/Toolbar/ToolbarButton";
@@ -17,7 +18,7 @@ export function InitializeImageBrowser() {
     window.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
 
     const root = createRoot(window);
-    window.Enabled = false;
+    window.Enabled = true;
 
     ToggleImageBrowser.Connect(() => {
         window.Enabled = !window.Enabled;
@@ -58,7 +59,6 @@ function ImageBrowser() {
     const selectedImageRef = useRef<ImageData | undefined>();
     const imagesFolderRef = useRef(GetImagesFolder());
 
-    const searchElementRef = useRef<TextBox>();
     const searchRef = useRef("");
 
     const images: ImageData[] = [];
@@ -86,6 +86,7 @@ function ImageBrowser() {
 
         for (const [_, image] of pairs(imagesFolderRef.current.GetChildren())) {
             if (!image.IsA("IntValue")) continue;
+            if (image.GetAttribute("Undeletable")) continue;
 
             const imageProperties = VerifyImageProperties(image);
             if (imageProperties === undefined) continue;
@@ -107,16 +108,9 @@ function ImageBrowser() {
             setForceRender((prev) => prev + 1);
         });
 
-        const textBox = searchElementRef.current as TextBox;
-        const connection3 = textBox.GetPropertyChangedSignal("Text").Connect(() => {
-            searchRef.current = textBox.Text;
-            setForceRender((prev) => prev + 1);
-        });
-
         return () => {
             connection1.Disconnect();
             connection2.Disconnect();
-            connection3.Disconnect();
         };
     }, []);
 
@@ -166,25 +160,12 @@ function ImageBrowser() {
                 </Div>
                 <Div>
                     <uilistlayout FillDirection="Horizontal" HorizontalAlignment={"Right"} />
-
-                    <Div Size={UDim2.fromScale(0.75, 1)} BackgroundColor={StyleConfig.Studio.Colors.Darkest}>
-                        <uipadding PaddingLeft={new UDim(0, 5)} PaddingRight={new UDim(0, 5)} />
-
-                        <textbox
-                            Size={UDim2.fromScale(1, 1)}
-                            BackgroundTransparency={1}
-                            TextColor3={StyleConfig.Studio.FontColor}
-                            TextSize={StyleConfig.Studio.FontSize}
-                            FontFace={StyleConfig.Studio.Font}
-                            TextXAlignment={"Left"}
-                            Text={""}
-                            PlaceholderText={"Search"}
-                            PlaceholderColor3={StyleConfig.Studio.FontColorPlaceholder}
-                            TextTruncate={"AtEnd"}
-                            ClearTextOnFocus={false}
-                            ref={searchElementRef}
-                        />
-                    </Div>
+                    <StudioUnlabelledTextInput
+                        TextChanged={(text) => {
+                            searchRef.current = text;
+                            setForceRender((prev) => prev + 1);
+                        }}
+                    />
                 </Div>
             </Toolbar>
 

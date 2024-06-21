@@ -3,7 +3,9 @@ import { GetWindow, InitializeWindows, Windows } from "Services/WindowSevice";
 InitializeWindows(plugin); // widgets are bloody annoying to work with
 CheckForUpdates(plugin);
 
-import { InitializeImageBrowser } from "Components/Windows/ImageBrowser/ImageBrowser";
+import { InitializeImageBrowser } from "Components/Windows/Browsers/ImageBrowser/ImageBrowser";
+import { InitializeMeshBrowser } from "Components/Windows/Browsers/MeshBrowser/MeshBrowser";
+import { InitializeMeshEditor } from "Components/Windows/Browsers/MeshBrowser/MeshUploader";
 import { InitializeLineGraph } from "Components/Windows/Line/LineGraph";
 import { InitializeMain } from "Components/Windows/Main/App";
 import { InitializeColorPicker } from "Components/Windows/Pickers.tsx/ColorPicker";
@@ -27,7 +29,10 @@ mainButton.Click.Connect(() => {
 });
 
 InitializeMain();
+
 InitializeImageBrowser();
+InitializeMeshBrowser();
+
 InitializeLineGraph();
 InitializeColorPicker();
 InitializeColorRamp();
