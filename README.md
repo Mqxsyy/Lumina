@@ -14,9 +14,3 @@ The aim of this project is to improve vfx creation in roblox by making a much mo
 - [Trello](https://trello.com/b/HdIHbE2Q/main)
 - [Discord](https://discord.gg/RwkrWuh6Bd)
 <br/>
-
-## Support Me
-- [Patreon](https://patreon.com/Mqxsyy)
-- [Ko-Fi](https://ko-fi.com/mqxsyy)
-<br/>
-<i><sub>Supporting does not provide any real benefits, the most I could give is a discord role and prioritize your suggestions.</sub></i> 
