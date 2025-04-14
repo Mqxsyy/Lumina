@@ -12,7 +12,7 @@ export class SetSizeOverLife extends UpdateNode {
     Run(data: ParticleData) {
         const lifetime = (os.clock() - data.spawnTime) / data.lifetime;
         const size = this.nodeFields.graph.GetNumber(lifetime);
-        const sizeVector3 = new Vector3(size, size, 0.001);
+        const sizeVector3 = new Vector3(size, size, size);
 
         if (data.sizeNormal === sizeVector3) return data;
         data.sizeNormal = sizeVector3;
