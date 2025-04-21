@@ -63,7 +63,6 @@ export function InitializeWindows(plugin: Plugin) {
     for (const [key, value] of pairs(windows)) {
         const widget = plugin.CreateDockWidgetPluginGui(key, value.Info);
         widget.Name = key;
-        widget.Title = key;
         widget.Enabled = false;
 
         windows[key].Widget = widget;
