@@ -19,7 +19,7 @@ export interface ConnectionData {
     startElement: ImageButton;
     endPos?: Vector2;
     endElement?: ImageButton;
-    fn: (data: ParticleData) => number | Vector2 | Vector3;
+    fn: (data: ParticleData) => number | Vector2 | Vector3 | Color3;
     isDestroying: boolean;
     onDestroy: Event;
 }
@@ -50,7 +50,7 @@ export function CreateConnection(
     startNode: NodeData,
     startElement: ImageButton,
     valueType: string,
-    fn: (data: ParticleData) => number | Vector2 | Vector3,
+    fn: (data: ParticleData) => number | Vector2 | Vector3 | Color3,
     loadedId?: number,
 ) {
     const connection: ConnectionCollectionEntry = {

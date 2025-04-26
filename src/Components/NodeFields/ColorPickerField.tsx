@@ -8,11 +8,12 @@ import { StyleProperties } from "Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {
-    Label: string;
+    Label?: string;
+    Disabled: boolean;
     ColorPicker: ColorField;
 }
 
-export function ColorPickerField({ Label, ColorPicker }: Props) {
+export function ColorPickerField({ Label = undefined, Disabled, ColorPicker }: Props) {
     const windowRef = useRef(GetWindow(Windows.ColorPicker));
     const [_, setForceRender] = useState(0);
 
@@ -33,10 +34,16 @@ export function ColorPickerField({ Label, ColorPicker }: Props) {
 
     return (
         <Div Size={UDim2.fromScale(1, 0)} AutomaticSize="Y">
-            <uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 10 * zoomScale)} />
+            <uilistlayout FillDirection="Horizontal" VerticalAlignment={"Center"} Padding={new UDim(0, 1 * zoomScale)} />
 
-            <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} />
-            <Div Size={new UDim2(1, 0, 0, 20 * zoomScale)} BackgroundColor={ColorPicker.GetColor()} onMouseButton1Down={OnMouseButton1Down}>
+            {Label !== undefined && <BasicTextLabel Size={UDim2.fromOffset(0, 20)} AutomaticSize="X" Text={Label} />}
+
+            <uiflexitem FlexMode="Fill" />
+            <Div
+                Size={new UDim2(1, 0, 0, 20 * zoomScale)}
+                BackgroundColor={Disabled ? undefined : ColorPicker.GetColor()}
+                onMouseButton1Down={OnMouseButton1Down}
+            >
                 <uicorner CornerRadius={StyleProperties.CornerRadius} />
                 <uiflexitem FlexMode="Fill" />
             </Div>

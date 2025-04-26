@@ -1,7 +1,6 @@
 import type { NodeField } from "API/Fields/NodeField";
 import { LowerFirstLetter } from "API/Lib";
 import type { Src } from "API/VFXScriptCreator";
-import { StyleColors } from "Style";
 import { NodeGroups } from "../NodeGroup";
 import { AutoGenAddToSystem, AutoGenImport } from "./AutoGenLib";
 import { NodeIdPool } from "./NodeIdPool";
@@ -31,26 +30,7 @@ export abstract class Node {
     abstract GetNodeGroups(): NodeGroups[];
     abstract GetNodeFolderName(): string;
 
-    GetColor() {
-        const nodeGroups = this.GetNodeGroups();
-
-        if (nodeGroups.size() === 2) {
-            return StyleColors.MixedGroup;
-        }
-
-        switch (nodeGroups[0]) {
-            case NodeGroups.Spawn:
-                return StyleColors.SpawnGroup;
-            case NodeGroups.Initialize:
-                return StyleColors.InitializeGroup;
-            case NodeGroups.Update:
-                return StyleColors.UpdateGroup;
-            case NodeGroups.Render:
-                return StyleColors.RenderGroup;
-            case NodeGroups.Logic:
-                return StyleColors.LogicGroup;
-        }
-    }
+    // GetColor logic removed; color mapping is now handled in the UI layer (Node.tsx)
 
     GetAutoGenerationCode(src: Src, wrapper?: string) {
         if (this.GetNodeGroups().findIndex((g) => g === NodeGroups.Logic) !== -1 && wrapper !== undefined) {

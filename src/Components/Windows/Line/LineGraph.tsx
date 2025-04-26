@@ -7,8 +7,8 @@ import { LerpNumber, ReduceDecimals, RemapValue, RoundDecimal } from "API/Lib";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import Div from "Components/Div";
-import { GetWindow, Windows } from "Services/WindowSevice";
 import { StyleColors } from "Style";
+import { GetWindow, Windows } from "Services/WindowSevice";
 import LineGraphPoint from "./LineGraphPoint";
 
 const DOUBLE_CLICK_TIME = 0.25;
@@ -97,15 +97,10 @@ function LineGraph() {
     const controlsTimeChanged = (time: number) => {
         if (graphAPIRef.current === undefined || selectedPointRef.current === undefined) return;
 
-        let validatedTime = time;
-        if (validatedTime > 1) {
-            validatedTime = 1;
-        }
-
-        const clampedTime = math.clamp(time, 0, maxValue);
+        const clampedTime = math.clamp(time, 0, 1);
         graphAPIRef.current.UpdatePoint(selectedPointRef.current.id, clampedTime, selectedPointRef.current.value);
 
-        return validatedTime;
+        return clampedTime;
     };
 
     const controlsValueChanged = (value: number) => {

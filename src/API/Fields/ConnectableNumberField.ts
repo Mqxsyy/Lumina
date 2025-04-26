@@ -36,7 +36,7 @@ export class ConnectableNumberField extends NodeField {
         this.FieldChanged.Fire();
     };
 
-    ConnectNode = (node: LogicNode, fn: (data: ParticleData) => number | Vector2 | Vector3) => {
+    ConnectNode = (node: LogicNode, fn: (data: ParticleData) => number | Vector2 | Vector3 | Color3) => {
         this.connectedNode = node;
         this.connectedFn = fn as (data: ParticleData) => number;
         this.FieldChanged.Fire();

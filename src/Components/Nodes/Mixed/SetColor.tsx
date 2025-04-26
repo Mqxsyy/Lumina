@@ -1,8 +1,8 @@
 import React from "@rbxts/react";
-import { SetColor as SetColorAPI } from "API/Nodes/Initialize/SetColor";
-import { ColorPickerField } from "Components/NodeFields/ColorPickerField";
+import { SetColor as SetColorAPI } from "API/Nodes/Mixed/SetColor";
 import { AddNode, type NodeData } from "Services/NodesService";
 import Node from "../Node";
+import ConnectableColorField from "Components/NodeFields/ConnectableColorField";
 
 export function CreateSetColor() {
     return AddNode(new SetColorAPI(), (data: NodeData) => {
@@ -23,7 +23,12 @@ function SetColor({ data }: { data: NodeData }) {
             NodeAnchorPoint={data.anchorPoint}
             IsConnectedToSystem={data.node.connectedSystemId !== undefined}
         >
-            <ColorPickerField Label="Color" ColorPicker={(data.node as SetColorAPI).nodeFields.color} />
+            <ConnectableColorField
+                NodeId={data.node.id}
+                NodeField={(data.node as SetColorAPI).nodeFields.Color}
+                NodeFieldName={"Color"}
+                Label="Color"
+            />
         </Node>
     );
 }

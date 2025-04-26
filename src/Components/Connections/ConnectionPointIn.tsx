@@ -27,7 +27,7 @@ interface Props {
     ValueName: string;
     ValueType: string;
 
-    BindNode: (boundNode: LogicNode, fn: (data: ParticleData) => number | Vector2 | Vector3) => void;
+    BindNode: (boundNode: LogicNode, fn: (data: ParticleData) => number | Vector2 | Vector3 | Color3) => void;
     UnbindNode: () => void;
 }
 

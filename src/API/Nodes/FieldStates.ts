@@ -68,6 +68,7 @@ export const ValueType = {
     Number: "Number",
     Vector2: "Vector2",
     Vector3: "Vector3",
+    Color: "Color3",
 };
 
 export const PropertyType = {

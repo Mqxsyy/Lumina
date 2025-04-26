@@ -10,6 +10,8 @@ export function GetConnectionColor(valueType: string) {
             return StyleConfig.Connection.TypeColors.Vector2;
         case ValueType.Vector3:
             return StyleConfig.Connection.TypeColors.Vector3;
+        case ValueType.Color:
+            return StyleConfig.Connection.TypeColors.Color;
     }
 
     return StyleColors.Highlight;

@@ -1,5 +1,5 @@
 import { MathOperationType, TrigonometryType } from "API/Nodes/FieldStates";
-import { SetColor } from "API/Nodes/Initialize/SetColor";
+import { SetColor } from "API/Nodes/Mixed/SetColor";
 import { SetLifetime } from "API/Nodes/Initialize/SetLifetime";
 import { AliveTime } from "API/Nodes/Logic/Alivetime";
 import { Clamp } from "API/Nodes/Logic/Clamp";
@@ -37,7 +37,7 @@ import { SetColorOverLife } from "API/Nodes/Update/SetColorOverLife";
 import { SetSizeOverLife } from "API/Nodes/Update/SetSizeOverLife";
 import { SetTransparencyOverLife } from "API/Nodes/Update/SetTransparencyOverLife";
 import { CreatePosition } from "Components/Nodes/Initialize/Position";
-import { CreateSetColor } from "Components/Nodes/Initialize/SetColor";
+import { CreateSetColor } from "Components/Nodes/Mixed/SetColor";
 import { CreateSetLifetime } from "Components/Nodes/Initialize/SetLifetime";
 import { CreateAliveTime } from "Components/Nodes/Logic/AliveTime";
 import { CreateClamp } from "Components/Nodes/Logic/Clamp";

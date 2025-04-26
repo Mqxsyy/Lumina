@@ -22,6 +22,7 @@ const StyleConfig = {
             Number: Color3.fromHex("3498db"),
             Vector2: Color3.fromHex("2ecc71"),
             Vector3: Color3.fromHex("e74c3c"),
+            Color: Color3.fromHex("9d4edd"),
         },
     },
 };

@@ -13,7 +13,7 @@ interface Props {
     NodeId: number;
     ValueType: string;
     ValueName: string;
-    Fn: (particleData: ParticleData) => number | Vector2 | Vector3;
+    Fn: (particleData: ParticleData) => number | Vector2 | Vector3 | Color3;
 }
 
 export default function ConnectionPointOut({
