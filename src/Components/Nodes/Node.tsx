@@ -15,6 +15,7 @@ import { GetNodeById, type NodeCollectionEntry, RemoveNode, SetNodeElement, Upda
 import { GetSelectedNodeId, SetSelectNodeId, selectedNodeIdChanged } from "Services/SelectionService";
 import { StyleColors, StyleProperties } from "Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
+import { NodeGroups } from "API/NodeGroup";
 
 const NODE_SELECT_TIME = 0.1;
 
@@ -35,15 +36,35 @@ interface Props {
     }>;
 }
 
+function getColorFromGroups(groups: NodeGroups[]): Color3 {
+    if (groups.size() === 2) {
+        return StyleColors.MixedGroup;
+    }
+    switch (groups[0]) {
+        case NodeGroups.Spawn:
+            return StyleColors.SpawnGroup;
+        case NodeGroups.Initialize:
+            return StyleColors.InitializeGroup;
+        case NodeGroups.Update:
+            return StyleColors.UpdateGroup;
+        case NodeGroups.Render:
+            return StyleColors.RenderGroup;
+        case NodeGroups.Logic:
+            return StyleColors.LogicGroup;
+        default:
+            return StyleColors.Primary;
+    }
+}
+
 function Node({
     Name,
     Width = NODE_WIDTH,
     NodeId,
     NodeAnchorPoint,
     IsConnectedToSystem,
-    Types = undefined,
-    TypesExtras = undefined,
-    Outputs = undefined,
+    Types,
+    TypesExtras,
+    Outputs,
     children,
 }: PropsWithChildren<Props>) {
     const [_, setForceRender] = useState(0);
@@ -115,8 +136,8 @@ function Node({
 
         const fieldsConnections: RBXScriptConnection[] = [];
 
-        const node = GetNodeById(NodeId) as NodeCollectionEntry;
-        const fields = node.data.node.nodeFields;
+        const nodeEntry = GetNodeById(NodeId) as NodeCollectionEntry;
+        const fields = nodeEntry.data.node.nodeFields;
         for (const [_, field] of pairs(fields)) {
             fieldsConnections.push(
                 field.FieldChanged.Connect(() => {
@@ -146,10 +167,11 @@ function Node({
             setForceRender((prev) => prev + 1);
         });
 
-        return () => {
-            connection.Disconnect();
-        };
+        return () => connection.Disconnect();
     }, [elementRef.current]);
+
+    const nodeEntry = GetNodeById(NodeId) as NodeCollectionEntry;
+    const headerColor = getColorFromGroups(nodeEntry.data.node.GetNodeGroups());
 
     return (
         <imagebutton
@@ -185,7 +207,7 @@ function Node({
 
             {/* Header */}
             <Div Size={new UDim2(1, 0, 0, 24)} ClipsDescendants={true}>
-                <Div Size={new UDim2(1, 0, 0, 30)} BackgroundColor={(GetNodeById(NodeId) as NodeCollectionEntry).data.node.GetColor()}>
+                <Div Size={new UDim2(1, 0, 0, 30)} BackgroundColor={headerColor}>
                     <uicorner CornerRadius={StyleProperties.CornerRadius} />
                     <uipadding PaddingLeft={new UDim(0, 10)} PaddingBottom={new UDim(0, 9)} PaddingTop={new UDim(0, 5)} />
 
@@ -197,7 +219,6 @@ function Node({
                     />
                 </Div>
             </Div>
-
             <Div Size={new UDim2(1, 0, 0, 2)} BackgroundColor={Color3.fromHex("15161E")} />
 
             {/* Types */}
