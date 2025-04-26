@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import Div from "Components/Div";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

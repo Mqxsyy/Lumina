@@ -17,7 +17,7 @@ import { GetAllNodes, NodesChanged } from "Services/NodesService";
 import { LoadingFinished } from "Services/Saving/LoadService";
 import { SetIsHoldingControl, SetSelectNodeId, SetSelectSystemId } from "Services/SelectionService";
 import { GetWindow, Windows } from "Services/WindowSevice";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import { GetZoomScale, UpdateZoomScale } from "ZoomScale";
 import CanvasBackground from "./Background";
 import DisplayConnections from "./DisplayConnections";

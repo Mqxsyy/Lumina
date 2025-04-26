@@ -1,5 +1,5 @@
 import React, { type PropsWithChildren } from "@rbxts/react";
-import { StyleColors, StyleText } from "Style";
+import { StyleColors, StyleText } from "API/Style";
 import { TextInput } from "./TextInput";
 
 interface Props {

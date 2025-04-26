@@ -6,7 +6,7 @@ import Div from "Components/Div";
 import { DestroyConnection } from "Services/ConnectionsService";
 import { EnableDropdown } from "Services/DropdownService";
 import { GetNodeById } from "Services/NodesService";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors, StyleProperties } from "API/Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

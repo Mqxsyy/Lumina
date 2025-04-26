@@ -1,6 +1,6 @@
 import React, { useState } from "@rbxts/react";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors, StyleProperties } from "API/Style";
 
 interface Props {
     ElementName: string;

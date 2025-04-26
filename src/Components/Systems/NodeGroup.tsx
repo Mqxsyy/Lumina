@@ -9,7 +9,7 @@ import { GetMousePosition } from "MainWindow";
 import { GetDraggingNodeId } from "Services/DraggingService";
 import { BindNodeGroupFunction, type NodeSystemData, NodeSystemsChanged } from "Services/NodeSystemService";
 import { GetNodeById, type NodeCollectionEntry, RemoveNode, UpdateNodeData } from "Services/NodesService";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import Div from "../Div";
 import { GROUP_BORDER_THICKNESS, GROUP_HEADER_HEIGHT, GROUP_LIST_PADDING, GROUP_PADDING } from "../SizeConfig";

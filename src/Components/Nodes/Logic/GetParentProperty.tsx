@@ -6,7 +6,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import StateField from "Components/NodeFields/StateField";
 import { AddNode, type NodeData } from "Services/NodesService";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors, StyleProperties } from "API/Style";
 import { GetZoomScale } from "ZoomScale";
 import Node from "../Node";
 

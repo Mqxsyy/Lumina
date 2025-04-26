@@ -1,6 +1,6 @@
 import React, { useState } from "@rbxts/react";
 import Div from "Components/Div";
-import { StyleColors, StyleProperties, StyleText } from "Style";
+import { StyleColors, StyleProperties, StyleText } from "API/Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

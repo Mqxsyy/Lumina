@@ -1,7 +1,7 @@
 import React, { useRef } from "@rbxts/react";
 import { RunService } from "@rbxts/services";
 import Div from "Components/Div";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 
 interface Props {
     Id: number;

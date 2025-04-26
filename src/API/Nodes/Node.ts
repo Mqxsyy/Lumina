@@ -1,7 +1,7 @@
 import type { NodeField } from "API/Fields/NodeField";
 import { LowerFirstLetter } from "API/Lib";
 import type { Src } from "API/VFXScriptCreator";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import { NodeGroups } from "../NodeGroup";
 import { AutoGenAddToSystem, AutoGenImport } from "./AutoGenLib";
 import { NodeIdPool } from "./NodeIdPool";

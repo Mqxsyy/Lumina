@@ -1,5 +1,5 @@
 import { ValueType } from "API/Nodes/FieldStates";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import StyleConfig from "./StyleConfig";
 
 export function GetConnectionColor(valueType: string) {

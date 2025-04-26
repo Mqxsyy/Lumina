@@ -3,7 +3,7 @@ import { createRoot } from "@rbxts/react-roblox";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { GetWindow, Windows } from "Services/WindowSevice";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import FeatureDetail from "./FeatureDetail";
 import FeatureHeader from "./FeatureHeader";
 

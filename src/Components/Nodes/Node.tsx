@@ -13,7 +13,7 @@ import { GetCanvasData } from "Services/CanvasService";
 import { SetDraggingNodeId } from "Services/DraggingService";
 import { GetNodeById, type NodeCollectionEntry, RemoveNode, SetNodeElement, UpdateNodeData } from "Services/NodesService";
 import { GetSelectedNodeId, SetSelectNodeId, selectedNodeIdChanged } from "Services/SelectionService";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors, StyleProperties } from "API/Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 
 const NODE_SELECT_TIME = 0.1;

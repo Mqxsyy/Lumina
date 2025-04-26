@@ -3,7 +3,7 @@ import { NodeGroups } from "API/NodeGroup";
 import type { Entry } from "API/Nodes/SelectionEntry";
 import { NodeList } from "Lists/NodeList";
 import { NodeSystems } from "Lists/SystemsList";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors, StyleProperties } from "API/Style";
 import Div from "../Div";
 import { NodeCategorySelectionButton } from "./NodeCategorySelectionButton";
 import { NodeSearchInput } from "./NodeSearchInput";

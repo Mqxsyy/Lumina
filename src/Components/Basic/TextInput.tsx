@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, type PropsWithChildren } from "@rbxts/react";
-import { StyleColors, StyleProperties, StyleText } from "Style";
+import { StyleColors, StyleProperties, StyleText } from "API/Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

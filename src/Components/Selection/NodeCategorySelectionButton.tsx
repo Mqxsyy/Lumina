@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import type { Entry, SelectionEntry } from "API/Nodes/SelectionEntry";
 import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors, StyleProperties } from "API/Style";
 import Div from "../Div";
 import { NodeSelectionButton } from "./NodeSelectionButton";
 

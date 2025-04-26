@@ -8,7 +8,7 @@ import { CreateConnectionLine } from "Components/Connections/ConnectionLine";
 import { ReloadConnectionVisuals } from "Components/Events";
 import StyleConfig from "Components/StyleConfig";
 import { GetMousePositionOnCanvas } from "MainWindow";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import type { NodeData } from "./NodesService";
 
 export interface ConnectionData {

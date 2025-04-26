@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
 import { GetDropdownData } from "Services/DropdownService";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors, StyleProperties } from "API/Style";
 
 export default function Dropdown() {
     const dropdownData = GetDropdownData();

@@ -4,7 +4,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import Div from "Components/Div";
 import { LoadColorRampAPI } from "Components/Windows/Ramps/ColorRamp";
 import { GetWindow, Windows } from "Services/WindowSevice";
-import { StyleColors, StyleProperties } from "Style";
+import { StyleColors, StyleProperties } from "API/Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

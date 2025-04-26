@@ -7,7 +7,7 @@ import { BasicTextLabel } from "Components/Basic/BasicTextLabel";
 import { NumberInput } from "Components/Basic/NumberInput";
 import Div from "Components/Div";
 import { GetWindow, Windows } from "Services/WindowSevice";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import { LoadColorPickerAPI } from "../Pickers.tsx/ColorPicker";
 import ColorRampPoint from "./ColorRampPoint";
 

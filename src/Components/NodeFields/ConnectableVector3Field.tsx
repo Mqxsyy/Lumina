@@ -6,7 +6,7 @@ import { NumberInput } from "Components/Basic/NumberInput";
 import ConnectionPointIn from "Components/Connections/ConnectionPointIn";
 import Div from "Components/Div";
 import { GetNodeById, type NodeCollectionEntry } from "Services/NodesService";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import { GetZoomScale } from "ZoomScale";
 
 interface Props {

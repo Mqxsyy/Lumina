@@ -6,7 +6,7 @@ import type { NodeSystem as NodeSystemAPI } from "API/NodeSystem";
 import { TextInput } from "Components/Basic/TextInput";
 import { GetMousePosition, GetMousePositionOnCanvas } from "MainWindow";
 import { GetSelectedSystemId, SetSelectSystemId, selectedSystemIdChanged } from "Services/SelectionService";
-import { StyleColors } from "Style";
+import { StyleColors } from "API/Style";
 import { GetZoomScale, ZoomScaleChanged } from "ZoomScale";
 import {
     GetSystemById,
